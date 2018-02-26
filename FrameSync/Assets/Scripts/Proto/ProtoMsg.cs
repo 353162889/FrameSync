@@ -10,10 +10,10 @@
 // Generated from: protofiles/Msg.proto
 namespace Proto
 {
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Msg_TestData")]
-  public partial class Msg_TestData : global::ProtoBuf.IExtensible
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Msg_Test_Data")]
+  public partial class Msg_Test_Data : global::ProtoBuf.IExtensible
   {
-    public Msg_TestData() {}
+    public Msg_Test_Data() {}
     
     private string _msg;
     [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"msg", DataFormat = global::ProtoBuf.DataFormat.Default)]

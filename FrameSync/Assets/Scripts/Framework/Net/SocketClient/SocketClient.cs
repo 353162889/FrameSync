@@ -77,8 +77,6 @@ namespace Framework
         public abstract void SendNetData(NetSendData data);
         //接收网络数据(已反序列化)
         public abstract int RecvNetData(Queue<NetRecvData> queue);
-        //接受指定个数的网络数据
-        public abstract int RecvNetData(Queue<NetRecvData> queue,int count);
         //用户断开连接，(外部)手动断开连接
         public virtual void DisConnect()
         {

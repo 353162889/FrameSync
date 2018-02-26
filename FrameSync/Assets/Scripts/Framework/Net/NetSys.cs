@@ -18,7 +18,7 @@ namespace Framework
 
         protected void CreateChannel(NetChannelType channel)
         {
-            //m_arrChannel[(int)channel] = new NetChannel(channel);
+            m_arrChannel[(int)channel] = new NetChannel(channel,new TCPSocketClient());
         }
 
         protected NetChannel GetChannel(NetChannelType type)
@@ -44,13 +44,23 @@ namespace Framework
             netChannel.SendMsg(sendData);
         }
 
-        public void AddMsgCallback(NetChannelType channel,short receiveOpcode,MsgCallback callback)
+        public void AddMsgCallback(NetChannelType channel,short receiveOpcode,MsgCallback callback,bool once = false)
         {
             if (callback != null)
             {
                 NetChannel netChannel = GetChannel(channel);
                 if (netChannel == null) return;
-                netChannel.AddMsgCallback(receiveOpcode, callback);
+                netChannel.AddMsgCallback(receiveOpcode, callback, once);
+            }
+        }
+
+        public void RemoveMsgCallback(NetChannelType channel,short receiveOpcode,MsgCallback callback)
+        {
+            if(callback != null)
+            {
+                NetChannel netChannel = GetChannel(channel);
+                if (netChannel == null) return;
+                netChannel.RemoveMsgCallback(receiveOpcode, callback);
             }
         }
 
@@ -66,6 +76,13 @@ namespace Framework
             NetChannel netChannel = GetChannel(channel);
             if (netChannel == null) return;
             netChannel.DisConnect();
+        }
+
+        public bool RunFrameData(NetChannelType channel, int frameIndex)
+        {
+            NetChannel netChannel = GetChannel(channel);
+            if (netChannel == null) return false;
+            return netChannel.RunFrameData(frameIndex);
         }
 
         void Update()

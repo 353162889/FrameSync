@@ -11,19 +11,32 @@ namespace Framework
     {
         private volatile Socket m_cSocket;
         private IAsyncResult m_cAsyncResult;
+        private SocketSender m_cSender;
+        private SocketReceiver m_cReceiver;
 
         public override int RecvNetData(Queue<NetRecvData> queue)
         {
-            return 0;
-        }
-
-        public override int RecvNetData(Queue<NetRecvData> queue, int count)
-        {
+            if(m_cReceiver != null)
+            {
+                m_cReceiver.RecvNetData(queue);
+            }
+            else
+            {
+                CLog.LogError("socket not connected,can not recv net Data!");
+            }
             return 0;
         }
 
         public override void SendNetData(NetSendData data)
         {
+            if(m_cSender != null)
+            {
+                m_cSender.SendData(data);
+            }
+            else
+            {
+                CLog.LogError("socket not connected,can not send net Data!");
+            }
         }
 
         protected override bool BeginConnect(string ip, int port)
@@ -55,6 +68,8 @@ namespace Framework
         private void OnConnectedSucc()
         {
             //初始化发送接收
+            m_cSender = new SocketSender(m_cSocket);
+            m_cReceiver = new SocketReceiver(m_cSocket);
         }
 
         public override void DisConnect()
@@ -88,9 +103,38 @@ namespace Framework
                 {
                     CLog.LogError(e.Message + "\n" + e.StackTrace);
                 }
+                if(m_cSender != null)
+                {
+                    m_cSender.Dispose();
+                    m_cSender = null;
+                }
+                if(m_cReceiver != null)
+                {
+                    m_cReceiver.Dispose();
+                    m_cReceiver = null;
+                }
                 m_cSocket = null;
                 m_cAsyncResult = null;
                 base.DisConnect();
+            }
+        }
+
+        public override void OnUpdate()
+        {
+            base.OnUpdate();
+            if(m_cSender != null)
+            {
+                if(!m_cSender.Update())
+                {
+                    this.LostConnect();
+                }
+            }
+            if(m_cReceiver != null)
+            {
+                if(!m_cReceiver.Update())
+                {
+                    this.LostConnect();
+                }
             }
         }
 
@@ -103,6 +147,7 @@ namespace Framework
                 point = new IPEndPoint(ipAddress, port);
                 return true;
             }
+            CLog.LogError("ip="+ip+",port="+port+" can not arrived!(or format error)");
             return false;
         }
     }
