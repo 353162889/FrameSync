@@ -72,7 +72,7 @@ namespace Framework
         //开始连接
         protected abstract bool BeginConnect(string ip, int port);
         //是否连接成功
-        protected abstract bool IsSocketConnected();
+        protected abstract SocketClientStatus SocketConnectingStatus();
         //发送网络数据（未序列化）
         public abstract void SendNetData(NetSendData data);
         //接收网络数据(已反序列化)
@@ -109,7 +109,8 @@ namespace Framework
                 }
                 else
                 {
-                    if(IsSocketConnected())
+                    SocketClientStatus s = SocketConnectingStatus();
+                    if (s == SocketClientStatus.Connected)
                     {
                         m_eStatus = SocketClientStatus.Connected;
                         if (null != m_connectCallback)
@@ -117,6 +118,15 @@ namespace Framework
                             m_connectCallback(true);
                             m_connectCallback = null;
                         }
+                    }
+                    else if(s == SocketClientStatus.DisConnect)
+                    {
+                        if (null != m_connectCallback)
+                        {
+                            m_connectCallback(false);
+                            m_connectCallback = null;
+                        }
+                        DisConnect();
                     }
                 }
             }

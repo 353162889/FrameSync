@@ -3,5 +3,5 @@ package Proto;
 
 enum PacketOpcode
 {
-	Msg_Test = 1;
+	Msg_Test = 1000;
 }

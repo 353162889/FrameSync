@@ -13,7 +13,11 @@ namespace Framework
         {
             int len = Enum.GetValues(typeof(NetChannelType)).Length;
             m_arrChannel = new NetChannel[len];
-            CreateChannel(NetChannelType.Game);
+            for (int i = 0; i < len; i++)
+            {
+                CreateChannel((NetChannelType)i);
+            }
+          
         }
 
         protected void CreateChannel(NetChannelType channel)
@@ -100,6 +104,18 @@ namespace Framework
                 {
                     CLog.LogError(e.Message+"\n"+e.StackTrace);
                 }
+            }
+        }
+        
+        void OnApplicationQuit()
+        {
+            for (int i = 0; i < m_arrChannel.Length; i++)
+            {
+                if (m_arrChannel[i] != null)
+                {
+                    m_arrChannel[i].Dispose();
+                }
+                m_arrChannel[i] = null;
             }
         }
     }

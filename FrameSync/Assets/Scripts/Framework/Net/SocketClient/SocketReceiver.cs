@@ -21,6 +21,7 @@ namespace Framework
         private MemoryStream m_cStream;
         private byte[] m_cBuffer;
         private Dictionary<short, Type> m_dicOpcodeToType;
+        private bool m_bStop = true;
 
         public SocketReceiver(Socket socket)
         {
@@ -28,29 +29,30 @@ namespace Framework
             m_queueData = new Queue<NetRecvData>();
             m_bLostConnect = false;
             m_dicOpcodeToType = new Dictionary<short, Type>();
+            LoadProtoTypes();
             m_cStream = new MemoryStream(MaxRecvDataSize);
             m_cBuffer = new byte[MaxRecvDataSize];
             m_cThread = new Thread(new ThreadStart(Run));
             m_cThread.IsBackground = true;
             m_cThread.Start();
+            m_bStop = false;
         }
 
         private void LoadProtoTypes()
         {
             Type type = typeof(Proto.PacketOpcode);
-            var values = Enum.GetValues(type);
+            var values = Enum.GetNames(type);
             foreach (var item in values)
             {
-                string strName = Enum.GetName(type, item);
-                string fullName = "Proto."+ strName + "_Data";
+                string fullName = "Proto."+ item + "_Data";
                 Type t = Type.GetType(fullName);
-                m_dicOpcodeToType.Add((short)item, t);
+                m_dicOpcodeToType.Add((short)(int)Enum.Parse(type,item), t);
             }
         }
 
         private void Run()
         {
-            while (true)
+            while (!m_bStop)
             {
                 try
                 {
@@ -100,7 +102,11 @@ namespace Framework
                 }
                 catch(Exception e)
                 {
-                    CLog.LogError("SocketReceiver exception:" + e.Message + "\n" + e.StackTrace);
+                    //忽略WSACancelBlockingCall异常
+                    if (!e.Message.Contains("WSACancelBlockingCall"))
+                    {
+                        CLog.LogError("SocketReceiver exception:" + e.Message + "\n" + e.StackTrace);
+                    }
                     m_bLostConnect = true;
                     break;
                 }
@@ -143,6 +149,7 @@ namespace Framework
             m_cSocket = null;
             m_cStream = null;
             m_cBuffer = null;
+            m_bStop = true;
             if (m_cThread != null)
             {
                 m_cThread.Abort();

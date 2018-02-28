@@ -17,6 +17,7 @@ namespace Framework
         private Thread m_cThread;
         private MemoryStream m_cStream;
         private ByteBuf m_cBuffer;
+        private bool m_bStop = true;
         public SocketSender(Socket socket)
         {
             m_cSocket = socket;
@@ -27,11 +28,12 @@ namespace Framework
             m_cThread = new Thread(new ThreadStart(Run));
             m_cThread.IsBackground = true;
             m_cThread.Start();
+            m_bStop = false;
         }
 
         private void Run()
         {
-            while(true)
+            while(!m_bStop)
             {
                 if(m_queueData.Count == 0)
                 {
@@ -48,6 +50,7 @@ namespace Framework
                     m_cStream.Position = 0;
                     ProtoBuf.Serializer.NonGeneric.Serialize(m_cStream, sendData.data);
                     short len = (short)m_cStream.Position;
+                    CLog.Log("send msg len ="+len);
                     m_cBuffer.SetIndex(0, 0);
                     m_cBuffer.WriteShortLE(sendData.sendOpcode);
                     m_cBuffer.WriteShortLE(len);
@@ -84,15 +87,16 @@ namespace Framework
 
         public void Dispose()
         {
-            m_bLostConnect = false;
-            m_cSocket = null;
-            m_cStream = null;
-            m_cBuffer = null;
-            if(m_cThread != null)
+            m_bStop = true;
+            if (m_cThread != null)
             {
                 m_cThread.Abort();
                 m_cThread = null;
             }
+            m_bLostConnect = false;
+            m_cSocket = null;
+            m_cStream = null;
+            m_cBuffer = null;
         }
 
     }

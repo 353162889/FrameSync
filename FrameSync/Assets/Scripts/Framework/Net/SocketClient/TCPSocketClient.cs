@@ -52,17 +52,31 @@ namespace Framework
             CLog.Log("Tcp AsyncCallback");
         }
 
-        protected override bool IsSocketConnected()
+        protected override SocketClientStatus SocketConnectingStatus()
         {
             if(m_cAsyncResult != null)
             {
                 if(m_cAsyncResult.IsCompleted)
                 {
-                    OnConnectedSucc();
-                    return true;
+
+                    if (m_cAsyncResult != null)
+                    {
+                        try
+                        {
+                            m_cSocket.EndConnect(m_cAsyncResult);
+                            m_cAsyncResult = null;
+                        }
+                        catch (Exception e)
+                        {
+                            m_cAsyncResult = null;
+                            return SocketClientStatus.DisConnect;
+                        }
+                        OnConnectedSucc();
+                        return SocketClientStatus.Connected;
+                    }
                 }
             }
-            return false;
+            return SocketClientStatus.Connecting;
         }
 
         private void OnConnectedSucc()

@@ -1,6 +1,6 @@
 syntax = "proto2";
 package Proto;
-message Msg_TestData
+message Msg_Test_Data
 {
 	required string msg = 1;
 }

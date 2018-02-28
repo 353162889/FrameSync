@@ -8,7 +8,7 @@ namespace Framework
 {
     public class CLog
     {
-        public static LogRecorder logRecorder = new LogRecorder();
+        //public static LogRecorder logRecorder = new LogRecorder();
 
         public static void Init() { }
 
@@ -27,19 +27,19 @@ namespace Framework
             }
 
             Debug.Log(sb.ToString());
-            logRecorder.Log(msg);
+            //logRecorder.Log(msg);
         }
 
         public static void LogError(object msg)
         {
             UnityEngine.Debug.LogError(msg);
-            logRecorder.LogError(msg);
+            //logRecorder.LogError(msg);
         }
 
         public static void LogWarn(object msg)
         {
             UnityEngine.Debug.LogWarning(msg);
-            logRecorder.LogWarn(msg);
+            //logRecorder.LogWarn(msg);
         }
     }
 

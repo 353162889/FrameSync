@@ -187,17 +187,20 @@ namespace Framework
         public void OnUpdate()
         {
             //处理网络事件
-            if (m_cSocketClient != null && m_cSocketClient.Status == SocketClientStatus.Connected)
+            if (m_cSocketClient != null && m_cSocketClient.Status != SocketClientStatus.DisConnect)
             {
                 m_cSocketClient.OnUpdate();
-                int count = m_cSocketClient.RecvNetData(m_queueRecvData);
-                //限制每帧处理包的最大个数可以在这里加
-                while(m_queueRecvData.Count > 0)
+                if (m_cSocketClient.Status == SocketClientStatus.Connected)
                 {
-                    NetRecvData recvData = m_queueRecvData.Dequeue();
-                    if(!m_cFrameData.AddRecvData(recvData))
+                    int count = m_cSocketClient.RecvNetData(m_queueRecvData);
+                    //限制每帧处理包的最大个数可以在这里加
+                    while (m_queueRecvData.Count > 0)
                     {
-                        HandleRecvData(recvData);
+                        NetRecvData recvData = m_queueRecvData.Dequeue();
+                        if (!m_cFrameData.AddRecvData(recvData))
+                        {
+                            HandleRecvData(recvData);
+                        }
                     }
                 }
             }

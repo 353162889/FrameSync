@@ -14,8 +14,8 @@ namespace Proto
     public enum PacketOpcode
     {
             
-      [global::ProtoBuf.ProtoEnum(Name=@"Msg_Test", Value=1)]
-      Msg_Test = 1
+      [global::ProtoBuf.ProtoEnum(Name=@"Msg_Test", Value=1000)]
+      Msg_Test = 1000
     }
   
 }
