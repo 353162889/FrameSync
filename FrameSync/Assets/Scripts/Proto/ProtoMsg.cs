@@ -27,4 +27,63 @@ namespace Proto
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"C2S_JoinOrCreateRoom_Data")]
+  public partial class C2S_JoinOrCreateRoom_Data : global::ProtoBuf.IExtensible
+  {
+    public C2S_JoinOrCreateRoom_Data() {}
+    
+    private int _roomId;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"roomId", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int roomId
+    {
+      get { return _roomId; }
+      set { _roomId = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"S2C_JoinOrCreateRoom_Data")]
+  public partial class S2C_JoinOrCreateRoom_Data : global::ProtoBuf.IExtensible
+  {
+    public S2C_JoinOrCreateRoom_Data() {}
+    
+    private bool _status;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"status", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public bool status
+    {
+      get { return _status; }
+      set { _status = value; }
+    }
+    private int _roomId = default(int);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"roomId", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int roomId
+    {
+      get { return _roomId; }
+      set { _roomId = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Frame_Msg_Test_Data")]
+  public partial class Frame_Msg_Test_Data : global::ProtoBuf.IExtensible
+  {
+    public Frame_Msg_Test_Data() {}
+    
+    private string _msg;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"msg", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public string msg
+    {
+      get { return _msg; }
+      set { _msg = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
 }

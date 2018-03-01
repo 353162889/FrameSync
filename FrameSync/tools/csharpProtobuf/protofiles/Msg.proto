@@ -1,6 +1,27 @@
 syntax = "proto2";
 package Proto;
+//测试包数据结构
 message Msg_Test_Data
+{
+	required string msg = 1;
+}
+
+//一般消息
+//进入或创建房间
+message C2S_JoinOrCreateRoom_Data
+{
+	required int32 roomId = 1;
+}
+
+//进入房间返回
+message S2C_JoinOrCreateRoom_Data
+{
+	required bool status = 1;
+	optional int32 roomId = 2;
+}
+
+//帧消息
+message Frame_Msg_Test_Data
 {
 	required string msg = 1;
 }

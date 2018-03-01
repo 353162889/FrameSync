@@ -12,7 +12,7 @@ public class TestNet : MonoBehaviour {
         gameObject.AddComponentOnce<FrameSyncSys>();
 
         NetSys.Instance.BeginConnect(NetChannelType.Game, "127.0.0.1", 8080, OnCallback);
-        NetSys.Instance.AddMsgCallback(NetChannelType.Game, (short)Proto.PacketOpcode.Msg_Test, OnCallback, true);
+        NetSys.Instance.AddMsgCallback(NetChannelType.Game, (short)Proto.PacketOpcode.Msg_Test, OnCallback, false);
 	}
 
     private void OnCallback(object netObj)
@@ -28,16 +28,21 @@ public class TestNet : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-		
-	}
+    }
 
     void OnGUI()
     {
-        if(GUI.Button(new Rect(0,0,100,50),"发送测试包"))
+        if (GUI.Button(new Rect(0, 0, 200, 100), "发送测试包"))
         {
             Proto.Msg_Test_Data data = new Proto.Msg_Test_Data();
             data.msg = "发送测试包";
-            NetSys.Instance.SendMsg(NetChannelType.Game, (short)Proto.PacketOpcode.Msg_Test,data);
+            NetSys.Instance.SendMsg(NetChannelType.Game, (short)Proto.PacketOpcode.Msg_Test, data);
+        }
+        if (GUI.Button(new Rect(200, 0, 200, 100), "进入或创建房间"))
+        {
+            Proto.C2S_JoinOrCreateRoom_Data data = new Proto.C2S_JoinOrCreateRoom_Data();
+            data.roomId = -1;
+            NetSys.Instance.SendMsg(NetChannelType.Game, (short)Proto.PacketOpcode.C2S_JoinOrCreateRoom, data);
         }
     }
 }

@@ -14,8 +14,17 @@ namespace Proto
     public enum PacketOpcode
     {
             
-      [global::ProtoBuf.ProtoEnum(Name=@"Msg_Test", Value=1000)]
-      Msg_Test = 1000
+      [global::ProtoBuf.ProtoEnum(Name=@"Msg_Test", Value=257)]
+      Msg_Test = 257,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"C2S_JoinOrCreateRoom", Value=1000)]
+      C2S_JoinOrCreateRoom = 1000,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"S2C_JoinOrCreateRoom", Value=1001)]
+      S2C_JoinOrCreateRoom = 1001,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Frame_Msg_Test", Value=10000)]
+      Frame_Msg_Test = 10000
     }
   
 }

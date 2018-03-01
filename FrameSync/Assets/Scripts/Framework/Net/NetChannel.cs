@@ -101,7 +101,7 @@ namespace Framework
                 if (!baseType.IsGenericType) continue;
                 Type dataType = baseType.GetGenericArguments()[0];
                 string opcodeName = dataType.Name.Replace("_Data", "");
-                short opcode = (short)Enum.Parse(typeof(Proto.PacketOpcode), opcodeName);
+                short opcode = (short)(int)Enum.Parse(typeof(Proto.PacketOpcode), opcodeName);
                 var msg = Activator.CreateInstance(type) as IServerMsg;
                 List<IServerMsg> lst;
                 m_dicServerMsg.TryGetValue(opcode, out lst);

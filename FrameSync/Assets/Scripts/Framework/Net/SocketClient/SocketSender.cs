@@ -50,7 +50,6 @@ namespace Framework
                     m_cStream.Position = 0;
                     ProtoBuf.Serializer.NonGeneric.Serialize(m_cStream, sendData.data);
                     short len = (short)m_cStream.Position;
-                    CLog.Log("send msg len ="+len);
                     m_cBuffer.SetIndex(0, 0);
                     m_cBuffer.WriteShortLE(sendData.sendOpcode);
                     m_cBuffer.WriteShortLE(len);
