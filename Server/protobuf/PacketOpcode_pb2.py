@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='PacketOpcode.proto',
   package='Proto',
   syntax='proto2',
-  serialized_pb=_b('\n\x12PacketOpcode.proto\x12\x05Proto*\x1d\n\x0cPacketOpcode\x12\r\n\x08Msg_Test\x10\xe8\x07')
+  serialized_pb=_b('\n\x12PacketOpcode.proto\x12\x05Proto*h\n\x0cPacketOpcode\x12\r\n\x08Msg_Test\x10\x81\x02\x12\x19\n\x14\x43\x32S_JoinOrCreateRoom\x10\xe8\x07\x12\x19\n\x14S2C_JoinOrCreateRoom\x10\xe9\x07\x12\x13\n\x0e\x46rame_Msg_Test\x10\x90N')
 )
 
 _PACKETOPCODE = _descriptor.EnumDescriptor(
@@ -30,19 +30,34 @@ _PACKETOPCODE = _descriptor.EnumDescriptor(
   file=DESCRIPTOR,
   values=[
     _descriptor.EnumValueDescriptor(
-      name='Msg_Test', index=0, number=1000,
+      name='Msg_Test', index=0, number=257,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='C2S_JoinOrCreateRoom', index=1, number=1000,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='S2C_JoinOrCreateRoom', index=2, number=1001,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='Frame_Msg_Test', index=3, number=10000,
       options=None,
       type=None),
   ],
   containing_type=None,
   options=None,
   serialized_start=29,
-  serialized_end=58,
+  serialized_end=133,
 )
 _sym_db.RegisterEnumDescriptor(_PACKETOPCODE)
 
 PacketOpcode = enum_type_wrapper.EnumTypeWrapper(_PACKETOPCODE)
-Msg_Test = 1000
+Msg_Test = 257
+C2S_JoinOrCreateRoom = 1000
+S2C_JoinOrCreateRoom = 1001
+Frame_Msg_Test = 10000
 
 
 DESCRIPTOR.enum_types_by_name['PacketOpcode'] = _PACKETOPCODE

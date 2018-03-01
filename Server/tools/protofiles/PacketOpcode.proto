@@ -3,5 +3,13 @@ package Proto;
 
 enum PacketOpcode
 {
-	Msg_Test = 1000;
+	//测试消息包（需要超过256）
+	Msg_Test = 257;
+
+	//一般消息包
+	C2S_JoinOrCreateRoom = 1000;
+	S2C_JoinOrCreateRoom = 1001;
+
+	//帧同步包 >= 10000
+	Frame_Msg_Test = 10000;
 }

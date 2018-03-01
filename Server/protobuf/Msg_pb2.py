@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Msg.proto',
   package='Proto',
   syntax='proto2',
-  serialized_pb=_b('\n\tMsg.proto\x12\x05Proto\"\x1c\n\rMsg_Test_Data\x12\x0b\n\x03msg\x18\x01 \x02(\t')
+  serialized_pb=_b('\n\tMsg.proto\x12\x05Proto\"\x1c\n\rMsg_Test_Data\x12\x0b\n\x03msg\x18\x01 \x02(\t\"+\n\x19\x43\x32S_JoinOrCreateRoom_Data\x12\x0e\n\x06roomId\x18\x01 \x02(\x05\";\n\x19S2C_JoinOrCreateRoom_Data\x12\x0e\n\x06status\x18\x01 \x02(\x08\x12\x0e\n\x06roomId\x18\x02 \x01(\x05\"\"\n\x13\x46rame_Msg_Test_Data\x12\x0b\n\x03msg\x18\x01 \x02(\t')
 )
 
 
@@ -55,7 +55,110 @@ _MSG_TEST_DATA = _descriptor.Descriptor(
   serialized_end=48,
 )
 
+
+_C2S_JOINORCREATEROOM_DATA = _descriptor.Descriptor(
+  name='C2S_JoinOrCreateRoom_Data',
+  full_name='Proto.C2S_JoinOrCreateRoom_Data',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='roomId', full_name='Proto.C2S_JoinOrCreateRoom_Data.roomId', index=0,
+      number=1, type=5, cpp_type=1, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=50,
+  serialized_end=93,
+)
+
+
+_S2C_JOINORCREATEROOM_DATA = _descriptor.Descriptor(
+  name='S2C_JoinOrCreateRoom_Data',
+  full_name='Proto.S2C_JoinOrCreateRoom_Data',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='status', full_name='Proto.S2C_JoinOrCreateRoom_Data.status', index=0,
+      number=1, type=8, cpp_type=7, label=2,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='roomId', full_name='Proto.S2C_JoinOrCreateRoom_Data.roomId', index=1,
+      number=2, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=95,
+  serialized_end=154,
+)
+
+
+_FRAME_MSG_TEST_DATA = _descriptor.Descriptor(
+  name='Frame_Msg_Test_Data',
+  full_name='Proto.Frame_Msg_Test_Data',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='msg', full_name='Proto.Frame_Msg_Test_Data.msg', index=0,
+      number=1, type=9, cpp_type=9, label=2,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=156,
+  serialized_end=190,
+)
+
 DESCRIPTOR.message_types_by_name['Msg_Test_Data'] = _MSG_TEST_DATA
+DESCRIPTOR.message_types_by_name['C2S_JoinOrCreateRoom_Data'] = _C2S_JOINORCREATEROOM_DATA
+DESCRIPTOR.message_types_by_name['S2C_JoinOrCreateRoom_Data'] = _S2C_JOINORCREATEROOM_DATA
+DESCRIPTOR.message_types_by_name['Frame_Msg_Test_Data'] = _FRAME_MSG_TEST_DATA
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 Msg_Test_Data = _reflection.GeneratedProtocolMessageType('Msg_Test_Data', (_message.Message,), dict(
@@ -64,6 +167,27 @@ Msg_Test_Data = _reflection.GeneratedProtocolMessageType('Msg_Test_Data', (_mess
   # @@protoc_insertion_point(class_scope:Proto.Msg_Test_Data)
   ))
 _sym_db.RegisterMessage(Msg_Test_Data)
+
+C2S_JoinOrCreateRoom_Data = _reflection.GeneratedProtocolMessageType('C2S_JoinOrCreateRoom_Data', (_message.Message,), dict(
+  DESCRIPTOR = _C2S_JOINORCREATEROOM_DATA,
+  __module__ = 'Msg_pb2'
+  # @@protoc_insertion_point(class_scope:Proto.C2S_JoinOrCreateRoom_Data)
+  ))
+_sym_db.RegisterMessage(C2S_JoinOrCreateRoom_Data)
+
+S2C_JoinOrCreateRoom_Data = _reflection.GeneratedProtocolMessageType('S2C_JoinOrCreateRoom_Data', (_message.Message,), dict(
+  DESCRIPTOR = _S2C_JOINORCREATEROOM_DATA,
+  __module__ = 'Msg_pb2'
+  # @@protoc_insertion_point(class_scope:Proto.S2C_JoinOrCreateRoom_Data)
+  ))
+_sym_db.RegisterMessage(S2C_JoinOrCreateRoom_Data)
+
+Frame_Msg_Test_Data = _reflection.GeneratedProtocolMessageType('Frame_Msg_Test_Data', (_message.Message,), dict(
+  DESCRIPTOR = _FRAME_MSG_TEST_DATA,
+  __module__ = 'Msg_pb2'
+  # @@protoc_insertion_point(class_scope:Proto.Frame_Msg_Test_Data)
+  ))
+_sym_db.RegisterMessage(Frame_Msg_Test_Data)
 
 
 # @@protoc_insertion_point(module_scope)
