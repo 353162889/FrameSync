@@ -16,6 +16,10 @@ _DISCONNECTED = frozenset({ECONNRESET, ENOTCONN, ESHUTDOWN, ECONNABORTED, EPIPE,
 class MsgPacket:
     HeadSize = 2 + 2
 
+    @staticmethod
+    def isFramePacket(packetId):
+        return packetId > 9999;
+
     def __init__(self, headBytes=None,packetID = None):
         self.head = headBytes
         self.serializeBytes = None
@@ -119,7 +123,7 @@ class PacketReceiver:
         if self.dataLength >= self.packet.packetSize + MsgPacket.HeadSize:
             print("receive from {0} packetID = {1}".format(self.connection.id,self.packet.packetID))
             #小于10000是一般包，反序列化，否则是帧包，不反序列化
-            if(self.packet.packetID < 10000) :
+            if(not MsgPacket.isFramePacket(self.packet.packetID)) :
                 self.bytesIO.seek(MsgPacket.HeadSize)
                 buff = self.bytesIO.read(self.packet.packetSize)
                 protoClass = self.mapOpcodeClass.get(self.packet.packetID,None)
@@ -199,6 +203,9 @@ class Connection:
 
     def leaveRoom(self):
         self.roomId = -1
+
+    def addFramePacket(self,pack):
+        return
 
     def lostConnection(self):
         print("lostConnection[id] "+str(self.id))
@@ -432,9 +439,16 @@ class CustomServer(socketserver.TCPServer):
             lock.release()
 
     def handMsg(self,conn,pack):
-        handle = self._mapMsgHandle.get(pack.packetID,None)
-        if handle:
-            handle(self,conn,pack.proto)
+        if MsgPacket.isFramePacket(pack.packetID):
+            if conn.isInRoom():
+                room = self.getRoomById(conn.roomId)
+                if room:
+                    room.addFramePacket(pack)
+        else:
+            handle = self._mapMsgHandle.get(pack.packetID, None)
+            if handle:
+                handle(self, conn, pack.proto)
+
 
 if __name__ == '__main__':
     # info = protobuf.Msg_pb2.Info()
