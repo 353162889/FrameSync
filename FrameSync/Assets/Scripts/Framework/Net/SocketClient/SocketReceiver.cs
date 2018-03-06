@@ -64,10 +64,11 @@ namespace Framework
                     if(opcode < 256)
                     {
                         netData.recvOpcode = 0;
-                        netData.len = (short)m_cBuffer[1];
+                        netData.len = opcode;
                         int frameIndexCount = m_cSocket.Receive(m_cBuffer, 0, 4, SocketFlags.None);
                         if (CheckReceiveZero(frameIndexCount)) break;
                         netData.data = BitConverter.ToInt32(m_cBuffer, 0);
+                       // CLog.Log(string.Format("收到帧包frameCount={0},frameIndex={1},buff={2}",netData.len,netData.data,BitConverter.ToString(m_cBuffer,0,4)));
                     }
                     else
                     {
