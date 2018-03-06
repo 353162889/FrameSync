@@ -1,6 +1,15 @@
 import  protobuf.PacketOpcode_pb2;
 import  sys
+import struct
 if __name__ == '__main__' :
+    print("len(!BBI)",struct.calcsize("!BBI"))
+    print("len(BB)",struct.calcsize("BB"))
+    print("len(I)",struct.calcsize("I"))
+    print("len(IBB)", struct.calcsize("IBB"))
+    print("len(HI)", struct.calcsize("HI"))
+    print("len(BBH)", struct.calcsize("BBH"))
+    print("len(BI)", struct.calcsize("BI"))
+    '''
     dd =__import__("protobuf.PacketOpcode_pb2",fromlist=True)
     dd1 = getattr(dd,"_PACKETOPCODE")
     for v in dd1.values:
@@ -24,3 +33,4 @@ if __name__ == '__main__' :
     mode = sys.modules.get("server.MsgHandle.Msg_Test_Handle", None)
     print(mode)
     #print(ttt.__all__)
+    '''

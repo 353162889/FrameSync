@@ -4,6 +4,7 @@ import threading
 import queue
 import struct
 import io
+import time
 
 from errno import EALREADY, EINPROGRESS, EWOULDBLOCK, ECONNRESET, EINVAL, \
     ENOTCONN, ESHUTDOWN, EISCONN, EBADF, ECONNABORTED, EPIPE, EAGAIN, \
@@ -18,7 +19,11 @@ class MsgPacket:
 
     @staticmethod
     def isFramePacket(packetId):
-        return packetId > 9999;
+        return packetId > 9999
+
+    @staticmethod
+    def isFrameHeadPacket(packetId):
+        return packetId == 0
 
     def __init__(self, headBytes=None,packetID = None):
         self.head = headBytes
@@ -26,7 +31,7 @@ class MsgPacket:
         self.buff = None
         self.proto = None
         if headBytes is not None:
-            unpack = struct.unpack("HH", self.head)
+            unpack = struct.unpack("=HH", self.head)
             self.packetID = unpack[0]
             self.packetSize = unpack[1]
         if packetID is not None:
@@ -49,10 +54,10 @@ class MsgPacket:
             if self.buff is not None:
                 length = len(self.buff)
                 self.packetSize = length
-                self.serializeBytes = struct.pack("HH{0}s".format(length), self.packetID,self.packetSize,self.buff)
+                self.serializeBytes = struct.pack("=HH{0}s".format(length), self.packetID,self.packetSize,self.buff)
             else:
                 self.packetSize = 0
-                self.serializeBytes = struct.pack("HH", self.packetID,self.packetSize)
+                self.serializeBytes = struct.pack("=HH", self.packetID,self.packetSize)
 
     def getSerializeBuff(self):
         return self.serializeBytes
@@ -155,7 +160,6 @@ class PacketSender:
         self.connection = conn
         self.bytesIO = io.BytesIO()
         self.packetQueue = queue.Queue()
-        self.dataLength = 0
 
     def sendPacket(self,packet):
         if packet is not None:
@@ -167,9 +171,15 @@ class PacketSender:
     def sendData(self):
         if not self.packetQueue.empty():
             pack = self.packetQueue.get()
-            pack.serialize()
-            print("send to {0} packetID = {1}".format(self.connection.id,pack.packetID))
-            serializeBuff = pack.getSerializeBuff()
+            serializeBuff = None
+            if MsgPacket.isFramePacket(pack.packetID) or MsgPacket.isFrameHeadPacket(pack.packetID):
+                serializeBuff = pack.buff
+            else:
+                pack.serialize()
+                print("send to {0} packetID = {1}".format(self.connection.id,pack.packetID))
+                serializeBuff = pack.getSerializeBuff()
+            if not serializeBuff:
+                print("can not send none pack,packId = {0}".format(pack.packetID))
             self.__send_buff(serializeBuff)
 
     def __send_buff(self, buff):
@@ -181,6 +191,7 @@ class PacketSender:
                 self.connection.lostConnection()
                 break
             sendLen += l
+
 
 #不处理逻辑功能
 class Connection:
@@ -203,9 +214,6 @@ class Connection:
 
     def leaveRoom(self):
         self.roomId = -1
-
-    def addFramePacket(self,pack):
-        return
 
     def lostConnection(self):
         print("lostConnection[id] "+str(self.id))
@@ -232,8 +240,7 @@ class Connection:
         if not self.receiver.packetQueue.empty():
             pack = self.receiver.packetQueue.get()
             if pack is not None:
-                if pack.proto is not None:
-                    return pack
+                return pack
         return None
 
     def sendPacket(self,pack):
@@ -243,11 +250,25 @@ class Connection:
         pack = MsgPacket(packetID=opcode)
         pack.writeProto(proto)
         self.sendPacket(pack)
+
+    #发送帧头包1+1+4
+    def sendFrameHeadPacket(self,frameIndex,frameCount):
+        pack = MsgPacket(packetID=0)
+        buff = struct.pack("=HI",frameCount,frameIndex)
+       # print("sendFrameHeadPacket,frameCount={0},frameIndex={1},buffLen = {2},buff={3}".format(frameCount,frameIndex,len(buff),str(buff)))
+        pack.writeBuff(buff)
+        self.sendPacket(pack)
+
 class Room:
     def __init__(self,id):
         self.id = id
         self.__mapConn = {}
         self.__delConn = []
+        self.__frameIndex = 1
+        self.__mapFramePackets = {}
+        self.__lstCurPacket = None
+        self.__tempLstPacket = []
+        self.__preTime = time.time()
 
     def add(self,conn):
         if self.getConn(conn.id) is None:
@@ -276,9 +297,60 @@ class Room:
                 self.__delConn.append(conn.id)
         for connId in self.__delConn:
             del self.__mapConn[connId]
+        succ = False
         if len(self.__mapConn) <= 0:
-            return False
-        return True
+            succ = False
+        succ = True
+        if not succ:
+            return succ;
+        #做房间帧消息处理
+        curTime = time.time()
+        if(curTime - self.__preTime > 0.05):
+            self.__preTime += 0.05
+            #发送数据包
+            self.sendMsgPacket()
+            self.__lstCurPacket = None
+        return succ
+
+    def sendMsgPacket(self):
+        self.__tempLstPacket.clear()
+        if self.__lstCurPacket:
+            if len(self.__lstCurPacket) > 255:
+                for index in range(256):
+                    self.__tempLstPacket.append(self.__lstCurPacket[index]);
+                #留到下一个帧中
+                self.__lstCurPacket = self.__lstCurPacket[256:]
+                #这里的帧索引会改变
+                self.createNewFrame(self.__frameIndex + 1, self.__lstCurPacket)
+            else:
+                self.__tempLstPacket = self.__lstCurPacket;
+                self.__lstCurPacket = None
+            #发送帧数据
+            for conn in self.__mapConn.values():
+                # 先发送一个帧头包,固定格式 1+1+4
+                conn.sendFrameHeadPacket(self.__frameIndex,len(self.__tempLstPacket))
+                #包的数量不能超过255，如果超过，那么放到下一帧中处理
+                for pack in self.__tempLstPacket:
+                    conn.sendPacket(pack)
+        else:
+            #发送空帧数据
+            for conn in self.__mapConn.values():
+                # 先发送一个帧包,固定格式 1+1+4
+                conn.sendFrameHeadPacket(self.__frameIndex, 0)
+        self.__frameIndex += 1
+
+    def addFramePacket(self,pack):
+        if not self.__lstCurPacket:
+            self.createNewFrame(self.__frameIndex,None)
+        self.__lstCurPacket.append(pack)
+
+    def createNewFrame(self,frameIndex,lst = None):
+        if lst:
+            self.__lstCurPacket = lst;
+        else:
+            self.__lstCurPacket = [];
+        self.__mapFramePackets[frameIndex] = self.__lstCurPacket
+
     def clear(self):
         self.__mapConn.clear()
         self.__delConn.clear()

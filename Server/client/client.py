@@ -14,11 +14,11 @@ class CustomClient:
             info = protobuf.Msg_pb2.Msg_Test_Data()
             info.msg = inp
             bs = info.SerializeToString()
-            self.socket.sendall(struct.pack("HH"+str(len(bs))+"s",1000,len(bs), bs))
+            self.socket.sendall(struct.pack("=HH"+str(len(bs))+"s",1000,len(bs), bs))
             # self.socket.sendall(struct.pack("i"+str(len(inp))+"s",len(bytes(inp))+4,inp))
 
             head_bytes = self.socket.recv(4)
-            unpack = struct.unpack("HH",head_bytes)
+            unpack = struct.unpack("=HH",head_bytes)
             id = unpack[0]
             length = unpack[1]
             data = self.socket.recv(length)
