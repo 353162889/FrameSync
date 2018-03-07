@@ -780,10 +780,11 @@ namespace Framework {
             return (int)value;
         }
 
-        //不允许float转换从FP
-        //public static FP FromFloat(float value) {
-        //    return (FP)value;
-        //}
+        //游戏逻辑不允许使用（外部强转时可用）
+        public static FP FromFloat(float value)
+        {
+            return new FP((long)(value * ONE));
+        }
 
         public static bool IsInfinity(FP value) {
             return value == NegativeInfinity || value == PositiveInfinity;

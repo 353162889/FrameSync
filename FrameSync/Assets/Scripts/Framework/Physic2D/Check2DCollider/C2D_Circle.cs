@@ -17,7 +17,7 @@ namespace Framework
             }
         }
 
-        public C2D_Circle(TSVector2 center,TSVector2 forward, int radius):base(center,forward)
+        public C2D_Circle(TSVector2 center,TSVector2 forward, FP radius):base(center,forward)
         {
             this.radius = radius;
         }
