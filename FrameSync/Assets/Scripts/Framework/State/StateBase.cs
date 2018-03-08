@@ -10,28 +10,79 @@ namespace Framework
         public StateContainerBase Parent { get; set; }
         public bool StateEnabled { get { return mStateEnabled; } }
         protected bool mStateEnabled = false;
+        protected IStateContext m_cContext;
 
-        public virtual void OnEnter()
+        public void _OnEnter(IStateContext context = null)
+        {
+            m_cContext = context;
+            OnEnter();
+            mStateEnabled = true;
+        }
+
+        protected virtual void OnEnter()
         {
 
         }
 
-        public virtual void OnLogicUpdate()
+
+        public void _OnLogicUpdate()
+        {
+            if(mStateEnabled)
+            {
+                OnLogicUpdate();
+            }
+        }
+        protected virtual void OnLogicUpdate()
         {
 
         }
 
-        public virtual void OnUpdate()
+        public void _OnUpdate()
+        {
+            if (mStateEnabled)
+            {
+                OnUpdate();
+            }
+        }
+        protected virtual void OnUpdate()
         {
 
         }
 
-        public virtual void OnLateUpdate()
+        public void _OnLateUpdate()
+        {
+            if(mStateEnabled)
+            {
+                OnLateUpdate();
+            }
+        }
+
+        protected virtual void OnLateUpdate()
         {
 
         }
 
-        public virtual void OnExit()
+        public void _OnExit()
+        {
+            OnExit();
+            m_cContext = null;
+            mStateEnabled = false;
+        }
+
+
+        protected virtual void OnExit()
+        {
+
+        }
+
+        public void _OnDispose()
+        {
+            OnDispose();
+            m_cContext = null;
+            mStateEnabled = false;
+        }
+
+        protected virtual void OnDispose()
         {
 
         }
