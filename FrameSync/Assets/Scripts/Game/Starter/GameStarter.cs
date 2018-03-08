@@ -60,7 +60,7 @@ namespace Game
             gameObject.AddComponentOnce<ResourceSys>();
             ResourceSys.Instance.Init(true, "Assets/ResourceEx");
             gameObject.AddComponentOnce<UpdateScheduler>();
-            gameObject.AddComponentOnce<TouchDispatcher>(); 
+            gameObject.AddComponentOnce<TouchDispatcher>();
         }
 
         void Update()
