@@ -54,7 +54,7 @@ def show_select_view(excel_path_dir,generate_xml_dir):
         except:
             repeat = True
 
-    try:
+    #try:
         if len(select_indexs) > 0:
             for select_index in select_indexs:
                 #print(select_index)
@@ -65,9 +65,9 @@ def show_select_view(excel_path_dir,generate_xml_dir):
                 select_file_path = os.path.join(excel_path_dir,select_file_name)
                 export_xls_to_xmls(select_file_path,generate_xml_dir)
 
-        print("导出配置成功")
-    except:
-        print("导出配置失败")
+      #  print("导出配置成功")
+    #except:
+     #   print("导出配置失败")
 
 
 #将excel导出到xml的接口
@@ -77,7 +77,9 @@ def export_xls_to_xmls(excel_absolute_path,generate_xml_dir):
     sheet_names=data.sheet_names()
     for index in range(len(sheets)):
         export_table_to_xml(sheets[index], generate_xml_dir,absolute_path = excel_absolute_path,sheet_name=sheet_names[index])
+        export_table_to_csharp(sheets[index], generate_xml_dir,absolute_path = excel_absolute_path,sheet_name=sheet_names[index])
 
+#将一个表单导出到xml接口
 def export_table_to_xml(table,generate_xml_dir,absolute_path = None,sheet_name = None):
     if table.nrows < 3:
         return
@@ -128,7 +130,7 @@ def is_cell_null(cell):
 def convert_cell_to_value(key,cell):
     func = dic_value.get(key,None)
     if func is None:
-        raise Exception("找不到类型为{0}的解析函数".format(key))
+        raise Exception("dic_value{0}的解析函数".format(key))
     return func(cell)
 
 def convert_cell_to_int(cell):
@@ -154,9 +156,106 @@ dic_value = {
     "string":convert_cell_to_string,
 }
 
+def export_table_to_csharp(table,generate_csharp_dir,absolute_path = None,sheet_name = None):
+    if table.nrows < 3:
+        return
+    if table.ncols < 2:
+        return
+    name_cell = table.cell(0, 0)
+    if is_cell_null(name_cell):
+        return
+    node_cell = table.cell(1,0)
+    if is_cell_null(node_cell):
+        return
+    csharp_name = name_cell.value + ".cs"
+    generate_csharp_path = os.path.join(generate_csharp_dir, csharp_name)
+    f = open(generate_csharp_path, 'w')
+    f.write("using System;\n")
+    f.write("using System.Security;\n")
+    f.write("using Framework;\n")
+    f.write("namespace GameData\n")
+    f.write("{\n")
+    f.write("   public class {0}\n".format(name_cell.value))
+    f.write("   {\n")
+    for col in range(1, table.ncols):
+        type_cell = table.cell(0, col)
+        if is_cell_null(type_cell):
+            continue
+        key_cell = table.cell(1, col)
+        if is_cell_null(key_cell):
+            raise Exception("{0}导出配置的第{1}行第{2}列的key值不能为空".format(name_cell.value, 2, col + 1))
+        str = csharp_convert_key_to_string(type_cell.value,key_cell.value)
+        f.write(str)
+        f.write("\n")
+    f.write("public {0}(SecurityElement element)\n".format(name_cell.value))
+    f.write("       {\n")
+    f.write("           SecurityElement config = element.Children[0] as SecurityElement;")
+    f.write("           foreach (SecurityElement node in config.Children)")
+    f.write("           {\n")
+    for col in range(1, table.ncols):
+        type_cell = table.cell(0, col)
+        if is_cell_null(type_cell):
+            continue
+        key_cell = table.cell(1, col)
+        if is_cell_null(key_cell):
+            raise Exception("{0}导出配置的第{1}行第{2}列的key值不能为空".format(name_cell.value, 2, col + 1))
+        str = csharp_parse_key_to_string(type_cell.value, key_cell.value)
+        f.write(str)
+        f.write("\n")
+    f.write("           }\n")
+    f.write("       }\n")
+    f.write("   }\n")
+    f.write("}")
+    f.close()
+    print("导出配置{0}-{1}到{2}".format(absolute_path, sheet_name, generate_csharp_path))
+
+def csharp_parse_key_to_string(type,key):
+    func = csharp_parse_property_value.get(type,None)
+    if func is None:
+        raise Exception("csharp_dic_property_value{0}的解析函数".format(key))
+    return func(key)
+
+def csharp_parse_int_property(key):
+    return "{0} = int.Parse(node.Attribute(\"{1}\t);".format(key,key)
+
+def csharp_parse_float_property(key):
+    return "{0} = FP.FromSourceLong(int.Parse(node.Attribute(\"{1}\")));".format(key,key)
+
+def csharp_parse_string_property(key):
+    return "{0} = node.Attribute(\"{1}\")".format(key,key)
+
+csharp_parse_property_value = {
+    "int": csharp_parse_int_property,
+    "float":csharp_parse_float_property,
+    "string":csharp_parse_string_property,
+}
+
+def csharp_convert_key_to_string(type,key):
+    func = csharp_dic_parse_property_value.get(type,None)
+    if func is None:
+        raise Exception("csharp_dic_parse_property_value {0}的解析函数".format(key))
+    return func(key)
+
+def csharp_int_property(key):
+    return "public int "+key+" { get; private set; }"
+def csharp_float_property(key):
+    return "public FP "+key+" { get; private set; }"
+
+def csharp_string_property(key):
+    return "public string "+key+" { get; private set; }"
+
+csharp_dic_parse_property_value = {
+    "int": csharp_int_property,
+    "float":csharp_float_property,
+    "string":csharp_string_property,
+}
+
 if __name__ == "__main__":
+    '''
     if len(sys.argv) > 2:
         excel_dir = str(sys.argv[1])
         xml_dir = str(sys.argv[2])
         show_select_view(excel_dir,xml_dir)
+'''
+    show_select_view("D:/PythonWorkspace/ExportExcelToXml/res","D:/PythonWorkspace/ExportExcelToXml/res")
     #export_xls_to_xmls("D:/PythonWorkspace/ExportExcelToXml/res/测试表格.xlsx","D:/PythonWorkspace/ExportExcelToXml/res");
