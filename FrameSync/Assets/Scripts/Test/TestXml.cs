@@ -15,7 +15,6 @@ public class TestXml : MonoBehaviour
         gameObject.AddComponent<ResourceSys>();
         ResourceSys.Instance.Init(true, "Assets/ResourceEx");
         //ResourceSys.Instance.GetResource("ResTest.xml",OnSucc);
-        gameObject.AddComponentOnce<ResCfgSys>();
         ResCfgSys.Instance.LoadResCfgs("",OnFinish);
     }
 

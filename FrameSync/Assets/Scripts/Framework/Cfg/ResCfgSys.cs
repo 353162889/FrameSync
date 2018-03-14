@@ -5,10 +5,11 @@ using System.Reflection;
 using System.Text;
 using System.Security;
 using Mono.Xml;
+using UnityEngine;
 
 namespace Framework
 {
-    public class ResCfgSys : SingletonMonoBehaviour<ResCfgSys>
+    public class ResCfgSys : Singleton<ResCfgSys>
     {
         public class DataReader<T>
         {
@@ -45,6 +46,8 @@ namespace Framework
         private Dictionary<string, ResCfgInfo> m_dicCfgInfo;
         private MultiResourceLoader m_resLoader;
         private Action m_finishAction;
+
+
         public void LoadResCfgs(string resDir, Action OnFinish = null)
         {
             m_finishAction = OnFinish;
@@ -84,14 +87,35 @@ namespace Framework
                 m_dicCfgInfo.Add(cfgInfo.xmlPath, cfgInfo);
                 //CLog.LogColorArgs(CLogColor.Red,type.Name,propertyInfo != null ? propertyInfo.Name : "null");
             }
-            //下载对应的资源
-            m_resLoader = new MultiResourceLoader(ResourceSys.Instance);
             List<string> names = new List<string>();
             foreach (var item in m_dicCfgInfo)
             {
                 names.Add(item.Value.xmlPath);
             }
-            m_resLoader.LoadList(names,OnComplete,OnProgress,ResourceType.Text);
+            //如果是播放模式
+            if (Application.isPlaying)
+            {
+                //下载对应的资源
+                m_resLoader = new MultiResourceLoader(ResourceSys.Instance);
+                m_resLoader.LoadList(names, OnComplete, OnProgress, ResourceType.Text);
+            }
+            else
+            {
+                for (int i = 0; i < names.Count; i++)
+                {
+                    var textAsset = UnityEditor.AssetDatabase.LoadAssetAtPath<TextAsset>(names[i]);
+                    if(textAsset != null)
+                    {
+                        ParseData(names[i], textAsset.text);
+                    }
+                }
+                if (null != m_finishAction)
+                {
+                    Action action = m_finishAction;
+                    m_finishAction = null;
+                    action();
+                }
+            }
         }
 
         private void OnComplete(MultiResourceLoader loader)
@@ -145,15 +169,16 @@ namespace Framework
             return DataReader<T>.lstData;
         }
 
-        protected override void OnDestroy()
+        public override void Dispose()
         {
-            if(m_resLoader != null)
+            if (m_resLoader != null)
             {
                 m_resLoader.Clear();
                 m_resLoader = null;
             }
             m_finishAction = null;
-            base.OnDestroy();
+            base.Dispose();
         }
+
     }
 }
