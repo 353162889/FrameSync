@@ -7,3 +7,4 @@ Library
 FrameSync.sln
 logInfo.log
 FrameSync.csproj
+/FrameSync/FrameSync.Editor.csproj
