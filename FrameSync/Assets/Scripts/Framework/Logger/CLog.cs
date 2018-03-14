@@ -30,6 +30,39 @@ namespace Framework
             //logRecorder.Log(msg);
         }
 
+        public static void LogArgs(params object[] args)
+        {
+            if (args.Length <= 0) return;
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < args.Length; i++)
+            {
+                sb.Append(args[i].ToString());
+                if(i < args.Length - 1)
+                {
+                    sb.Append("\t");
+                }
+            }
+            Debug.Log(sb.ToString());
+        }
+
+        public static void LogColorArgs(string color,params object[] args)
+        {
+            if (args.Length <= 0) return;
+            StringBuilder sb = new StringBuilder();
+            sb.Append("<color=" + color + ">");
+            for (int i = 0; i < args.Length; i++)
+            {
+                sb.Append(args[i].ToString());
+                if (i < args.Length - 1)
+                {
+                    sb.Append("\t");
+                }
+            }
+            sb.Append("</color>");
+            Debug.Log(sb.ToString());
+        }
+
+
         public static void LogError(object msg)
         {
             UnityEngine.Debug.LogError(msg);

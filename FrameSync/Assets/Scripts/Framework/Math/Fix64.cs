@@ -786,6 +786,13 @@ namespace Framework {
             return new FP((long)(value * ONE));
         }
 
+        public static FP FromSourceLong(long value)
+        {
+            FP fp = new FP();
+            fp._serializedValue = value;
+            return fp;
+        }
+
         public static bool IsInfinity(FP value) {
             return value == NegativeInfinity || value == PositiveInfinity;
         }
