@@ -7,28 +7,43 @@ namespace Framework
 {
     public class StateContainerBase : StateBase
     {
+        public delegate void StateContainerHandler(int oldState, int newState);
+        public event StateContainerHandler OnBeforeSwitchState;
+        public event StateContainerHandler OnAfterSwitchState;
         protected Dictionary<int, StateBase> m_dicState = new Dictionary<int, StateBase>();
         protected StateBase m_cCurState = null;
 
         public virtual bool SwitchState(int stateKey,IStateContext context = null)
         {
+            int oldStateKey = m_cCurState == null ? -1 : m_cCurState.key;
+            if(null != OnBeforeSwitchState)
+            {
+                OnBeforeSwitchState(oldStateKey, stateKey);
+            }
             if(m_cCurState != null)
             {
                 m_cCurState._OnExit();
             }
             m_cCurState = GetState(stateKey);
+            bool succ = false;
             if(m_cCurState != null)
             {
                 m_cCurState._OnEnter(context);
+                succ = true;
             }
-            return false;
+            if(null != OnAfterSwitchState)
+            {
+                OnAfterSwitchState(oldStateKey, stateKey);
+            }
+            return succ;
         }
 
         public virtual bool AddState(int key,StateBase state,bool defaultState = false)
         {
             if (m_dicState.ContainsKey(key)) return false;
             m_dicState.Add(key, state);
-            if(defaultState)
+            state.UpdateKey(key);
+            if (defaultState)
             {
                 m_cCurState = state;
             }
@@ -44,6 +59,7 @@ namespace Framework
                 m_cCurState._OnExit();
                 m_cCurState = null;
             }
+            state.UpdateKey(-1);
             state._OnDispose();
             m_dicState.Remove(key);
             return true;
