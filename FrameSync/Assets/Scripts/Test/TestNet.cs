@@ -10,6 +10,7 @@ public class TestNet : MonoBehaviour {
 	void Start () {
         gameObject.AddComponentOnce<NetSys>();
         gameObject.AddComponentOnce<FrameSyncSys>();
+        NetSys.Instance.CreateChannel(NetChannelType.Game, NetChannelModeType.StandAlone);
         FrameSyncSys.Instance.StartRun();
 
         NetSys.Instance.BeginConnect(NetChannelType.Game, "127.0.0.1", 8080, OnCallback);

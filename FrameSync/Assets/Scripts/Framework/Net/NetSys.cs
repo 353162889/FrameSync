@@ -13,16 +13,30 @@ namespace Framework
         {
             int len = Enum.GetValues(typeof(NetChannelType)).Length;
             m_arrChannel = new NetChannel[len];
-            for (int i = 0; i < len; i++)
-            {
-                CreateChannel((NetChannelType)i);
-            }
-          
+            //for (int i = 0; i < len; i++)
+            //{
+            //    CreateChannel((NetChannelType)i);
+            //}
         }
 
-        protected void CreateChannel(NetChannelType channel)
+        public void CreateChannel(NetChannelType channel,NetChannelModeType channelMode)
         {
-            m_arrChannel[(int)channel] = new NetChannel(channel,new TCPSocketClient());
+            var curChannel = GetChannel(channel);
+            if(curChannel != null)
+            {
+                curChannel.DisConnect();
+            }
+            curChannel = null;
+            switch(channelMode)
+            {
+                case NetChannelModeType.Tcp:
+                    curChannel = new NetChannel(channel,new TCPSocketClient());
+                    break;
+                case NetChannelModeType.StandAlone:
+                    curChannel = new NetChannel(channel, new StandAloneSocketClient());
+                    break;
+            }
+            m_arrChannel[(int)channel] = curChannel;
         }
 
         protected NetChannel GetChannel(NetChannelType type)

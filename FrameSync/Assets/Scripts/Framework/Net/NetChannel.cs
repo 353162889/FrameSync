@@ -11,6 +11,13 @@ namespace Framework
         Game = 0
     }
 
+    public enum NetChannelModeType
+    {
+        Tcp,
+        StandAlone,
+    }
+
+
     /// <summary>
     /// 主要处理一个网络连接，网络事件处理（包括回调）,心跳，重连
     /// </summary>

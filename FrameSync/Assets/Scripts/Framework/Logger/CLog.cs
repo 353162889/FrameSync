@@ -12,7 +12,7 @@ namespace Framework
 
         public static void Init() { }
 
-        public static void Log(string msg, string color = "#ffffff")
+        public static void Log(string msg, string color = "#000000")
         {
             StringBuilder sb = new StringBuilder();
             if (string.IsNullOrEmpty(color))
