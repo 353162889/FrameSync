@@ -56,6 +56,14 @@ namespace Game
         protected void InitSingleton()
         {
             gameObject.AddComponentOnce<NetSys>();
+            if (netMode == GameNetMode.Network)
+            {
+                NetSys.Instance.CreateChannel(NetChannelType.Game,NetChannelModeType.Tcp);
+            }
+            else if(netMode == GameNetMode.StandAlone)
+            {
+                NetSys.Instance.CreateChannel(NetChannelType.Game, NetChannelModeType.StandAlone);
+            }
             gameObject.AddComponentOnce<FrameSyncSys>();
             gameObject.AddComponentOnce<ResourceSys>();
             ResourceSys.Instance.Init(true, "Assets/ResourceEx");

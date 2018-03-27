@@ -7,15 +7,19 @@ namespace Framework
 {
     public class FrameSyncSys : SingletonMonoBehaviour<FrameSyncSys>
     {
-        public static int LOGIC_FRAME_DELTA = 50;  //逻辑帧设定为20帧/s
+        private static FP OnFrameTime = FP.One / 20;
         public delegate void FrameSyncUpdateHandler();
         public event FrameSyncUpdateHandler OnFrameSyncUpdate;
         private bool m_bStartRun;
-        private int m_nFrameIndex;
+        private static int m_nFrameIndex;
+        public static int frameIndex { get { return m_nFrameIndex; } }
+        private static FP m_fpTime;
+        public static FP time { get { return m_fpTime; } }
         protected override void Init()
         {
             m_bStartRun = false;
             m_nFrameIndex = 0;
+            m_fpTime = 0;
         }
 
         public void StartRun()
@@ -30,12 +34,13 @@ namespace Framework
                 bool succ = NetSys.Instance.RunFrameData(NetChannelType.Game, m_nFrameIndex);
                 if (succ)
                 {
+                    m_nFrameIndex++;
+                    m_fpTime = m_fpTime + OnFrameTime;
                     if (null != OnFrameSyncUpdate)
                     {
                         OnFrameSyncUpdate();
                     }
-
-                    m_nFrameIndex++;
+                    CLog.Log("recv frame=:"+frameIndex + ",time="+time);
                 }
             }
         }

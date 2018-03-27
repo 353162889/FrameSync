@@ -12,7 +12,8 @@ namespace Game
     {
         protected override void HandleMsg(Frame_Msg_Test_Data msg)
         {
-            CLog.Log("Frame_Msg_Test_Msg:msg="+msg.msg);
+            CLog.Log("Frame_Msg_Test_Msg:msg="+msg.msg+",frameIndex="+FrameSyncSys.frameIndex + ",frameTime="+FrameSyncSys.time);
+
         }
     }
 }
