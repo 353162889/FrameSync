@@ -1,5 +1,0 @@
-<?xml version="1.0" ?>
-<root>
-	<restest1 desc="sss" id="3" point="4294967296" test_repeated_float="4294967296,4294967296,4294967296,4294967296,4294967296" test_repeated_int="1,1,1,1,1" test_repeated_string="aaaa,bbbb,cccc"/>
-	<restest1 desc="aaa" id="4" point="9544373200434894" test_repeated_float="8589934592,8589934592,8589934592,8589934592,8589934592" test_repeated_int="2,2,2,2,2" test_repeated_string="cccc,bbbb,aaaa"/>
-</root>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using Framework;
+using GameData;
 
 namespace Game
 {
@@ -23,17 +24,37 @@ namespace Game
         public GameVersionMode versionMode = GameVersionMode.Debug;
         public GameNetMode netMode = GameNetMode.StandAlone;
         public static StateContainerBase GameGlobalState { get; private set; }
-        void Awake()
+        void Start()
+        {
+            InitSingleton();
+            ResCfgSys.Instance.LoadResCfgs("Data", OnLoadCfgs);
+        }
+
+        private void OnLoadCfgs()
+        {
+            InitUI();
+            InitState();
+        }
+
+        private void InitState()
         {
             var stateData = GameStateCfg.GetConfig(versionMode, netMode);
-            if(stateData == null)
+            if (stateData == null)
             {
-                CLog.LogError("没找版本模式为:"+versionMode+",网络模式为:"+netMode+"的状态配置");
+                CLog.LogError("没找版本模式为:" + versionMode + ",网络模式为:" + netMode + "的状态配置");
                 return;
             }
-            InitSingleton();
             GameGlobalState = (StateContainerBase)CreateState(stateData);
             GameGlobalState._OnEnter();
+        }
+
+        private void InitUI()
+        {
+            List<ResUI> lst = ResCfgSys.Instance.GetCfgLst<ResUI>();
+            for (int i = 0; i < lst.Count; i++)
+            {
+                ViewSys.Instance.RegistUIPath(lst[i].name, lst[i].prefab);
+            }
         }
 
         protected StateBase CreateState(GameStateData stateData)
@@ -63,12 +84,17 @@ namespace Game
             else if(netMode == GameNetMode.StandAlone)
             {
                 NetSys.Instance.CreateChannel(NetChannelType.Game, NetChannelModeType.StandAlone);
+                gameObject.AddComponentOnce<ClientServer>();
+                ClientServer.Instance.StartServer();
             }
             gameObject.AddComponentOnce<FrameSyncSys>();
             gameObject.AddComponentOnce<ResourceSys>();
             ResourceSys.Instance.Init(true, "Assets/ResourceEx");
             gameObject.AddComponentOnce<UpdateScheduler>();
             gameObject.AddComponentOnce<TouchDispatcher>();
+            GameObject uiGO = transform.Find("UIContainer").gameObject;
+            uiGO.AddComponentOnce<ViewSys>();
+           
         }
 
         void Update()
@@ -77,6 +103,27 @@ namespace Game
             {
                 GameGlobalState._OnUpdate();
             }
+
+            //if (Input.GetMouseButtonUp(0))
+            //{
+            //    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            //    RaycastHit hitInfo;
+            //    if (Physics.Raycast(ray, out hitInfo))
+            //    {
+            //        if (null != PvpPlayerMgr.Instance.mainPlayer)
+            //        {
+            //            Unit unit = PvpPlayerMgr.Instance.mainPlayer.unit;
+            //            if (null != unit)
+            //            {
+            //                //unit.ReqMove(TSVector.FromUnitVector3(hitInfo.point));
+            //                var direction = TSVector.FromUnitVector3(hitInfo.point - unit.transform.position);
+            //                direction.Normalize();
+            //                CLog.LogColorArgs("#ff0000", direction);
+            //                unit.ReqMoveForward(direction);
+            //            }
+            //        }
+            //    }
+            //}
         }
 
         void LateUpdate()

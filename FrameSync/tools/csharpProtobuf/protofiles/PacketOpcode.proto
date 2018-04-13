@@ -10,6 +10,20 @@ enum PacketOpcode
 	C2S_JoinOrCreateRoom = 1000;
 	S2C_JoinOrCreateRoom = 1001;
 
+	//客户端请求准备完成
+	C2S_GameReady = 1002;
+	//服务器发送开始战斗
+	S2C_StartBattle = 1003;
+	
+
 	//帧同步包 >= 10000
 	Frame_Msg_Test = 10000;
+
+	Frame_CreatePlayer = 10001;
+	Frame_ReqMovePath = 10002;
+	Frame_ReqMovePoint = 10003;
+	Frame_ReqSetPosition = 10004;
+	Frame_ReqSetForward = 10005;
+	Frame_ReqMoveForward = 10006;
+	Frame_ReqStopMove = 10007;
 }

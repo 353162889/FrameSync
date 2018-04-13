@@ -8,23 +8,28 @@ namespace Framework
     public class FrameSyncSys : SingletonMonoBehaviour<FrameSyncSys>
     {
         private static FP OnFrameTime = FP.One / 20;
-        public delegate void FrameSyncUpdateHandler();
+        public delegate void FrameSyncUpdateHandler(FP deltaTime);
         public event FrameSyncUpdateHandler OnFrameSyncUpdate;
-        private bool m_bStartRun;
+        private bool m_bStartRun = false;
         private static int m_nFrameIndex;
         public static int frameIndex { get { return m_nFrameIndex; } }
         private static FP m_fpTime;
         public static FP time { get { return m_fpTime; } }
-        protected override void Init()
-        {
-            m_bStartRun = false;
-            m_nFrameIndex = 0;
-            m_fpTime = 0;
-        }
 
         public void StartRun()
         {
             m_bStartRun = true;
+            m_nFrameIndex = 0;
+            m_fpTime = 0;
+            OnFrameSyncUpdate = null;
+        }
+
+        public void StopRun()
+        {
+            m_bStartRun = false;
+            m_nFrameIndex = 0;
+            m_fpTime = 0;
+            OnFrameSyncUpdate = null;
         }
 
         void Update()
@@ -38,9 +43,8 @@ namespace Framework
                     m_fpTime = m_fpTime + OnFrameTime;
                     if (null != OnFrameSyncUpdate)
                     {
-                        OnFrameSyncUpdate();
+                        OnFrameSyncUpdate(OnFrameTime);
                     }
-                    CLog.Log("recv frame=:"+frameIndex + ",time="+time);
                 }
             }
         }

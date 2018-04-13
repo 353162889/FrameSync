@@ -793,6 +793,11 @@ namespace Framework {
             return fp;
         }
 
+        public long ToSourceLong()
+        {
+            return this._serializedValue;
+        }
+
         public static bool IsInfinity(FP value) {
             return value == NegativeInfinity || value == PositiveInfinity;
         }

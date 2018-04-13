@@ -16,6 +16,8 @@ namespace Framework
         private AssetBundleFile _assetBundleFile;
 
         public bool ResourcesLoadMode { get; private set; }
+        private string _resRootDir;
+        public string ResRootDir { get { return _resRootDir; } }
 
         public void Init(bool resourceLoadMode,string resRootDir)
         {
@@ -26,6 +28,7 @@ namespace Framework
             _resLoader.OnDone += OnResourceDone;
             ResourcesLoadMode = resourceLoadMode;
             ResourceFileUtil resUtil = gameObject.AddComponentOnce<ResourceFileUtil>();
+            _resRootDir = resRootDir;
             resUtil.Init(resRootDir);
             _assetBundleFile = gameObject.AddComponentOnce<AssetBundleFile>();
         }

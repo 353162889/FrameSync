@@ -36,6 +36,7 @@ namespace Framework
         private string m_sViewName;
         private int m_iHashCode;
         public string viewName { get { return m_sViewName; } set { m_sViewName = value; m_iHashCode = m_sViewName.GetHashCode(); } }
+        public string viewPath { get; set; }
 
         public List<BaseSubView> _subViews;
 
@@ -124,8 +125,7 @@ namespace Framework
         {
             this.m_eStatus = ViewStatus.Initing;
             //加载资源
-            string uiPath = this.viewName;
-            ResourceSys.Instance.GetResource(uiPath, OnResourceLoaded);
+            ResourceSys.Instance.GetResource(viewPath, OnResourceLoaded);
         }
 
         private void OnResourceLoaded(Resource res)
@@ -136,6 +136,12 @@ namespace Framework
             UnityEngine.Object objPrefab = m_cResource.GetAsset(null);
             this.MainGO = GameObject.Instantiate(objPrefab) as GameObject;
            
+            if (this.MainGO != null)
+            {
+                this.MainGO.transform.SetParent(ViewSys.Instance.Root2D.transform, false);
+                this.MainGO.name = this.viewName;
+            }
+
             this._subViews = this.BuildSubViews();
             if (this._subViews != null)
             {
@@ -145,13 +151,6 @@ namespace Framework
                     this._subViews[i].viewController = this;
                 }
             }
-
-            if (this.MainGO != null)
-            {
-                this.MainGO.transform.SetParent(ViewSys.Instance.Root2D.transform, false);
-                this.MainGO.name = this.viewName;
-            }
-
 
             if (this.MainGO != null)
             {
@@ -299,7 +298,7 @@ namespace Framework
         protected virtual List<BaseSubView> BuildSubViews()
         {
             //默认只有一个view，支持重写BuildSubViews
-            Type type = Type.GetType(viewName);
+            Type type = Type.GetType("Game."+viewName);
             if (type == null)
             {
                 return null;

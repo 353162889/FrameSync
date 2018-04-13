@@ -47,7 +47,7 @@ namespace Framework
         //监听回复消息
         public void SendMsg(NetChannelType channel,short sendOpcode,short receiveOpcode, object data,MsgCallback callback)
         {
-            AddMsgCallback(channel, receiveOpcode, callback);
+            AddMsgCallback(channel, receiveOpcode, callback,true);
             SendMsg(channel, sendOpcode, data);
         }
 
