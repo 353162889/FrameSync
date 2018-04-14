@@ -80,6 +80,8 @@ namespace Framework
                     CLog.LogError("配置名称:"+type.Name+ "找不到唯一key的定义ResCfgAttribute");
                     continue;
                 }
+                string path = resDir + type.Name + ".xml";
+                //考虑下需要过滤不在此目录的文件
                 ResCfgInfo cfgInfo = new ResCfgInfo();
                 cfgInfo.xmlPath = resDir + type.Name + ".xml";
                 cfgInfo.type = type;
@@ -147,7 +149,8 @@ namespace Framework
             ResCfgInfo info;
             if(m_dicCfgInfo.TryGetValue(path, out info))
             {
-                Type dataReaderTType = typeof(ResCfgSys).GetNestedType("DataReader`1");
+                Type dataReaderTType = typeof(DataReader<>);
+                //Type dataReaderTType = typeof(ResCfgSys).GetNestedType("DataReader`1");
                 Type dataReaderDataType = dataReaderTType.MakeGenericType(new Type[] { info.type});
                 MethodInfo addMethod = dataReaderDataType.GetMethod("Add", BindingFlags.Static | BindingFlags.Public);
                 foreach (SecurityElement node in element.Children)

@@ -9,9 +9,8 @@ namespace Game
     public enum GameStateType
     {
         Root,
-        Start,
-        Loading,
-        Gaming
+        GameOut,
+        GameIn,
     }
 
     public class GameStateData
@@ -41,7 +40,7 @@ namespace Game
                 }
                 else if(netMode == GameNetMode.StandAlone)
                 {
-                    return ReleaseNetwork;
+                    return ReleaseStandAlone;
                 }
             }
             else if(versionMode == GameVersionMode.Debug)
@@ -52,7 +51,7 @@ namespace Game
                 }
                 else if (netMode == GameNetMode.StandAlone)
                 {
-                    return ReleaseNetwork;
+                    return ReleaseStandAlone;
                 }
             }
             return null;
@@ -63,9 +62,16 @@ namespace Game
     {
         public static GameStateData ReleaseNetwork = new GameStateData(GameStateType.Root,typeof(StateContainerBase),false,
             new GameStateData[] {
-                new GameStateData(GameStateType.Start,typeof(GS_Start),true),
-                new GameStateData(GameStateType.Loading,typeof(GS_Loading),false),
-                new GameStateData(GameStateType.Gaming,typeof(GS_Gaming),false),
+                new GameStateData(GameStateType.GameOut,typeof(GameOut),true),
+                new GameStateData(GameStateType.GameIn,typeof(GameIn),false),
+            });
+    }
+
+    public partial class GameStateCfg
+    {
+        public static GameStateData ReleaseStandAlone = new GameStateData(GameStateType.Root, typeof(StateContainerBase), false,
+            new GameStateData[] {
+                new GameStateData(GameStateType.GameIn,typeof(GameIn),true),
             });
     }
 }

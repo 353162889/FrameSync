@@ -37,12 +37,34 @@ namespace Framework
         private Dictionary<string, BaseViewController> _views = new Dictionary<string, BaseViewController>();
         private DynamicContainer m_cContainer;
 
+        private Dictionary<string, string> m_dicPath;
+
+        public void RegistUIPath(string viewName,string prefabPath)
+        {
+            if(m_dicPath.ContainsKey(viewName))
+            {
+                CLog.LogError("已注册viewName="+viewName+"的配置");
+                return;
+            }
+            m_dicPath.Add(viewName, prefabPath);
+        }
+
+        protected string GetViewPath(string viewName)
+        {
+            string path = "";
+            if(!m_dicPath.TryGetValue(viewName, out path))
+            {
+                CLog.LogError("找不到viewName="+ viewName+"的UI配置");
+            }
+            return path;
+        }
+
         protected override void Init()
         {
             m_root2D = this.gameObject;
             m_transRoot2D = m_root2D.transform as RectTransform;
             m_cCanvas = m_root2D.GetComponent<Canvas>();
-
+            m_dicPath = new Dictionary<string, string>();
             m_cContainer = new DynamicContainer();
             m_cContainer.OnAdd += OnAdd;
             m_cContainer.OnRemove += OnRemove;
@@ -117,6 +139,7 @@ namespace Framework
                 }
                 BaseViewController controller = obj as BaseViewController;
                 controller.viewName = name;
+                controller.viewPath = GetViewPath(name);
                 //_views.Add(name, controller);
                 m_cContainer.Add(controller, param);
             }

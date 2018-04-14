@@ -805,6 +805,16 @@ namespace Framework
             return new TSVector2(this.x, this.y);
         }
 
+        public Vector3 ToUnityVector3()
+        {
+            return new Vector3(this.x.AsFloat(), this.y.AsFloat(), this.z.AsFloat());
+        }
+
+        public static TSVector FromUnitVector3(Vector3 v)
+        {
+            return new TSVector(FP.FromFloat(v.x),FP.FromFloat(v.y),FP.FromFloat(v.z));
+        }
+
     }
 
 }

@@ -1,5 +1,12 @@
 syntax = "proto2";
 package Proto;
+
+message ProtoVector2
+{
+	required int64 x = 1;
+	required int64 y = 2;
+}
+
 //测试包数据结构
 message Msg_Test_Data
 {
@@ -20,8 +27,58 @@ message S2C_JoinOrCreateRoom_Data
 	optional int32 roomId = 2;
 }
 
+message C2S_GameReady_Data
+{
+	
+}
+
+message S2C_StartBattle_Data
+{
+	required int32 seed = 1;
+}
+
 //帧消息
 message Frame_Msg_Test_Data
 {
 	required string msg = 1;
+}
+
+message Frame_CreatePlayer_Data
+{
+	required int64 playerId = 1;
+}
+
+message Frame_ReqMovePath_Data
+{
+	required uint32 unitId = 1;
+	repeated ProtoVector2 paths = 2;
+}
+
+message Frame_ReqMovePoint_Data
+{
+	required uint32 unitId = 1;
+	required ProtoVector2 targetPosition = 2;
+}
+
+message Frame_ReqSetPosition_Data
+{
+	required uint32 unitId = 1;
+	required ProtoVector2 position = 2;
+}
+
+message Frame_ReqSetForward_Data
+{
+	required uint32 unitId = 1;
+	required ProtoVector2 forward = 2;
+}
+
+message Frame_ReqMoveForward_Data
+{
+	required uint32 unitId = 1;
+	required ProtoVector2 forward = 2;
+}
+
+message Frame_ReqStopMove_Data
+{
+	required uint32 unitId = 1;
 }

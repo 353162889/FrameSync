@@ -20,16 +20,16 @@ public class TestXml : MonoBehaviour
 
     private void OnFinish()
     {
-        var lst = ResCfgSys.Instance.GetCfgLst<ResTest>();
-        for (int i = 0; i < lst.Count; i++)
-        {
-            CLog.LogArgs(lst[i].id,lst[i].point,lst[i].desc);
-        }
-        var lst1 = ResCfgSys.Instance.GetCfgLst<ResTest1>();
-        for (int i = 0; i < lst1.Count; i++)
-        {
-            CLog.LogArgs(lst1[i].id, lst1[i].point, lst1[i].desc);
-        }
+        //var lst = ResCfgSys.Instance.GetCfgLst<ResTest>();
+        //for (int i = 0; i < lst.Count; i++)
+        //{
+        //    CLog.LogArgs(lst[i].id,lst[i].point,lst[i].desc);
+        //}
+        //var lst1 = ResCfgSys.Instance.GetCfgLst<ResTest1>();
+        //for (int i = 0; i < lst1.Count; i++)
+        //{
+        //    CLog.LogArgs(lst1[i].id, lst1[i].point, lst1[i].desc);
+        //}
     }
 
     //private void OnSucc(Resource res)

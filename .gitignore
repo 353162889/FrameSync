@@ -8,3 +8,4 @@ FrameSync.sln
 logInfo.log
 FrameSync.csproj
 /FrameSync/FrameSync.Editor.csproj
+/Server/venv3.5
