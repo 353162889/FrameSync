@@ -233,6 +233,13 @@ namespace NodeEditor
             GUILayout.BeginArea(leftArea);
             GUILayout.Label("总描述", m_cToolBarBtnStyle, GUILayout.Width(leftArea.width));
             leftScrollPos = GUILayout.BeginScrollView(leftScrollPos, false, true);
+            if(m_cRoot != null)
+            {
+                float oldWidth= EditorGUIUtility.labelWidth;
+                EditorGUIUtility.labelWidth = 50;
+                NEDataProperties.Draw(m_cRoot.dataProperty, GUILayout.Width(leftArea.width - 50));
+                EditorGUIUtility.labelWidth = oldWidth;
+            }
             GUILayout.EndScrollView();
             GUILayout.EndArea();
 

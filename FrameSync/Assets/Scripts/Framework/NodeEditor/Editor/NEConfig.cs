@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BTCore;
+using Game;
 
 namespace NodeEditor
 {
@@ -27,11 +28,11 @@ namespace NodeEditor
     {
         public static NETreeComposeType[] arrTreeComposeData = new NETreeComposeType[] {
         //一般数据
-        new NETreeComposeType(typeof(BTRoot),new List<Type> { typeof(NENodeAttribute) },"","bytes"),
+        new NETreeComposeType(typeof(SkillTree),new List<Type> { typeof(SkillNodeAttribute), typeof(NENodeAttribute) },"","bytes"),
         };
 
         public static string[] arrTreeComposeTypeDesc = new string[] {
-        "节点",
+        "技能编辑",
     };
     }
 }
