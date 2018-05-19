@@ -23,6 +23,8 @@ namespace NodeEditor
         private GUIStyle m_cToolBarBtnStyle;
         private GUIStyle m_cToolBarPopupStyle;
 
+        private string[] m_arrComposeDesc;
+
         private NENode m_cRoot;
 
         [MenuItem("Tools/NETreeWindow")]
@@ -42,11 +44,16 @@ namespace NodeEditor
         {
             m_cToolBarBtnStyle = null;
             m_cToolBarPopupStyle = null;
-
+            m_arrComposeDesc = new string[NEConfig.arrTreeComposeData.Length];
+            for (int i = 0; i < NEConfig.arrTreeComposeData.Length; i++)
+            {
+                m_arrComposeDesc[i] = NEConfig.arrTreeComposeData[i].desc + "编辑";
+            }
+           
             Load(NEConfig.arrTreeComposeData[m_nTreeComposeIndex]);
         }
 
-        private void Load(NETreeComposeType containType)
+        private void Load(NETreeComposeType conposeType)
         {
             NEData neData = null;
             if (m_cRoot != null)
@@ -55,7 +62,7 @@ namespace NodeEditor
                 {
                     if (item.rootType == m_cRoot.node.GetType())
                     {
-                        if (item == containType)
+                        if (item == conposeType)
                         {
                             neData = GetCurrentTreeNEData();
                         }
@@ -64,7 +71,7 @@ namespace NodeEditor
                 }
                 m_cRoot = null;
             }
-            LoadByAttribute(containType.rootType, containType.lstNodeAttribute);
+            NEUtil.LoadTreeComposeTypes(conposeType, out m_lstNodeType, out m_lstNodeDataType);
 
             //移除根节点
             List<Type> lst = new List<Type>();
@@ -128,27 +135,6 @@ namespace NodeEditor
             return parentNode;
         }
 
-        private void LoadByAttribute(Type rootType, List<Type> types)
-        {
-            m_lstNodeType = new List<Type>();
-            m_lstNodeDataType = new List<Type>();
-            for (int i = 0; i < types.Count; i++)
-            {
-                var assembly = types[i].Assembly;
-                var lstTypes = assembly.GetTypes();
-                for (int j = 0; j < lstTypes.Length; j++)
-                {
-                    var arr = lstTypes[j].GetCustomAttributes(types[i], true);
-                    if (arr.Length > 0)
-                    {
-                        m_lstNodeType.Add(lstTypes[j]);
-                        var attr = arr[0] as NENodeAttribute;
-                        m_lstNodeDataType.Add(attr.nodeDataType);
-                    }
-                }
-            }
-        }
-
         private bool IsRootType(Type type)
         {
             for (int i = 0; i < NEConfig.arrTreeComposeData.Length; i++)
@@ -186,20 +172,23 @@ namespace NodeEditor
         private object CreateNENode(Type neNodeType, Type neNodeDataType, object data = null)
         {
             object node = Activator.CreateInstance(neNodeType);
-            var fieldInfos = neNodeType.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
-            foreach (var item in fieldInfos)
-            {
-                if (item.GetCustomAttributes(typeof(NENodeDataAttribute), true).Length > 0)
-                {
-                    if (data == null)
-                    {
-                        data = Activator.CreateInstance(neNodeDataType);
-                    }
-                    item.SetValue(node, data);
-                    break;
-                }
-            }
+            if(data == null) data = Activator.CreateInstance(neNodeDataType);
+            (node as INENode).data = data;
             return node;
+            //var fieldInfos = neNodeType.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+            //foreach (var item in fieldInfos)
+            //{
+            //    if (item.GetCustomAttributes(typeof(NENodeDataAttribute), true).Length > 0)
+            //    {
+            //        if (data == null)
+            //        {
+            //            data = Activator.CreateInstance(neNodeDataType);
+            //        }
+            //        item.SetValue(node, data);
+            //        break;
+            //    }
+            //}
+            //return node;
         }
 
         void OnDisable()
@@ -285,7 +274,7 @@ namespace NodeEditor
             GUILayout.BeginHorizontal();
             GUILayout.Label("", m_cToolBarBtnStyle, GUILayout.Width(10));
             int oldTreeComposeIndex = m_nTreeComposeIndex;
-            m_nTreeComposeIndex = EditorGUILayout.Popup(m_nTreeComposeIndex, NEConfig.arrTreeComposeTypeDesc, m_cToolBarPopupStyle, GUILayout.Width(100));
+            m_nTreeComposeIndex = EditorGUILayout.Popup(m_nTreeComposeIndex, m_arrComposeDesc, m_cToolBarPopupStyle, GUILayout.Width(100));
             if (oldTreeComposeIndex != m_nTreeComposeIndex)
             {
                 Load(NEConfig.arrTreeComposeData[m_nTreeComposeIndex]);

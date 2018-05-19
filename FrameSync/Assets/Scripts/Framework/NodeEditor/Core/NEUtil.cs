@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml.Serialization;
@@ -128,6 +129,26 @@ namespace NodeEditor
                 catch (System.Exception ex)
                 {
                     Debug.LogError("DeSerializerObject Erro:" + ex.ToString());
+                }
+            }
+        }
+        public static void LoadTreeComposeTypes(NETreeComposeType composeType,out List<Type> lstNodeType,out List<Type> lstNodeDataType)
+        {
+            lstNodeType = new List<Type>();
+            lstNodeDataType = new List<Type>();
+            for (int i = 0; i < composeType.lstNodeAttribute.Count; i++)
+            {
+                var assembly = composeType.lstNodeAttribute[i].Assembly;
+                var lstTypes = assembly.GetTypes();
+                for (int j = 0; j < lstTypes.Length; j++)
+                {
+                    var arr = lstTypes[j].GetCustomAttributes(composeType.lstNodeAttribute[i], true);
+                    if (arr.Length > 0)
+                    {
+                        lstNodeType.Add(lstTypes[j]);
+                        var attr = arr[0] as NENodeAttribute;
+                        lstNodeDataType.Add(attr.nodeDataType);
+                    }
                 }
             }
         }

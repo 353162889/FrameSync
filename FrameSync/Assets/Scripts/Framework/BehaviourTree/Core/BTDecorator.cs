@@ -17,12 +17,7 @@ namespace BTCore
             if (m_cChild != null)
             {
                 Debug.LogError(this.GetType() + " has exist child node! add has override it");
-                if (m_lstChild != null && m_lstChild.Contains(m_cChild))
-                {
-                    m_lstChild.Remove(m_cChild);
-                }
             }
-            base.AddChild(child);
             m_cChild = child;
         }
 

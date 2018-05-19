@@ -30,11 +30,15 @@ namespace Game
 
         protected string m_sPrefab;
 
+        protected AgentObject m_cAgentObj;
+        public AgentObject agentObj { get { return m_cAgentObj; } }
+
         public void Init(uint id,int configId,UnitType type, TSVector position, TSVector forward)
         {
             m_nId = id;
             m_nConfigId = configId;
             m_eUnitType = type;
+            m_cAgentObj = new AgentUnit(this);
             SetPosition(position);
             SetForward(forward);
             SubInit();
@@ -76,24 +80,39 @@ namespace Game
         {
             InitMove();
             InitView();
+            InitSkill();
         }
 
         public virtual void OnUpdate(FP deltaTime)
         {
             UpdateMove(deltaTime);
             UpdateView(deltaTime);
+            UpdateSkill(deltaTime);
         }
 
         public void Dispose()
         {
             DisposeMove();
             DisposeView();
+            ClearAgent();
+            DisposeSkill();
         }
 
         public void Reset()
         {
             ResetMove();
             ResetView();
+            ClearAgent();
+            ResetSkill();
+        }
+
+        private void ClearAgent()
+        {
+            if (m_cAgentObj != null)
+            {
+                m_cAgentObj.Clear();
+                m_cAgentObj = null;
+            }
         }
     }
 }

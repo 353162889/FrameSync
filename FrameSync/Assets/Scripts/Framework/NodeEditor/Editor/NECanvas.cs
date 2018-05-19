@@ -222,6 +222,7 @@ namespace NodeEditor
                                 GUI.changed = true;
                             }
                             m_cDragNode = selectNode;
+                            GUI.FocusControl(null);
                             e.Use();
                         }
                         break;
@@ -254,7 +255,7 @@ namespace NodeEditor
                     if (selectNode != null)
                     {
                         HandleNodeMenu(selectNode, e.mousePosition);
-                        e.Use();
+                        //e.Use();
                     }
                     else
                     {
@@ -325,10 +326,12 @@ namespace NodeEditor
                 count--;
             }
             menu.ShowAsContext();
+            GUI.changed = true;
         }
 
         private void HandleNodeMenu(NENode node, Vector2 mousePosition)
         {
+            GUI.changed = true;
             //GenericMenu menu = new GenericMenu();
             //menu.AddItem(new GUIContent("删除节点"), false, () => { m_lstNode.Remove(node); });
             //menu.ShowAsContext();

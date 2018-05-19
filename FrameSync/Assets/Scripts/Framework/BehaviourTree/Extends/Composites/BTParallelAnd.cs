@@ -16,12 +16,11 @@ namespace BTCore
     /// </summary>
     public class BTParallelAnd : BTComposite
     {
-        protected List<BTResult> m_lstResults;
-        protected int m_iCount;
+        protected List<BTResult> m_lstResults = new List<BTResult>();
+        protected int m_nCount;
         public BTParallelAnd()
         {
-            m_lstResults = new List<BTResult>();
-            m_iCount = 0;
+            m_nCount = 0;
         }
 
         public override void AddChild(BTNode child)
@@ -41,11 +40,11 @@ namespace BTCore
                     if(childResult != BTResult.Running)
                     {
                         m_lstResults[i] = childResult;
-                        m_iCount++;
+                        m_nCount++;
                     }
                 }
             }
-            if(m_iCount == count)
+            if(m_nCount == count)
             {
                 for (int i = 0; i < count; i++)
                 {
@@ -62,7 +61,11 @@ namespace BTCore
 
         public override void Clear()
         {
-            m_iCount = 0;
+            m_nCount = 0;
+            for (int i = 0; i < m_lstResults.Count; i++)
+            {
+                m_lstResults[i] = BTResult.Running;
+            }
             base.Clear();
         }
     }

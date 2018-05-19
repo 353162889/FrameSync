@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,6 +8,7 @@ namespace BTCore
 {
     public class BTBlackBoard
     {
+        public FP deltaTime { get; set; }
         protected List<BTSharedVariable> m_lstVariable;
         public BTBlackBoard()
         {
@@ -33,6 +35,7 @@ namespace BTCore
 
         public void Clear()
         {
+            deltaTime = 0;
             m_lstVariable.Clear();
         }
     }

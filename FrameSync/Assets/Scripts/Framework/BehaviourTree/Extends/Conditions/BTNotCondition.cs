@@ -1,4 +1,5 @@
-﻿using NodeEditor;
+﻿using Framework;
+using NodeEditor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,20 +21,15 @@ namespace BTCore
         {
             if (m_cChild != null)
             {
-                Debug.LogError("BTDecorator has exist child node! add has override it");
-                if (m_lstChild != null && m_lstChild.Contains(m_cChild))
-                {
-                    m_lstChild.Remove(m_cChild);
-                }
+                CLog.LogError("BTDecorator has exist child node! add has override it");
             }
             if (child is BTCondition)
             {
-                base.AddChild(child);
                 m_cChild = (BTCondition)child;
             }
             else
             {
-                Debug.LogError("BTNotCondition AddChild is not BTCondition");
+                CLog.LogError("BTNotCondition AddChild is not BTCondition");
             }
         }
 

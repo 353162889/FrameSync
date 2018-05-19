@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using Framework;
 
 namespace NodeEditor
 {
@@ -41,6 +42,17 @@ namespace NodeEditor
                         EditorGUILayout.BeginHorizontal();
                         Space(3);
                         newValue = EditorGUILayout.FloatField((float)oldValue , options);
+                        EditorGUILayout.EndHorizontal();
+                        break;
+                    case NEDatapRropertyType.FP:
+                        EditorGUILayout.BeginHorizontal();
+                        EditorGUILayout.LabelField(property.Name);
+                        EditorGUILayout.EndHorizontal();
+                        EditorGUILayout.BeginHorizontal();
+                        Space(3);
+                        float oldFloatValue = ((FP)oldValue).AsFloat();
+                        float newFloatValue = EditorGUILayout.FloatField(oldFloatValue, options);
+                        newValue = FP.FromFloat(newFloatValue);
                         EditorGUILayout.EndHorizontal();
                         break;
                     case NEDatapRropertyType.Boolean:
@@ -140,6 +152,16 @@ namespace NodeEditor
                         array.SetValue(newValue, i);
                     }
                 }
+                else if(type == typeof(FP))
+                {
+                    float oldFloatValue = ((FP)oldValue).AsFloat();
+                    float newFloatValue = EditorGUILayout.FloatField(i.ToString(), oldFloatValue, options);
+                    var newValue = FP.FromFloat(newFloatValue);
+                    if (newValue != (FP)oldValue)
+                    {
+                        array.SetValue(newValue, i);
+                    }
+                }
                 else if (type == typeof(bool))
                 {
                     var newValue = EditorGUILayout.Toggle(i.ToString(), (bool)oldValue, options);
@@ -216,6 +238,7 @@ namespace NodeEditor
         Generic,
         Integer,
         Float,
+        FP,
         Boolean,
         String,
         Vector2,
@@ -322,6 +345,12 @@ namespace NodeEditor
             if (type == typeof(float))
             {
                 propertyType = NEDatapRropertyType.Float;
+                return true;
+            }
+
+            if(type == typeof(FP))
+            {
+                propertyType = NEDatapRropertyType.FP;
                 return true;
             }
 

@@ -7,6 +7,6 @@ namespace NodeEditor
 {
     public interface INENode
     {
-        object data { get; }
+        object data { get; set; }
     }
 }

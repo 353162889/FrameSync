@@ -12,6 +12,7 @@ namespace BTCore
         Running,
     }
     [NENodeCategory("Action")]
+    [NENodeDisplay(true,false,true)]
     public abstract class BTAction : BTNode
     {
         protected BTActionResult m_eActionResult;
