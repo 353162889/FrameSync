@@ -14,7 +14,7 @@ namespace Game
         {
             m_cNEDataLoader = new NEDataLoader();
             List<string> files = new List<string>();
-            //files.Add("Config/Skill/test.bytes");
+            files.Add("Config/Skill/test.bytes");
             Skill.Init();
             m_cNEDataLoader.Load(files, Skill.arrSkillNodeDataType,onFinish);
         }

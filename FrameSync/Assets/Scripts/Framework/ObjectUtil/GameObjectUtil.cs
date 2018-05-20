@@ -18,7 +18,13 @@ namespace Framework
 		public static void AddChildToParent(this GameObject go,GameObject child,string name = null, bool worldPositionStays = false)
 		{
 			child.transform.SetParent (go.transform,worldPositionStays);
-            if(!name.IsEmpty())
+            if (!worldPositionStays)
+            {
+                child.transform.localPosition = Vector3.zero;
+                child.transform.localEulerAngles = Vector3.zero;
+                child.transform.localScale = Vector3.one;
+            }
+            if (!name.IsEmpty())
             {
                 child.name = name;
             }

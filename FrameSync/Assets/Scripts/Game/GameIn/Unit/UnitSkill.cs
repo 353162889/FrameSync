@@ -83,6 +83,11 @@ namespace Game
             return false;
         }
 
+        public Skill GetSkill(int skillId)
+        {
+            return m_cSkillExecutor.GetSkill(skillId);
+        }
+
 
         protected void InitSkill()
         {

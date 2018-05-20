@@ -14,6 +14,7 @@ namespace NodeEditor
         public static NETreeComposeType[] arrTreeComposeData = new NETreeComposeType[] {
         //技能数据
         Skill.SkillComposeType,
+        Remote.RemoteComposeType,
         };
     }
 }

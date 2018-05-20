@@ -9,46 +9,36 @@ namespace Game
 {
     public partial class Unit
     {
-        private Resource m_cResource;
+        private GameObject m_cView;
         protected void InitView()
         {
-            ResourceSys.Instance.GetResource(m_sPrefab, OnResLoad);
+            GameObjectPool.Instance.GetObject(m_sPrefab, OnResLoad);
         }
 
-        private void OnResLoad(Resource res)
+        private void OnResLoad(GameObject go)
         {
-            if(res.isSucc)
-            {
-                m_cResource = res;
-                m_cResource.Retain();
-                UnityEngine.Object prefab = m_cResource.GetAsset(res.path);
-                GameObject go = (GameObject)GameObject.Instantiate(prefab);
-                this.gameObject.AddChildToParent(go);
-            }
-            else
-            {
-                CLog.LogError("加载unit资源"+res.path+"失败");
-            }
+            m_cView = go;
+            this.gameObject.AddChildToParent(m_cView);
         }
 
         protected void ResetView()
         {
-            ResourceSys.Instance.RemoveListener(m_sPrefab, OnResLoad);
-            if(m_cResource != null)
+            if(m_cView != null)
             {
-                m_cResource.Release();
-                m_cResource = null;
+                GameObjectPool.Instance.SaveObject(m_sPrefab, m_cView);
+                m_cView = null;
             }
+            GameObjectPool.Instance.RemoveCallback(m_sPrefab, OnResLoad);
         }
 
         protected void DisposeView()
         {
-            ResourceSys.Instance.RemoveListener(m_sPrefab, OnResLoad);
-            if (m_cResource != null)
+            if (m_cView != null)
             {
-                m_cResource.Release();
-                m_cResource = null;
+                GameObjectPool.Instance.SaveObject(m_sPrefab, m_cView);
+                m_cView = null;
             }
+            GameObjectPool.Instance.RemoveCallback(m_sPrefab, OnResLoad);
         }
 
         protected void SetViewPosition(TSVector position)

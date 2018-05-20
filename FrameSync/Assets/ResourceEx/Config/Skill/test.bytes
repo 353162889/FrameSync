@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <editorPos>
-    <x>4991</x>
-    <y>4796</y>
+    <x>5008</x>
+    <y>4785</y>
   </editorPos>
   <data xsi:type="SkillData">
     <skillId>1</skillId>
-    <skillDesc>fsafa</skillDesc>
-    <skillTarget>TargetPosition</skillTarget>
+    <skillDesc>创建远程</skillDesc>
+    <skillTarget>TargetForward</skillTarget>
     <skillCD>
       <_serializedValue>0</_serializedValue>
     </skillCD>
@@ -15,22 +15,21 @@
   <lstChild>
     <NEData>
       <editorPos>
-        <x>4993</x>
-        <y>4934</y>
+        <x>4991</x>
+        <y>4938</y>
       </editorPos>
       <data xsi:type="BTTimeLineData" />
       <lstChild>
         <NEData>
           <editorPos>
-            <x>4894</x>
-            <y>5076</y>
+            <x>4990</x>
+            <y>5113</y>
           </editorPos>
-          <data xsi:type="TestSkillActionData">
+          <data xsi:type="SK_CreateRemoteActionData">
             <time>
               <_serializedValue>0</_serializedValue>
             </time>
-            <desc>1111111a</desc>
-            <times>1</times>
+            <remoteId>1</remoteId>
           </data>
         </NEData>
       </lstChild>
