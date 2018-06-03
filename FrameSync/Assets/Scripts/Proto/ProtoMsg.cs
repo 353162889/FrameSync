@@ -245,6 +245,13 @@ namespace Proto
       get { return _forward; }
       set { _forward = value; }
     }
+    private bool _immediately;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"immediately", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public bool immediately
+    {
+      get { return _immediately; }
+      set { _immediately = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }

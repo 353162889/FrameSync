@@ -12,7 +12,7 @@ namespace Framework
             get { return m_nRecvFrameIndex; }
         }
         private int m_nRecvFrameIndex;
-       
+
         private int m_nCurLeaveRecvCount;
         private Queue<List<NetRecvData>> m_cPool;
         public NetFrameData()
@@ -34,6 +34,11 @@ namespace Framework
                     List<NetRecvData> queue = GetList();
                     m_dicData.Add(m_nRecvFrameIndex, queue);
                 }
+                else
+                {
+                    m_nRecvFrameIndex++;
+                }
+                return true;
             }
             else
             {
@@ -43,6 +48,10 @@ namespace Framework
                     {
                         m_dicData[m_nRecvFrameIndex].Add(recvData);
                         m_nCurLeaveRecvCount--;
+                        if (m_nCurLeaveRecvCount == 0)
+                        {
+                            m_nRecvFrameIndex++;
+                        }
                     }
                     catch(Exception e)
                     {

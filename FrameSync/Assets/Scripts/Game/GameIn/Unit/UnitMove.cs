@@ -12,8 +12,9 @@ namespace Game
     public partial class Unit
     {
         private static FP MoveForwardDistance = 1000;
-        protected UPointMove m_cMove;
-        protected UPointMoveView m_cMoveView;
+        protected PointMove m_cMove;
+        protected ForwardRotate m_cRotate;
+        protected LerpMoveView m_cLerpMoveView;
         protected FP m_sMoveSpeed = 10;
 
         public void ReqMove(List<TSVector> movePath)
@@ -36,8 +37,6 @@ namespace Game
             if (CanMove())
             {
                 m_cMove.Move(m_sCurPosition, movePath, m_sMoveSpeed);
-                List<Vector3> lst = GameInTool.TSVectorToLstUnityVector3(movePath);
-                m_cMoveView.Move(m_cMoveView.transform.position, lst, m_sMoveSpeed.AsFloat());
             }
         }
 
@@ -57,7 +56,6 @@ namespace Game
             if (CanMove())
             {
                 m_cMove.Move(m_sCurPosition, targetPosition, m_sMoveSpeed);
-                m_cMoveView.Move(m_cMoveView.transform.position, targetPosition.ToUnityVector3(), m_sMoveSpeed.AsFloat());
             }
         }
 
@@ -78,7 +76,6 @@ namespace Game
             {
                 TSVector nextPoint = direction * MoveForwardDistance;
                 m_cMove.Move(m_sCurPosition, nextPoint, m_sMoveSpeed);
-                m_cMoveView.Move(m_cMoveView.transform.position, nextPoint.ToUnityVector3(), m_sMoveSpeed.AsFloat());
             }
         }
 
@@ -95,7 +92,6 @@ namespace Game
         public void StopMove()
         {
             m_cMove.StopMove();
-            m_cMoveView.StopMove();
         }
 
         public bool CanMove()
@@ -105,32 +101,88 @@ namespace Game
 
         protected void InitMove()
         {
-            m_cMove = new UPointMove();
-            m_cMoveView = this.gameObject.AddComponentOnce<UPointMoveView>();
-            m_cMoveView.Init(m_cMove);
+            m_cMove = new PointMove();
+            m_cMove.OnMoveStart += OnStartMove;
+            m_cMove.OnMove += OnMove;
+            m_cMove.OnMoveStop += OnStopMove;
+            m_cMove.OnWillMove += OnWillMove;
+            m_cRotate = new ForwardRotate();
+            m_cRotate.OnStartRotate += OnStartRotate;
+            m_cRotate.OnRotate += OnRotate;
+            m_cRotate.OnStopRotate += OnStopRotate;
+            m_cLerpMoveView = this.gameObject.AddComponentOnce<LerpMoveView>();
+            m_cLerpMoveView.Init();
+        }
+
+        private void RotateToTarget(TSVector targetForward)
+        {
+            m_cRotate.StartRotateBySpeed(m_sCurForward, targetForward, 360 * 8);
+        }
+
+        private void OnStartRotate(TSVector preForward, TSVector newForward)
+        {
+        }
+
+        private void OnRotate(TSVector preForward, TSVector newForward)
+        {
+            SetForward(newForward, true);
+        }
+
+        private void OnStopRotate(TSVector preForward, TSVector newForward)
+        {
+        }
+
+        private void OnStartMove(TSVector position, TSVector forward)
+        {
+            List<Vector3> lst = GameInTool.TSVectorToLstUnityVector3(m_cMove.lstNextPosition);
+            m_cLerpMoveView.StartMove(transform.position, lst);
+            RotateToTarget(forward);
+        }
+
+        private void OnMove(TSVector position, TSVector forward)
+        {
+            m_sCurPosition = position;
+            RotateToTarget(forward);
+        }
+
+        private void OnStopMove(TSVector position, TSVector forward)
+        {
+            m_cLerpMoveView.StopMove();
+            if (!(m_sCurForward - forward).IsNearlyZero())
+            {
+                m_cRotate.StartRotate(m_sCurForward, forward,0);
+            }
+        }
+
+        private void OnWillMove(TSVector position, TSVector forward)
+        {
+            m_cLerpMoveView.Move(position.ToUnityVector3(), m_cMove.lstNextPosition.Count);
         }
 
         protected void ResetMove()
         {
-            m_cMove.StopMove();
-            m_cMoveView.StopMove();
+            m_cMove.Clear();
+            m_cRotate.Clear();
+            m_cLerpMoveView.StopMove();
         }
 
         protected void DisposeMove()
         {
-            m_cMove.StopMove();
-            m_cMoveView.Clear();
+            m_cMove.Clear();
+            m_cRotate.Clear();
+            m_cLerpMoveView.StopMove();
         }
 
+        private GameObject box;
         protected void UpdateMove(FP deltaTime)
         {
-            bool isMoving = m_cMove.isMoving;
             m_cMove.OnUpdate(deltaTime);
-            if (isMoving)
+            m_cRotate.OnUpdate(deltaTime);
+            if(null == box)
             {
-                m_sCurPosition = m_cMove.curPosition;
-                m_sCurForward = m_cMove.curForward;
+                box = GameObject.CreatePrimitive(PrimitiveType.Cube);
             }
+            box.transform.position = m_sCurPosition.ToUnityVector3();
         }
     }
 }

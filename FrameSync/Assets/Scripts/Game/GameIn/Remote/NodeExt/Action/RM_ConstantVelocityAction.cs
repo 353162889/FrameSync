@@ -24,68 +24,92 @@ namespace Game
         public override FP time { get { return m_cActionData.time; } }
         private FP m_sDistance;
         private TSVector m_sTargetPosition;
-        private TSVector m_sForward;
+        private PointMove m_cPointMove;
+        private Remote m_cRemote;
+        private BTActionResult m_eCurActionResult;
 
         protected override void OnInitData(object data)
         {
             base.OnInitData(data);
             m_cActionData = data as RM_ConstantVelocityActionData;
+            m_cPointMove = new PointMove();
         }
 
         protected override void OnEnter(RemoteBlackBoard blackBoard)
         {
             m_sDistance = 0;
-            Remote remote = blackBoard.remote;
+            m_cRemote = blackBoard.remote;
             var remoteTargetType = blackBoard.remote.remoteData.remoteTarget;
             switch(remoteTargetType)
             {
                 case RemoteTargetType.Target:
-                    m_sTargetPosition = remote.target.curPosition;
+                    m_sTargetPosition = m_cRemote.target.curPosition;
                     break;
                 case RemoteTargetType.TargetForward:
-                    m_sTargetPosition = remote.targetForward * m_cActionData.maxDistance;
+                    m_sTargetPosition = m_cRemote.curPosition + m_cRemote.targetForward * m_cActionData.maxDistance;
                     break;
                 case RemoteTargetType.TargetPosition:
-                    m_sTargetPosition = remote.targetPosition;
+                    m_sTargetPosition = m_cRemote.targetPosition;
                     break;
             }
-            m_sForward = m_sTargetPosition - remote.curPosition;
-            if (!m_sForward.IsZero()) m_sForward.Normalize();
+            m_cPointMove.Clear();
+            m_cPointMove.OnMoveStart += OnStartMove;
+            m_cPointMove.OnMove += OnMove;
+            m_cPointMove.OnMoveStop += OnStopMove;
+            m_cPointMove.OnWillMove += OnWillMove;
+            m_cPointMove.Move(m_cRemote.curPosition, m_sTargetPosition,m_cActionData.speed);
+            m_eCurActionResult = BTActionResult.Running;
+        }
+
+        private void OnStartMove(TSVector position, TSVector forward)
+        {
+            m_cRemote.StartMove(position, m_cPointMove.lstNextPosition);
+        }
+
+        private void OnMove(TSVector position, TSVector forward)
+        {
+            m_cRemote.Move(position);
+            m_sDistance += (m_cRemote.curPosition - m_cRemote.lastPosition).magnitude;
+            if (m_sDistance >= m_cActionData.maxDistance)
+            {
+                m_eCurActionResult = BTActionResult.Ready;
+            }
+        }
+
+        private void OnStopMove(TSVector position, TSVector forward)
+        {
+            m_cRemote.StopMove();
+            m_eCurActionResult = BTActionResult.Ready;
+        }
+
+        private void OnWillMove(TSVector position, TSVector forward)
+        {
+            m_cRemote.WillMove(position, m_cPointMove.lstNextPosition.Count);
+        }
+
+        public override void OnExit(RemoteBlackBoard blackBoard)
+        {
+            m_cPointMove.Clear();
+            m_cRemote = null;
+            base.OnExit(blackBoard);
         }
 
         public override BTActionResult OnRun(RemoteBlackBoard blackBoard)
         {
-            if (m_sForward.IsZero()) return BTActionResult.Ready;
+            m_cPointMove.OnUpdate(blackBoard.deltaTime);
             Remote remote = blackBoard.remote;
-            var offset = m_sForward * m_cActionData.speed * blackBoard.deltaTime;
-            var nextPosition = remote.curPosition + offset;
-            var nextForward = (m_sTargetPosition - nextPosition);
-            bool finish = false;
-            if(nextForward.IsZero())
-            {
-                finish = true;
-            }
-            nextForward.Normalize();
-            if(!finish && TSVector.Angle(nextForward,m_sForward) > 90)
-            {
-                finish = true;
-                nextPosition = m_sTargetPosition;
-                offset = m_sTargetPosition - remote.curPosition;
-            }
-            remote.SetPosition(nextPosition);
-            m_sDistance += offset.magnitude;
-
             if(remote.remoteData.remoteTarget == RemoteTargetType.Target)
             {
-                m_sTargetPosition = remote.target.curPosition;
-                m_sForward = m_sTargetPosition - remote.curPosition;
-                if (!m_sForward.IsZero()) m_sForward.Normalize();
+                var nextTargetPosition = remote.target.curPosition;
+                if(nextTargetPosition != m_sTargetPosition)
+                {
+                    m_sTargetPosition = nextTargetPosition;
+                    m_cPointMove.Move(remote.curPosition, m_sTargetPosition, m_cActionData.speed);
+                    m_eCurActionResult = BTActionResult.Running;
+                }
             }
-            if (finish || m_sDistance >= m_cActionData.maxDistance)
-            {
-                return BTActionResult.Ready;
-            }
-            return BTActionResult.Running;
+            
+            return m_eCurActionResult;
         }
     }
 }

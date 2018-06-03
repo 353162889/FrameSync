@@ -204,6 +204,7 @@ namespace Framework
                     while (m_queueRecvData.Count > 0)
                     {
                         NetRecvData recvData = m_queueRecvData.Dequeue();
+                        //如果当前非帧包，直接运行
                         if (!m_cFrameData.AddRecvData(recvData))
                         {
                             HandleRecvData(recvData);

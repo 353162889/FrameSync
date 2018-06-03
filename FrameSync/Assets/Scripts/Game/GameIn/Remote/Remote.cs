@@ -56,6 +56,8 @@ namespace Game
         public TSVector targetForward { get { return m_sTargetForward; } }
         private TSVector m_sTargetForward;
 
+        private LerpMoveView m_cLerpView;
+
         private GameObject m_cView;
 
         public void Init(uint id, int configId, TSVector position, TSVector forward, uint targetAgentId, AgentObjectType targetAgentType, TSVector targetPosition, TSVector targetForward)
@@ -78,6 +80,36 @@ namespace Game
             m_sTargetPosition = targetPosition;
             m_sTargetForward = targetForward;
             GameObjectPool.Instance.GetObject(m_cRemoteData.remotePath, OnResLoad);
+            m_cLerpView = gameObject.AddComponentOnce<LerpMoveView>();
+            m_cLerpView.Init();
+            m_cLerpView.StopMove();
+        }
+
+        public void StartMove(TSVector startPosition, List<TSVector> lstPosition)
+        {
+            TSVector forward = m_sCurForward;
+            if (lstPosition.Count > 0) forward = lstPosition[0] - startPosition;
+            if (!forward.IsZero()) forward.Normalize();
+            SetForward(forward);
+            SetPosition(startPosition);
+            List<Vector3> lst = GameInTool.TSVectorToLstUnityVector3(lstPosition);
+            m_cLerpView.StartMove(transform.position, lst);
+        }
+
+        public void Move(TSVector position)
+        {
+            SetPosition(position);
+            SetForward(m_sCurPosition - m_sLastPosition);
+        }
+
+        public void WillMove(TSVector position, int logicPointCount)
+        {
+            m_cLerpView.Move(position.ToUnityVector3(), logicPointCount);
+        }
+
+        public void StopMove()
+        {
+            m_cLerpView.StopMove();
         }
 
         private void OnResLoad(GameObject go)
@@ -96,6 +128,7 @@ namespace Game
         public void SetForward(TSVector forward)
         {
             if (forward == TSVector.zero) return;
+            forward.Normalize();
             m_sLastForward = m_sCurForward;
             m_sCurForward = forward;
             SetViewForward(forward);
@@ -107,6 +140,7 @@ namespace Game
             BTResult result = m_cRemoteTree.OnTick(m_cBlackBoard);
             if (result != BTResult.Running)
             {
+                StopMove();
                 End();
             }
         }
@@ -114,6 +148,7 @@ namespace Game
         protected void End()
         {
             m_cRemoteTree.Clear();
+            StopMove();
             //回收远程
             BattleScene.Instance.DestroyRemote(this);
         }
@@ -125,6 +160,7 @@ namespace Game
                 GameObjectPool.Instance.SaveObject(m_cRemoteData.remotePath, m_cView);
                 m_cView = null;
             }
+            m_cLerpView.StopMove();
             GameObjectPool.Instance.RemoveCallback(m_cRemoteData.remotePath, OnResLoad);
             m_cBlackBoard.Clear();
             m_cTarget = null;

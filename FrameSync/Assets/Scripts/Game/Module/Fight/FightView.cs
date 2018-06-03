@@ -27,15 +27,38 @@ namespace Game
             m_cBtnSkillTest = this.MainGO.FindChildRecursive("btnSkillTest");
             GameObject joystickGO = this.MainGO.FindChildRecursive("Joystick");
             m_cJoystick = joystickGO.AddComponentOnce<UIJoystick>();
-            m_cJoystick.Init(rectTrans, m_cBaseTrans, m_cMoveTrans, m_cBaseTrans.rect.width / 2f, false);
+            m_cJoystick.Init(rectTrans, m_cBaseTrans, m_cMoveTrans, m_cBaseTrans.rect.width / 2f, true);
             minDirLen = m_cBaseTrans.rect.width * 0.1f;
             m_cJoystick.OnBegin += OnJoystickBegin;
             m_cJoystick.OnMove += OnJoystickMove;
             m_cJoystick.OnEnd += OnJoystickEnd;
+            m_cJoystick.AddKeyCode(KeyCode.A, Vector2.left);
+            m_cJoystick.AddKeyCode(KeyCode.D, Vector2.right);
+            m_cJoystick.AddKeyCode(KeyCode.W, Vector2.up);
+            m_cJoystick.AddKeyCode(KeyCode.S, Vector2.down);
             //m_cJoystick.enabled = false;
             SetJoystickActive(false);
 
             UIEventTrigger.Get(m_cBtnSkillTest).AddListener(EventTriggerType.PointerClick, OnClick);
+
+            //TouchDispatcher.instance.touchBeganListeners += OnTouch;
+        }
+
+        private void OnTouch(TouchEventParam obj)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(obj.GetTouch(0).position);
+            RaycastHit hitInfo;
+            if(Physics.Raycast(ray,out hitInfo))
+            {
+                if (PvpPlayerMgr.Instance.mainPlayer != null)
+                {
+                    Unit unit = PvpPlayerMgr.Instance.mainPlayer.unit;
+                    if (unit != null)
+                    {
+                        unit.ReqMove(TSVector.FromUnitVector3(hitInfo.point));
+                    }
+                }
+            }
         }
 
         private void OnClick(BaseEventData data)

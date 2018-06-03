@@ -59,21 +59,29 @@ namespace Game
             SetViewPosition(position);
         }
 
-        public void ReqSetForward(TSVector forward)
+        public void ReqSetForward(TSVector forward,bool immediately = true)
         {
             if (TSMath.Abs(TSVector.Angle(m_sCurForward, forward)) < FP.EN1) return;
             Frame_ReqSetForward_Data data = new Frame_ReqSetForward_Data();
             data.unitId = id;
             data.forward = GameInTool.ToProtoVector2(forward);
+            data.immediately = immediately;
             NetSys.Instance.SendMsg(NetChannelType.Game, (short)PacketOpcode.Frame_ReqSetForward, data);
 
         }
 
-        public void SetForward(TSVector forward)
+        public void SetForward(TSVector forward, bool immediately = true)
         {
             if (forward == TSVector.zero) return;
-            m_sCurForward = forward;
-            SetViewForward(forward);
+            if (immediately)
+            {
+                m_sCurForward = forward;
+                SetViewForward(forward);
+            }
+            else
+            {
+                RotateToTarget(forward);
+            }
         }
 
         protected virtual void SubInit()

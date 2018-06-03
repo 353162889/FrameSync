@@ -106,7 +106,7 @@ namespace Framework
                 bool isOnUI = (EventSystem.current != null) ? EventSystem.current.IsPointerOverGameObject() : false;
                 if(!isOnUI)
                 {
-                    if(Input.GetMouseButtonDown(MouseLeftKey))
+                    if(Input.GetMouseButton(MouseLeftKey))
                     {
                         Vector3 screenPosition = Input.mousePosition;
                         bool inEffectRect = RectTransformUtility.RectangleContainsScreenPoint(mEffectTransfrom, screenPosition, m_cCanvasCamera);
@@ -126,7 +126,7 @@ namespace Framework
                     Vector2 direct = Vector2.zero;
                     foreach (var item in m_dicKeyCode)
                     {
-                        if (Input.GetKeyDown(item.Key))
+                        if (Input.GetKey(item.Key))
                         {
                             direct += item.Value;
                         }
