@@ -30,11 +30,15 @@ namespace Game
 
         protected string m_sPrefab;
 
+        protected AgentObject m_cAgentObj;
+        public AgentObject agentObj { get { return m_cAgentObj; } }
+
         public void Init(uint id,int configId,UnitType type, TSVector position, TSVector forward)
         {
             m_nId = id;
             m_nConfigId = configId;
             m_eUnitType = type;
+            m_cAgentObj = new AgentUnit(this);
             SetPosition(position);
             SetForward(forward);
             SubInit();
@@ -55,45 +59,68 @@ namespace Game
             SetViewPosition(position);
         }
 
-        public void ReqSetForward(TSVector forward)
+        public void ReqSetForward(TSVector forward,bool immediately = true)
         {
             if (TSMath.Abs(TSVector.Angle(m_sCurForward, forward)) < FP.EN1) return;
             Frame_ReqSetForward_Data data = new Frame_ReqSetForward_Data();
             data.unitId = id;
             data.forward = GameInTool.ToProtoVector2(forward);
+            data.immediately = immediately;
             NetSys.Instance.SendMsg(NetChannelType.Game, (short)PacketOpcode.Frame_ReqSetForward, data);
 
         }
 
-        public void SetForward(TSVector forward)
+        public void SetForward(TSVector forward, bool immediately = true)
         {
             if (forward == TSVector.zero) return;
-            m_sCurForward = forward;
-            SetViewForward(forward);
+            if (immediately)
+            {
+                m_sCurForward = forward;
+                SetViewForward(forward);
+            }
+            else
+            {
+                RotateToTarget(forward);
+            }
         }
 
         protected virtual void SubInit()
         {
             InitMove();
             InitView();
+            InitSkill();
         }
 
         public virtual void OnUpdate(FP deltaTime)
         {
             UpdateMove(deltaTime);
             UpdateView(deltaTime);
+            UpdateSkill(deltaTime);
         }
 
         public void Dispose()
         {
             DisposeMove();
             DisposeView();
+            ClearAgent();
+            DisposeSkill();
         }
 
         public void Reset()
         {
             ResetMove();
             ResetView();
+            ClearAgent();
+            ResetSkill();
+        }
+
+        private void ClearAgent()
+        {
+            if (m_cAgentObj != null)
+            {
+                m_cAgentObj.Clear();
+                m_cAgentObj = null;
+            }
         }
     }
 }

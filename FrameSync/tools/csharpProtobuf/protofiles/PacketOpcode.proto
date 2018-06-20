@@ -26,4 +26,6 @@ enum PacketOpcode
 	Frame_ReqSetForward = 10005;
 	Frame_ReqMoveForward = 10006;
 	Frame_ReqStopMove = 10007;
+	Frame_ReqDoSkill = 10008;
+	Frame_ReqBreakSkill = 10009;
 }

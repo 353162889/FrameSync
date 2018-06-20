@@ -12,6 +12,7 @@ namespace Game
         private CommandSequence m_cJoinSequence;
         protected override void OnEnter()
         {
+            GameObjectPool.Instance.Clear();
             ViewSys.Instance.Open("LoadingView");
             m_cJoinSequence = new CommandSequence();
             var cmdConnectBattleServer = new Cmd_ConnectBattleServer();
@@ -74,6 +75,7 @@ namespace Game
         {
             ViewSys.Instance.Close("FightView");
             PvpPlayerMgr.Instance.Clear();
+            GameObjectPool.Instance.Clear();
             if (m_cJoinSequence != null)
             {
                 m_cJoinSequence.OnDestroy();

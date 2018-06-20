@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <editorPos>
+    <x>5007</x>
+    <y>4794</y>
+  </editorPos>
+  <data xsi:type="RemoteData">
+    <remoteId>1</remoteId>
+    <remoteDesc>测试远程</remoteDesc>
+    <remotePath>Prefab/Effect/Bullet.prefab</remotePath>
+    <remoteTarget>TargetForward</remoteTarget>
+  </data>
+  <lstChild>
+    <NEData>
+      <editorPos>
+        <x>4981</x>
+        <y>4954</y>
+      </editorPos>
+      <data xsi:type="BTTimeLineData" />
+      <lstChild>
+        <NEData>
+          <editorPos>
+            <x>4984</x>
+            <y>5131</y>
+          </editorPos>
+          <data xsi:type="RM_ConstantVelocityActionData">
+            <time>
+              <_serializedValue>0</_serializedValue>
+            </time>
+            <speed>
+              <_serializedValue>214748364800</_serializedValue>
+            </speed>
+            <maxDistance>
+              <_serializedValue>128849018880</_serializedValue>
+            </maxDistance>
+          </data>
+        </NEData>
+      </lstChild>
+    </NEData>
+  </lstChild>
+</NEData>

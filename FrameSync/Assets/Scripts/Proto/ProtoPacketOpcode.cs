@@ -51,7 +51,13 @@ namespace Proto
       Frame_ReqMoveForward = 10006,
             
       [global::ProtoBuf.ProtoEnum(Name=@"Frame_ReqStopMove", Value=10007)]
-      Frame_ReqStopMove = 10007
+      Frame_ReqStopMove = 10007,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Frame_ReqDoSkill", Value=10008)]
+      Frame_ReqDoSkill = 10008,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Frame_ReqBreakSkill", Value=10009)]
+      Frame_ReqBreakSkill = 10009
     }
   
 }

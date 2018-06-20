@@ -70,6 +70,7 @@ message Frame_ReqSetForward_Data
 {
 	required uint32 unitId = 1;
 	required ProtoVector2 forward = 2;
+	required bool immediately = 3;
 }
 
 message Frame_ReqMoveForward_Data
@@ -81,4 +82,20 @@ message Frame_ReqMoveForward_Data
 message Frame_ReqStopMove_Data
 {
 	required uint32 unitId = 1;
+}
+
+message Frame_ReqDoSkill_Data
+{
+	required uint32 unitId = 1;
+	required int32 skillId = 2;
+	required uint32 targetAgentId = 3;
+	required int32 targetAgentType = 4;
+	required ProtoVector2 position = 5;
+	required ProtoVector2 forward = 6;
+}
+
+message Frame_ReqBreakSkill_Data
+{
+	required uint32 unitId = 1;
+	required int32 skillId = 2;
 }

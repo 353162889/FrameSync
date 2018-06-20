@@ -128,11 +128,12 @@ namespace Framework
                 _succCallbacks.Remove(res);
                 if (succList != null)
                 {
-                    for (int i = 0; i < succList.Count; i++)
+                    while(succList.Count > 0)
                     {
-                        succList[i].Invoke(res);
+                        var callback = succList[0];
+                        succList.RemoveAt(0);
+                        callback.Invoke(res);
                     }
-                    succList.Clear();
                 }
                 res.Release();
             }
@@ -152,11 +153,12 @@ namespace Framework
                 _failCallbacks.Remove(res);
                 if (failList != null)
                 {
-                    for (int i = 0; i < failList.Count; i++)
+                    while (failList.Count > 0)
                     {
-                        failList[i].Invoke(res);
+                        var callback = failList[0];
+                        failList.RemoveAt(0);
+                        callback.Invoke(res);
                     }
-                    failList.Clear();
                 }
                 res.Release();
                 if (res.refCount <= 0)

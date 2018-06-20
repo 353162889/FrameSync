@@ -12,17 +12,24 @@ namespace Game
     {
         private static System.Random mRandom;
         private static uint mStartUnitId;
+        private static uint mStartRemoteId;
         private static List<TSVector> mListTSVector = new List<TSVector>();
         private static List<Vector3> mListUnityVector = new List<Vector3>();
         public static void InitRandomSeed(int seed)
         {
             mRandom = new System.Random(seed);
             mStartUnitId = 0;
+            mStartRemoteId = 0;
         }
 
         public static uint GenerateUnitId()
         {
             return ++mStartUnitId;
+        }
+
+        public static uint GenerateRemoteId()
+        {
+            return ++mStartRemoteId;
         }
 
         public static TSVector ToTSVector(ProtoVector2 source)

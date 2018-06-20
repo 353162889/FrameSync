@@ -27,10 +27,20 @@ namespace Game
         void Start()
         {
             InitSingleton();
-            ResCfgSys.Instance.LoadResCfgs("Data", OnLoadCfgs);
+            ResCfgSys.Instance.LoadResCfgs("Config/Data", OnLoadCfgs);
         }
 
         private void OnLoadCfgs()
+        {
+            SkillCfgSys.Instance.LoadResCfgs("Config/Skill", OnLoadSkillCfgs);
+        }
+
+        private void OnLoadSkillCfgs()
+        {
+            RemoteCfgSys.Instance.LoadResCfgs("Config/Remote", OnLoadRemoteCfgs);
+        }
+
+        private void OnLoadRemoteCfgs()
         {
             InitUI();
             InitState();
@@ -92,6 +102,10 @@ namespace Game
             ResourceSys.Instance.Init(true, "Assets/ResourceEx");
             gameObject.AddComponentOnce<UpdateScheduler>();
             gameObject.AddComponentOnce<TouchDispatcher>();
+            GameObject goPool = new GameObject();
+            goPool.name = "GameObjectPool";
+            GameObject.DontDestroyOnLoad(goPool);
+            goPool.AddComponentOnce<GameObjectPool>();
             GameObject uiGO = transform.Find("UIContainer").gameObject;
             uiGO.AddComponentOnce<ViewSys>();
            

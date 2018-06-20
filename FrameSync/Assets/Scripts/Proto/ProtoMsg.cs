@@ -245,6 +245,13 @@ namespace Proto
       get { return _forward; }
       set { _forward = value; }
     }
+    private bool _immediately;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"immediately", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public bool immediately
+    {
+      get { return _immediately; }
+      set { _immediately = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -285,6 +292,82 @@ namespace Proto
     {
       get { return _unitId; }
       set { _unitId = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Frame_ReqDoSkill_Data")]
+  public partial class Frame_ReqDoSkill_Data : global::ProtoBuf.IExtensible
+  {
+    public Frame_ReqDoSkill_Data() {}
+    
+    private uint _unitId;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"unitId", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public uint unitId
+    {
+      get { return _unitId; }
+      set { _unitId = value; }
+    }
+    private int _skillId;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"skillId", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int skillId
+    {
+      get { return _skillId; }
+      set { _skillId = value; }
+    }
+    private uint _targetAgentId;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"targetAgentId", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public uint targetAgentId
+    {
+      get { return _targetAgentId; }
+      set { _targetAgentId = value; }
+    }
+    private int _targetAgentType;
+    [global::ProtoBuf.ProtoMember(4, IsRequired = true, Name=@"targetAgentType", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int targetAgentType
+    {
+      get { return _targetAgentType; }
+      set { _targetAgentType = value; }
+    }
+    private Proto.ProtoVector2 _position;
+    [global::ProtoBuf.ProtoMember(5, IsRequired = true, Name=@"position", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public Proto.ProtoVector2 position
+    {
+      get { return _position; }
+      set { _position = value; }
+    }
+    private Proto.ProtoVector2 _forward;
+    [global::ProtoBuf.ProtoMember(6, IsRequired = true, Name=@"forward", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public Proto.ProtoVector2 forward
+    {
+      get { return _forward; }
+      set { _forward = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Frame_ReqBreakSkill_Data")]
+  public partial class Frame_ReqBreakSkill_Data : global::ProtoBuf.IExtensible
+  {
+    public Frame_ReqBreakSkill_Data() {}
+    
+    private uint _unitId;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"unitId", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public uint unitId
+    {
+      get { return _unitId; }
+      set { _unitId = value; }
+    }
+    private int _skillId;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"skillId", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int skillId
+    {
+      get { return _skillId; }
+      set { _skillId = value; }
     }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)

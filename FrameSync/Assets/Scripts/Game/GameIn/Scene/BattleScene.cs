@@ -27,6 +27,12 @@ namespace Game
 
         private Dictionary<uint, Unit> m_dicUnit;
         private DynamicContainer m_cUnitContainer;
+
+        private GameObject m_cRemoteRoot;
+        public GameObject remoteRoot { get { return m_cRemoteRoot; } }
+
+        private Dictionary<uint, Remote> m_dicRemote;
+        private DynamicContainer m_cRemoteContainer;
        
 
         public void Init(int sceneId)
@@ -41,12 +47,29 @@ namespace Game
             m_cUnitRoot = new GameObject("UnitRoot");
             m_cUnitRoot.name = "UnitRoot";
             GameObject.DontDestroyOnLoad(m_cUnitRoot);
+
+            m_cRemoteRoot = new GameObject("RemoteRoot");
+            m_cRemoteRoot.name = "RemoteRoot";
+            GameObject.DontDestroyOnLoad(m_cRemoteRoot);
+
             m_dicUnit = new Dictionary<uint, Unit>();
             m_cUnitContainer = new DynamicContainer();
             m_cUnitContainer.OnAdd += OnAddUnit;
             m_cUnitContainer.OnRemove += OnRemoveUnit;
             m_cUnitContainer.OnUpdate += OnUpdateUnit;
+
+            m_dicRemote = new Dictionary<uint, Remote>();
+            m_cRemoteContainer = new DynamicContainer();
+            m_cRemoteContainer.OnAdd += OnAddRemote;
+            m_cRemoteContainer.OnRemove += OnRemoveRemote;
+            m_cRemoteContainer.OnUpdate += OnUpdateRemote;
+
+            BehaviourPool<UnitAirShip>.Instance.Init(30);
+            BehaviourPool<Remote>.Instance.Init(100);
+
             FrameSyncSys.Instance.OnFrameSyncUpdate += OnFrameSyncUpdate;
+
+
         }
 
         public Unit GetUnit(uint id)
@@ -59,6 +82,7 @@ namespace Game
         private void OnFrameSyncUpdate(FP deltaTime)
         {
             m_cUnitContainer.Update(deltaTime);
+            m_cRemoteContainer.Update(deltaTime);
         }
 
         private void OnAddUnit(IDynamicObj obj, object param)
@@ -72,6 +96,12 @@ namespace Game
         {
             Unit unit = (Unit)obj;
             m_dicUnit.Remove(unit.id);
+            switch (unit.unitType)
+            {
+                case UnitType.AirShip:
+                    BehaviourPool<UnitAirShip>.Instance.SaveObject((UnitAirShip)unit);
+                    break;
+            }
             GlobalEventDispatcher.Instance.Dispatch(GameEvent.UnitRemove, unit);
         }
 
@@ -81,15 +111,32 @@ namespace Game
             unit.OnUpdate((FP)param);
         }
 
+        private void OnAddRemote(IDynamicObj obj, object param)
+        {
+            Remote remote = (Remote)obj;
+            m_dicRemote.Add(remote.id, remote);
+        }
+
+        private void OnRemoveRemote(IDynamicObj obj, object param)
+        {
+            Remote remote = (Remote)obj;
+            m_dicRemote.Remove(remote.id);
+            BehaviourPool<Remote>.Instance.SaveObject(remote);
+        }
+
+        private void OnUpdateRemote(IDynamicObj obj, object param)
+        {
+            Remote remote = (Remote)obj;
+            remote.OnUpdate((FP)param);
+        }
+
         public Unit CreateUnit(int configId,UnitType type, TSVector bornPosition, TSVector bornForward)
         {
             Unit unit = null;
             switch(type)
             {
                 case UnitType.AirShip:
-                    GameObject go = new GameObject();
-                    m_cUnitRoot.AddChildToParent(go);
-                    unit = go.AddComponentOnce<UnitAirShip>();
+                    unit = BehaviourPool<UnitAirShip>.Instance.GetObject(m_cUnitRoot.transform);
                     break;
             }
 
@@ -107,10 +154,26 @@ namespace Game
             m_cUnitContainer.Remove(unit);
         }
 
+        public Remote CreateRemote(int configId, TSVector position, TSVector forward, uint targetAgentId, AgentObjectType targetAgentType, TSVector targetPosition, TSVector targetForward)
+        {
+            Remote remote = BehaviourPool<Remote>.Instance.GetObject(m_cRemoteRoot.transform);
+            uint remoteId = GameInTool.GenerateRemoteId();
+            remote.Init(remoteId, configId, position, forward, targetAgentId, targetAgentType, targetPosition, targetForward);
+            m_cRemoteContainer.Add(remote);
+            return remote;
+        }
+
+        public void DestroyRemote(Remote remote)
+        {
+            m_cRemoteContainer.Remove(remote);
+        }
+
         public void Clear()
         {
             m_nSceneId = -1;
             m_cResScene = null;
+            BehaviourPool<UnitAirShip>.Instance.Dispose();
+            BehaviourPool<Remote>.Instance.Dispose();
             FrameSyncSys.Instance.OnFrameSyncUpdate -= OnFrameSyncUpdate;
             if (m_cUnitContainer != null)
             {
@@ -124,6 +187,19 @@ namespace Game
             {
                 GameObject.Destroy(m_cUnitRoot);
                 m_cUnitRoot = null;
+            }
+            if(m_cRemoteContainer != null)
+            {
+                m_cRemoteContainer.OnAdd -= OnAddRemote;
+                m_cRemoteContainer.OnRemove -= OnRemoveRemote;
+                m_cRemoteContainer.OnUpdate -= OnUpdateRemote;
+                m_cRemoteContainer.Clear();
+                m_cRemoteContainer = null;
+            }
+            if(m_cRemoteRoot != null)
+            {
+                GameObject.Destroy(m_cRemoteRoot);
+                m_cRemoteRoot = null;
             }
         }
     }
