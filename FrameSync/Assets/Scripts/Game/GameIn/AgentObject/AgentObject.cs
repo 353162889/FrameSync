@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace Game
 {
@@ -42,5 +43,6 @@ namespace Game
         abstract public AgentObjectType agentType { get; }
         abstract public TSVector curPosition { get; }
         abstract public TSVector curForward { get; }
+        abstract public Transform GetHangPoint(string name, out TSVector position, out TSVector forward);
     }
 }

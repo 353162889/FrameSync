@@ -27,20 +27,30 @@ namespace Game
         void Start()
         {
             InitSingleton();
-            ResCfgSys.Instance.LoadResCfgs("Config/Data", OnLoadCfgs);
+            LoadConfigs();
         }
 
-        private void OnLoadCfgs()
+
+        private int m_nConfingIndex;
+        private void LoadConfigs()
         {
-            SkillCfgSys.Instance.LoadResCfgs("Config/Skill", OnLoadSkillCfgs);
+            m_nConfingIndex = 4;
+            ResCfgSys.Instance.LoadResCfgs("Config/Data", OnLoadOneConfig);
+            SkillCfgSys.Instance.LoadResCfgs(OnLoadOneConfig);
+            RemoteCfgSys.Instance.LoadResCfgs(OnLoadOneConfig);
+            HangPointCfgSys.Instance.LoadResCfgs(OnLoadOneConfig);
         }
 
-        private void OnLoadSkillCfgs()
+        private void OnLoadOneConfig()
         {
-            RemoteCfgSys.Instance.LoadResCfgs("Config/Remote", OnLoadRemoteCfgs);
+            m_nConfingIndex--;
+            if(m_nConfingIndex==0)
+            {
+                OnLoadConfigs();
+            }
         }
 
-        private void OnLoadRemoteCfgs()
+        private void OnLoadConfigs()
         {
             InitUI();
             InitState();

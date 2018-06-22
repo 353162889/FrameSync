@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Framework;
+using UnityEngine;
 
 namespace Game
 {
@@ -57,6 +58,17 @@ namespace Game
             {
                 return m_cUnit == null ? m_sLastPosition : m_cUnit.curPosition;
             }
+        }
+
+        public override Transform GetHangPoint(string name, out TSVector position, out TSVector forward)
+        {
+            if(m_cUnit != null)
+            {
+                return m_cUnit.GetHangPoint(name, out position, out forward);
+            }
+            position = curPosition;
+            forward = curForward;
+            return null;
         }
     }
 }
