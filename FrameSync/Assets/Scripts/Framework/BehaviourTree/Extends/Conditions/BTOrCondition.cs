@@ -11,7 +11,7 @@ namespace BTCore
     {
 
     }
-    [NENode(typeof(BTOrConditionData))]
+    [BTNode(typeof(BTOrConditionData))]
     public class BTOrCondition : BTCondition
     {
         private List<BTNode> m_lstChild = new List<BTNode>();

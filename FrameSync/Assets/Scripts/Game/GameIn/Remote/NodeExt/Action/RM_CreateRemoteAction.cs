@@ -16,7 +16,7 @@ namespace Game
         public string hangPoint;
         public bool useHangPoint;
     }
-    [SkillNode(typeof(RM_CreateRemoteActionData))]
+    [RemoteNode(typeof(RM_CreateRemoteActionData))]
     public class RM_CreateRemoteAction : BaseTimeLineRemoteAction
     {
         private RM_CreateRemoteActionData m_cActionData;

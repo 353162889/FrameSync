@@ -12,7 +12,7 @@ namespace Game
     public class Remote : MonoBehaviour, IPoolable,IDynamicObj
     {
 
-        public static NETreeComposeType RemoteComposeType = new NETreeComposeType(typeof(RemoteTree), new List<Type> { typeof(RemoteNodeAttribute), typeof(NENodeAttribute) }, "Assets/ResourceEx/Config/Remote", "remote", "bytes", "远程");
+        public static NETreeComposeType RemoteComposeType = new NETreeComposeType(typeof(RemoteTree), new List<Type> { typeof(RemoteNodeAttribute), typeof(BTNodeAttribute),typeof(BTGameNodeAttribute) }, "Assets/ResourceEx/Config/Remote", "remote", "bytes", "远程");
         private static bool m_bInit = false;
         private static List<Type> m_lstRemoteNodeType;
         public static List<Type> lstRemoteNodeType { get { return m_lstRemoteNodeType; } }

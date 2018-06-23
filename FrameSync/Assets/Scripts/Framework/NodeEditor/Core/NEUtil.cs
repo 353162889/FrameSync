@@ -145,9 +145,12 @@ namespace NodeEditor
                     var arr = lstTypes[j].GetCustomAttributes(composeType.lstNodeAttribute[i], true);
                     if (arr.Length > 0)
                     {
-                        lstNodeType.Add(lstTypes[j]);
-                        var attr = arr[0] as NENodeAttribute;
-                        lstNodeDataType.Add(attr.nodeDataType);
+                        if(!lstNodeType.Contains(lstTypes[j]))
+                        {
+                            lstNodeType.Add(lstTypes[j]);
+                            var attr = arr[0] as NENodeAttribute;
+                            lstNodeDataType.Add(attr.nodeDataType);
+                        }
                     }
                 }
             }

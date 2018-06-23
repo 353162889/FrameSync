@@ -12,7 +12,7 @@ namespace BTCore
 
     }
 
-    [NENode(typeof(BTSelectorData))]
+    [BTNode(typeof(BTSelectorData))]
     public class BTSelector : BTRunningComposite
     {
         protected int m_iSelectedIndex;

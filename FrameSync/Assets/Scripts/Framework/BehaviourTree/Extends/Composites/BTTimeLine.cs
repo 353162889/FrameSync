@@ -15,7 +15,7 @@ namespace BTCore
     public class BTTimeLineData
     {
     }
-    [NENode(typeof(BTTimeLineData))]
+    [BTNode(typeof(BTTimeLineData))]
     public class BTTimeLine : BTComposite
     {
         private bool m_bIsEnd = true;

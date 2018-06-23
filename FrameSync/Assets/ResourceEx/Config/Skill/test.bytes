@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <editorPos>
-    <x>5018</x>
+    <x>5023</x>
     <y>4785</y>
   </editorPos>
   <data xsi:type="SkillData">
@@ -15,15 +15,15 @@
   <lstChild>
     <NEData>
       <editorPos>
-        <x>5001</x>
+        <x>5006</x>
         <y>4938</y>
       </editorPos>
       <data xsi:type="BTTimeLineData" />
       <lstChild>
         <NEData>
           <editorPos>
-            <x>5000</x>
-            <y>5135</y>
+            <x>5005</x>
+            <y>5146</y>
           </editorPos>
           <data xsi:type="SK_CreateRemoteActionData">
             <time>

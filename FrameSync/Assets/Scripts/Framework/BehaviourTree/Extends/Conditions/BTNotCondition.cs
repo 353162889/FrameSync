@@ -12,7 +12,7 @@ namespace BTCore
     {
 
     }
-    [NENode(typeof(BTNotConditionData))]
+    [BTNode(typeof(BTNotConditionData))]
     public class BTNotCondition : BTCondition
     {
         protected BTCondition m_cChild;

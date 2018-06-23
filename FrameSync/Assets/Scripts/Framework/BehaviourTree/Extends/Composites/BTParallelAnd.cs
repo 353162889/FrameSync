@@ -10,7 +10,7 @@ namespace BTCore
     {
     }
 
-    [NENode(typeof(BTParallelAndData))]
+    [BTNode(typeof(BTParallelAndData))]
     /// <summary>
     /// 并行与，需要所有子对象都运行完成才返回
     /// </summary>

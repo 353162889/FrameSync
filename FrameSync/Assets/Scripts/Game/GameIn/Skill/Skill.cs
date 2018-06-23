@@ -10,7 +10,7 @@ namespace Game
 {
     public class Skill
     {
-        public static NETreeComposeType SkillComposeType = new NETreeComposeType(typeof(SkillTree), new List<Type> { typeof(SkillNodeAttribute), typeof(NENodeAttribute) }, "Assets/ResourceEx/Config/Skill", "skill", "bytes", "技能");
+        public static NETreeComposeType SkillComposeType = new NETreeComposeType(typeof(SkillTree), new List<Type> { typeof(SkillNodeAttribute), typeof(BTNodeAttribute), typeof(BTGameNodeAttribute) }, "Assets/ResourceEx/Config/Skill", "skill", "bytes", "技能");
         private static bool m_bInit = false;
         private static List<Type> m_lstSkillNodeType;
         public static List<Type> lstSkillNodeType { get { return m_lstSkillNodeType; } }
