@@ -89,6 +89,13 @@ namespace Game
             return unit;
         }
 
+        public Remote GetRemote(uint id)
+        {
+            Remote remote = null;
+            m_dicRemote.TryGetValue(id, out remote);
+            return remote;
+        }
+
         private void OnFrameSyncUpdate(FP deltaTime)
         {
             m_cUnitContainer.Update(deltaTime);
@@ -166,8 +173,7 @@ namespace Game
             if(unit != null)
             {
                 uint unitId = GameInTool.GenerateUnitId();
-                unit.Init(unitId, configId, campId, type, bornPosition, bornForward);
-                m_cUnitContainer.Add(unit);
+				unit.name = "unit_"+ type + "_"+unitId;				unit.Init(unitId, configId, campId, type, bornPosition, bornForward);                m_cUnitContainer.Add(unit);
             }
             return unit;
         }

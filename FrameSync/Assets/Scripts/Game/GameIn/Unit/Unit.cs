@@ -18,6 +18,9 @@ namespace Game
         protected int m_nConfigId;
         public int configId { get { return m_nConfigId; } }
 
+        protected int m_nCampId;
+        public int campId { get { return m_nCampId; } }
+
         protected UnitType m_eUnitType;
         public UnitType unitType { get { return m_eUnitType; } }
         
@@ -33,12 +36,17 @@ namespace Game
         protected AgentObject m_cAgentObj;
         public AgentObject agentObj { get { return m_cAgentObj; } }
 
-        public void Init(uint id,int configId,UnitType type, TSVector position, TSVector forward)
+        protected bool m_bIsDie;
+        public bool isDie { get { return m_bIsDie; } }
+
+        public void Init(uint id,int configId,int campId, UnitType type, TSVector position, TSVector forward)
         {
             m_nId = id;
             m_nConfigId = configId;
+            m_nCampId = campId;
             m_eUnitType = type;
             m_cAgentObj = new AgentUnit(this);
+            m_bIsDie = false;
             SetPosition(position);
             SetForward(forward);
             SubInit();
@@ -89,10 +97,12 @@ namespace Game
             InitMove();
             InitView();
             InitSkill();
+            InitField();
         }
 
         public virtual void OnUpdate(FP deltaTime)
         {
+            UpdateField(deltaTime);
             UpdateMove(deltaTime);
             UpdateView(deltaTime);
             UpdateSkill(deltaTime);
@@ -104,6 +114,7 @@ namespace Game
             DisposeView();
             ClearAgent();
             DisposeSkill();
+            DisposeField();
         }
 
         public void Reset()

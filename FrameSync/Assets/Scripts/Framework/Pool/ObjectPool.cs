@@ -9,6 +9,7 @@ namespace Framework
 		private Queue<T> _pool;
 		private int _capicity;
 		private bool _inited;
+        public bool inited { get { return _inited; } }
 
 		public void Init(int capicity)
 		{

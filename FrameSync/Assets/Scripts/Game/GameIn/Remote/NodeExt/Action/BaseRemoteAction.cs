@@ -7,24 +7,9 @@ using System.Text;
 
 namespace Game
 {
-    [NENodeCategory("Remote")]
+    [NENodeCategory("Remote/Action")]
     public class BaseRemoteAction : BTAction
     {
-        public override object data
-        {
-            get
-            {
-                return base.data;
-            }
-
-            set
-            {
-                base.data = value;
-                OnInitData(value);
-            }
-        }
-        protected virtual void OnInitData(object data) { }
-
         sealed public override void OnEnter(BTBlackBoard blackBoard)
         {
             this.OnEnter((RemoteBlackBoard)blackBoard);

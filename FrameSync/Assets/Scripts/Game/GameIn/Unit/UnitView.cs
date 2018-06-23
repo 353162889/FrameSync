@@ -10,8 +10,17 @@ namespace Game
     public partial class Unit
     {
         private GameObject m_cView;
+        private HangPoint m_cHangPoint;
+
+        public Transform GetHangPoint(string name, out TSVector position, out TSVector forward)
+        {
+            return m_cHangPoint.GetHangPoint(name, curPosition, curForward, out position, out forward);
+        }
+
         protected void InitView()
         {
+            m_cHangPoint = gameObject.AddComponentOnce<HangPoint>();
+            m_cHangPoint.Init(m_sPrefab);
             GameObjectPool.Instance.GetObject(m_sPrefab, OnResLoad);
         }
 
@@ -19,10 +28,13 @@ namespace Game
         {
             m_cView = go;
             this.gameObject.AddChildToParent(m_cView);
+            HangPointView hangPointView = m_cView.GetComponent<HangPointView>();
+            m_cHangPoint.InitHangView(hangPointView);
         }
 
         protected void ResetView()
         {
+            m_cHangPoint.Clear();
             if(m_cView != null)
             {
                 GameObjectPool.Instance.SaveObject(m_sPrefab, m_cView);
@@ -33,6 +45,7 @@ namespace Game
 
         protected void DisposeView()
         {
+            m_cHangPoint.Clear();
             if (m_cView != null)
             {
                 GameObjectPool.Instance.SaveObject(m_sPrefab, m_cView);

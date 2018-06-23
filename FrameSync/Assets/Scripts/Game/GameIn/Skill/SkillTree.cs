@@ -27,7 +27,7 @@ namespace Game
         public FP skillCD;
     }
 
-    [NENode(typeof(SkillData))]
+    [BTNode(typeof(SkillData))]
     [NENodeDisplay(false, true, false)]
     [NENodeName("SkillRoot")]
     public class SkillTree : BTNode

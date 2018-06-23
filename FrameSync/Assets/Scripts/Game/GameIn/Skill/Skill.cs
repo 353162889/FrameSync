@@ -10,7 +10,7 @@ namespace Game
 {
     public class Skill
     {
-        public static NETreeComposeType SkillComposeType = new NETreeComposeType(typeof(SkillTree), new List<Type> { typeof(SkillNodeAttribute), typeof(NENodeAttribute) }, "", "bytes", "技能");
+        public static NETreeComposeType SkillComposeType = new NETreeComposeType(typeof(SkillTree), new List<Type> { typeof(SkillNodeAttribute), typeof(BTNodeAttribute), typeof(BTGameNodeAttribute) }, "Assets/ResourceEx/Config/Skill", "skill", "bytes", "技能");
         private static bool m_bInit = false;
         private static List<Type> m_lstSkillNodeType;
         public static List<Type> lstSkillNodeType { get { return m_lstSkillNodeType; } }
@@ -42,6 +42,8 @@ namespace Game
 
         public AgentObject target { get { return m_cTarget; } }
         private AgentObject m_cTarget;
+        public uint targetAgentId { get { return m_cTarget == null ? 0 : m_cTarget.id; } }
+        public AgentObjectType targetAgentType { get { return m_cTarget == null ? AgentObjectType.Unit : m_cTarget.agentType; } }
         public TSVector targetPosition { get { return m_sTargetPosition; } }
         private TSVector m_sTargetPosition;
         public TSVector targetForward { get { return m_sTargetForward; } }

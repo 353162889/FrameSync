@@ -10,7 +10,7 @@ namespace BTCore
     {
 
     }
-    [NENode(typeof(BTSequenceData))]
+    [BTNode(typeof(BTSequenceData))]
     public class BTSequence : BTRunningComposite
     {
         protected int m_iSelectedIndex;

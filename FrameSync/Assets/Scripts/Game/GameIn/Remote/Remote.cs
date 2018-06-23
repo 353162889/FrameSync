@@ -12,7 +12,7 @@ namespace Game
     public class Remote : MonoBehaviour, IPoolable,IDynamicObj
     {
 
-        public static NETreeComposeType RemoteComposeType = new NETreeComposeType(typeof(RemoteTree), new List<Type> { typeof(RemoteNodeAttribute), typeof(NENodeAttribute) }, "", "bytes", "远程");
+        public static NETreeComposeType RemoteComposeType = new NETreeComposeType(typeof(RemoteTree), new List<Type> { typeof(RemoteNodeAttribute), typeof(BTNodeAttribute),typeof(BTGameNodeAttribute) }, "Assets/ResourceEx/Config/Remote", "remote", "bytes", "远程");
         private static bool m_bInit = false;
         private static List<Type> m_lstRemoteNodeType;
         public static List<Type> lstRemoteNodeType { get { return m_lstRemoteNodeType; } }
@@ -51,6 +51,9 @@ namespace Game
 
         public AgentObject target { get { return m_cTarget; } }
         private AgentObject m_cTarget;
+        public uint targetAgentId { get { return m_cTarget == null ? 0 : m_cTarget.id; } }
+        public AgentObjectType targetAgentType { get { return m_cTarget == null ? AgentObjectType.Unit : m_cTarget.agentType; } }
+
         public TSVector targetPosition { get { return m_sTargetPosition; } }
         private TSVector m_sTargetPosition;
         public TSVector targetForward { get { return m_sTargetForward; } }
@@ -60,6 +63,12 @@ namespace Game
 
         private GameObject m_cView;
 
+        private HangPoint m_cHangPoint;
+
+        private AgentObject m_cAgentObj;
+        public AgentObject agentObj { get { return m_cAgentObj; } }
+
+
         public void Init(uint id, int configId, TSVector position, TSVector forward, uint targetAgentId, AgentObjectType targetAgentType, TSVector targetPosition, TSVector targetForward)
         {
             m_nId = id;
@@ -67,6 +76,7 @@ namespace Game
             this.gameObject.name = "remote_" + m_nId + "_" + m_nConfigId;
             m_cRemoteTree = RemoteTreePool.Instance.GetRemoteTree(m_nConfigId);
             m_cRemoteData = m_cRemoteTree.data as RemoteData;
+            m_cAgentObj = new AgentRemote(this);
             SetPosition(position);
             m_sLastPosition = position;
             SetForward(forward);
@@ -79,10 +89,20 @@ namespace Game
             m_cTarget = AgentObject.GetAgentObject(targetAgentId, targetAgentType);
             m_sTargetPosition = targetPosition;
             m_sTargetForward = targetForward;
-            GameObjectPool.Instance.GetObject(m_cRemoteData.remotePath, OnResLoad);
+            m_cView = SceneEffectPool.Instance.CreateEffect(m_cRemoteData.remotePath, false, this.transform);
             m_cLerpView = gameObject.AddComponentOnce<LerpMoveView>();
             m_cLerpView.Init();
             m_cLerpView.StopMove();
+
+            m_cHangPoint = gameObject.AddComponentOnce<HangPoint>();
+            m_cHangPoint.Init(PathTool.GetSceneEffectPath(m_cRemoteData.remotePath));
+            //暂时不支持表现挂点(特效上挂特效)
+            m_cHangPoint.InitHangView(null);
+        }
+
+        public Transform GetHangPoint(string name, out TSVector position, out TSVector forward)
+        {
+            return m_cHangPoint.GetHangPoint(name, curPosition, curForward, out position, out forward);
         }
 
         public void StartMove(TSVector startPosition, List<TSVector> lstPosition)
@@ -110,12 +130,6 @@ namespace Game
         public void StopMove()
         {
             m_cLerpView.StopMove();
-        }
-
-        private void OnResLoad(GameObject go)
-        {
-            m_cView = go;
-            this.gameObject.AddChildToParent(m_cView);
         }
 
         public void SetPosition(TSVector position)
@@ -157,16 +171,17 @@ namespace Game
         {
             if(m_cView != null)
             {
-                GameObjectPool.Instance.SaveObject(m_cRemoteData.remotePath, m_cView);
+                SceneEffectPool.Instance.DestroyEffectGO(m_cView);
                 m_cView = null;
             }
             m_cLerpView.StopMove();
-            GameObjectPool.Instance.RemoveCallback(m_cRemoteData.remotePath, OnResLoad);
             m_cBlackBoard.Clear();
+            m_cHangPoint.Clear();
             m_cTarget = null;
             RemoteTreePool.Instance.SaveRemoteTree(m_nConfigId, m_cRemoteTree);
             m_cRemoteData = null;
             m_cRemoteTree = null;
+            ClearAgent();
         }
 
 
@@ -178,6 +193,15 @@ namespace Game
         protected void SetViewForward(TSVector forward)
         {
             transform.forward = forward.ToUnityVector3();
+        }
+
+        private void ClearAgent()
+        {
+            if (m_cAgentObj != null)
+            {
+                m_cAgentObj.Clear();
+                m_cAgentObj = null;
+            }
         }
     }
 }

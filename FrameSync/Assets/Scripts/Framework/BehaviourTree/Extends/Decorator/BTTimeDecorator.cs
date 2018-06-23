@@ -11,7 +11,7 @@ namespace BTCore
     {
         public FP time;
     }
-    [NENode(typeof(BTTimeDecoratorData))]
+    [BTNode(typeof(BTTimeDecoratorData))]
     public class BTTimeDecorator : BTDecorator, IBTTimeLineNode
     {
         public FP time

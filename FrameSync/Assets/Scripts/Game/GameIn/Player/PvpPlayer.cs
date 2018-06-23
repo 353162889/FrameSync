@@ -31,7 +31,7 @@ namespace Game
 
         public void CreateUnit()
         {
-            m_cUnit = BattleScene.Instance.CreateUnit(1, UnitType.AirShip, TSVector.zero, TSVector.forward);
+            m_cUnit = BattleScene.Instance.CreateUnit(1, (int)CampType.Camp1, UnitType.AirShip, TSVector.zero, TSVector.forward);
         }
 
         public void FrameUpdate(FP deltaTime)

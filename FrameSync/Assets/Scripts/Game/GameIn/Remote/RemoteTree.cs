@@ -28,7 +28,7 @@ namespace Game
         public RemoteTargetType remoteTarget;
     }
 
-    [NENode(typeof(RemoteData))]
+    [BTNode(typeof(RemoteData))]
     [NENodeDisplay(false, true, false)]
     [NENodeName("RemoteRoot")]
     public class RemoteTree : BTNode

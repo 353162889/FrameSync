@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace Game
 {
@@ -10,6 +11,7 @@ namespace Game
     public enum AgentObjectType
     {
         Unit,
+        Remote,
     }
 
     public abstract class AgentObject
@@ -27,6 +29,13 @@ namespace Game
                         agentObj = unit.agentObj;
                     }
                     break;
+                case AgentObjectType.Remote:
+                    Remote remote = BattleScene.Instance.GetRemote(id);
+                    if(remote != null)
+                    {
+                        agentObj = remote.agentObj;
+                    }
+                    break;
             }
             return agentObj;
         }
@@ -42,5 +51,6 @@ namespace Game
         abstract public AgentObjectType agentType { get; }
         abstract public TSVector curPosition { get; }
         abstract public TSVector curForward { get; }
+        abstract public Transform GetHangPoint(string name, out TSVector position, out TSVector forward);
     }
 }

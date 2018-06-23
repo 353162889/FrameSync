@@ -7,24 +7,9 @@ using System.Text;
 
 namespace Game
 {
-    [NENodeCategory("Skill")]
+    [NENodeCategory("Skill/Action")]
     public class BaseSkillAction : BTAction
     {
-        public override object data
-        {
-            get
-            {
-                return base.data;
-            }
-
-            set
-            {
-                base.data = value;
-                OnInitData(value);
-            }
-        }
-        protected virtual void OnInitData(object data) { }
-
         sealed public override void OnEnter(BTBlackBoard blackBoard)
         {
             this.OnEnter((SkillBlackBoard)blackBoard);

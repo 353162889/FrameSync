@@ -10,7 +10,7 @@ namespace Game
     public class RemoteCfgSys : Singleton<RemoteCfgSys>
     {
         private NEDataLoader m_cNEDataLoader;
-        public void LoadResCfgs(string resDir, Action onFinish)
+        public void LoadResCfgs(Action onFinish)
         {
             m_cNEDataLoader = new NEDataLoader();
             List<string> files = new List<string>();

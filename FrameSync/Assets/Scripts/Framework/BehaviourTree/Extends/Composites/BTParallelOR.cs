@@ -10,7 +10,7 @@ namespace BTCore
     {
 
     }
-    [NENode(typeof(BTParallelORData))]
+    [BTNode(typeof(BTParallelORData))]
     /// <summary>
     /// 并行或，只要有一个不在运行中，那么返回结果
     /// </summary>

@@ -292,7 +292,15 @@ namespace NodeEditor
 
         private void LoadTreeByTreeData()
         {
-            string path = EditorUtility.OpenFilePanel("加载数据", Application.dataPath, "bytes");
+            if (m_nTreeComposeIndex < 0 || m_nTreeComposeIndex > NEConfig.arrTreeComposeData.Length)
+            {
+                Debug.Log("需要选择树的类型");
+                return;
+            }
+            var composeData = NEConfig.arrTreeComposeData[m_nTreeComposeIndex];
+            string dir = composeData.fileDir;
+            if (dir.StartsWith("Assets")) dir = dir.Replace("Assets", "");
+            string path = EditorUtility.OpenFilePanel("加载数据", Application.dataPath + dir, composeData.fileExt);
             if (path.Length != 0)
             {
                 //通过前后缀确定当前数据是哪种类型,需要先切换到当前类型，在加载数据，否则数据有可能不对
@@ -315,7 +323,9 @@ namespace NodeEditor
                 Debug.Log("没有树数据");
                 return;
             }
-            string path = EditorUtility.SaveFilePanel("保存数据", Application.dataPath, "", composeData.fileExt);
+            string dir = composeData.fileDir;
+            if (dir.StartsWith("Assets")) dir = dir.Replace("Assets", "");
+            string path = EditorUtility.SaveFilePanel("保存数据", Application.dataPath + dir, "", composeData.fileExt);
             if (path.Length != 0)
             {
                 NEUtil.SerializerObject(path, data, m_lstNodeDataType.ToArray());
