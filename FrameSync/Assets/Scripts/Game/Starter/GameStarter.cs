@@ -112,10 +112,22 @@ namespace Game
             ResourceSys.Instance.Init(true, "Assets/ResourceEx");
             gameObject.AddComponentOnce<UpdateScheduler>();
             gameObject.AddComponentOnce<TouchDispatcher>();
+            //初始化对象池
             GameObject goPool = new GameObject();
             goPool.name = "GameObjectPool";
             GameObject.DontDestroyOnLoad(goPool);
             goPool.AddComponentOnce<GameObjectPool>();
+            //初始化特效池
+            GameObject sceneEffectPool = new GameObject();
+            sceneEffectPool.name = "SceneEffectPool";
+            GameObject.DontDestroyOnLoad(sceneEffectPool);
+            sceneEffectPool.AddComponentOnce<SceneEffectPool>();
+
+            GameObject uiEffectPool = new GameObject();
+            uiEffectPool.name = "UIEffectPool";
+            GameObject.DontDestroyOnLoad(uiEffectPool);
+            uiEffectPool.AddComponentOnce<UIEffectPool>();
+
             GameObject uiGO = transform.Find("UIContainer").gameObject;
             uiGO.AddComponentOnce<ViewSys>();
            

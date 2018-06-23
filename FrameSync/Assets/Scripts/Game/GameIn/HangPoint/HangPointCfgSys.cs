@@ -93,10 +93,6 @@ namespace Game
                 path = m_sRootDir + path;
                 hangPointItem = m_cHangPointSet.GetHangPointItem(path);
             }
-            if(hangPointItem == null)
-            {
-                CLog.LogError("找不到path="+path+"的挂点配置");
-            }
             return hangPointItem;
         }
 

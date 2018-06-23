@@ -143,6 +143,7 @@ namespace Game
             if(unit != null)
             {
                 uint unitId = GameInTool.GenerateUnitId();
+                unit.name = "unit_"+ type + "_"+unitId;
                 unit.Init(unitId, configId, type, bornPosition, bornForward);
                 m_cUnitContainer.Add(unit);
             }

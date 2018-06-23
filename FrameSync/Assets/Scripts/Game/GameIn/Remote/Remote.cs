@@ -79,7 +79,7 @@ namespace Game
             m_cTarget = AgentObject.GetAgentObject(targetAgentId, targetAgentType);
             m_sTargetPosition = targetPosition;
             m_sTargetForward = targetForward;
-            GameObjectPool.Instance.GetObject(m_cRemoteData.remotePath, OnResLoad);
+            m_cView = SceneEffectPool.Instance.CreateEffect(m_cRemoteData.remotePath, false, this.transform);
             m_cLerpView = gameObject.AddComponentOnce<LerpMoveView>();
             m_cLerpView.Init();
             m_cLerpView.StopMove();
@@ -110,12 +110,6 @@ namespace Game
         public void StopMove()
         {
             m_cLerpView.StopMove();
-        }
-
-        private void OnResLoad(GameObject go)
-        {
-            m_cView = go;
-            this.gameObject.AddChildToParent(m_cView);
         }
 
         public void SetPosition(TSVector position)
@@ -157,11 +151,10 @@ namespace Game
         {
             if(m_cView != null)
             {
-                GameObjectPool.Instance.SaveObject(m_cRemoteData.remotePath, m_cView);
+                SceneEffectPool.Instance.DestroyEffectGO(m_cView);
                 m_cView = null;
             }
             m_cLerpView.StopMove();
-            GameObjectPool.Instance.RemoveCallback(m_cRemoteData.remotePath, OnResLoad);
             m_cBlackBoard.Clear();
             m_cTarget = null;
             RemoteTreePool.Instance.SaveRemoteTree(m_nConfigId, m_cRemoteTree);

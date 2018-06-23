@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace Game
+namespace Framework
 {
     public class GameObjectPool : SingletonMonoBehaviour<GameObjectPool>
     {
@@ -80,6 +80,32 @@ namespace Game
             }
         }
 
+        public void Clear(string path)
+        {
+            ResourceSys.Instance.RemoveListener(path, OnResLoad);
+            m_dicCallback.Remove(path);
+            Resource resource = null;
+            Queue<GameObject> queue = null;
+            foreach (var item in m_dicGO)
+            {
+                if (item.Key.path == path)
+                {
+                    resource = item.Key;
+                    queue = item.Value;
+                    break;
+                }
+            }
+            if(resource != null)
+            {
+                m_dicGO.Remove(resource);
+                while (queue.Count > 0)
+                {
+                    GameObject.Destroy(queue.Dequeue());
+                }
+                resource.Release();
+            }
+        }
+
         public void Clear()
         {
             foreach (var item in m_dicCallback)
@@ -93,7 +119,7 @@ namespace Game
                 {
                     GameObject.Destroy(item.Value.Dequeue());
                 }
-                item.Key.Retain();
+                item.Key.Release();
             }
             m_dicGO.Clear();
         }
