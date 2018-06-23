@@ -14,6 +14,13 @@ namespace Game
         AirShip,//飞船
     }
 
+    public enum CampType
+    {
+        Camp1 = 0,
+        Camp2,
+        CampMax,
+    }
+
     public class BattleScene : Singleton<BattleScene>
     {
         private int m_nSceneId;
@@ -26,6 +33,8 @@ namespace Game
         public GameObject unitRoot { get { return m_cUnitRoot; } }
 
         private Dictionary<uint, Unit> m_dicUnit;
+        private Dictionary<int, List<Unit>> m_dicCampUnits;
+        public Dictionary<int, List<Unit>> dicCampUnits { get { return m_dicCampUnits; } }
         private DynamicContainer m_cUnitContainer;
 
         private GameObject m_cRemoteRoot;
@@ -53,6 +62,7 @@ namespace Game
             GameObject.DontDestroyOnLoad(m_cRemoteRoot);
 
             m_dicUnit = new Dictionary<uint, Unit>();
+            m_dicCampUnits = new Dictionary<int, List<Unit>>();
             m_cUnitContainer = new DynamicContainer();
             m_cUnitContainer.OnAdd += OnAddUnit;
             m_cUnitContainer.OnRemove += OnRemoveUnit;
@@ -89,6 +99,14 @@ namespace Game
         {
             Unit unit = (Unit)obj;
             m_dicUnit.Add(unit.id, unit);
+            List<Unit> lst;
+            m_dicCampUnits.TryGetValue(unit.campId, out lst);
+            if(lst == null)
+            {
+                lst = new List<Unit>();
+                m_dicCampUnits.Add(unit.campId, lst);
+            }
+            lst.Add(unit);
             GlobalEventDispatcher.Instance.Dispatch(GameEvent.UnitAdd, unit);
         }
 
@@ -96,6 +114,11 @@ namespace Game
         {
             Unit unit = (Unit)obj;
             m_dicUnit.Remove(unit.id);
+            List<Unit> lst;
+            if(m_dicCampUnits.TryGetValue(unit.campId, out lst))
+            {
+                lst.Remove(unit);
+            }
             switch (unit.unitType)
             {
                 case UnitType.AirShip:
@@ -130,7 +153,7 @@ namespace Game
             remote.OnUpdate((FP)param);
         }
 
-        public Unit CreateUnit(int configId,UnitType type, TSVector bornPosition, TSVector bornForward)
+        public Unit CreateUnit(int configId,int campId, UnitType type, TSVector bornPosition, TSVector bornForward)
         {
             Unit unit = null;
             switch(type)
@@ -143,7 +166,7 @@ namespace Game
             if(unit != null)
             {
                 uint unitId = GameInTool.GenerateUnitId();
-                unit.Init(unitId, configId, type, bornPosition, bornForward);
+                unit.Init(unitId, configId, campId, type, bornPosition, bornForward);
                 m_cUnitContainer.Add(unit);
             }
             return unit;
@@ -175,6 +198,9 @@ namespace Game
             BehaviourPool<UnitAirShip>.Instance.Dispose();
             BehaviourPool<Remote>.Instance.Dispose();
             FrameSyncSys.Instance.OnFrameSyncUpdate -= OnFrameSyncUpdate;
+            m_dicCampUnits.Clear();
+            m_dicUnit.Clear();
+            m_dicRemote.Clear();
             if (m_cUnitContainer != null)
             {
                 m_cUnitContainer.OnAdd -= OnAddUnit;
