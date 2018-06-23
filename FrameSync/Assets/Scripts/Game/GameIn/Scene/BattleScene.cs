@@ -79,6 +79,13 @@ namespace Game
             return unit;
         }
 
+        public Remote GetRemote(uint id)
+        {
+            Remote remote = null;
+            m_dicRemote.TryGetValue(id, out remote);
+            return remote;
+        }
+
         private void OnFrameSyncUpdate(FP deltaTime)
         {
             m_cUnitContainer.Update(deltaTime);

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Game
 {
-    [NENodeCategory("Remote")]
+    [NENodeCategory("Remote/Action")]
     public class BaseRemoteAction : BTAction
     {
         sealed public override void OnEnter(BTBlackBoard blackBoard)

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Game
 {
-    [NENodeCategory("Skill")]
+    [NENodeCategory("Skill/Action")]
     public class BaseSkillAction : BTAction
     {
         sealed public override void OnEnter(BTBlackBoard blackBoard)

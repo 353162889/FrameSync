@@ -11,6 +11,7 @@ namespace Game
     public enum AgentObjectType
     {
         Unit,
+        Remote,
     }
 
     public abstract class AgentObject
@@ -26,6 +27,13 @@ namespace Game
                     if (unit != null)
                     {
                         agentObj = unit.agentObj;
+                    }
+                    break;
+                case AgentObjectType.Remote:
+                    Remote remote = BattleScene.Instance.GetRemote(id);
+                    if(remote != null)
+                    {
+                        agentObj = remote.agentObj;
                     }
                     break;
             }
