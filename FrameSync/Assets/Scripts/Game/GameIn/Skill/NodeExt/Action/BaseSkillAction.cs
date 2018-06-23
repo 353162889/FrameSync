@@ -10,21 +10,6 @@ namespace Game
     [NENodeCategory("Skill")]
     public class BaseSkillAction : BTAction
     {
-        public override object data
-        {
-            get
-            {
-                return base.data;
-            }
-
-            set
-            {
-                base.data = value;
-                OnInitData(value);
-            }
-        }
-        protected virtual void OnInitData(object data) { }
-
         sealed public override void OnEnter(BTBlackBoard blackBoard)
         {
             this.OnEnter((SkillBlackBoard)blackBoard);

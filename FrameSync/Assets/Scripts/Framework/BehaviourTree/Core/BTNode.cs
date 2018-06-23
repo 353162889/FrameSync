@@ -16,7 +16,9 @@ namespace BTCore
     abstract public class BTNode : INENode{
         [NENodeData]
         protected object m_cData;
-        public virtual object data {  get { return m_cData; }  set { m_cData = value; } }
+        public object data {  get { return m_cData; }  set { m_cData = value; OnInitData(m_cData); } }
+
+        protected virtual void OnInitData(object data) { }
 
         public virtual BTResult OnTick(BTBlackBoard blackBoard){ return BTResult.Success; }
 

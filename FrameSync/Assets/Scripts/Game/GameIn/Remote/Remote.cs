@@ -51,6 +51,9 @@ namespace Game
 
         public AgentObject target { get { return m_cTarget; } }
         private AgentObject m_cTarget;
+        public uint targetAgentId { get { return m_cTarget == null ? 0 : m_cTarget.id; } }
+        public AgentObjectType targetAgentType { get { return m_cTarget == null ? AgentObjectType.Unit : m_cTarget.agentType; } }
+
         public TSVector targetPosition { get { return m_sTargetPosition; } }
         private TSVector m_sTargetPosition;
         public TSVector targetForward { get { return m_sTargetForward; } }
@@ -59,6 +62,8 @@ namespace Game
         private LerpMoveView m_cLerpView;
 
         private GameObject m_cView;
+
+        private HangPoint m_cHangPoint;
 
         public void Init(uint id, int configId, TSVector position, TSVector forward, uint targetAgentId, AgentObjectType targetAgentType, TSVector targetPosition, TSVector targetForward)
         {
@@ -83,6 +88,16 @@ namespace Game
             m_cLerpView = gameObject.AddComponentOnce<LerpMoveView>();
             m_cLerpView.Init();
             m_cLerpView.StopMove();
+
+            m_cHangPoint = gameObject.AddComponentOnce<HangPoint>();
+            m_cHangPoint.Init(PathTool.GetSceneEffectPath(m_cRemoteData.remotePath));
+            //暂时不支持表现挂点(特效上挂特效)
+            m_cHangPoint.InitHangView(null);
+        }
+
+        public Transform GetHangPoint(string name, out TSVector position, out TSVector forward)
+        {
+            return m_cHangPoint.GetHangPoint(name, curPosition, curForward, out position, out forward);
         }
 
         public void StartMove(TSVector startPosition, List<TSVector> lstPosition)
@@ -156,6 +171,7 @@ namespace Game
             }
             m_cLerpView.StopMove();
             m_cBlackBoard.Clear();
+            m_cHangPoint.Clear();
             m_cTarget = null;
             RemoteTreePool.Instance.SaveRemoteTree(m_nConfigId, m_cRemoteTree);
             m_cRemoteData = null;

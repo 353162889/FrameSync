@@ -42,6 +42,8 @@ namespace Game
 
         public AgentObject target { get { return m_cTarget; } }
         private AgentObject m_cTarget;
+        public uint targetAgentId { get { return m_cTarget == null ? 0 : m_cTarget.id; } }
+        public AgentObjectType targetAgentType { get { return m_cTarget == null ? AgentObjectType.Unit : m_cTarget.agentType; } }
         public TSVector targetPosition { get { return m_sTargetPosition; } }
         private TSVector m_sTargetPosition;
         public TSVector targetForward { get { return m_sTargetForward; } }

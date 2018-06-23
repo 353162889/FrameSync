@@ -86,5 +86,35 @@
         </HangPointData>
       </mLstData>
     </HangPointItem>
+    <HangPointItem>
+      <path>Assets/ResourceEx/Prefab/Effect/Bullet.prefab</path>
+      <mLstData>
+        <HangPointData>
+          <name>FirePos</name>
+          <position>
+            <x>
+              <_serializedValue>0</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>0</_serializedValue>
+            </z>
+          </position>
+          <forward>
+            <x>
+              <_serializedValue>4154573824</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>-1089157120</_serializedValue>
+            </z>
+          </forward>
+        </HangPointData>
+      </mLstData>
+    </HangPointItem>
   </mLstHangPointItem>
 </HangPointSet>

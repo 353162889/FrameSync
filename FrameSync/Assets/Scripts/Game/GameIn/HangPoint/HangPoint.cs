@@ -28,32 +28,29 @@ namespace Game
             forward = curForward;
             Transform transform = null;
             bool hasHangPoint = false;
-            if(m_cHangPointView != null)
+            if (m_cHangPointItem != null)
+            {
+                var hangPointData = m_cHangPointItem.GetHangPointData(name);
+                if (hangPointData != null)
+                {
+                    hasHangPoint = true;
+                    FP nAngle = TSVector.Angle(TSVector.forward, curForward);
+                    if (curForward.x < 0)
+                    {
+                        nAngle = 360 - nAngle;
+                    }
+                    TSQuaternion sQuat = TSQuaternion.AngleAxis(nAngle, TSVector.up);
+                    position = curPosition + sQuat * hangPointData.position;
+                    forward = sQuat * hangPointData.forward;
+                    forward.Normalize();
+                }
+            }
+            if (m_cHangPointView != null)
             {
                 transform = m_cHangPointView.GetHangPoint(name);
                 hasHangPoint = true;
             }
-            if(transform == null)
-            {
-                if(m_cHangPointItem != null)
-                {
-                    var hangPointData = m_cHangPointItem.GetHangPointData(name);
-                    if(hangPointData != null)
-                    {
-                        hasHangPoint = true;
-                        FP nAngle = TSVector.Angle(TSVector.forward, curForward);
-                        if (curForward.x < 0)
-                        {
-                            nAngle = 360 - nAngle;
-                        }
-                        TSQuaternion sQuat = TSQuaternion.AngleAxis(nAngle, TSVector.up);
-                        position = curPosition +  sQuat * hangPointData.position;
-                        forward = sQuat * hangPointData.forward;
-                        forward.Normalize();
-                    }
-                }
-            }
-            if(!hasHangPoint)
+            if (!hasHangPoint)
             {
                 CLog.LogError("对象"+this.name+"找不到挂点名为:"+name+"的挂点信息");
             }

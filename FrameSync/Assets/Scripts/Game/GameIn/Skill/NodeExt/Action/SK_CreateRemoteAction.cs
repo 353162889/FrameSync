@@ -14,6 +14,7 @@ namespace Game
         public FP time;
         public int remoteId;
         public string hangPoint;
+        public bool useHangPoint;
     }
     [SkillNode(typeof(SK_CreateRemoteActionData))]
     public class SK_CreateRemoteAction : BaseTimeLineSkillAction
@@ -37,7 +38,12 @@ namespace Game
             {
                 host.GetHangPoint(m_cActionData.hangPoint,out bornPosition,out bornForward);
             }
-            BattleScene.Instance.CreateRemote(m_cActionData.remoteId, bornPosition, bornForward, 0, AgentObjectType.Unit, skill.targetPosition, skill.targetForward);
+            TSVector targetForward = skill.targetForward;
+            if(m_cActionData.useHangPoint)
+            {
+                targetForward = bornForward;
+            }
+            BattleScene.Instance.CreateRemote(m_cActionData.remoteId, bornPosition, targetForward, skill.targetAgentId, skill.targetAgentType, skill.targetPosition, targetForward);
             return BTActionResult.Ready;
         }
     }
