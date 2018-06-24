@@ -30,6 +30,7 @@ namespace Framework
 
         public override bool CheckCollider(Check2DCollider collider)
         {
+            if (collider == null) return false;
             return collider.CheckRect(this.center, this.forward, halfWidth, halfHeight);
         }
 

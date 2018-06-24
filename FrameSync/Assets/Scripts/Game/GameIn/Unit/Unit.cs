@@ -10,6 +10,7 @@ namespace Game
 {
     public partial class Unit : MonoBehaviour,IDynamicObj,IPoolable
     {
+
         public int key{ get { return (int)m_nId; } }
 
         private uint m_nId;
@@ -26,10 +27,15 @@ namespace Game
         
 
         protected TSVector m_sCurPosition;
-        public TSVector curPosition { get { return m_sCurPosition; } }
+        public TSVector curPosition { get { return m_sCurPosition; } protected set { m_sLastPosition = m_sCurPosition; m_sCurPosition = value; } }
 
         protected TSVector m_sCurForward;
-        public TSVector curForward { get { return m_sCurForward; } }
+        public TSVector curForward { get { return m_sCurForward; } protected set { m_sLastForward = m_sCurForward;m_sCurForward = value; } }
+
+        public TSVector lastPosition { get { return m_sLastPosition; } }
+        protected TSVector m_sLastPosition;
+        public TSVector lastForward { get { return m_sLastForward; } }
+        protected TSVector m_sLastForward;
 
         protected string m_sPrefab;
 
@@ -47,6 +53,8 @@ namespace Game
             m_eUnitType = type;
             m_cAgentObj = new AgentUnit(this);
             m_bIsDie = false;
+            m_sCurPosition = m_sLastPosition = position;
+            m_sCurForward = m_sLastForward = forward;
             SetPosition(position);
             SetForward(forward);
             SubInit();
@@ -63,7 +71,7 @@ namespace Game
 
         public void SetPosition(TSVector position)
         {
-            m_sCurPosition = position;
+            curPosition = position;
             SetViewPosition(position);
         }
 
@@ -83,7 +91,7 @@ namespace Game
             if (forward == TSVector.zero) return;
             if (immediately)
             {
-                m_sCurForward = forward;
+                curForward = forward;
                 SetViewForward(forward);
             }
             else
@@ -97,12 +105,10 @@ namespace Game
             InitMove();
             InitView();
             InitSkill();
-            InitField();
         }
 
         public virtual void OnUpdate(FP deltaTime)
         {
-            UpdateField(deltaTime);
             UpdateMove(deltaTime);
             UpdateView(deltaTime);
             UpdateSkill(deltaTime);
@@ -114,7 +120,6 @@ namespace Game
             DisposeView();
             ClearAgent();
             DisposeSkill();
-            DisposeField();
         }
 
         public void Reset()

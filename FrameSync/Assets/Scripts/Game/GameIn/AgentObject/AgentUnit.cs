@@ -11,6 +11,7 @@ namespace Game
     {
         private Unit m_cUnit;
         private uint m_nId;
+        private int m_nLastCampId;
         private TSVector m_sLastPosition;
         private TSVector m_sLastForward;
         public AgentUnit(Unit unit)
@@ -22,6 +23,7 @@ namespace Game
 
         public override void Clear()
         {
+            m_nLastCampId = m_cUnit.campId;
             m_sLastPosition = m_cUnit.curPosition;
             m_sLastForward = m_cUnit.curForward;
             m_cUnit = null;
@@ -44,6 +46,14 @@ namespace Game
             }
         }
 
+        public override int campId
+        {
+            get
+            {
+                return m_cUnit == null ? m_nLastCampId : m_cUnit.campId;
+            }
+        }
+
         public override TSVector curForward
         {
             get
@@ -60,11 +70,38 @@ namespace Game
             }
         }
 
+        public override TSVector lastForward
+        {
+            get
+            {
+                return m_cUnit == null ? m_sLastForward : m_cUnit.lastForward;
+            }
+        }
+
+        public override TSVector lastPosition
+        {
+            get
+            {
+                return m_cUnit == null ? m_sLastPosition : m_cUnit.lastPosition;
+            }
+        }
+
         public override Transform GetHangPoint(string name, out TSVector position, out TSVector forward)
         {
             if(m_cUnit != null)
             {
                 return m_cUnit.GetHangPoint(name, out position, out forward);
+            }
+            position = curPosition;
+            forward = curForward;
+            return null;
+        }
+
+        public override Transform GetHangPoint(string name, TSVector cPosition, TSVector cForward, out TSVector position, out TSVector forward)
+        {
+            if (m_cUnit != null)
+            {
+                return m_cUnit.GetHangPoint(name, cPosition, cForward, out position, out forward);
             }
             position = curPosition;
             forward = curForward;

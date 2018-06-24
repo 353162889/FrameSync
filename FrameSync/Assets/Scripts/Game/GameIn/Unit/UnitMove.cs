@@ -141,7 +141,7 @@ namespace Game
 
         private void OnMove(TSVector position, TSVector forward)
         {
-            m_sCurPosition = position;
+            curPosition = position;
             RotateToTarget(forward);
         }
 

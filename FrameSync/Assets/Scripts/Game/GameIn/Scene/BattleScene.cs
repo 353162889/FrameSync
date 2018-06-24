@@ -41,8 +41,13 @@ namespace Game
         public GameObject remoteRoot { get { return m_cRemoteRoot; } }
 
         private Dictionary<uint, Remote> m_dicRemote;
+        private Dictionary<int, List<Remote>> m_dicCampRemotes;
+        public Dictionary<int, List<Remote>> dicCampRemotes { get { return m_dicCampRemotes; } }
         private DynamicContainer m_cRemoteContainer;
-       
+
+        private Dictionary<int, AgentObjField> m_dicCampUnitField;
+        private Dictionary<int, AgentObjField> m_dicCampRemoteField;
+
 
         public void Init(int sceneId)
         {
@@ -69,10 +74,28 @@ namespace Game
             m_cUnitContainer.OnUpdate += OnUpdateUnit;
 
             m_dicRemote = new Dictionary<uint, Remote>();
+            m_dicCampRemotes = new Dictionary<int, List<Remote>>();
             m_cRemoteContainer = new DynamicContainer();
             m_cRemoteContainer.OnAdd += OnAddRemote;
             m_cRemoteContainer.OnRemove += OnRemoveRemote;
             m_cRemoteContainer.OnUpdate += OnUpdateRemote;
+
+            int campMax = (int)CampType.CampMax;
+            m_dicCampUnitField = new Dictionary<int, AgentObjField>();
+            for (int i = 0; i < campMax; i++)
+            {
+                AgentObjField agentObjField = new AgentObjField();
+                agentObjField.Init(i, (int)AgentObjectType.Unit);
+                m_dicCampUnitField.Add(i, agentObjField);
+            }
+
+            m_dicCampRemoteField = new Dictionary<int, AgentObjField>();
+            for (int i = 0; i < campMax; i++)
+            {
+                AgentObjField agentObjField = new AgentObjField();
+                agentObjField.Init(i, (int)AgentObjectType.Remote);
+                m_dicCampRemoteField.Add(i, agentObjField);
+            }
 
             BehaviourPool<UnitAirShip>.Instance.Init(30);
             BehaviourPool<Remote>.Instance.Init(100);
@@ -96,8 +119,31 @@ namespace Game
             return remote;
         }
 
+        public AgentObjField GetField(int campId,AgentObjectType agentObjType)
+        {
+            if(agentObjType == AgentObjectType.Unit)
+            {
+                return m_dicCampUnitField[campId];
+            }
+            else if(agentObjType == AgentObjectType.Remote)
+            {
+                return m_dicCampRemoteField[campId];
+            }
+            return null;
+        }
+
         private void OnFrameSyncUpdate(FP deltaTime)
         {
+            foreach (var item in m_dicCampUnitField)
+            {
+                item.Value.UpdateField(deltaTime);
+            }
+
+            foreach (var item in m_dicCampRemoteField)
+            {
+                item.Value.UpdateField(deltaTime);
+            }
+
             m_cUnitContainer.Update(deltaTime);
             m_cRemoteContainer.Update(deltaTime);
         }
@@ -144,6 +190,13 @@ namespace Game
         private void OnAddRemote(IDynamicObj obj, object param)
         {
             Remote remote = (Remote)obj;
+            List<Remote> lst;
+            m_dicCampRemotes.TryGetValue(remote.campId, out lst);
+            if (lst == null)
+            {
+                lst = new List<Remote>();
+                m_dicCampRemotes.Add(remote.campId, lst);
+            }
             m_dicRemote.Add(remote.id, remote);
         }
 
@@ -151,6 +204,11 @@ namespace Game
         {
             Remote remote = (Remote)obj;
             m_dicRemote.Remove(remote.id);
+            List<Remote> lst;
+            if (m_dicCampRemotes.TryGetValue(remote.campId, out lst))
+            {
+                lst.Remove(remote);
+            }
             BehaviourPool<Remote>.Instance.SaveObject(remote);
         }
 
@@ -173,7 +231,9 @@ namespace Game
             if(unit != null)
             {
                 uint unitId = GameInTool.GenerateUnitId();
-				unit.name = "unit_"+ type + "_"+unitId;				unit.Init(unitId, configId, campId, type, bornPosition, bornForward);                m_cUnitContainer.Add(unit);
+				unit.name = "unit_"+ type + "_"+unitId;
+                unit.Init(unitId, configId, campId, type, bornPosition, bornForward);
+                m_cUnitContainer.Add(unit);
             }
             return unit;
         }
@@ -183,11 +243,11 @@ namespace Game
             m_cUnitContainer.Remove(unit);
         }
 
-        public Remote CreateRemote(int configId, TSVector position, TSVector forward, uint targetAgentId, AgentObjectType targetAgentType, TSVector targetPosition, TSVector targetForward)
+        public Remote CreateRemote(int configId,int campId, TSVector position, TSVector forward, uint targetAgentId, AgentObjectType targetAgentType, TSVector targetPosition, TSVector targetForward)
         {
             Remote remote = BehaviourPool<Remote>.Instance.GetObject(m_cRemoteRoot.transform);
             uint remoteId = GameInTool.GenerateRemoteId();
-            remote.Init(remoteId, configId, position, forward, targetAgentId, targetAgentType, targetPosition, targetForward);
+            remote.Init(remoteId, configId, campId, position, forward, targetAgentId, targetAgentType, targetPosition, targetForward);
             m_cRemoteContainer.Add(remote);
             return remote;
         }
@@ -204,7 +264,18 @@ namespace Game
             BehaviourPool<UnitAirShip>.Instance.Dispose();
             BehaviourPool<Remote>.Instance.Dispose();
             FrameSyncSys.Instance.OnFrameSyncUpdate -= OnFrameSyncUpdate;
+            foreach (var item in m_dicCampUnitField)
+            {
+                item.Value.Clear();
+            }
+            m_dicCampUnitField.Clear();
+            foreach (var item in m_dicCampRemoteField)
+            {
+                item.Value.Clear();
+            }
+            m_dicCampRemoteField.Clear();
             m_dicCampUnits.Clear();
+            m_dicCampRemotes.Clear();
             m_dicUnit.Clear();
             m_dicRemote.Clear();
             if (m_cUnitContainer != null)

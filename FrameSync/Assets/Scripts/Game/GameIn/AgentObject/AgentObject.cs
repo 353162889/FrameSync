@@ -10,12 +10,17 @@ namespace Game
 
     public enum AgentObjectType
     {
-        Unit,
-        Remote,
+        Unit = 1 << 0,
+        Remote = 1 << 1,
     }
 
     public abstract class AgentObject
     {
+
+        static AgentObject()
+        {
+            ResetObjectPool<List<AgentObject>>.Instance.Init(5, (List<AgentObject> lst) => { lst.Clear(); });
+        }
 
         public static AgentObject GetAgentObject(uint id, AgentObjectType agentType)
         {
@@ -49,8 +54,12 @@ namespace Game
 
         abstract public uint id { get; }
         abstract public AgentObjectType agentType { get; }
+        abstract public int campId { get; }
         abstract public TSVector curPosition { get; }
         abstract public TSVector curForward { get; }
+        abstract public TSVector lastPosition { get; }
+        abstract public TSVector lastForward { get; }
         abstract public Transform GetHangPoint(string name, out TSVector position, out TSVector forward);
+        abstract public Transform GetHangPoint(string name, TSVector cPosition, TSVector cForward, out TSVector position, out TSVector forward);
     }
 }

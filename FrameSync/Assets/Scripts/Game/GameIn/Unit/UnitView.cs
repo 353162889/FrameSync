@@ -17,6 +17,11 @@ namespace Game
             return m_cHangPoint.GetHangPoint(name, curPosition, curForward, out position, out forward);
         }
 
+        public Transform GetHangPoint(string name,TSVector cPosition,TSVector cForward,out TSVector position,out TSVector forward)
+        {
+            return m_cHangPoint.GetHangPoint(name, cPosition, cForward, out position, out forward);
+        }
+
         protected void InitView()
         {
             m_cHangPoint = gameObject.AddComponentOnce<HangPoint>();

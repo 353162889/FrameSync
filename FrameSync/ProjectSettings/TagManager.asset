@@ -6,6 +6,7 @@ TagManager:
   tags:
   - HangPoint_Transform
   - HangPoint_Position
+  - GameCollider
   layers:
   - Default
   - TransparentFX

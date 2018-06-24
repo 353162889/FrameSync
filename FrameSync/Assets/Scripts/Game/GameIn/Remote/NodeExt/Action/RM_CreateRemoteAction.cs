@@ -42,7 +42,7 @@ namespace Game
             {
                 targetForward = bornForward;
             }
-            BattleScene.Instance.CreateRemote(m_cActionData.remoteId, bornPosition, targetForward, remote.targetAgentId, remote.targetAgentType, remote.targetPosition, targetForward);
+            BattleScene.Instance.CreateRemote(m_cActionData.remoteId, remote.campId, bornPosition, targetForward, remote.targetAgentId, remote.targetAgentType, remote.targetPosition, targetForward);
             return BTActionResult.Ready;
         }
     }

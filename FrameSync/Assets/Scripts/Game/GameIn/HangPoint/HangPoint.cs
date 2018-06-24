@@ -9,6 +9,7 @@ namespace Game
 {
     public class HangPoint : MonoBehaviour
     {
+
         private HangPointView m_cHangPointView;
         private HangPointItem m_cHangPointItem;
 

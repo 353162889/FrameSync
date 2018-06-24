@@ -29,6 +29,7 @@ namespace Framework
 
         public override bool CheckCollider(Check2DCollider collider)
         {
+            if (collider == null) return false;
             return collider.CheckCircle(this.center, radius);
         }
 

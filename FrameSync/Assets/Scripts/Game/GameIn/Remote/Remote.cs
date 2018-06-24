@@ -34,6 +34,8 @@ namespace Game
         protected uint m_nId;
         public int configId { get { return m_nConfigId; } }
         protected int m_nConfigId;
+        public int campId { get { return m_nCampId; } }
+        protected int m_nCampId;
         public RemoteData remoteData { get { return m_cRemoteData; } }
         protected RemoteData m_cRemoteData;
         protected RemoteTree m_cRemoteTree;
@@ -69,10 +71,11 @@ namespace Game
         public AgentObject agentObj { get { return m_cAgentObj; } }
 
 
-        public void Init(uint id, int configId, TSVector position, TSVector forward, uint targetAgentId, AgentObjectType targetAgentType, TSVector targetPosition, TSVector targetForward)
+        public void Init(uint id, int configId,int campId, TSVector position, TSVector forward, uint targetAgentId, AgentObjectType targetAgentType, TSVector targetPosition, TSVector targetForward)
         {
             m_nId = id;
             m_nConfigId = configId;
+            m_nCampId = campId;
             this.gameObject.name = "remote_" + m_nId + "_" + m_nConfigId;
             m_cRemoteTree = RemoteTreePool.Instance.GetRemoteTree(m_nConfigId);
             m_cRemoteData = m_cRemoteTree.data as RemoteData;
@@ -103,6 +106,11 @@ namespace Game
         public Transform GetHangPoint(string name, out TSVector position, out TSVector forward)
         {
             return m_cHangPoint.GetHangPoint(name, curPosition, curForward, out position, out forward);
+        }
+
+        public Transform GetHangPoint(string name, TSVector cPosition, TSVector cForward, out TSVector position, out TSVector forward)
+        {
+            return m_cHangPoint.GetHangPoint(name, cPosition, cForward, out position, out forward);
         }
 
         public void StartMove(TSVector startPosition, List<TSVector> lstPosition)
