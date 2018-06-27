@@ -10,6 +10,11 @@ namespace Framework
         public FP halfWidth { get; set; }
         public FP halfHeight { get; set; }
         
+        public C2D_Rect():this(TSVector2.zero,TSVector2.up,0,0)
+        {
+
+        }
+
         public C2D_Rect(TSVector2 center,TSVector2 forward, FP nHalfWidth, FP nHalfHeight):base(center,forward)
         {
             halfWidth = nHalfWidth;

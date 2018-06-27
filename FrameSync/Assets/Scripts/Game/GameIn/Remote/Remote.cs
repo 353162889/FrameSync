@@ -66,6 +66,8 @@ namespace Game
         private GameObject m_cView;
 
         private HangPoint m_cHangPoint;
+        public GameCollider gameCollider { get { return m_cCollider; } }
+        private GameCollider m_cCollider;
 
         private AgentObject m_cAgentObj;
         public AgentObject agentObj { get { return m_cAgentObj; } }
@@ -98,9 +100,14 @@ namespace Game
             m_cLerpView.StopMove();
 
             m_cHangPoint = gameObject.AddComponentOnce<HangPoint>();
-            m_cHangPoint.Init(PathTool.GetSceneEffectPath(m_cRemoteData.remotePath));
+            string remoteFullPath = PathTool.GetSceneEffectPath(m_cRemoteData.remotePath);
+            m_cHangPoint.Init(remoteFullPath);
             //暂时不支持表现挂点(特效上挂特效)
             m_cHangPoint.InitHangView(null);
+
+            m_cCollider = ObjectPool<GameCollider>.Instance.GetObject();
+            m_cCollider.Init(remoteFullPath);
+            m_cCollider.Update(curPosition, curForward);
         }
 
         public Transform GetHangPoint(string name, out TSVector position, out TSVector forward)
@@ -165,6 +172,10 @@ namespace Game
                 StopMove();
                 End();
             }
+            if(m_cCollider != null)
+            {
+                m_cCollider.Update(curPosition, curForward);
+            }
         }
 
         protected void End()
@@ -181,6 +192,11 @@ namespace Game
             {
                 SceneEffectPool.Instance.DestroyEffectGO(m_cView);
                 m_cView = null;
+            }
+            if (m_cCollider != null)
+            {
+                ObjectPool<GameCollider>.Instance.SaveObject(m_cCollider);
+                m_cCollider = null;
             }
             m_cLerpView.StopMove();
             m_cBlackBoard.Clear();

@@ -86,6 +86,14 @@ namespace Game
             }
         }
 
+        public override GameCollider gameCollider
+        {
+            get
+            {
+                return m_cUnit == null ? null : m_cUnit.gameCollider;
+            }
+        }
+
         public override Transform GetHangPoint(string name, out TSVector position, out TSVector forward)
         {
             if(m_cUnit != null)

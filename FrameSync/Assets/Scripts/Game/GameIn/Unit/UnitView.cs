@@ -11,6 +11,8 @@ namespace Game
     {
         private GameObject m_cView;
         private HangPoint m_cHangPoint;
+        public GameCollider gameCollider { get { return m_cCollider; } }
+        private GameCollider m_cCollider;
 
         public Transform GetHangPoint(string name, out TSVector position, out TSVector forward)
         {
@@ -26,6 +28,10 @@ namespace Game
         {
             m_cHangPoint = gameObject.AddComponentOnce<HangPoint>();
             m_cHangPoint.Init(m_sPrefab);
+            m_cCollider = ObjectPool<GameCollider>.Instance.GetObject();
+            m_cCollider.Init(m_sPrefab);
+            m_cCollider.Update(curPosition, curForward);
+
             GameObjectPool.Instance.GetObject(m_sPrefab, OnResLoad);
         }
 
@@ -50,6 +56,11 @@ namespace Game
 
         protected void DisposeView()
         {
+            if (m_cCollider != null)
+            {
+                ObjectPool<GameCollider>.Instance.SaveObject(m_cCollider);
+                m_cCollider = null;
+            }
             m_cHangPoint.Clear();
             if (m_cView != null)
             {
@@ -71,7 +82,7 @@ namespace Game
 
         protected void UpdateView(FP deltaTime)
         {
-
+            m_cCollider.Update(curPosition, curForward);
         }
 
     }

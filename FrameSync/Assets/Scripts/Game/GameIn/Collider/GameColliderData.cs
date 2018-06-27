@@ -41,19 +41,17 @@ namespace Game
     {
         public string name;
         public GameColliderType gameColliderType;
+        public TSVector center;
+        public TSVector forward;
     }
 
     public class CircleColliderData : BaseGameColliderData
     {
-        public TSVector center;
-        public TSVector forward;
         public FP radius;
     }
 
     public class RectColliderData : BaseGameColliderData
     {
-        public TSVector center;
-        public TSVector forward;
         public FP halfWidth;
         public FP halfHeight;
     }

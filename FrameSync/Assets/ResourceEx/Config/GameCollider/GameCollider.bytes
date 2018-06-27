@@ -38,5 +38,42 @@
         </BaseGameColliderData>
       </mLstData>
     </GameColliderItem>
+    <GameColliderItem>
+      <path>Assets/ResourceEx/Prefab/Effect/Bullet.prefab</path>
+      <mLstData>
+        <BaseGameColliderData xsi:type="RectColliderData">
+          <name>GameObject</name>
+          <gameColliderType>RectCollider</gameColliderType>
+          <center>
+            <x>
+              <_serializedValue>0</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>0</_serializedValue>
+            </z>
+          </center>
+          <forward>
+            <x>
+              <_serializedValue>0</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>4294967296</_serializedValue>
+            </z>
+          </forward>
+          <halfWidth>
+            <_serializedValue>279172864</_serializedValue>
+          </halfWidth>
+          <halfHeight>
+            <_serializedValue>2147483648</_serializedValue>
+          </halfHeight>
+        </BaseGameColliderData>
+      </mLstData>
+    </GameColliderItem>
   </mLstColliderItem>
 </GameColliderSet>

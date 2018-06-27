@@ -59,7 +59,9 @@ namespace Game
         abstract public TSVector curForward { get; }
         abstract public TSVector lastPosition { get; }
         abstract public TSVector lastForward { get; }
+        abstract public GameCollider gameCollider { get; }
         abstract public Transform GetHangPoint(string name, out TSVector position, out TSVector forward);
         abstract public Transform GetHangPoint(string name, TSVector cPosition, TSVector cForward, out TSVector position, out TSVector forward);
+        
     }
 }

@@ -40,6 +40,23 @@ namespace Game
                 blackBoard.host.GetHangPoint(m_cLastPosToCurPosData.hangPoint, host.curPosition, host.curForward, out curPosition, out curForward);
             }
             //检测lastPosition到curPosition这条之间碰撞到的代理
+            for (int i = 0; i < lst.Count; i++)
+            {
+                var agentObj = lst[i];
+                if(agentObj.gameCollider != null)
+                {
+                    TSVector hitPoint;
+                    if(agentObj.gameCollider.CheckLine(lastPosition, curPosition - lastPosition, out hitPoint))
+                    {
+                        SelectAgentObjInfo info = new SelectAgentObjInfo();
+                        info.agentObj = agentObj;
+                        info.hitPoint = hitPoint;
+                        TSVector direct = agentObj.gameCollider.center - curPosition; ;
+                        if (direct.IsZero()) direct = curForward;
+                        info.hitDirect = direct;
+                    }
+                }
+            }
         }
     }
 }

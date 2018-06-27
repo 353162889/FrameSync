@@ -99,6 +99,7 @@ namespace Game
 
             BehaviourPool<UnitAirShip>.Instance.Init(30);
             BehaviourPool<Remote>.Instance.Init(100);
+            ObjectPool<GameCollider>.Instance.Init(200);
 
             FrameSyncSys.Instance.OnFrameSyncUpdate += OnFrameSyncUpdate;
 
