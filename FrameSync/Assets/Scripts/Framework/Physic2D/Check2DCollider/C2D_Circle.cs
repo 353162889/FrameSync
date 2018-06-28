@@ -40,6 +40,7 @@ namespace Framework
 
         public override bool CheckLine(TSVector2 sOrgPos, TSVector2 sOffset, out TSVector2 sCrossPoint)
         {
+            sCrossPoint = sOrgPos;
             return TSCheck2D.CheckCicleAndLine(sOrgPos, sOffset, this.center, radius, out sCrossPoint);
         }
 

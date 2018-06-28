@@ -40,7 +40,10 @@ namespace BTCore
 
         public override void Clear()
         {
-            m_cChild = null;
+            if(m_cChild != null)
+            {
+                m_cChild.Clear();
+            }
             base.Clear();
         }
     }

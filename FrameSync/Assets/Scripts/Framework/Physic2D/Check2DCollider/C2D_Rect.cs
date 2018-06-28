@@ -41,8 +41,8 @@ namespace Framework
 
         public override bool CheckLine(TSVector2 sOrgPos, TSVector2 sOffset, out TSVector2 sCrossPoint)
         {
-            sCrossPoint = TSVector2.zero;
-            if(TSCheck2D.CheckRectangleAndLine(this.center, this.forward, halfWidth, halfHeight, sOrgPos, ref sOffset))
+            sCrossPoint = sOrgPos;
+            if (TSCheck2D.CheckRectangleAndLine(this.center, this.forward, halfWidth, halfHeight, sOrgPos, ref sOffset))
             {
                 sCrossPoint = sOrgPos + sOffset;
                 return true;

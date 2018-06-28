@@ -157,12 +157,15 @@ namespace Game
             {
                 C2D_Rect rect = ObjectPool<C2D_Rect>.Instance.GetObject();
                 RectColliderData rectData = (RectColliderData)data;
+                rect.halfWidth = rectData.halfWidth;
+                rect.halfHeight = rectData.halfHeight;
                 collider = rect;
             }
             else if(data.gameColliderType == GameColliderType.CircleCollider)
             {
                 C2D_Circle circle = ObjectPool<C2D_Circle>.Instance.GetObject();
                 CircleColliderData circleData = (CircleColliderData)data;
+                circle.radius = circleData.radius;
                 collider = circle;
             }
             return collider;

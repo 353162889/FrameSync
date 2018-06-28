@@ -26,6 +26,7 @@ namespace Game
 
         protected override void OnSelectChild(AgentObjectBlackBoard blackBoard, List<AgentObject> lst, ref List<SelectAgentObjInfo> result)
         {
+            if (lst.Count == 0) return;
             AgentObject host = blackBoard.host;
             TSVector lastPosition = host.lastPosition;
             TSVector lastForward = host.lastForward;

@@ -8,6 +8,7 @@ namespace Game
 {
     public class PvpPlayer
     {
+        private static TSVector bornPos = TSVector.zero;
         private long m_lId;
         public long id { get { return m_lId; } }
 
@@ -29,9 +30,10 @@ namespace Game
             }
         }
 
-        public void CreateUnit()
+        public void CreateUnit(int campType)
         {
-            m_cUnit = BattleScene.Instance.CreateUnit(1, (int)CampType.Camp1, UnitType.AirShip, TSVector.zero, TSVector.forward);
+            m_cUnit = BattleScene.Instance.CreateUnit(1, campType, UnitType.AirShip, bornPos, TSVector.forward);
+            bornPos += TSVector.right * 5;
         }
 
         public void FrameUpdate(FP deltaTime)

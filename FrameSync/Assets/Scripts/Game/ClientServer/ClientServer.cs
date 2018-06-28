@@ -12,6 +12,7 @@ namespace Game
     public class ClientServer : SingletonMonoBehaviour<ClientServer>
     {
         private bool m_bIsRun = false;
+        public bool isRun { get { return m_bIsRun; } }
         public void StartServer()
         {
             m_bIsRun = true;
@@ -35,6 +36,10 @@ namespace Game
             Frame_CreatePlayer_Data createPlayerData = new Frame_CreatePlayer_Data();
             createPlayerData.playerId = 1;
             NetSys.Instance.SendMsg(NetChannelType.Game, (short)PacketOpcode.Frame_CreatePlayer, createPlayerData);
+
+            Frame_CreatePlayer_Data createOtherPlayerData = new Frame_CreatePlayer_Data();
+            createOtherPlayerData.playerId = 2;
+            NetSys.Instance.SendMsg(NetChannelType.Game, (short)PacketOpcode.Frame_CreatePlayer, createOtherPlayerData);
         }
 
     }

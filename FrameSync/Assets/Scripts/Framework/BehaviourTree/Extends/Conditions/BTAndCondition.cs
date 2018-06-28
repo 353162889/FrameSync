@@ -38,5 +38,14 @@ namespace BTCore
             }
             return result;
         }
+
+        public override void Clear()
+        {
+            for (int i = 0; i < m_lstChild.Count; i++)
+            {
+                m_lstChild[i].Clear();
+            }
+            base.Clear();
+        }
     }
 }

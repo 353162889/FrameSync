@@ -12,6 +12,8 @@ namespace Game
         private CommandSequence m_cJoinSequence;
         protected override void OnEnter()
         {
+            BattleInfo.Clear();
+            BattleInfo.userId = 1;
             GameObjectPool.Instance.Clear();
             ViewSys.Instance.Open("LoadingView");
             m_cJoinSequence = new CommandSequence();
@@ -63,12 +65,20 @@ namespace Game
         private void OnPlayerCreate(object args)
         {
             PvpPlayer player = (PvpPlayer)args;
-            PvpPlayerMgr.Instance.SetMainPlayer(player);
-            CLog.Log("初始化其他战斗的数据");
             //初始化其他数据
-            player.CreateUnit();
-            ViewSys.Instance.Close("LoadingView");
-            ViewSys.Instance.Open("FightView");
+         
+            if (BattleInfo.userId == player.id)
+            {
+                player.CreateUnit((int)CampType.Camp1);
+                PvpPlayerMgr.Instance.SetMainPlayer(player);
+                ViewSys.Instance.Close("LoadingView");
+                ViewSys.Instance.Open("FightView");
+            }
+            else
+            {
+                player.CreateUnit((int)CampType.Camp2);
+            }
+            CLog.Log("初始化其他战斗的数据");
         }
 
         protected override void OnExit()
