@@ -72,6 +72,8 @@ namespace Game
             }
         }
 
+        private static Dictionary<SelectAgentObjectType, Action<AgentObject,List<AgentObject>>> m_dicSelectFunc;
+
         private BTG_BaseSelectAgentObjCompositeData m_cCompositeData;
         public override FP time { get { return m_cCompositeData.time; } }
         protected bool m_bIsEnd;
@@ -80,10 +82,119 @@ namespace Game
         protected List<SelectAgentObjCountInfo> m_lstSelectInfo = new List<SelectAgentObjCountInfo>();
         protected int m_nMaxSelectCount;
 
+        #region 选择函数
+        private static void SelectSelf(AgentObject host, List<AgentObject> lstAgentObj)
+        {
+            lstAgentObj.Add(host);
+        }
+        private static void SelectUnitFriend(AgentObject host, List<AgentObject> lstAgentObj)
+        {
+            var field = BattleScene.Instance.GetField(host.campId, AgentObjectType.Unit);
+            for (int i = 0; i < field.lstFriend.Count; i++)
+            {
+                lstAgentObj.Add(field.lstFriend[i]);
+            }
+        }
+        private static void SelectUnitFriendOutSelf(AgentObject host, List<AgentObject> lstAgentObj)
+        {
+            var field = BattleScene.Instance.GetField(host.campId, AgentObjectType.Unit);
+            for (int i = 0; i < field.lstFriend.Count; i++)
+            {
+                if (field.lstFriend[i] == host) continue;
+                lstAgentObj.Add(field.lstFriend[i]);
+            }
+        }
+        private static void SelectUnitEnemy(AgentObject host, List<AgentObject> lstAgentObj)
+        {
+            var field = BattleScene.Instance.GetField(host.campId, AgentObjectType.Unit);
+            for (int i = 0; i < field.lstEnemy.Count; i++)
+            {
+                lstAgentObj.Add(field.lstEnemy[i]);
+            }
+        }
+        private static void SelectRemoteFriend(AgentObject host, List<AgentObject> lstAgentObj)
+        {
+            var field = BattleScene.Instance.GetField(host.campId, AgentObjectType.Remote);
+            for (int i = 0; i < field.lstFriend.Count; i++)
+            {
+                lstAgentObj.Add(field.lstFriend[i]);
+            }
+        }
+        private static void SelectRemoteFriendOutSelf(AgentObject host, List<AgentObject> lstAgentObj)
+        {
+            var field = BattleScene.Instance.GetField(host.campId, AgentObjectType.Remote);
+            for (int i = 0; i < field.lstFriend.Count; i++)
+            {
+                if (field.lstFriend[i] == host) continue;
+                lstAgentObj.Add(field.lstFriend[i]);
+            }
+        }
+        private static void SelectRemoteEnemy(AgentObject host, List<AgentObject> lstAgentObj)
+        {
+            var field = BattleScene.Instance.GetField(host.campId, AgentObjectType.Remote);
+            for (int i = 0; i < field.lstEnemy.Count; i++)
+            {
+                lstAgentObj.Add(field.lstEnemy[i]);
+            }
+        }
+        private static void SelectUnitAndRemoteFriend(AgentObject host, List<AgentObject> lstAgentObj)
+        {
+            var field = BattleScene.Instance.GetField(host.campId, AgentObjectType.Unit);
+            for (int i = 0; i < field.lstFriend.Count; i++)
+            {
+                lstAgentObj.Add(field.lstFriend[i]);
+            }
+            field = BattleScene.Instance.GetField(host.campId, AgentObjectType.Remote);
+            for (int i = 0; i < field.lstFriend.Count; i++)
+            {
+                lstAgentObj.Add(field.lstFriend[i]);
+            }
+        }
+        private static void SelectUnitAndRemoteFriendOutSelf(AgentObject host, List<AgentObject> lstAgentObj)
+        {
+            var field = BattleScene.Instance.GetField(host.campId, AgentObjectType.Unit);
+            for (int i = 0; i < field.lstFriend.Count; i++)
+            {
+                if (field.lstFriend[i] == host) continue;
+                lstAgentObj.Add(field.lstFriend[i]);
+            }
+            field = BattleScene.Instance.GetField(host.campId, AgentObjectType.Remote);
+            for (int i = 0; i < field.lstFriend.Count; i++)
+            {
+                if (field.lstFriend[i] == host) continue;
+                lstAgentObj.Add(field.lstFriend[i]);
+            }
+        }
+        private static void SelectUnitAndRemoteEnemy(AgentObject host, List<AgentObject> lstAgentObj)
+        {
+            var field = BattleScene.Instance.GetField(host.campId, AgentObjectType.Unit);
+            for (int i = 0; i < field.lstEnemy.Count; i++)
+            {
+                lstAgentObj.Add(field.lstEnemy[i]);
+            }
+            field = BattleScene.Instance.GetField(host.campId, AgentObjectType.Remote);
+            for (int i = 0; i < field.lstEnemy.Count; i++)
+            {
+                lstAgentObj.Add(field.lstEnemy[i]);
+            }
+        }
+        #endregion
         static BTG_BaseSelectAgentObjComposite()
         {
             ResetObjectPool<List<SelectAgentObjInfo>>.Instance.Init(5, (List<SelectAgentObjInfo> lst) => { lst.Clear(); });
+            m_dicSelectFunc = new Dictionary<SelectAgentObjectType, Action<AgentObject,List<AgentObject>>>();
+            m_dicSelectFunc.Add(SelectAgentObjectType.Self, SelectSelf);
+            m_dicSelectFunc.Add(SelectAgentObjectType.UnitFriend, SelectUnitFriend);
+            m_dicSelectFunc.Add(SelectAgentObjectType.UnitFriendOutSelf, SelectUnitFriendOutSelf);
+            m_dicSelectFunc.Add(SelectAgentObjectType.UnitEnemy, SelectUnitEnemy);
+            m_dicSelectFunc.Add(SelectAgentObjectType.RemoteFriend, SelectRemoteFriend);
+            m_dicSelectFunc.Add(SelectAgentObjectType.RemoteFriendOutSelf, SelectRemoteFriendOutSelf);
+            m_dicSelectFunc.Add(SelectAgentObjectType.RemoteEnemy, SelectRemoteEnemy);
+            m_dicSelectFunc.Add(SelectAgentObjectType.UnitAndRemoteFriend, SelectUnitAndRemoteFriend);
+            m_dicSelectFunc.Add(SelectAgentObjectType.UnitAndRemoteFriendOutSelf, SelectUnitAndRemoteFriendOutSelf);
+            m_dicSelectFunc.Add(SelectAgentObjectType.UnitAndRemoteEnemy, SelectUnitAndRemoteEnemy);
         }
+       
 
         protected override void OnInitData(object data)
         {
@@ -112,7 +223,12 @@ namespace Game
                 {
                     m_sLastSelectTime = 0;
                 }
-                OnSelect(blackBoard);
+                bool succ = OnSelect(blackBoard);
+                if(!succ)
+                {
+                    m_bIsEnd = true;
+                    return BTResult.Success;
+                }
             }
             
             if(m_sTime >= m_cCompositeData.totalDuration)
@@ -142,99 +258,10 @@ namespace Game
 
         }
 
-        private void OnSelect(AgentObjectBlackBoard blackBoard)
+        private bool OnSelect(AgentObjectBlackBoard blackBoard)
         {
             var lstAgentObj = ResetObjectPool<List<AgentObject>>.Instance.GetObject();
-            AgentObjField field;
-            switch (m_cCompositeData.selectType)
-            {
-                case SelectAgentObjectType.Self:
-                    lstAgentObj.Add(blackBoard.host);
-                    break;
-                case SelectAgentObjectType.UnitFriend:
-                    field = BattleScene.Instance.GetField(blackBoard.host.campId, AgentObjectType.Unit);
-                    for (int i = 0; i < field.lstFriend.Count; i++)
-                    {
-                        lstAgentObj.Add(field.lstFriend[i]);
-                    }
-                    break;
-                case SelectAgentObjectType.UnitFriendOutSelf:
-                    field = BattleScene.Instance.GetField(blackBoard.host.campId, AgentObjectType.Unit);
-                    for (int i = 0; i < field.lstFriend.Count; i++)
-                    {
-                        if (field.lstFriend[i] == blackBoard.host) continue;
-                        lstAgentObj.Add(field.lstFriend[i]);
-                    }
-                    break;
-                case SelectAgentObjectType.UnitEnemy:
-                    field = BattleScene.Instance.GetField(blackBoard.host.campId, AgentObjectType.Unit);
-                    for (int i = 0; i < field.lstEnemy.Count; i++)
-                    {
-                        lstAgentObj.Add(field.lstEnemy[i]);
-                    }
-                    break;
-                case SelectAgentObjectType.RemoteFriend:
-                    field = BattleScene.Instance.GetField(blackBoard.host.campId, AgentObjectType.Remote);
-                    for (int i = 0; i < field.lstFriend.Count; i++)
-                    {
-                        lstAgentObj.Add(field.lstFriend[i]);
-                    }
-                    break;
-                case SelectAgentObjectType.RemoteFriendOutSelf:
-                    field = BattleScene.Instance.GetField(blackBoard.host.campId, AgentObjectType.Remote);
-                    for (int i = 0; i < field.lstFriend.Count; i++)
-                    {
-                        if (field.lstFriend[i] == blackBoard.host) continue;
-                        lstAgentObj.Add(field.lstFriend[i]);
-                    }
-                    break;
-                case SelectAgentObjectType.RemoteEnemy:
-                    field = BattleScene.Instance.GetField(blackBoard.host.campId, AgentObjectType.Remote);
-                    for (int i = 0; i < field.lstEnemy.Count; i++)
-                    {
-                        lstAgentObj.Add(field.lstEnemy[i]);
-                    }
-                    break;
-                case SelectAgentObjectType.UnitAndRemoteFriend:
-                    field = BattleScene.Instance.GetField(blackBoard.host.campId, AgentObjectType.Unit);
-                    for (int i = 0; i < field.lstFriend.Count; i++)
-                    {
-                        lstAgentObj.Add(field.lstFriend[i]);
-                    }
-                    field = BattleScene.Instance.GetField(blackBoard.host.campId, AgentObjectType.Remote);
-                    for (int i = 0; i < field.lstFriend.Count; i++)
-                    {
-                        lstAgentObj.Add(field.lstFriend[i]);
-                    }
-                    break;
-                case SelectAgentObjectType.UnitAndRemoteFriendOutSelf:
-                    field = BattleScene.Instance.GetField(blackBoard.host.campId, AgentObjectType.Unit);
-                    for (int i = 0; i < field.lstFriend.Count; i++)
-                    {
-                        if (field.lstFriend[i] == blackBoard.host) continue;
-                        lstAgentObj.Add(field.lstFriend[i]);
-                    }
-                    field = BattleScene.Instance.GetField(blackBoard.host.campId, AgentObjectType.Remote);
-                    for (int i = 0; i < field.lstFriend.Count; i++)
-                    {
-                        if (field.lstFriend[i] == blackBoard.host) continue;
-                        lstAgentObj.Add(field.lstFriend[i]);
-                    }
-                    break;
-                case SelectAgentObjectType.UnitAndRemoteEnemy:
-                    field = BattleScene.Instance.GetField(blackBoard.host.campId, AgentObjectType.Unit);
-                    for (int i = 0; i < field.lstEnemy.Count; i++)
-                    {
-                        lstAgentObj.Add(field.lstEnemy[i]);
-                    }
-                    field = BattleScene.Instance.GetField(blackBoard.host.campId, AgentObjectType.Remote);
-                    for (int i = 0; i < field.lstEnemy.Count; i++)
-                    {
-                        lstAgentObj.Add(field.lstEnemy[i]);
-                    }
-                    break;
-            }
-
+            m_dicSelectFunc[m_cCompositeData.selectType].Invoke(blackBoard.host, lstAgentObj);
             var lstSelectInfo = ResetObjectPool<List<SelectAgentObjInfo>>.Instance.GetObject();
             var lstSelectInfoResult = ResetObjectPool<List<SelectAgentObjInfo>>.Instance.GetObject();
             OnSelectChild(blackBoard, lstAgentObj,ref lstSelectInfo);
@@ -270,8 +297,14 @@ namespace Game
                 selectObjInfo.agentObjCount = lstSelectInfoResult.Count;
                 ExecuteChilds(blackBoard, selectObjInfo);
             }
+            m_nMaxSelectCount += lstSelectInfoResult.Count;
+            if(m_nMaxSelectCount >= m_cCompositeData.oneObjMaxCount)
+            {
+                return false;
+            }
             ResetObjectPool<List<SelectAgentObjInfo>>.Instance.SaveObject(lstSelectInfo);
             ResetObjectPool<List<SelectAgentObjInfo>>.Instance.SaveObject(lstSelectInfoResult);
+            return true;
         }
 
         private void ExecuteChilds(AgentObjectBlackBoard blackBoard, SelectAgentObjInfo selectObjInfo)

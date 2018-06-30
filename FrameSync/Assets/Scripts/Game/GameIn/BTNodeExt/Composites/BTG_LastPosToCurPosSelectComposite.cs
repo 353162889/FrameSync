@@ -55,6 +55,7 @@ namespace Game
                         TSVector direct = agentObj.gameCollider.center - curPosition; ;
                         if (direct.IsZero()) direct = curForward;
                         info.hitDirect = direct;
+                        result.Add(info);
                     }
                 }
             }

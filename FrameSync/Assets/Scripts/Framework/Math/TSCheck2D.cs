@@ -7,7 +7,7 @@ namespace Framework
 {
     public class TSCheck2D
     {
-
+        //NEW已测
         /// <summary>
         /// 检测一个点的xz平面投影是否处于2DAabb内
         /// </summary>
@@ -30,6 +30,7 @@ namespace Framework
             return true;
         }
 
+        //New 已测
         /// <summary>
         /// 检测点是否在矩形中
         /// </summary>
@@ -53,9 +54,9 @@ namespace Framework
                 //当计算的角度是顺时针角度需要转换为逆时针角度
                 nAngle = 360 - nAngle;
             }
-            
-            FP nCos = TSMath.Cos(nAngle);
-            FP nSin = TSMath.Sin(nAngle);
+            FP angle = nAngle * FP.Deg2Rad;
+            FP nCos = TSMath.Cos(angle);
+            FP nSin = TSMath.Sin(angle);
             FP deltaX = sPos.x - sCenter.x;
             FP deltaY = sPos.y - sCenter.y;
             FP nNewX = deltaX * nCos - deltaY * nSin + sCenter.x;
@@ -66,24 +67,25 @@ namespace Framework
             return CheckAabbAndPos(sCenter, nHalfWidth, nHalfHeight, sPos);
         }
 
-        //
-        //
+        //NEW 已测
         /// <summary>
         /// 检测一条射线的xz平面投影是否与2DAabb相交
         /// </summary>
-        /// <param name="sCenter"></param>
-        /// <param name="nHalfWidth"></param>
-        /// <param name="nHalfHeight"></param>
-        /// <param name="sOrigin"></param>
-        /// <param name="sDirection"></param>
-        /// <param name="nMaxDistance"></param>
+        /// <param name="sCenter">AABB中心点</param>
+        /// <param name="nHalfWidth">AABB宽度</param>
+        /// <param name="nHalfHeight">AABB高度</param>
+        /// <param name="sOrigin">射线原点</param>
+        /// <param name="sDirection">射线方向</param>
+        /// <param name="nMaxDistance">射线长度</param>
         /// <returns>返回负数代表无交点</returns>
         public static FP CheckAabbAndLine(TSVector2 sCenter, FP nHalfWidth, FP nHalfHeight, TSVector2 sOrigin, TSVector2 sDirection, FP nMaxDistance)
         {
-            FP nNear = -FP.MinValue;
-            FP nFar = FP.MaxValue;
-
+            FP nMax = FP.MaxValue;
+            FP nMin = FP.MinValue;
+            //非线段直接忽略掉
+            if (sDirection.x == 0 && sDirection.y == 0) return -1;
             sDirection.Normalize();
+
             if (0 == sDirection.x)
             {
                 if ((sOrigin.x < sCenter.x - nHalfWidth) || (sOrigin.x > sCenter.x + nHalfWidth))
@@ -94,66 +96,58 @@ namespace Framework
             else
             {
                 //射线上任意一点p = p0 + t *dir ;
-                //这里采用轴分离的思想
-                FP nLength = sDirection.x > 0 ? nHalfWidth : -nHalfWidth;
-                nNear = (sCenter.x - nLength - sOrigin.x) / sDirection.x;
-                nFar = (sCenter.x + nLength - sOrigin.x) / sDirection.x;
+                //这里采用轴分离的思想slab方法
+                FP invX = 1 / sDirection.x;
+                FP halfLength = sDirection.x > 0 ? nHalfWidth : -nHalfWidth;
+                FP t1 = (sCenter.x - halfLength - sOrigin.x) * invX;
+                FP t2 = (sCenter.x + halfLength - sOrigin.x) * invX;
 
-                //射线原点在左边且方向向左或者射线原点在右边且方向向右
-                if (nNear > nFar)
-                {
-                    return -1;
-                }
+                if (t1 < 0 && t2 < 0) return -1;
+
+                if (t1 > nMin) nMin = t1;
+                if (t2 < nMax) nMax = t2;
             }
 
             if (0 == sDirection.y)
             {
-                if ((sOrigin.y < sCenter.y - nHalfWidth) || (sOrigin.y > sCenter.y + nHalfWidth))
+                if ((sOrigin.y < sCenter.y - nHalfHeight) || (sOrigin.y > sCenter.y + nHalfHeight))
                 {
                     return -1;
                 }
-                else if (0 == sDirection.x)
+            }
+            else
+            {
+                FP invY = 1 / sDirection.y;
+                FP halfLength = sDirection.y > 0 ? nHalfHeight : -nHalfHeight;
+                FP t1 = (sCenter.y - halfLength - sOrigin.y) * invY;
+                FP t2 = (sCenter.y + halfLength - sOrigin.y) * invY;
+                if (t1 < 0 && t2 < 0) return -1;
+                if (t1 > nMin) nMin = t1;
+                if (t2 < nMax) nMax = t2;
+            }
+            FP len = nMin;
+            if(len < 0)
+            {
+                len = nMax;
+            }
+            if(len > nMax || len < 0)
+            {
+                return -1;
+            }
+            if (len > nMaxDistance)
+            {
+                if (nMin < 0)
                 {
                     return 0;
                 }
-            }
-            else
-            {
-                FP nLength = sDirection.y > 0 ? nHalfHeight : -nHalfHeight;
-                FP nTemp = (sCenter.y - nLength - sOrigin.y) / sDirection.y;
-                if (nTemp > nNear)
-                {
-                    nNear = nTemp;
-                }
-                nTemp = (sCenter.y + nLength - sOrigin.y) / sDirection.y;
-                if (nTemp < nFar)
-                {
-                    nFar = nTemp;
-                }
-                if (nNear > nFar)
+                else
                 {
                     return -1;
                 }
             }
-            if (nFar < 0)
-            {
-                return -1;
-            }
-            if (nNear < 0)
-            {
-                nNear = nFar;
-            }
-
-            if (nNear > nMaxDistance)
-            {
-                return -1;
-            }
-            else
-            {
-                return nNear;
-            }
+            return len;
         }
-
+        //New 已测
         /// <summary>
         /// 检查矩形是否和线段相交
         /// </summary>
@@ -166,15 +160,15 @@ namespace Framework
         /// <returns></returns>
         public static bool CheckRectangleAndLine(TSVector2 sCenter, TSVector2 sDir, FP nHalfWidth, FP nHalfHeight, TSVector2 sOrgPos, ref TSVector2 sOffset)
         {
-            sDir.y = 0;
             FP nAngle = TSVector2.Angle(sDir, TSVector2.up);
             if (sDir.x < 0)
             {
                 nAngle = 360 - nAngle;
             }
             TSVector2 sEndPos = sOrgPos + sOffset;
-            FP nCos = TSMath.Cos(nAngle);
-            FP nSin = TSMath.Sin(nAngle);
+            FP angle = nAngle * FP.Deg2Rad;
+            FP nCos = TSMath.Cos(angle);
+            FP nSin = TSMath.Sin(angle);
             FP deltaX = sOrgPos.x - sCenter.x;
             FP deltaY = sOrgPos.y - sCenter.y;
             FP nNewX = deltaX * nCos - deltaY * nSin + sCenter.x;
@@ -190,22 +184,21 @@ namespace Framework
             sEndPos.x = nNewX;
             sEndPos.y = nNewY;
 
-            sOffset = sEndPos - sOrgPos;
+            TSVector2 sNewDirection = sEndPos - sOrgPos;
             FP nDis = sOffset.magnitude;
-            sOffset.Normalize();
-            nDis = CheckAabbAndLine(sCenter, nHalfWidth, nHalfHeight, sOrgPos, sOffset, nDis);
+            nDis = CheckAabbAndLine(sCenter, nHalfWidth, nHalfHeight, sOrgPos, sNewDirection, nDis);
             if (nDis < 0)
             {
                 return false;
             }
             else
             {
-                sOffset = sOffset * nDis;
+                sOffset = sOffset.normalized * nDis;
                 return true;
             }
         }
 
-        //
+        //New 已测
         /// <summary>
         /// 计算点到经过两点的直线的距离 
         /// </summary>
@@ -215,18 +208,13 @@ namespace Framework
         /// <returns></returns>
         public static FP DistanceFromPointToLine(TSVector2 sPos, TSVector2 sPos1, TSVector2 sPos2)
         {
-            FP a = sPos2.y - sPos1.y;
-            FP b = sPos1.x - sPos2.x;
-            FP c = sPos2.x * sPos1.y - sPos1.x * sPos2.y;
-
-            if (a == 0 && b == 0)
-            {
-                return 0;
-            }
-
-            return TSMath.Abs(a * sPos.x + b * sPos.y + c) / TSMath.Sqrt(a * a + b * b);
+            TSVector2 line1 = sPos2 - sPos1;
+            TSVector2 line2 = sPos - sPos1;
+            if (line1 == TSVector2.zero) return line2.magnitude;
+            return  TSMath.Abs(line2.x * line1.y - line2.y * line1.x) / line1.magnitude;
         }
 
+        //New 已测
         /// <summary>
         /// 检测矩形与圆是否相交
         /// </summary>
@@ -261,6 +249,7 @@ namespace Framework
             return (nHalfWidth2 - nHalfWidth) * (nHalfWidth2 - nHalfWidth) + (nHalfHeight2 - nHalfHeight) * (nHalfHeight2 - nHalfHeight) <= nRadius * nRadius;
         }
 
+        //New 已测
         /// <summary>
         /// 检测圆与线段是否相交
         /// </summary>
@@ -276,14 +265,11 @@ namespace Framework
             //http://blog.csdn.net/rabbit729/article/details/4285119
 
             sCrossPoint = sCenter;
-            sCenter.y = 0;
-            sOrgPos.y = 0;
-            sOffset.y = 0;
 
             FP nDis = sOffset.magnitude;
             TSVector2 d = sOffset.normalized;
             TSVector2 e = sCenter - sOrgPos;
-            FP a = (e.x * d.x + e.y * d.y) / d.magnitude;
+            FP a = (e.x * d.x + e.y * d.y);
             FP f = a * a + nRadius * nRadius - e.LengthSquared();
 
             if (f >= 0)
@@ -297,17 +283,30 @@ namespace Framework
                     t1 = t2;
                     t2 = fTemp;
                 }
+                //射线原点在圆外
                 if ((t1 >= 0) && (t1 - nDis) <= 0)
                 {
                     sCrossPoint.x = sOrgPos.x + t1 * d.x;
                     sCrossPoint.y = sOrgPos.y + t1 * d.y;
                     return true;
                 }
-                if ((t2 >= 0) && (t2 - nDis) <= 0)
+
+                //这里说明射线原点在圆内
+                if (t2 >= 0)
                 {
-                    sCrossPoint.x = sOrgPos.x + t2 * d.x;
-                    sCrossPoint.y = sOrgPos.y + t2 * d.y;
-                    return true;
+                    //如果与圆有碰撞
+                    if ((t2 - nDis) <= 0)
+                    {
+                        sCrossPoint.x = sOrgPos.x + t2 * d.x;
+                        sCrossPoint.y = sOrgPos.y + t2 * d.y;
+                        return true;
+                    }
+                    //如果两个点都在圆内
+                    else
+                    {
+                        sCrossPoint = sOrgPos;
+                        return true;
+                    }
                 }
 
             }
@@ -330,10 +329,11 @@ namespace Framework
                 return false;
             }
             sOffset = sCrossPoint - sOrgPos;
-            sOffset.y = 0;
             return true;
         }
 
+
+        //New 已测
         /// <summary>
         /// 检测点是否在圆内
         /// </summary>
@@ -347,36 +347,7 @@ namespace Framework
             return lDistance <= nRadius * nRadius;
         }
 
-        /// <summary>
-        /// 检测点是否在扇形区域内
-        /// </summary>
-        /// <param name="sCenter"></param>
-        /// <param name="sForward"></param>
-        /// <param name="nRadius"></param>
-        /// <param name="nAngle"></param>
-        /// <param name="sPos"></param>
-        /// <returns></returns>
-        public static bool CheckSectorAndPos(TSVector2 sCenter, TSVector2 sForward, FP nRadius, FP nAngle, TSVector2 sPos)
-        {
-            if (sPos == sCenter)
-            {
-                return true;
-            }
-            TSVector2 sDir = sPos - sCenter;
-            sDir.y = 0;
-            FP nTempAngle = TSVector2.Angle(sDir, sForward);
-
-            if (nTempAngle <= nAngle / 2)
-            {
-                if ((sCenter - sPos).LengthSquared() < nRadius * nRadius)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
+        //New 已测
         /// <summary>
         /// 检测圆与圆是否相交
         /// </summary>
@@ -388,67 +359,97 @@ namespace Framework
         public static bool CheckCircleAndCircle(TSVector2 sCenter, FP nRadius, TSVector2 sCenter2, FP nRadius2)
         {
             FP nDeltaX = sCenter.x - sCenter2.x;
-            FP nDeltaZ = sCenter.y - sCenter2.y;
+            FP nDeltaY = sCenter.y - sCenter2.y;
             FP nRadiusAdd = nRadius + nRadius2;
-            return nDeltaX * nDeltaX + nDeltaZ * nDeltaZ < nRadiusAdd * nRadiusAdd;
+            return nDeltaX * nDeltaX + nDeltaY * nDeltaY <= nRadiusAdd * nRadiusAdd;
         }
 
-        /// <summary>
-        /// 检测圆与扇形是否相交
-        /// </summary>
-        /// <param name="sCircleCenter"></param>
-        /// <param name="nCircleRadius"></param>
-        /// <param name="sSectorCenter"></param>
-        /// <param name="sSectorForward"></param>
-        /// <param name="nSectorRadius"></param>
-        /// <param name="nSectorAngle"></param>
-        /// <returns></returns>
-        public static bool CheckCircleAndSector(TSVector2 sCircleCenter, FP nCircleRadius, TSVector2 sSectorCenter, TSVector2 sSectorForward, FP nSectorRadius, FP nSectorAngle)
-        {
-            // 1. 如果扇形圆心和圆盘圆心的方向能分离，两形状不相交
-            TSVector2 sDir = sCircleCenter - sSectorCenter;
-            sDir.y = 0;
+        ///// <summary>
+        ///// 检测点是否在扇形区域内
+        ///// </summary>
+        ///// <param name="sCenter"></param>
+        ///// <param name="sForward"></param>
+        ///// <param name="nRadius"></param>
+        ///// <param name="nAngle"></param>
+        ///// <param name="sPos"></param>
+        ///// <returns></returns>
+        //public static bool CheckSectorAndPos(TSVector2 sCenter, TSVector2 sForward, FP nRadius, FP nAngle, TSVector2 sPos)
+        //{
+        //    if (sPos == sCenter)
+        //    {
+        //        return true;
+        //    }
+        //    TSVector2 sDir = sPos - sCenter;
+        //    FP nTempAngle = TSVector2.Angle(sDir, sForward);
 
-            FP nSum = nCircleRadius + nSectorRadius;
-            if (sDir.LengthSquared() > nSum * nSum)
-            {
-                return false;
-            }
+        //    if (nTempAngle <= nAngle / 2)
+        //    {
+        //        if ((sCenter - sPos).LengthSquared() < nRadius * nRadius)
+        //        {
+        //            return true;
+        //        }
+        //    }
 
-            // 2. 计算出扇形局部空间的 p
-            sSectorForward.Normalize();
-            FP px = TSVector2.Dot(sDir, sSectorForward);
-            FP py = TSMath.Abs(-sDir.x * sSectorForward.y + sDir.y * sSectorForward.x);
+        //    return false;
+        //}
 
-            // 3. 如果 p_x > ||p|| cos theta，两形状相交
-            FP nTheta = nSectorAngle / 2;
-            if (px > sDir.magnitude * TSMath.Cos(nTheta))
-                return true;
 
-            // 4. 求左边线段与圆盘是否相交
-            TSVector2 q = nSectorRadius * new TSVector2(TSMath.Cos(nTheta), TSMath.Sin(nTheta));
-            TSVector2 p = new TSVector2(px, py);
-            FP t = TSVector2.Dot(p, q) / q.LengthSquared();
-            FP nDis = (p - (TSMath.Clamp(t, 0, 1) * q)).LengthSquared();
-            return nDis <= nCircleRadius * nCircleRadius;
-        }
 
-        /// <summary>
-        /// 矩形与扇形是否相交
-        /// </summary>
-        /// <param name="sCenter"></param>
-        /// <param name="sDir"></param>
-        /// <param name="nHalfWidth"></param>
-        /// <param name="nHalfHeight"></param>
-        /// <param name="sSectorCenter"></param>
-        /// <param name="sSectorForward"></param>
-        /// <param name="nSectorRadius"></param>
-        /// <param name="nSectorAngles"></param>
-        /// <returns></returns>
-        public static bool CheckRectangleAndSector(TSVector2 sCenter, TSVector2 sDir, FP nHalfWidth, FP nHalfHeight,
-       TSVector2 sSectorCenter, TSVector2 sSectorForward, FP nSectorRadius, FP nSectorAngles)
-        {
-            throw new Exception("需要实现矩形与扇形的检测");
-        }
+        // /// <summary>
+        // /// 检测圆与扇形是否相交
+        // /// </summary>
+        // /// <param name="sCircleCenter"></param>
+        // /// <param name="nCircleRadius"></param>
+        // /// <param name="sSectorCenter"></param>
+        // /// <param name="sSectorForward"></param>
+        // /// <param name="nSectorRadius"></param>
+        // /// <param name="nSectorAngle"></param>
+        // /// <returns></returns>
+        // public static bool CheckCircleAndSector(TSVector2 sCircleCenter, FP nCircleRadius, TSVector2 sSectorCenter, TSVector2 sSectorForward, FP nSectorRadius, FP nSectorAngle)
+        // {
+        //     // 1. 如果扇形圆心和圆盘圆心的方向能分离，两形状不相交
+        //     TSVector2 sDir = sCircleCenter - sSectorCenter;
+
+        //     FP nSum = nCircleRadius + nSectorRadius;
+        //     if (sDir.LengthSquared() > nSum * nSum)
+        //     {
+        //         return false;
+        //     }
+
+        //     // 2. 计算出扇形局部空间的 p
+        //     sSectorForward.Normalize();
+        //     FP px = TSVector2.Dot(sDir, sSectorForward);
+        //     FP py = TSMath.Abs(-sDir.x * sSectorForward.y + sDir.y * sSectorForward.x);
+
+        //     // 3. 如果 p_x > ||p|| cos theta，两形状相交
+        //     FP nTheta = nSectorAngle / 2;
+        //     if (px > sDir.magnitude * TSMath.Cos(nTheta))
+        //         return true;
+
+        //     // 4. 求左边线段与圆盘是否相交
+        //     TSVector2 q = nSectorRadius * new TSVector2(TSMath.Cos(nTheta), TSMath.Sin(nTheta));
+        //     TSVector2 p = new TSVector2(px, py);
+        //     FP t = TSVector2.Dot(p, q) / q.LengthSquared();
+        //     FP nDis = (p - (TSMath.Clamp(t, 0, 1) * q)).LengthSquared();
+        //     return nDis <= nCircleRadius * nCircleRadius;
+        // }
+
+        // /// <summary>
+        // /// 矩形与扇形是否相交
+        // /// </summary>
+        // /// <param name="sCenter"></param>
+        // /// <param name="sDir"></param>
+        // /// <param name="nHalfWidth"></param>
+        // /// <param name="nHalfHeight"></param>
+        // /// <param name="sSectorCenter"></param>
+        // /// <param name="sSectorForward"></param>
+        // /// <param name="nSectorRadius"></param>
+        // /// <param name="nSectorAngles"></param>
+        // /// <returns></returns>
+        // public static bool CheckRectangleAndSector(TSVector2 sCenter, TSVector2 sDir, FP nHalfWidth, FP nHalfHeight,
+        //TSVector2 sSectorCenter, TSVector2 sSectorForward, FP nSectorRadius, FP nSectorAngles)
+        // {
+        //     throw new Exception("需要实现矩形与扇形的检测");
+        // }
     }
 }
