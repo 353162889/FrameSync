@@ -130,6 +130,8 @@ namespace Game
 
             GameObject uiGO = transform.Find("UIContainer").gameObject;
             uiGO.AddComponentOnce<ViewSys>();
+
+            gameObject.AddComponentOnce<FPSMono>();
            
         }
 

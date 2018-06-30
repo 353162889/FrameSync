@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace Game
 {
@@ -14,6 +15,7 @@ namespace Game
         private RectTransform m_cBaseTrans;
         private RectTransform m_cMoveTrans;
         private GameObject m_cBtnSkillTest;
+        private Text m_txtFps;
         private float minDirLen;
         public FightView(GameObject go) : base(go)
         {
@@ -21,6 +23,7 @@ namespace Game
 
         protected override void BuidUI()
         {
+            m_txtFps = this.MainGO.FindChildComponentRecursive<Text>("txtFps");
             RectTransform rectTrans = this.MainGO.FindChildComponentRecursive<RectTransform>("JoystickRect");
             m_cBaseTrans = this.MainGO.FindChildComponentRecursive<RectTransform>("JoystickBase");
             m_cMoveTrans = this.MainGO.FindChildComponentRecursive<RectTransform>("JoystickMove");
@@ -119,6 +122,11 @@ namespace Game
         public override void OnEnter(ViewParam openParam)
         {
             base.OnEnter(openParam);
+        }
+
+        public override void OnUpdate()
+        {
+            m_txtFps.text = FPSMono.Instance.realFPS.ToString();
         }
     }
 }

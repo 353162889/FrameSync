@@ -72,7 +72,7 @@ namespace Game
             }
         }
 
-        private static Dictionary<SelectAgentObjectType, Action<AgentObject,List<AgentObject>>> m_dicSelectFunc;
+        private static Dictionary<int, Action<AgentObject,List<AgentObject>>> m_dicSelectFunc;
 
         private BTG_BaseSelectAgentObjCompositeData m_cCompositeData;
         public override FP time { get { return m_cCompositeData.time; } }
@@ -182,17 +182,17 @@ namespace Game
         static BTG_BaseSelectAgentObjComposite()
         {
             ResetObjectPool<List<SelectAgentObjInfo>>.Instance.Init(5, (List<SelectAgentObjInfo> lst) => { lst.Clear(); });
-            m_dicSelectFunc = new Dictionary<SelectAgentObjectType, Action<AgentObject,List<AgentObject>>>();
-            m_dicSelectFunc.Add(SelectAgentObjectType.Self, SelectSelf);
-            m_dicSelectFunc.Add(SelectAgentObjectType.UnitFriend, SelectUnitFriend);
-            m_dicSelectFunc.Add(SelectAgentObjectType.UnitFriendOutSelf, SelectUnitFriendOutSelf);
-            m_dicSelectFunc.Add(SelectAgentObjectType.UnitEnemy, SelectUnitEnemy);
-            m_dicSelectFunc.Add(SelectAgentObjectType.RemoteFriend, SelectRemoteFriend);
-            m_dicSelectFunc.Add(SelectAgentObjectType.RemoteFriendOutSelf, SelectRemoteFriendOutSelf);
-            m_dicSelectFunc.Add(SelectAgentObjectType.RemoteEnemy, SelectRemoteEnemy);
-            m_dicSelectFunc.Add(SelectAgentObjectType.UnitAndRemoteFriend, SelectUnitAndRemoteFriend);
-            m_dicSelectFunc.Add(SelectAgentObjectType.UnitAndRemoteFriendOutSelf, SelectUnitAndRemoteFriendOutSelf);
-            m_dicSelectFunc.Add(SelectAgentObjectType.UnitAndRemoteEnemy, SelectUnitAndRemoteEnemy);
+            m_dicSelectFunc = new Dictionary<int, Action<AgentObject,List<AgentObject>>>();
+            m_dicSelectFunc.Add((int)SelectAgentObjectType.Self, SelectSelf);
+            m_dicSelectFunc.Add((int)SelectAgentObjectType.UnitFriend, SelectUnitFriend);
+            m_dicSelectFunc.Add((int)SelectAgentObjectType.UnitFriendOutSelf, SelectUnitFriendOutSelf);
+            m_dicSelectFunc.Add((int)SelectAgentObjectType.UnitEnemy, SelectUnitEnemy);
+            m_dicSelectFunc.Add((int)SelectAgentObjectType.RemoteFriend, SelectRemoteFriend);
+            m_dicSelectFunc.Add((int)SelectAgentObjectType.RemoteFriendOutSelf, SelectRemoteFriendOutSelf);
+            m_dicSelectFunc.Add((int)SelectAgentObjectType.RemoteEnemy, SelectRemoteEnemy);
+            m_dicSelectFunc.Add((int)SelectAgentObjectType.UnitAndRemoteFriend, SelectUnitAndRemoteFriend);
+            m_dicSelectFunc.Add((int)SelectAgentObjectType.UnitAndRemoteFriendOutSelf, SelectUnitAndRemoteFriendOutSelf);
+            m_dicSelectFunc.Add((int)SelectAgentObjectType.UnitAndRemoteEnemy, SelectUnitAndRemoteEnemy);
         }
        
 
@@ -261,7 +261,7 @@ namespace Game
         private bool OnSelect(AgentObjectBlackBoard blackBoard)
         {
             var lstAgentObj = ResetObjectPool<List<AgentObject>>.Instance.GetObject();
-            m_dicSelectFunc[m_cCompositeData.selectType].Invoke(blackBoard.host, lstAgentObj);
+            m_dicSelectFunc[(int)m_cCompositeData.selectType].Invoke(blackBoard.host, lstAgentObj);
             var lstSelectInfo = ResetObjectPool<List<SelectAgentObjInfo>>.Instance.GetObject();
             var lstSelectInfoResult = ResetObjectPool<List<SelectAgentObjInfo>>.Instance.GetObject();
             OnSelectChild(blackBoard, lstAgentObj,ref lstSelectInfo);
@@ -269,25 +269,25 @@ namespace Game
             for (int i = 0; i < lstSelectInfo.Count; i++)
             {
                 var selectObjInfo = lstSelectInfo[i];
-                if(m_nMaxSelectCount < m_cCompositeData.totalObjMaxCount)
+                if (m_nMaxSelectCount < m_cCompositeData.totalObjMaxCount)
                 {
-                    SelectAgentObjCountInfo selectInfo = new SelectAgentObjCountInfo(selectObjInfo.agentObj.id, selectObjInfo.agentObj.agentType,0);
+                    SelectAgentObjCountInfo selectInfo = new SelectAgentObjCountInfo(selectObjInfo.agentObj.id, selectObjInfo.agentObj.agentType, 0);
                     for (int j = 0; j < m_lstSelectInfo.Count; j++)
                     {
                         var info = m_lstSelectInfo[j];
-                        if(info.id == selectObjInfo.agentObj.id && info.agentType == selectObjInfo.agentObj.agentType)
+                        if (info.id == selectObjInfo.agentObj.id && info.agentType == selectObjInfo.agentObj.agentType)
                         {
                             selectInfo = info;
                             break;
                         }
                     }
-                    if(selectInfo.count < m_cCompositeData.oneObjMaxCount)
+                    if (selectInfo.count < m_cCompositeData.oneObjMaxCount)
                     {
                         if (selectInfo.count == 0) m_lstSelectInfo.Add(selectInfo);
                         selectInfo.count++;
                         //通过选择器
                         lstSelectInfoResult.Add(selectObjInfo);
-                      
+
                     }
                 }
             }
@@ -298,7 +298,7 @@ namespace Game
                 ExecuteChilds(blackBoard, selectObjInfo);
             }
             m_nMaxSelectCount += lstSelectInfoResult.Count;
-            if(m_nMaxSelectCount >= m_cCompositeData.oneObjMaxCount)
+            if (m_nMaxSelectCount >= m_cCompositeData.oneObjMaxCount)
             {
                 return false;
             }

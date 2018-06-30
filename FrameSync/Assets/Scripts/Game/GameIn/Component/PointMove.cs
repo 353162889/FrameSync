@@ -207,7 +207,7 @@ namespace Game
 
         private void PreCalculate()
         {
-            PreCalculate(3, FrameSyncSys.OnFrameTime);
+            PreCalculate(4, FrameSyncSys.OnFrameTime);
         }
 
         private void PreCalculate(int count, FP deltaTime)

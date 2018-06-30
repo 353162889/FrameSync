@@ -83,8 +83,10 @@ namespace Game
             m_cRemoteData = m_cRemoteTree.data as RemoteData;
             m_cAgentObj = new AgentRemote(this);
             SetPosition(position);
+            SetViewPosition(position);
             m_sLastPosition = position;
             SetForward(forward);
+            SetViewForward(forward);
             m_sLastForward = forward;
             if(m_cBlackBoard == null)
             {
@@ -151,7 +153,6 @@ namespace Game
         {
             m_sLastPosition = m_sCurPosition;
             m_sCurPosition = position;
-            SetViewPosition(position);
         }
 
         public void SetForward(TSVector forward)
@@ -160,7 +161,7 @@ namespace Game
             forward.Normalize();
             m_sLastForward = m_sCurForward;
             m_sCurForward = forward;
-            SetViewForward(forward);
+           
         }
 
         public void OnUpdate(FP deltaTime)

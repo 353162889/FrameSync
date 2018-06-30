@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <editorPos>
-    <x>5052</x>
-    <y>4794</y>
+    <x>5062</x>
+    <y>4790</y>
   </editorPos>
   <data xsi:type="RemoteData">
     <remoteId>1</remoteId>
@@ -13,14 +13,14 @@
   <lstChild>
     <NEData>
       <editorPos>
-        <x>5041</x>
-        <y>4923</y>
+        <x>5044</x>
+        <y>4927</y>
       </editorPos>
       <data xsi:type="BTTimeLineData" />
       <lstChild>
         <NEData>
           <editorPos>
-            <x>5038</x>
+            <x>5058</x>
             <y>5050</y>
           </editorPos>
           <data xsi:type="BTTimeDecoratorData">
@@ -31,15 +31,15 @@
           <lstChild>
             <NEData>
               <editorPos>
-                <x>5037</x>
+                <x>5057</x>
                 <y>5170</y>
               </editorPos>
               <data xsi:type="BTParallelORData" />
               <lstChild>
                 <NEData>
                   <editorPos>
-                    <x>4900</x>
-                    <y>5307</y>
+                    <x>4920</x>
+                    <y>5351</y>
                   </editorPos>
                   <data xsi:type="RM_ConstantVelocityActionData">
                     <time>
@@ -55,8 +55,8 @@
                 </NEData>
                 <NEData>
                   <editorPos>
-                    <x>5188</x>
-                    <y>5302</y>
+                    <x>5208</x>
+                    <y>5346</y>
                   </editorPos>
                   <data xsi:type="BTG_LastPosToCurPosSelectCompositeData">
                     <time>
