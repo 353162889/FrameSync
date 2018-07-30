@@ -10,9 +10,9 @@ namespace Framework
 {
     public class UIJoystick : MonoBehaviour
     {
-        public delegate void JoystickHandler(Vector2 vector2);
+        public delegate void JoystickHandler(Vector2 screenPos, Vector2 offset,Vector2 delta);
         public event JoystickHandler OnBegin;
-        public event JoystickHandler OnMove;
+        public event JoystickHandler OnMove;//点击不动也算move
         public event JoystickHandler OnEnd;
         private static readonly int MouseLeftKey = 0;
         public RectTransform mEffectTransfrom;
@@ -24,8 +24,16 @@ namespace Framework
         private Camera m_cCanvasCamera;
 
         private int m_nCurTouchId;
-        private Vector2 m_defaultBasePosition;
-        private Vector2 m_startBasePosition;
+        //初始化锚点坐标
+        private Vector2 m_defaultAnchorPosition;
+        //初始化屏幕坐标
+        private Vector2 m_defaultScreenPosition;
+        //开始锚点坐标
+        private Vector2 m_startAnchorPosition;
+        //开始屏幕坐标
+        private Vector2 m_startScreenPosition;
+        //最后一次移动的屏幕坐标
+        private Vector2 m_preScreenPosition;
         public float moveRadius { get { return m_fMoveRadius; } }
         private float m_fMoveRadius;
         private bool m_bFixedBase;
@@ -60,7 +68,8 @@ namespace Framework
         /// <param name="fixedBase"></param>
         public void Init(float moveRadius,bool fixedBase)
         {
-            m_defaultBasePosition = mBase.anchoredPosition;
+            m_defaultAnchorPosition = mBase.anchoredPosition;
+            m_defaultScreenPosition = RectTransformUtility.WorldToScreenPoint(m_cCanvasCamera,mBase.position);
             m_fMoveRadius = moveRadius;
             m_bFixedBase = fixedBase;
             //关闭遥感的Raycast
@@ -116,7 +125,7 @@ namespace Framework
                             //设置位置
                             Vector2 localPosition;
                             RectTransformUtility.ScreenPointToLocalPointInRectangle(mBase.parent as RectTransform, screenPosition, m_cCanvasCamera, out localPosition);
-                            BeginMovePosition(localPosition);
+                            BeginMovePosition(screenPosition, localPosition);
                         }
                     }
                 }
@@ -135,7 +144,7 @@ namespace Framework
                     {
                         direct.Normalize();
                         m_nCurTouchId = 1;
-                        Vector2 localPosition = m_defaultBasePosition + direct * m_fMoveRadius;
+                        Vector2 localPosition = m_defaultAnchorPosition + direct * m_fMoveRadius;
                         BeginMovePosition(localPosition);
                     }
                 }
@@ -160,7 +169,7 @@ namespace Framework
                                         //设置位置
                                         Vector2 localPosition;
                                         RectTransformUtility.ScreenPointToLocalPointInRectangle(mBase.parent as RectTransform, touch.position, m_cCanvasCamera, out localPosition);
-                                        BeginMovePosition(localPosition);
+                                        BeginMovePosition(touch.position,localPosition);
                                         break;
                                     }
                                 }
@@ -182,14 +191,14 @@ namespace Framework
                         Vector3 screenPosition = Input.mousePosition;
                         Vector2 localPosition;
                         RectTransformUtility.ScreenPointToLocalPointInRectangle(mMove.parent as RectTransform, screenPosition, m_cCanvasCamera, out localPosition);
-                        EndMovePosition(localPosition);
+                        EndMovePosition(screenPosition,localPosition);
                     }
                     else if (Input.GetMouseButton(MouseLeftKey))
                     {
                         Vector3 screenPosition = Input.mousePosition;
                         Vector2 localPosition;
                         RectTransformUtility.ScreenPointToLocalPointInRectangle(mMove.parent as RectTransform, screenPosition, m_cCanvasCamera, out localPosition);
-                        UpdateMovePosition(localPosition);
+                        UpdateMovePosition(screenPosition,localPosition);
                     }
                 }
                 else if(m_nCurTouchId == 1)
@@ -205,12 +214,12 @@ namespace Framework
                     if (direct != Vector2.zero)
                     {
                         direct.Normalize();
-                        Vector2 localPosition = m_defaultBasePosition + direct * m_fMoveRadius;
+                        Vector2 localPosition = m_defaultAnchorPosition + direct * m_fMoveRadius;
                         UpdateMovePosition(localPosition);
                     }
                     else
                     {
-                        EndMovePosition(m_startBasePosition);
+                        EndMovePosition(m_startScreenPosition,m_startAnchorPosition);
                     }
                 }
 #else
@@ -224,37 +233,48 @@ namespace Framework
                             Vector3 screenPosition = touch.position;
                             Vector2 localPosition;
                             RectTransformUtility.ScreenPointToLocalPointInRectangle(mMove.parent as RectTransform, screenPosition, m_cCanvasCamera, out localPosition);
-                            UpdateMovePosition(localPosition);
+                            UpdateMovePosition(screenPosition,localPosition);
                         }
                         else
                         {
                             Vector3 screenPosition = touch.position;
                             Vector2 localPosition;
                             RectTransformUtility.ScreenPointToLocalPointInRectangle(mMove.parent as RectTransform, screenPosition, m_cCanvasCamera, out localPosition);
-                            EndMovePosition(localPosition);
+                            EndMovePosition(screenPosition,localPosition);
                         }
                     }
                     else
                     {
-                        EndMovePosition(m_startBasePosition);
+                        EndMovePosition(m_startScreenPosition,m_startAnchorPosition);
                     }
                 }
 #endif
             }
         }
-
-        private void SetBaseAnchoredPosition(Vector2 position)
+        //在有屏幕坐标的情况下更新base的位置
+        private void SetBaseAnchoredPosition(Vector2 screenPosition, Vector2 anchoredPosition)
         {
             if (!m_bFixedBase)
             {
-                mBase.anchoredPosition = position;
+                mBase.anchoredPosition = anchoredPosition;
+                m_startScreenPosition = screenPosition;
             }
-            m_startBasePosition = mBase.anchoredPosition;
+            m_startAnchorPosition = mBase.anchoredPosition;
+        }
+        //在没有屏幕坐标的情况下更新base的位置
+        private void SetBaseAnchoredPosition(Vector2 anchoredPosition)
+        {
+            if (!m_bFixedBase)
+            {
+                mBase.anchoredPosition = anchoredPosition;
+            }
+            m_startAnchorPosition = mBase.anchoredPosition;
+            m_startScreenPosition = RectTransformUtility.WorldToScreenPoint(m_cCanvasCamera, mBase.position);
         }
 
         private void SetMoveAnchoredPosition(Vector2 position)
         {
-            Vector2 offset = position - m_startBasePosition;
+            Vector2 offset = position - m_startAnchorPosition;
             float len = offset.magnitude;
             if (len <= m_fMoveRadius)
             {
@@ -263,56 +283,84 @@ namespace Framework
             else
             {
                 offset.Normalize();
-                mMove.anchoredPosition = m_startBasePosition + offset * m_fMoveRadius;
+                mMove.anchoredPosition = m_startAnchorPosition + offset * m_fMoveRadius;
             }
         }
 
-        private void EndMovePosition(Vector2 position)
+        private void EndMovePosition(Vector2 screenPos, Vector2 anchorPosition)
         {
             m_nCurTouchId = -1;
-            Vector2 offsetPosition = position - m_startBasePosition;
-            SetBaseAnchoredPosition(m_defaultBasePosition);
-            SetMoveAnchoredPosition(m_defaultBasePosition);
+            SetBaseAnchoredPosition(m_defaultScreenPosition,m_defaultAnchorPosition);
+            SetMoveAnchoredPosition(m_defaultAnchorPosition);
             //派发取消事件
             if(null != OnEnd)
             {
-                OnEnd(offsetPosition);
+                OnEnd(screenPos,Vector2.zero,Vector2.zero);
             }
            
         }
 
-        private void BeginMovePosition(Vector2 position)
+        //在有屏幕坐标的情况下开始移动位置
+        private void BeginMovePosition(Vector2 screenPos, Vector2 anchorPosition)
         {
-            SetBaseAnchoredPosition(position);
-            SetMoveAnchoredPosition(position);
+            SetBaseAnchoredPosition(screenPos, anchorPosition);
+            SetMoveAnchoredPosition(anchorPosition);
             //派发开始遥感事件
             if (null != OnBegin)
             {
-                OnBegin(position - m_startBasePosition);
+                OnBegin(screenPos,screenPos - m_startScreenPosition, Vector2.zero);
             }
+            m_preScreenPosition = screenPos;
         }
 
-        private void UpdateMovePosition(Vector2 position)
+        //没有屏幕坐标的情况下开始移动位置
+        private void BeginMovePosition(Vector2 anchorPosition)
         {
-            SetMoveAnchoredPosition(position);
+            SetBaseAnchoredPosition(anchorPosition);
+            SetMoveAnchoredPosition(anchorPosition);
+            Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(m_cCanvasCamera, mMove.position);
+            //派发开始遥感事件
+            if (null != OnBegin)
+            {
+                OnBegin(screenPos, screenPos - m_startScreenPosition, Vector2.zero);
+            }
+            m_preScreenPosition = screenPos;
+        }
+
+        private void UpdateMovePosition(Vector2 screenPos, Vector2 anchorPosition)
+        {
+            SetMoveAnchoredPosition(anchorPosition);
             //派发移动事件
             if(null != OnMove)
             {
-                OnMove(position - m_startBasePosition);
+                OnMove(screenPos, screenPos - m_startScreenPosition, screenPos - m_preScreenPosition);
             }
+            m_preScreenPosition = screenPos;
+        }
+
+        private void UpdateMovePosition(Vector2 anchorPosition)
+        {
+            SetMoveAnchoredPosition(anchorPosition);
+            Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(m_cCanvasCamera, mMove.position);
+            //派发移动事件
+            if (null != OnMove)
+            {
+                OnMove(screenPos, screenPos - m_startScreenPosition, screenPos - m_preScreenPosition);
+            }
+            m_preScreenPosition = screenPos;
         }
 
         private void OnApplicationPause(bool pause)
         {
             if(pause)
             {
-                EndMovePosition(m_startBasePosition);
+                EndMovePosition(m_startScreenPosition, m_startAnchorPosition);
             }
         }
 
         private void OnApplicationQuit()
         {
-            EndMovePosition(m_startBasePosition);
+            EndMovePosition(m_startScreenPosition,m_startAnchorPosition);
         }
 
         public void Clear()

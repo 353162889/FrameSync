@@ -40,6 +40,22 @@ namespace Game
                     {
                         nAngle = 360 - nAngle;
                     }
+                    //FP len = hangPointData.position.magnitude;
+                    //FP sinAngle = TSMath.Sin(nAngle);
+                    //FP cosAngle = TSMath.Cos(nAngle);
+                    //FP rotateX = len * sinAngle;
+                    //FP rotateZ = len * cosAngle;
+                    //position.y = hangPointData.position.y;
+                    //position.x = rotateX;
+                    //position.z = rotateZ;
+
+                    //TSVector cfgForward = hangPointData.forward;
+                    //cfgForward.y = 0;
+                    //nAngle = TSVector.Angle(TSVector.forward, cfgForward);
+                    //sinAngle = TSMath.Sin(nAngle);
+                    //cosAngle = TSMath.Cos(nAngle);
+
+                    //这里会有性能问题
                     TSQuaternion sQuat = TSQuaternion.AngleAxis(nAngle, TSVector.up);
                     position = curPosition + sQuat * hangPointData.position;
                     forward = sQuat * hangPointData.forward;

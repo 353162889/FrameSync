@@ -32,6 +32,7 @@ namespace Game
             m_cJoystick = joystickGO.AddComponentOnce<UIJoystick>();
             m_cJoystick.Init(rectTrans, m_cBaseTrans, m_cMoveTrans, m_cBaseTrans.rect.width / 2f, true);
             minDirLen = m_cBaseTrans.rect.width * 0.1f;
+            minDirLen = 5f;
             m_cJoystick.OnBegin += OnJoystickBegin;
             m_cJoystick.OnMove += OnJoystickMove;
             m_cJoystick.OnEnd += OnJoystickEnd;
@@ -80,43 +81,49 @@ namespace Game
 
         private void SetJoystickActive(bool active)
         {
-            if (m_cBaseTrans.gameObject.activeSelf != active)
-            {
-                m_cBaseTrans.gameObject.SetActive(active);
-                m_cMoveTrans.gameObject.SetActive(active);
-            }
+            //if (m_cBaseTrans.gameObject.activeSelf != active)
+            //{
+            //    m_cBaseTrans.gameObject.SetActive(active);
+            //    m_cMoveTrans.gameObject.SetActive(active);
+            //}
         }
 
-        private void OnJoystickBegin(Vector2 vector2)
+        private void OnJoystickBegin(Vector2 screenPos, Vector2 offset,Vector2 delta)
         {
             SetJoystickActive(true);
         }
 
-        private void OnJoystickMove(Vector2 vector2)
+        private void OnJoystickMove(Vector2 screenPos, Vector2 offset, Vector2 delta)
         {
             if (PvpPlayerMgr.Instance.mainPlayer != null && PvpPlayerMgr.Instance.mainPlayer.unit != null)
             {
-                if (vector2.magnitude > minDirLen)
+                if ((!Mathf.Approximately(offset.x,0) || !Mathf.Approximately(offset.y,0)) && offset.magnitude > minDirLen)
                 {
-                    var dir = new TSVector(FP.FromFloat(vector2.x), 0, FP.FromFloat(vector2.y));
+                    var dir = new TSVector(FP.FromFloat(offset.x), 0, FP.FromFloat(offset.y));
                     dir.Normalize();
                     PvpPlayerMgr.Instance.mainPlayer.unit.ReqMoveForward(dir);
+                }
+                if(!Mathf.Approximately(delta.x, 0) || !Mathf.Approximately(delta.y, 0))
+                {
+
                 }
             }
         }
 
-        private void OnJoystickEnd(Vector2 vector2)
+        private void OnJoystickEnd(Vector2 screenPos, Vector2 offset,Vector2 delta)
         {
             if (PvpPlayerMgr.Instance.mainPlayer != null && PvpPlayerMgr.Instance.mainPlayer.unit != null)
             {
                 PvpPlayerMgr.Instance.mainPlayer.unit.ReqStopMove();
             }
-            SetJoystickActive(false);
+            //SetJoystickActive(false);
         }
 
         public override void DestroyUI()
         {
+            m_cJoystick.OnBegin -= OnJoystickBegin;
             m_cJoystick.OnMove -= OnJoystickMove;
+            m_cJoystick.OnEnd -= OnJoystickEnd;
         }
 
         public override void OnEnter(ViewParam openParam)
