@@ -12,20 +12,24 @@ namespace Game
         private CommandSequence m_cJoinSequence;
         protected override void OnEnter()
         {
+            FrameSyncSys.Instance.StopRun();
             BattleInfo.Clear();
             BattleInfo.userId = 1;
-            GameObjectPool.Instance.Clear();
+            BattleInfo.sceneId = GameConst.Instance.GetInt("default_scene_id");
+            SceneEffectPool.Instance.Clear();
+            SceneGOPool.Instance.Clear();
             ViewSys.Instance.Open("LoadingView");
             m_cJoinSequence = new CommandSequence();
             var cmdConnectBattleServer = new Cmd_ConnectBattleServer();
             var cmdLoadScene = new Cmd_LoadScene();
+            var cmdPreload = new Cmd_Preload();
             cmdLoadScene.On_Done += OnLoadSceneDone;
+            cmdPreload.On_Done += OnPreLoad;
             m_cJoinSequence.AddSubCommand(cmdConnectBattleServer);
             m_cJoinSequence.AddSubCommand(cmdLoadScene);
+            m_cJoinSequence.AddSubCommand(cmdPreload);
             m_cJoinSequence.On_Done += OnJoinScene;
-            GameInContext context = new GameInContext();
-            context.sceneId = GameConst.Instance.GetInt("default_scene_id");
-            m_cJoinSequence.Execute(context);
+            m_cJoinSequence.Execute();
         }
 
         protected override void OnUpdate()
@@ -38,9 +42,13 @@ namespace Game
 
         private void OnLoadSceneDone(CommandBase obj)
         {
+        }
+
+        private void OnPreLoad(CommandBase obj)
+        {
             //出事化战斗场景数据
-            Cmd_LoadScene cmdScene = obj as Cmd_LoadScene;
-            BattleScene.Instance.Init(cmdScene.sceneId);
+            BattleScene.Instance.Init(BattleInfo.sceneId);
+            CameraSys.Instance.Init();
         }
 
         private void OnJoinScene(CommandBase obj)
@@ -60,6 +68,7 @@ namespace Game
         private void OnStartBattle(object args)
         {
             CLog.Log("开始战斗");
+            FrameSyncSys.Instance.StartRun();//开始帧同步
         }
 
         private void OnPlayerCreate(object args)
@@ -84,8 +93,10 @@ namespace Game
         protected override void OnExit()
         {
             ViewSys.Instance.Close("FightView");
+            CameraSys.Instance.Clear();
             PvpPlayerMgr.Instance.Clear();
-            GameObjectPool.Instance.Clear();
+            SceneEffectPool.Instance.Clear();
+            SceneGOPool.Instance.Clear();
             if (m_cJoinSequence != null)
             {
                 m_cJoinSequence.OnDestroy();

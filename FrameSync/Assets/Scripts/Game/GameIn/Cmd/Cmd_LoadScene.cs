@@ -11,15 +11,11 @@ namespace Game
 {
     public class Cmd_LoadScene : CommandBase
     {
-        private int m_nSceneId;
-        public int sceneId { get { return m_nSceneId; } }
         private AsyncOperation m_cAsyncOperation;
         public override void Execute(ICommandContext context)
         {
             base.Execute(context);
-            GameInContext gameInContext = context as GameInContext;
-            m_nSceneId = gameInContext.sceneId;
-            var resScene = ResCfgSys.Instance.GetCfg<ResScene>(m_nSceneId);
+            var resScene = ResCfgSys.Instance.GetCfg<ResScene>(BattleInfo.sceneId);
             m_cAsyncOperation = SceneManager.LoadSceneAsync(resScene.name);
         }
 

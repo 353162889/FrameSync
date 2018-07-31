@@ -30,7 +30,7 @@ namespace Game
             m_cBtnSkillTest = this.MainGO.FindChildRecursive("btnSkillTest");
             GameObject joystickGO = this.MainGO.FindChildRecursive("Joystick");
             m_cJoystick = joystickGO.AddComponentOnce<UIJoystick>();
-            m_cJoystick.Init(rectTrans, m_cBaseTrans, m_cMoveTrans, m_cBaseTrans.rect.width / 2f, true);
+            m_cJoystick.Init(rectTrans, m_cBaseTrans, m_cMoveTrans, 100000 /*m_cBaseTrans.rect.width / 2f*/, false);
             minDirLen = m_cBaseTrans.rect.width * 0.1f;
             minDirLen = 5f;
             m_cJoystick.OnBegin += OnJoystickBegin;
@@ -81,31 +81,55 @@ namespace Game
 
         private void SetJoystickActive(bool active)
         {
-            //if (m_cBaseTrans.gameObject.activeSelf != active)
-            //{
-            //    m_cBaseTrans.gameObject.SetActive(active);
-            //    m_cMoveTrans.gameObject.SetActive(active);
-            //}
+            if (m_cBaseTrans.gameObject.activeSelf != active)
+            {
+                m_cBaseTrans.gameObject.SetActive(active);
+                m_cMoveTrans.gameObject.SetActive(active);
+            }
         }
 
         private void OnJoystickBegin(Vector2 screenPos, Vector2 offset,Vector2 delta)
         {
-            SetJoystickActive(true);
+            //SetJoystickActive(true);
         }
 
         private void OnJoystickMove(Vector2 screenPos, Vector2 offset, Vector2 delta)
         {
             if (PvpPlayerMgr.Instance.mainPlayer != null && PvpPlayerMgr.Instance.mainPlayer.unit != null)
             {
-                if ((!Mathf.Approximately(offset.x,0) || !Mathf.Approximately(offset.y,0)) && offset.magnitude > minDirLen)
+                var unit = PvpPlayerMgr.Instance.mainPlayer.unit;
+                if (m_cJoystick.IsKeyTouch)
                 {
-                    var dir = new TSVector(FP.FromFloat(offset.x), 0, FP.FromFloat(offset.y));
-                    dir.Normalize();
-                    PvpPlayerMgr.Instance.mainPlayer.unit.ReqMoveForward(dir);
+                    if ((!Mathf.Approximately(offset.x, 0) || !Mathf.Approximately(offset.y, 0)) && offset.magnitude > minDirLen)
+                    {
+                        var dir = new Vector3(offset.x, 0, offset.y);
+                        dir.Normalize();
+                        var curPos = unit.curPosition.ToUnityVector3();
+                        var nextPos = curPos + dir * 1000;
+                        RaycastHit hit;
+                        if(Physics.Linecast(curPos, nextPos, out hit, LayerDefine.MoveBoundMask))
+                        {
+                            nextPos = hit.point;
+                        }
+                        //CLog.LogArgs("nextPos", nextPos);
+                        unit.ReqMove(TSVector.FromUnitVector3(nextPos));
+                    }
                 }
-                if(!Mathf.Approximately(delta.x, 0) || !Mathf.Approximately(delta.y, 0))
+                else
                 {
-
+                    if (!Mathf.Approximately(delta.x, 0) || !Mathf.Approximately(delta.y, 0))
+                    {
+                        var scenePosDelta = CameraSys.Instance.GetSceneDeltaByScreenDelta(delta);
+                        var curPos = unit.curPosition.ToUnityVector3();
+                        var nextPos = curPos + new Vector3(scenePosDelta.x,0,scenePosDelta.y);
+                        RaycastHit hit;
+                        if (Physics.Linecast(curPos, nextPos, out hit, LayerDefine.MoveBoundMask))
+                        {
+                            nextPos = hit.point;
+                        }
+                        //CLog.LogArgs("nextPos", nextPos);
+                        unit.ReqMove(TSVector.FromUnitVector3(nextPos));
+                    }
                 }
             }
         }

@@ -11,11 +11,11 @@ namespace Game
     //unit的移动部分
     public partial class Unit
     {
-        private static FP MoveForwardDistance = 1000;
         protected PointMove m_cMove;
         protected ForwardRotate m_cRotate;
         protected LerpMoveView m_cLerpMoveView;
         protected FP m_sMoveSpeed = 10;
+        protected TSVector m_sLastReqMovePosition = TSVector.MinValue;
 
         public void ReqMove(List<TSVector> movePath)
         {
@@ -42,12 +42,13 @@ namespace Game
 
         public void ReqMove(TSVector targetPosition)
         {
-            if(CanMove())
+            if(CanMove() && m_sLastReqMovePosition != targetPosition)
             {
                 Frame_ReqMovePoint_Data data = new Frame_ReqMovePoint_Data();
                 data.unitId = id;
                 data.targetPosition = GameInTool.ToProtoVector2(targetPosition);
                 NetSys.Instance.SendMsg(NetChannelType.Game, (short)PacketOpcode.Frame_ReqMovePoint, data);
+                m_sLastReqMovePosition = targetPosition;
             }
         }
 
@@ -59,22 +60,23 @@ namespace Game
             }
         }
 
-        public void ReqMoveForward(TSVector direction)
+        public void ReqMoveForward(TSVector direction,FP len)
         {
             if(CanMove() && (TSVector.Angle(curForward,direction) > FP.EN1 || !m_cMove.isMoving))
             {
                 Frame_ReqMoveForward_Data data = new Frame_ReqMoveForward_Data();
                 data.unitId = id;
                 data.forward = GameInTool.ToProtoVector2(direction);
+                data.len = len.ToSourceLong();
                 NetSys.Instance.SendMsg(NetChannelType.Game, (short)PacketOpcode.Frame_ReqMoveForward, data);
             }
         }
 
-        public void MoveForward(TSVector direction)
+        public void MoveForward(TSVector direction,FP len)
         {
             if(CanMove())
             {
-                TSVector nextPoint = direction * MoveForwardDistance;
+                TSVector nextPoint = direction * len;
                 m_cMove.Move(m_sCurPosition, nextPoint, m_sMoveSpeed);
             }
         }
@@ -166,13 +168,6 @@ namespace Game
             m_cLerpMoveView.StopMove();
         }
 
-        protected void DisposeMove()
-        {
-            m_cMove.Clear();
-            m_cRotate.Clear();
-            m_cLerpMoveView.StopMove();
-        }
-
         private GameObject box;
         protected void UpdateMove(FP deltaTime)
         {
@@ -183,6 +178,13 @@ namespace Game
                 box = GameObject.CreatePrimitive(PrimitiveType.Cube);
             }
             box.transform.position = m_sCurPosition.ToUnityVector3();
+        }
+
+        protected void DieMove(DamageInfo damageInfo)
+        {
+            m_cMove.StopMove();
+            m_cRotate.StopRotate();
+            m_cLerpMoveView.StopMove();
         }
     }
 }

@@ -21,7 +21,7 @@ namespace Game
                 if(succ)
                 {
                     CLog.Log("连接战斗服务器成功");
-                    FrameSyncSys.Instance.StartRun();//开始帧同步
+                   
                     this.OnExecuteDone(CmdExecuteState.Success);
                 }
                 else

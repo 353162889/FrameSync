@@ -104,6 +104,15 @@ namespace Game
             }
         }
 
+        public void BreakAll()
+        {
+            for (int i = m_lstCurSkill.Count - 1; i > -1; i--)
+            {
+                m_lstCurSkill[i].Break();
+                m_lstCurSkill.RemoveAt(i);
+            }
+        }
+
         public bool IsDoing(Skill skill)
         {
             for (int i = 0; i < m_lstCurSkill.Count; i++)
@@ -123,6 +132,17 @@ namespace Game
                     m_lstCurSkill.RemoveAt(i);
                 }
             }
+        }
+
+        public void Clear()
+        {
+            BreakAll();
+            for (int i = 0; i < m_lstSkill.Count; i++)
+            {
+                m_lstSkill[i].Clear();
+            }
+            m_lstCurSkill.Clear();
+            m_lstSkill.Clear();
         }
     }
 }

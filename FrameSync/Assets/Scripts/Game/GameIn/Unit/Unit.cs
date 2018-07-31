@@ -10,7 +10,6 @@ namespace Game
 {
     public partial class Unit : MonoBehaviour,IDynamicObj,IPoolable
     {
-
         public int key{ get { return (int)m_nId; } }
 
         private uint m_nId;
@@ -100,8 +99,27 @@ namespace Game
             }
         }
 
+        public void OnHurt(DamageInfo damageInfo)
+        {
+            this.hp -= damageInfo.damage;
+            if(this.hp <= 0)
+            {
+                this.Die(damageInfo);
+            }
+        }
+
+        protected virtual void Die(DamageInfo damageInfo)
+        {
+            DieAttr(damageInfo);
+            DieMove(damageInfo);
+            DieSkill(damageInfo);
+            DieView(damageInfo);
+            BattleScene.Instance.DestroyUnit(this);
+        }
+
         protected virtual void SubInit()
         {
+            InitAttr();
             InitMove();
             InitView();
             InitSkill();
@@ -109,21 +127,15 @@ namespace Game
 
         public virtual void OnUpdate(FP deltaTime)
         {
+            UpdateAttr(deltaTime);
             UpdateMove(deltaTime);
             UpdateView(deltaTime);
             UpdateSkill(deltaTime);
         }
 
-        public void Dispose()
-        {
-            DisposeMove();
-            DisposeView();
-            ClearAgent();
-            DisposeSkill();
-        }
-
         public void Reset()
         {
+            ResetAttr();
             ResetMove();
             ResetView();
             ClearAgent();

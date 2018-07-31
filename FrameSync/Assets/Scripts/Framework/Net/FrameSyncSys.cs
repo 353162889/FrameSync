@@ -22,7 +22,6 @@ namespace Framework
             m_bStartRun = true;
             m_nFrameIndex = 1;
             m_fpTime = 0;
-            OnFrameSyncUpdate = null;
         }
 
         public void StopRun()

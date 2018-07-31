@@ -102,14 +102,20 @@ namespace Game
             }
         }
 
-        protected void ResetSkill()
+        protected virtual void ResetSkill()
         {
-
+            if (null != m_cSkillExecutor)
+            {
+                m_cSkillExecutor.Clear();
+            }
         }
 
-        protected void DisposeSkill()
+        protected virtual void DieSkill(DamageInfo damageInfo)
         {
-
+            if (null != m_cSkillExecutor)
+            {
+                m_cSkillExecutor.BreakAll();
+            }
         }
     }
 }

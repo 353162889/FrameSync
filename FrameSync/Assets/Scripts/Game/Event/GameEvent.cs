@@ -7,6 +7,9 @@ namespace Game
 {
     public class GameEvent
     {
+        //系统消息
+        public static int ResolutionUpdate = "ResolutionUpdate".GetHashCode();//分辨率改变
+
         //战斗部分
         public static int StartBattle = "StartBattle".GetHashCode();//开始战斗消息
         public static int PvpPlayerCreate = "PvpPlayerCreate".GetHashCode(); ///战斗玩家创建消息

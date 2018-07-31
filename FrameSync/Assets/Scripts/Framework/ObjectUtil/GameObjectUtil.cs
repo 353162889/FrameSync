@@ -30,6 +30,13 @@ namespace Framework
             }
 		}
 
+        public static void Reset(this GameObject go)
+        {
+            go.transform.localPosition = Vector3.zero;
+            go.transform.localEulerAngles = Vector3.zero;
+            go.transform.localScale = Vector3.one;
+        }
+
         public static void Destroy(GameObject go)
         {
             GameObject.Destroy(go);

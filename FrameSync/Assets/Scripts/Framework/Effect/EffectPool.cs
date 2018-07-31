@@ -13,6 +13,12 @@ namespace Framework
         private Queue<EffectCtrl> m_queuePool = new Queue<EffectCtrl>();
         private List<string> m_lstPath = new List<string>();
 
+        public void CacheObject(Resource res, int count)
+        {
+            if (!m_lstPath.Contains(res.path)) m_lstPath.Add(res.path);
+            GameObjectPool.Instance.CacheObject(res, count);
+        }
+
         public virtual GameObject CreateEffect(string path,bool autoDestory, Transform parent = null)
         {
             if (!m_lstPath.Contains(path)) m_lstPath.Add(path);

@@ -10,14 +10,14 @@ namespace Game
 {
     public static class GameInTool
     {
-        private static System.Random mRandom;
+        private static TSRandom mRandom;
         private static uint mStartUnitId;
         private static uint mStartRemoteId;
         private static List<TSVector> mListTSVector = new List<TSVector>();
         private static List<Vector3> mListUnityVector = new List<Vector3>();
         public static void InitRandomSeed(int seed)
         {
-            mRandom = new System.Random(seed);
+            mRandom = TSRandom.New(seed);
             mStartUnitId = 0;
             mStartRemoteId = 0;
         }

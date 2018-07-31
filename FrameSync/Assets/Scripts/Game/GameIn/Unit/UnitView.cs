@@ -27,12 +27,12 @@ namespace Game
         protected void InitView()
         {
             m_cHangPoint = gameObject.AddComponentOnce<HangPoint>();
-            m_cHangPoint.Init(m_sPrefab);
+            m_cHangPoint.Init(PathTool.GetBasePrefabPath(m_sPrefab));
             m_cCollider = ObjectPool<GameCollider>.Instance.GetObject();
-            m_cCollider.Init(m_sPrefab);
+            m_cCollider.Init(PathTool.GetBasePrefabPath(m_sPrefab));
             m_cCollider.Update(curPosition, curForward);
 
-            GameObjectPool.Instance.GetObject(m_sPrefab, OnResLoad);
+            SceneGOPool.Instance.GetObject(m_sPrefab, OnResLoad);
         }
 
         private void OnResLoad(GameObject go)
@@ -45,29 +45,18 @@ namespace Game
 
         protected void ResetView()
         {
-            m_cHangPoint.Clear();
-            if(m_cView != null)
-            {
-                GameObjectPool.Instance.SaveObject(m_sPrefab, m_cView);
-                m_cView = null;
-            }
-            GameObjectPool.Instance.RemoveCallback(m_sPrefab, OnResLoad);
-        }
-
-        protected void DisposeView()
-        {
             if (m_cCollider != null)
             {
                 ObjectPool<GameCollider>.Instance.SaveObject(m_cCollider);
                 m_cCollider = null;
             }
             m_cHangPoint.Clear();
-            if (m_cView != null)
+            if(m_cView != null)
             {
-                GameObjectPool.Instance.SaveObject(m_sPrefab, m_cView);
+                SceneGOPool.Instance.SaveObject(m_sPrefab, m_cView);
                 m_cView = null;
             }
-            GameObjectPool.Instance.RemoveCallback(m_sPrefab, OnResLoad);
+            SceneGOPool.Instance.RemoveCallback(m_sPrefab, OnResLoad);
         }
 
         protected void SetViewPosition(TSVector position)
@@ -85,5 +74,12 @@ namespace Game
             m_cCollider.Update(curPosition, curForward);
         }
 
+        protected virtual void DieView(DamageInfo damageInfo)
+        {
+            if (m_cView != null)
+            {
+                m_cView.SetActive(false);
+            }
+        }
     }
 }

@@ -7,11 +7,13 @@ namespace Game
 {
     public static class BattleInfo
     {
-        public static long userId = 0;
+        public static long userId;
+        public static int sceneId;
 
         public static void Clear()
         {
             userId = 0;
+            sceneId = 0;
         }
     }
 }

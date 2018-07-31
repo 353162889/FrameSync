@@ -10,13 +10,18 @@ namespace Game
         public static string SceneEffectDir = "Prefab/Effect/";
         public static string GetSceneEffectPath(string name)
         {
-            return SceneEffectDir + name + ".prefab";
+            return GetBasePrefabPath(SceneEffectDir + name);
         }
 
         public static string UIEffectDir = "Prefab/UIEffect/";
         public static string GetUIEffectPath(string name)
         {
-            return UIEffectDir + name + ".prefab";
+            return GetBasePrefabPath(UIEffectDir + name);
+        }
+
+        public static string GetBasePrefabPath(string name)
+        {
+            return name + ".prefab";
         }
     }
 }

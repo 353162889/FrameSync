@@ -7,9 +7,13 @@ using UnityEngine;
 
 namespace Framework
 {
+    public delegate void GameObjectPoolHandler(GameObject go);
+    /// <summary>
+    /// 游戏中全局对象池（上层逻辑池会调用当前池），不允许直接使用
+    /// </summary>
     public class GameObjectPool : SingletonMonoBehaviour<GameObjectPool>
     {
-        public delegate void GameObjectPoolHandler(GameObject go);
+       
         private Dictionary<Resource, Queue<GameObject>> m_dicGO;
         private Dictionary<string, List<GameObjectPoolHandler>> m_dicCallback;
 
@@ -19,13 +23,25 @@ namespace Framework
             m_dicCallback = new Dictionary<string, List<GameObjectPoolHandler>>();
             base.Init();
         }
-        public void GetObject(string path,GameObjectPoolHandler callback)
+
+        public void CacheObject(Resource res,int count)
         {
-            if(callback == null)
+            Queue<GameObject> queueGO = null;
+            if (!m_dicGO.TryGetValue(res, out queueGO))
             {
-                CLog.LogError("GameObjectPool callback can not be null!");
-                return;
+                queueGO = new Queue<GameObject>();
+                m_dicGO.Add(res, queueGO);
+                res.Retain();
             }
+            for (int i = 0; i < count; i++)
+            {
+                var go = GetGameObject(res);
+                SaveObject(res.path, go);
+            }
+        }
+
+        public GameObject GetObject(string path,GameObjectPoolHandler callback)
+        {
             foreach (var item in m_dicGO)
             {
                 if(item.Key.path == path)
@@ -40,21 +56,30 @@ namespace Framework
                         go = GetGameObject(item.Key);
                     }
                     go.SetActive(true);
-                    callback.Invoke(go);
-                    return;
+                    if (null != callback)
+                    {
+                        var tempCallback = callback;
+                        callback = null;
+                        tempCallback.Invoke(go);
+                    }
+                    return go;
                 }
             }
-            List<GameObjectPoolHandler> lst = null;
-            if(!m_dicCallback.TryGetValue(path, out lst))
+            if (callback != null)
             {
-                lst = new List<GameObjectPoolHandler>();
-                m_dicCallback.Add(path, lst);
-            }
-            if (!lst.Contains(callback))
-            {
-                lst.Add(callback);
+                List<GameObjectPoolHandler> lst = null;
+                if (!m_dicCallback.TryGetValue(path, out lst))
+                {
+                    lst = new List<GameObjectPoolHandler>();
+                    m_dicCallback.Add(path, lst);
+                }
+                if (!lst.Contains(callback))
+                {
+                    lst.Add(callback);
+                }
             }
             ResourceSys.Instance.GetResource(path, OnResLoad);
+            return null;
         }
 
         public void RemoveCallback(string path,GameObjectPoolHandler callback)

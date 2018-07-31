@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-	<resairship id="1" prefab="Prefab/Unit/AirShip.prefab"/>
+	<resairship id="1" prefab="Prefab/Unit/AirShip"/>
 </root>

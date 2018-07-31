@@ -21,6 +21,9 @@ namespace Game
             }
             m_sPrefab = m_resInfo.prefab;
             base.SubInit();
+            this.hpLmt = 100;
+            this.hp = this.hpLmt;
+            this.attack = 1;
         }
     }
 }

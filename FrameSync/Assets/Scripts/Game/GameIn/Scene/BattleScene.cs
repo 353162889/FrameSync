@@ -21,6 +21,20 @@ namespace Game
         CampMax,
     }
 
+    public class DamageInfo : IPoolable
+    {
+        public AgentObject attack;
+        public AgentObject defence;
+        public int damage;
+
+        public void Reset()
+        {
+            attack = null;
+            defence = null;
+            damage = 0;
+        }
+    }
+
     public class BattleScene : Singleton<BattleScene>
     {
         private int m_nSceneId;
@@ -100,6 +114,7 @@ namespace Game
             BehaviourPool<UnitAirShip>.Instance.Init(30);
             BehaviourPool<Remote>.Instance.Init(100);
             ObjectPool<GameCollider>.Instance.Init(200);
+            ObjectPool<DamageInfo>.Instance.Init(20);
 
             FrameSyncSys.Instance.OnFrameSyncUpdate += OnFrameSyncUpdate;
 

@@ -276,6 +276,13 @@ namespace Proto
       get { return _forward; }
       set { _forward = value; }
     }
+    private long _len;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"len", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public long len
+    {
+      get { return _len; }
+      set { _len = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }

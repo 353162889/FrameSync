@@ -24,6 +24,13 @@ namespace Game
         public GameVersionMode versionMode = GameVersionMode.Debug;
         public GameNetMode netMode = GameNetMode.StandAlone;
         public static StateContainerBase GameGlobalState { get; private set; }
+        private int m_nLastWidth;
+        private int m_nLastHeight;
+        void Awake()
+        {
+            m_nLastWidth = Screen.width;
+            m_nLastHeight = Screen.height;
+        }
         void Start()
         {
             InitSingleton();
@@ -73,7 +80,7 @@ namespace Game
             List<ResUI> lst = ResCfgSys.Instance.GetCfgLst<ResUI>();
             for (int i = 0; i < lst.Count; i++)
             {
-                ViewSys.Instance.RegistUIPath(lst[i].name, lst[i].prefab);
+                ViewSys.Instance.RegistUIPath(lst[i].name, PathTool.GetBasePrefabPath(lst[i].prefab));
             }
         }
 
@@ -117,6 +124,9 @@ namespace Game
             goPool.name = "GameObjectPool";
             GameObject.DontDestroyOnLoad(goPool);
             goPool.AddComponentOnce<GameObjectPool>();
+            goPool.AddComponentOnce<CoreGOPool>();
+            goPool.AddComponentOnce<SceneGOPool>();
+
             //初始化特效池
             GameObject sceneEffectPool = new GameObject();
             sceneEffectPool.name = "SceneEffectPool";
@@ -135,13 +145,17 @@ namespace Game
            
         }
 
+       
         void Update()
         {
             if(GameGlobalState != null)
             {
                 GameGlobalState._OnUpdate();
             }
-
+            if(m_nLastWidth != Screen.width || m_nLastHeight != Screen.height)
+            {
+                GlobalEventDispatcher.Instance.Dispatch(GameEvent.ResolutionUpdate);
+            }
             //if (Input.GetMouseButtonUp(0))
             //{
             //    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
