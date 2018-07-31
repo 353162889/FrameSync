@@ -88,9 +88,12 @@ namespace Game
             }
         }
 
+        private Vector3 startPosition;
         private void OnJoystickBegin(Vector2 screenPos, Vector2 offset,Vector2 delta)
         {
             //SetJoystickActive(true);
+            if (PvpPlayerMgr.Instance.mainPlayer != null && PvpPlayerMgr.Instance.mainPlayer.unit != null)
+                startPosition = PvpPlayerMgr.Instance.mainPlayer.unit.curPosition.ToUnityVector3();
         }
 
         private void OnJoystickMove(Vector2 screenPos, Vector2 offset, Vector2 delta)
@@ -119,9 +122,9 @@ namespace Game
                 {
                     if (!Mathf.Approximately(delta.x, 0) || !Mathf.Approximately(delta.y, 0))
                     {
-                        var scenePosDelta = CameraSys.Instance.GetSceneDeltaByScreenDelta(delta);
                         var curPos = unit.curPosition.ToUnityVector3();
-                        var nextPos = curPos + new Vector3(scenePosDelta.x,0,scenePosDelta.y);
+                        var scenePosDelta = CameraSys.Instance.GetSceneDeltaByScreenDelta(offset);
+                        var nextPos = startPosition + new Vector3(scenePosDelta.x,0,scenePosDelta.y);
                         RaycastHit hit;
                         if (Physics.Linecast(curPos, nextPos, out hit, LayerDefine.MoveBoundMask))
                         {

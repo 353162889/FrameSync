@@ -34,6 +34,7 @@ namespace Game
 
         public Vector2 GetSceneDeltaByScreenDelta(Vector2 screenDelta)
         {
+           // CLog.LogArgs(screenDelta, m_fSceneScreenRate, screenDelta * m_fSceneScreenRate);
             return screenDelta * m_fSceneScreenRate;
         }
 

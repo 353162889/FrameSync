@@ -14,7 +14,7 @@ namespace Game
         protected PointMove m_cMove;
         protected ForwardRotate m_cRotate;
         protected LerpMoveView m_cLerpMoveView;
-        protected FP m_sMoveSpeed = 10;
+        protected FP m_sMoveSpeed = 30;
         protected TSVector m_sLastReqMovePosition = TSVector.MinValue;
 
         public void ReqMove(List<TSVector> movePath)
