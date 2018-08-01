@@ -103,6 +103,13 @@ namespace Framework
             return netChannel.RunFrameData(frameIndex);
         }
 
+        public bool CanRunFrameData(NetChannelType channel, int frameIndex)
+        {
+            NetChannel netChannel = GetChannel(channel);
+            if (netChannel == null) return false;
+            return netChannel.CanRunFrameData(frameIndex);
+        }
+
         void Update()
         {
             for (int i = 0; i < m_arrChannel.Length; i++)

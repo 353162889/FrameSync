@@ -84,21 +84,44 @@ namespace Framework
             return minValue + Next() % range;
         }
 
+        public int Next(int maxValue)
+        {
+            return Next(0, maxValue);
+        }
+
+        public FP Next(FP minValue,FP maxValue){
+            if (minValue > maxValue)
+            {
+                FP tmp = maxValue;
+                maxValue = minValue;
+                minValue = tmp;
+            }
+            FP range = maxValue - minValue;
+            return minValue + NextFP() * range;
+        }
+
+        public FP Next(FP maxValue)
+        {
+            return Next(0, maxValue);
+        }
+
+
         /**
          *  @brief Returns a {@link FP} between a min value [inclusive] and a max value [inclusive].
          **/
-        public FP Next(float minValue, float maxValue) {
-            int minValueInt = (int)(minValue * 1000), maxValueInt = (int)(maxValue * 1000);
+         //这里是截断法，不应该支持
+        //public FP Next(float minValue, float maxValue) {
+        //    int minValueInt = (int)(minValue * 1000), maxValueInt = (int)(maxValue * 1000);
 
-            if (minValueInt > maxValueInt) {
-                int tmp = maxValueInt;
-                maxValueInt = minValueInt;
-                minValueInt = tmp;
-            }
+        //    if (minValueInt > maxValueInt) {
+        //        int tmp = maxValueInt;
+        //        maxValueInt = minValueInt;
+        //        minValueInt = tmp;
+        //    }
 
-            return (FP.Floor((maxValueInt - minValueInt + 1) * NextFP() +
-                minValueInt)) / 1000;
-        }
+        //    return (FP.Floor((maxValueInt - minValueInt + 1) * NextFP() +
+        //        minValueInt)) / 1000;
+        //}
 
         /**
          *  @brief Returns a integer between a min value [inclusive] and a max value [exclusive].
@@ -110,9 +133,9 @@ namespace Framework
         /**
          *  @brief Returns a {@link FP} between a min value [inclusive] and a max value [inclusive].
          **/
-        public static FP Range(float minValue, float maxValue) {
-            return instance.Next(minValue, maxValue);
-        }
+        //public static FP Range(float minValue, float maxValue) {
+        //    return instance.Next(minValue, maxValue);
+        //}
 
         /**
          *  @brief Returns a {@link FP} between 0.0 [inclusive] and 1.0 [inclusive].

@@ -72,6 +72,7 @@ namespace Game
         private AgentObject m_cAgentObj;
         public AgentObject agentObj { get { return m_cAgentObj; } }
 
+        private ValueContainer m_cValueContainer;
 
         public void Init(uint id, int configId,int campId, TSVector position, TSVector forward, uint targetAgentId, AgentObjectType targetAgentType, TSVector targetPosition, TSVector targetForward)
         {
@@ -110,6 +111,22 @@ namespace Game
             m_cCollider = ObjectPool<GameCollider>.Instance.GetObject();
             m_cCollider.Init(remoteFullPath);
             m_cCollider.Update(curPosition, curForward);
+
+            if (m_cValueContainer == null)
+            {
+                m_cValueContainer = new ValueContainer();
+                m_cValueContainer.Add((int)AttrType.Attack);
+            }
+            m_cValueContainer.Reset();
+        }
+
+        public FP GetAttrValue(int key)
+        {
+            return m_cValueContainer.GetValue(key);
+        }
+        public void SetAttrValue(int key, FP value)
+        {
+            m_cValueContainer.SetValue(key, value);
         }
 
         public Transform GetHangPoint(string name, out TSVector position, out TSVector forward)
@@ -198,6 +215,10 @@ namespace Game
             {
                 ObjectPool<GameCollider>.Instance.SaveObject(m_cCollider);
                 m_cCollider = null;
+            }
+            if(m_cValueContainer != null)
+            {
+                m_cValueContainer.Reset();
             }
             m_cLerpView.StopMove();
             m_cBlackBoard.Clear();

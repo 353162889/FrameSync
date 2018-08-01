@@ -7,15 +7,15 @@ namespace Framework
 {
     public class ValueContainer
     {
-        public delegate void ValueContainerHandler(int key, int oldValue, int newValue);
+        public delegate void ValueContainerHandler(int key, FP oldValue, FP newValue);
         public event ValueContainerHandler OnValueChanged;
         protected List<int> m_lstKey;
-        protected List<int> m_lstValue;
+        protected List<FP> m_lstValue;
 
         public ValueContainer()
         {
             m_lstKey = new List<int>();
-            m_lstValue = new List<int>();
+            m_lstValue = new List<FP>();
         }
 
         public List<int> GetAllKey()
@@ -37,12 +37,12 @@ namespace Framework
             }
         }
 
-        public virtual void SetValue(int key, int value)
+        public virtual void SetValue(int key, FP value)
         {
             int index = m_lstKey.IndexOf(key);
             if (index > -1)
             {
-                int oldValue = m_lstValue[index];
+                FP oldValue = m_lstValue[index];
                 if (oldValue != value)
                 {
                     m_lstValue[index] = value;
@@ -58,7 +58,7 @@ namespace Framework
             }
         }
 
-        public virtual int GetValue(int key)
+        public virtual FP GetValue(int key)
         {
             int index = m_lstKey.IndexOf(key);
             if (index > -1) return m_lstValue[index];

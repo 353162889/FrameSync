@@ -11,38 +11,35 @@ namespace BTCore
 
     }
     [BTNode(typeof(BTSequenceData))]
-    public class BTSequence : BTRunningComposite
+    public class BTSequence : BTComposite
     {
         protected int m_iSelectedIndex;
         public BTSequence()
         {
             m_iSelectedIndex = 0;
         }
-        protected override BTResult OnCompositeTick(BTBlackBoard blackBoard)
+
+        public override BTResult OnTick(BTBlackBoard blackBoard)
         {
-            int curIndex = m_iSelectedIndex;
             int totalCount = m_lstChild.Count;
-            if (curIndex < totalCount)
+            while(m_iSelectedIndex < totalCount)
             {
-                var child = m_lstChild[curIndex];
-                BTResult childResult = this.OnRunningChildTick(child, blackBoard);
-                if (childResult == BTResult.Failure)
+                var child = m_lstChild[m_iSelectedIndex];
+                BTResult childResult = child.OnTick(blackBoard);
+                if(childResult == BTResult.Failure)
                 {
                     return BTResult.Failure;
+                }
+                else if(childResult == BTResult.Running)
+                {
+                    return BTResult.Running;
                 }
                 else if(childResult == BTResult.Success)
                 {
                     m_iSelectedIndex++;
                 }
             }
-            if(m_iSelectedIndex < totalCount)
-            {
-                return BTResult.Running;
-            }
-            else
-            {
-                return BTResult.Success;
-            }
+            return BTResult.Success;
         }
 
         public override void Clear()

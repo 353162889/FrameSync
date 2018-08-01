@@ -7,6 +7,13 @@ using System.Text;
 
 namespace Game
 {
+
+    public enum BTActionTarget
+    {
+        Host,   //当前宿主
+        SelectTarget,//当前选择的目标
+    }
+
     [NENodeCategory("BTGame/Action")]
     public class BaseBTGameAction : BTAction
     {

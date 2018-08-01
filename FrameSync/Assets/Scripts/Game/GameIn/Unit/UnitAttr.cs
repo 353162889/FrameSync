@@ -6,12 +6,6 @@ using Framework;
 
 namespace Game
 {
-    public enum UnitAttrType
-    {
-        HP,//血量
-        HPLmt,//血量上限
-        Attack,//攻击力
-    }
     public partial class Unit
     {
         public event ValueContainer.ValueContainerHandler OnValueChanged
@@ -22,9 +16,9 @@ namespace Game
 
         private ValueContainer m_cValueContainer;
 
-        public int hp { get { return GetValue((int)UnitAttrType.HP); } set { SetValue((int)UnitAttrType.HP,value); } }
-        public int hpLmt { get { return GetValue((int)UnitAttrType.HPLmt); } set { SetValue((int)UnitAttrType.HPLmt, value); } }
-        public int attack { get { return GetValue((int)UnitAttrType.Attack); } set { SetValue((int)UnitAttrType.Attack, value); } }
+        public FP hp { get { return GetAttrValue((int)AttrType.HP); } set { SetAttrValue((int)AttrType.HP,value); } }
+        public FP hpLmt { get { return GetAttrValue((int)AttrType.HPLmt); } set { SetAttrValue((int)AttrType.HPLmt, value); } }
+        public FP attack { get { return GetAttrValue((int)AttrType.Attack); } set { SetAttrValue((int)AttrType.Attack, value); } }
 
         protected void InitAttr()
         {
@@ -32,20 +26,20 @@ namespace Game
             {
                 m_cValueContainer = new ValueContainer();
             }
-            m_cValueContainer.Add((int)UnitAttrType.HP);
-            m_cValueContainer.Add((int)UnitAttrType.HPLmt);
-            m_cValueContainer.Add((int)UnitAttrType.Attack);
+            m_cValueContainer.Add((int)AttrType.HP);
+            m_cValueContainer.Add((int)AttrType.HPLmt);
+            m_cValueContainer.Add((int)AttrType.Attack);
         }
 
-        protected int GetValue(int key)
+        public FP GetAttrValue(int key)
         {
             return m_cValueContainer.GetValue(key);
         }
-        protected void SetValue(int key,int value)
+        public void SetAttrValue(int key, FP value)
         {
             switch(key)
             {
-                case (int)UnitAttrType.HP:
+                case (int)AttrType.HP:
                     if (value > hpLmt) value = hpLmt;
                     break;
             }

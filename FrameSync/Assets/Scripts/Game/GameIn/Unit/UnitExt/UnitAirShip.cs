@@ -23,7 +23,7 @@ namespace Game
             base.SubInit();
             this.hpLmt = 100;
             this.hp = this.hpLmt;
-            this.attack = 1;
+            this.attack = 10;
         }
     }
 }

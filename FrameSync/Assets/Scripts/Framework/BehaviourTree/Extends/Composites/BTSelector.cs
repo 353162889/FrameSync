@@ -13,7 +13,7 @@ namespace BTCore
     }
 
     [BTNode(typeof(BTSelectorData))]
-    public class BTSelector : BTRunningComposite
+    public class BTSelector : BTComposite
     {
         protected int m_iSelectedIndex;
         public BTSelector()
@@ -21,25 +21,24 @@ namespace BTCore
             m_iSelectedIndex = 0;
         }
 
-        protected override BTResult OnCompositeTick(BTBlackBoard blackBoard)
+        public override BTResult OnTick(BTBlackBoard blackBoard)
         {
-            int curIndex = m_iSelectedIndex;
-            int selectedCount = 0;
             int totalCount = m_lstChild.Count;
-            while(selectedCount < totalCount)
+            while (m_iSelectedIndex < totalCount)
             {
-                curIndex = curIndex % totalCount;
-                var child = m_lstChild[curIndex];
-                BTResult childResult = this.OnRunningChildTick(child, blackBoard);
-                if(childResult == BTResult.Failure)
+                var child = m_lstChild[m_iSelectedIndex];
+                BTResult childResult = child.OnTick(blackBoard);
+                if (childResult == BTResult.Success)
                 {
-                    curIndex++;
-                    selectedCount++;
+                    return BTResult.Success;
                 }
-                else
+                else if (childResult == BTResult.Running)
                 {
-                    m_iSelectedIndex = curIndex;
-                    return childResult;
+                    return BTResult.Running;
+                }
+                else if (childResult == BTResult.Failure)
+                {
+                    m_iSelectedIndex++;
                 }
             }
             return BTResult.Failure;

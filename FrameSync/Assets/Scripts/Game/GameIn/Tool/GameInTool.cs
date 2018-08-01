@@ -32,6 +32,33 @@ namespace Game
             return ++mStartRemoteId;
         }
 
+        public static FP Random(FP max)
+        {
+            return mRandom.Next(max);
+        }
+
+        public static FP Random(FP min,FP max)
+        {
+            return mRandom.Next(min, max);
+        }
+
+        public static int Random(int max)
+        {
+            return mRandom.Next(max);
+        }
+
+        public static int Random(int min,int max)
+        {
+            return mRandom.Next(min, max);
+        }
+
+        public static TSVector RandomInRect(TSRect rect)
+        {
+            FP x = Random(rect.xMin, rect.xMax);
+            FP z = Random(rect.yMin, rect.yMax);
+            return new TSVector(x,0,z);
+        }
+
         public static TSVector ToTSVector(ProtoVector2 source)
         {
             TSVector result = new TSVector();

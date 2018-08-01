@@ -76,6 +76,20 @@ namespace Game
 
         public void Clear()
         {
+            if(m_cHangPointView != null)
+            {
+                //销毁当前对象身上挂点下的所有特效
+                var lst = m_cHangPointView.GetAllHangPoint();
+                for (int i = 0; i < lst.Count; i++)
+                {
+                    int count = lst[i].childCount;
+                    for (int j = 0; j < count; j++)
+                    {
+                        var child = lst[i].GetChild(j);
+                        SceneEffectPool.Instance.DestroyEffectGO(child.gameObject);
+                    }
+                }
+            }
             m_cHangPointView = null;
             m_cHangPointItem = null;
         }

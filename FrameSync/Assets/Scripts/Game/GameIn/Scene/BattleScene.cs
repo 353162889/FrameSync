@@ -25,7 +25,7 @@ namespace Game
     {
         public AgentObject attack;
         public AgentObject defence;
-        public int damage;
+        public FP damage;
 
         public void Reset()
         {

@@ -17,6 +17,7 @@ namespace Game
         public bool useHangPoint;
     }
     [RemoteNode(typeof(RM_CreateRemoteActionData))]
+    [NENodeDesc("从宿主挂点位置创建远程")]
     public class RM_CreateRemoteAction : BaseTimeLineRemoteAction
     {
         private RM_CreateRemoteActionData m_cActionData;
@@ -42,7 +43,8 @@ namespace Game
             {
                 targetForward = bornForward;
             }
-            BattleScene.Instance.CreateRemote(m_cActionData.remoteId, remote.campId, bornPosition, targetForward, remote.targetAgentId, remote.targetAgentType, remote.targetPosition, targetForward);
+            var createRemote = BattleScene.Instance.CreateRemote(m_cActionData.remoteId, remote.campId, bornPosition, targetForward, remote.targetAgentId, remote.targetAgentType, remote.targetPosition, targetForward);
+            createRemote.SetAttrValue((int)AttrType.Attack, remote.GetAttrValue((int)AttrType.Attack));
             return BTActionResult.Ready;
         }
     }

@@ -10,6 +10,7 @@ namespace Game
     public class GameIn : StateBase
     {
         private CommandSequence m_cJoinSequence;
+        private GamingSysCompContainer m_cSysCompContainer;
         protected override void OnEnter()
         {
             FrameSyncSys.Instance.StopRun();
@@ -57,6 +58,9 @@ namespace Game
             CLog.Log("进入场景成功");
             //初始化一些数据
             PvpPlayerMgr.Instance.Init();
+            m_cSysCompContainer = new GamingSysCompContainer();
+            //注册逻辑
+            m_cSysCompContainer.RegisterComp(GamingSysCompType.EnemyRefresh, new GSC_EnemyRefresh());
 
             GlobalEventDispatcher.Instance.AddEvent(GameEvent.StartBattle, OnStartBattle);
             GlobalEventDispatcher.Instance.AddEvent(GameEvent.PvpPlayerCreate, OnPlayerCreate);
@@ -68,7 +72,27 @@ namespace Game
         private void OnStartBattle(object args)
         {
             CLog.Log("开始战斗");
+            FrameSyncSys.Instance.OnFirstFrameRun += OnFirstFrameRun;
+            FrameSyncSys.Instance.OnFrameSyncUpdate += OnFrameSyncUpdate;
             FrameSyncSys.Instance.StartRun();//开始帧同步
+        }
+
+        private void OnFrameSyncUpdate(FP deltaTime)
+        {
+            if(null != m_cSysCompContainer)
+            {
+                m_cSysCompContainer.Update(deltaTime);
+            }
+        }
+
+        private void OnFirstFrameRun(FP deltaTime)
+        {
+            FrameSyncSys.Instance.OnFirstFrameRun -= OnFirstFrameRun;
+            //第一帧运行，帧同步开始运行
+            if(null != m_cSysCompContainer)
+            {
+                m_cSysCompContainer.Enter();
+            }
         }
 
         private void OnPlayerCreate(object args)
@@ -85,13 +109,19 @@ namespace Game
             }
             else
             {
-                player.CreateUnit((int)CampType.Camp2);
+                player.CreateUnit((int)CampType.Camp1);
             }
             CLog.Log("初始化其他战斗的数据");
         }
 
         protected override void OnExit()
         {
+            if(m_cSysCompContainer != null)
+            {
+                m_cSysCompContainer.Exit();
+            }
+            //停止帧同步运行
+            FrameSyncSys.Instance.OnFrameSyncUpdate -= OnFrameSyncUpdate;
             ViewSys.Instance.Close("FightView");
             CameraSys.Instance.Clear();
             PvpPlayerMgr.Instance.Clear();
@@ -104,6 +134,7 @@ namespace Game
             }
 
             //断开连接操作
+            NetSys.Instance.DisConnect(NetChannelType.Game);
         }
     }
 }

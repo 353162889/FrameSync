@@ -22,5 +22,10 @@ namespace Game
             }
             return null;
         }
+
+        public List<Transform> GetAllHangPoint()
+        {
+            return m_lstTrans;
+        }
     }
 }

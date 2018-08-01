@@ -228,6 +228,13 @@ namespace Framework
             m_cMsgDispatcher.Dispatch(recvData.recvOpcode, recvData.data);
         }
 
+        public bool CanRunFrameData(int frameIndex)
+        {
+            if (Status != SocketClientStatus.Connected) return false;
+            if (frameIndex >= m_cFrameData.recvFrameIndex) return false;
+            return true;
+        }
+
         public bool RunFrameData(int frameIndex)
         {
             if (Status != SocketClientStatus.Connected) return false;

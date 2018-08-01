@@ -11,6 +11,7 @@ namespace Framework
         public static FP OnFrameTime = FP.One / 20;
         public delegate void FrameSyncUpdateHandler(FP deltaTime);
         public event FrameSyncUpdateHandler OnFrameSyncUpdate;
+        public event FrameSyncUpdateHandler OnFirstFrameRun;
         private bool m_bStartRun = false;
         private static int m_nFrameIndex;
         public static int frameIndex { get { return m_nFrameIndex; } }
@@ -35,8 +36,16 @@ namespace Framework
         {
             if(m_bStartRun)
             {
-                while(NetSys.Instance.RunFrameData(NetChannelType.Game, m_nFrameIndex))
+                while(NetSys.Instance.CanRunFrameData(NetChannelType.Game, m_nFrameIndex))
                 {
+                    if(m_nFrameIndex == 1)
+                    {
+                        if(null != OnFirstFrameRun)
+                        {
+                            OnFirstFrameRun(OnFrameTime);
+                        }
+                    }
+                    NetSys.Instance.RunFrameData(NetChannelType.Game, m_nFrameIndex);
                     if (null != OnFrameSyncUpdate)
                     {
                         OnFrameSyncUpdate(OnFrameTime);

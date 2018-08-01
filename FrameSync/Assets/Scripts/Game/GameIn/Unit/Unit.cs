@@ -10,6 +10,9 @@ namespace Game
 {
     public partial class Unit : MonoBehaviour,IDynamicObj,IPoolable
     {
+        public delegate void UnitDamageHandler(Unit unit, DamageInfo damageInfo);
+        public event UnitDamageHandler OnUnitHurt;
+        public event UnitDamageHandler OnUnitDie;
         public int key{ get { return (int)m_nId; } }
 
         private uint m_nId;
@@ -102,8 +105,18 @@ namespace Game
         public void OnHurt(DamageInfo damageInfo)
         {
             this.hp -= damageInfo.damage;
+            if(null != OnUnitHurt)
+            {
+                OnUnitHurt(this, damageInfo);
+            }
+            GlobalEventDispatcher.Instance.Dispatch(GameEvent.UnitHurt, damageInfo);
             if(this.hp <= 0)
             {
+                if(null != OnUnitDie)
+                {
+                    OnUnitDie(this, damageInfo);
+                }
+                GlobalEventDispatcher.Instance.Dispatch(GameEvent.UnitDie, damageInfo);
                 this.Die(damageInfo);
             }
         }
@@ -140,6 +153,8 @@ namespace Game
             ResetView();
             ClearAgent();
             ResetSkill();
+            OnUnitHurt = null;
+            OnUnitDie = null;
         }
 
         private void ClearAgent()

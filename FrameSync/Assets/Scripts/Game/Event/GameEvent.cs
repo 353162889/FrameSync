@@ -15,5 +15,7 @@ namespace Game
         public static int PvpPlayerCreate = "PvpPlayerCreate".GetHashCode(); ///战斗玩家创建消息
         public static int UnitAdd = "UnitAdd".GetHashCode();//单位添加
         public static int UnitRemove = "UnitRemove".GetHashCode();//单位移除
+        public static int UnitHurt = "UnitHurt".GetHashCode();
+        public static int UnitDie = "UnitDie".GetHashCode();
     }
 }

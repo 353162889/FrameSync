@@ -62,6 +62,8 @@ namespace Game
         abstract public GameCollider gameCollider { get; }
         abstract public Transform GetHangPoint(string name, out TSVector position, out TSVector forward);
         abstract public Transform GetHangPoint(string name, TSVector cPosition, TSVector cForward, out TSVector position, out TSVector forward);
-        
+
+        abstract public FP GetAttrValue(int key);
+        abstract public void SetAttrValue(int key, FP value);
     }
 }

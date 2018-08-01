@@ -115,5 +115,22 @@ namespace Game
             forward = curForward;
             return null;
         }
+
+        public override FP GetAttrValue(int key)
+        {
+            if(m_cRemote != null)
+            {
+                return m_cRemote.GetAttrValue(key);
+            }
+            return 0;
+        }
+
+        public override void SetAttrValue(int key, FP value)
+        {
+            if(m_cRemote != null)
+            {
+                m_cRemote.SetAttrValue(key, value);
+            }
+        }
     }
 }
