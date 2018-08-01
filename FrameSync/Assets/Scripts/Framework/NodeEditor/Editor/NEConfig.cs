@@ -15,6 +15,7 @@ namespace NodeEditor
         //技能数据
         Skill.SkillComposeType,
         Remote.RemoteComposeType,
+        AgentObjectAI.AIComposeType,
         };
     }
 }

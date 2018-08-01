@@ -50,11 +50,11 @@ namespace Game
         private TSVector m_sTargetForward;
 
         private FP m_sStartTime;
+        private FP m_sEndTime;
 
-        public Skill(AgentObject host,NEData neData)
+        public Skill(NEData neData)
         {
             Init();
-            m_cHost = host;
             m_cNEData = neData;
             m_cSkillData = m_cNEData.data as SkillData;
             m_cSkillTree = CreateNode(m_cNEData) as SkillTree;
@@ -62,12 +62,18 @@ namespace Game
             m_cBlackBoard = new SkillBlackBoard(this);
             m_bIsDo = false;
             m_sStartTime = -1000;
+            m_sEndTime = -1000;
+        }
+
+        public void Init(AgentObject host)
+        {
+            m_cHost = host;
         }
 
         public bool CanDo()
         {
             if (isDo) return false;
-            if (FrameSyncSys.time - m_sStartTime < cd) return false;
+            if (FrameSyncSys.time < m_sEndTime) return false;
             return true;
         }
 
@@ -79,6 +85,7 @@ namespace Game
             m_sTargetForward = forward;
             m_bIsDo = true;
             m_sStartTime = FrameSyncSys.time;
+            m_sEndTime = FrameSyncSys.time + cd;
         }
 
         public void Break()

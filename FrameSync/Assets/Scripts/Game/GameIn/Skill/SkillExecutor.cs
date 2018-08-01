@@ -26,10 +26,12 @@ namespace Game
                 CLog.LogError("skillId = "+ skillId +" is exist!");
                 return;
             }
-            NEData neData = SkillCfgSys.Instance.GetSkillData(skillId);
-            if (neData == null) return;
-            Skill skill = new Skill(m_cAgentObject, neData);
-            m_lstSkill.Add(skill);
+            Skill skill = SkillPool.Instance.GetSkill(skillId);
+            if (skill != null)
+            {
+                skill.Init(m_cAgentObject);
+                m_lstSkill.Add(skill);
+            }
         }
 
         public void RemoveSkill(int skillId)
@@ -37,9 +39,11 @@ namespace Game
             Break(skillId);
             for (int i = m_lstSkill.Count - 1; i > -1; i--)
             {
-                if(m_lstSkill[i].skillId == skillId)
+                var skill = m_lstSkill[i];
+                if (skill.skillId == skillId)
                 {
                     m_lstSkill.RemoveAt(i);
+                    SkillPool.Instance.SaveSkill(skillId, skill);
                     break;
                 }
             }
@@ -139,7 +143,7 @@ namespace Game
             BreakAll();
             for (int i = 0; i < m_lstSkill.Count; i++)
             {
-                m_lstSkill[i].Clear();
+                SkillPool.Instance.SaveSkill(m_lstSkill[i].skillId, m_lstSkill[i]);
             }
             m_lstCurSkill.Clear();
             m_lstSkill.Clear();

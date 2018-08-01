@@ -40,12 +40,13 @@ namespace Game
         private int m_nConfingIndex;
         private void LoadConfigs()
         {
-            m_nConfingIndex = 5;
+            m_nConfingIndex = 6;
             ResCfgSys.Instance.LoadResCfgs("Config/Data", OnLoadOneConfig);
             SkillCfgSys.Instance.LoadResCfgs(OnLoadOneConfig);
             RemoteCfgSys.Instance.LoadResCfgs(OnLoadOneConfig);
             HangPointCfgSys.Instance.LoadResCfgs(OnLoadOneConfig);
             GameColliderCfgSys.Instance.LoadResCfgs(OnLoadOneConfig);
+            AICfgSys.Instance.LoadResCfgs(OnLoadOneConfig);
         }
 
         private void OnLoadOneConfig()
