@@ -264,6 +264,20 @@ namespace NodeEditor
                     }
                 }
             }
+            else if(e.button == 2)
+            {
+                switch (e.type)
+                {
+                    case EventType.MouseDrag:
+                        if (isInWindow)
+                        {
+                            scrollPos -= e.delta;
+                            e.Use();
+                            GUI.changed = true;
+                        }
+                        break;
+                }
+            }
         }
 
         private NENode GetNodeByPosition(Vector2 pos)

@@ -46,7 +46,15 @@ namespace Game
             if ((startForward - targetForward).IsZero()) return false;
             m_sSpeed = angleSpeed / 360;
             m_sStartRotation = TSQuaternion.identity;
-            m_sTargetRotation = TSQuaternion.FromToRotation(m_sStartForward, m_sTargetForward);
+            if ((m_sStartForward - TSVector.Negate(m_sTargetForward)).IsNearlyZero())
+            {
+                //如果旋转是180度，这边有问题，特殊处理
+                m_sTargetRotation = TSQuaternion.Euler(0, 180, 0);
+            }
+            else
+            {
+                m_sTargetRotation = TSQuaternion.FromToRotation(m_sStartForward, m_sTargetForward);
+            }
             m_nRotating = true;
             m_sLerp = 0;
             if(null != OnStartRotate)

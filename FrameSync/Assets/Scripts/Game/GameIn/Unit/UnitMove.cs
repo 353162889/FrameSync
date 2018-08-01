@@ -15,7 +15,6 @@ namespace Game
         protected ForwardRotate m_cRotate;
         protected LerpMoveView m_cLerpMoveView;
         protected FP m_sMoveSpeed = 30;
-        protected TSVector m_sLastReqMovePosition = TSVector.MinValue;
 
         public void ReqMove(List<TSVector> movePath)
         {
@@ -42,13 +41,12 @@ namespace Game
 
         public void ReqMove(TSVector targetPosition)
         {
-            if(CanMove() && m_sLastReqMovePosition != targetPosition)
+            if(CanMove() && (!m_cMove.isMoving || m_cMove.targetPosition != targetPosition))
             {
                 Frame_ReqMovePoint_Data data = new Frame_ReqMovePoint_Data();
                 data.unitId = id;
                 data.targetPosition = GameInTool.ToProtoVector2(targetPosition);
                 NetSys.Instance.SendMsg(NetChannelType.Game, (short)PacketOpcode.Frame_ReqMovePoint, data);
-                m_sLastReqMovePosition = targetPosition;
             }
         }
 
@@ -138,13 +136,15 @@ namespace Game
         {
             List<Vector3> lst = GameInTool.TSVectorToLstUnityVector3(m_cMove.lstNextPosition);
             m_cLerpMoveView.StartMove(transform.position, lst);
-            RotateToTarget(forward);
+            SetForward(forward, false);
+            //RotateToTarget(forward);
         }
 
         private void OnMove(TSVector position, TSVector forward)
         {
             curPosition = position;
-            RotateToTarget(forward);
+            SetForward(forward, false);
+            //RotateToTarget(forward);
         }
 
         private void OnStopMove(TSVector position, TSVector forward)

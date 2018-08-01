@@ -10,7 +10,7 @@ namespace Game
 {
     public class AgentObjectAI
     {
-        public static NETreeComposeType AIComposeType = new NETreeComposeType(typeof(SkillTree), new List<Type> { typeof(AINodeAttribute), typeof(BTNodeAttribute), typeof(BTGameNodeAttribute) }, "Assets/ResourceEx/Config/AI", "AI", "bytes", "AI");
+        public static NETreeComposeType AIComposeType = new NETreeComposeType(typeof(AITree), new List<Type> { typeof(AINodeAttribute), typeof(BTNodeAttribute), typeof(BTGameNodeAttribute) }, "Assets/ResourceEx/Config/AI", "AI", "bytes", "AI");
         private static bool m_bInit = false;
         private static List<Type> m_lstAINodeType;
         public static List<Type> lstAINodeType { get { return m_lstAINodeType; } }

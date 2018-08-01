@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <editorPos>
-    <x>5062</x>
+    <x>5067</x>
     <y>4790</y>
   </editorPos>
   <data xsi:type="RemoteData">
@@ -13,14 +13,14 @@
   <lstChild>
     <NEData>
       <editorPos>
-        <x>5044</x>
+        <x>5049</x>
         <y>4927</y>
       </editorPos>
       <data xsi:type="BTTimeLineData" />
       <lstChild>
         <NEData>
           <editorPos>
-            <x>5058</x>
+            <x>5063</x>
             <y>5050</y>
           </editorPos>
           <data xsi:type="BTTimeDecoratorData">
@@ -31,15 +31,15 @@
           <lstChild>
             <NEData>
               <editorPos>
-                <x>5057</x>
+                <x>5062</x>
                 <y>5170</y>
               </editorPos>
               <data xsi:type="BTParallelORData" />
               <lstChild>
                 <NEData>
                   <editorPos>
-                    <x>4920</x>
-                    <y>5351</y>
+                    <x>4925</x>
+                    <y>5362</y>
                   </editorPos>
                   <data xsi:type="RM_ConstantVelocityActionData">
                     <time>
@@ -55,8 +55,8 @@
                 </NEData>
                 <NEData>
                   <editorPos>
-                    <x>5208</x>
-                    <y>5346</y>
+                    <x>5213</x>
+                    <y>5357</y>
                   </editorPos>
                   <data xsi:type="BTG_LastPosToCurPosSelectCompositeData">
                     <time>
@@ -73,6 +73,20 @@
                     <selectType>UnitEnemy</selectType>
                     <hangPoint>FirePos</hangPoint>
                   </data>
+                  <lstChild>
+                    <NEData>
+                      <editorPos>
+                        <x>5212</x>
+                        <y>5534</y>
+                      </editorPos>
+                      <data xsi:type="BTG_HurtActionData">
+                        <time>
+                          <_serializedValue>0</_serializedValue>
+                        </time>
+                        <actionTarget>SelectTarget</actionTarget>
+                      </data>
+                    </NEData>
+                  </lstChild>
                 </NEData>
               </lstChild>
             </NEData>
