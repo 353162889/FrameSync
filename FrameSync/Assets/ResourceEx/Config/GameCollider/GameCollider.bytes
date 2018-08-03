@@ -89,7 +89,7 @@
               <_serializedValue>0</_serializedValue>
             </y>
             <z>
-              <_serializedValue>0</_serializedValue>
+              <_serializedValue>-1374389504</_serializedValue>
             </z>
           </center>
           <forward>
@@ -104,10 +104,42 @@
             </z>
           </forward>
           <halfWidth>
-            <_serializedValue>4101693696</_serializedValue>
+            <_serializedValue>8160437760</_serializedValue>
           </halfWidth>
           <halfHeight>
-            <_serializedValue>8181912576</_serializedValue>
+            <_serializedValue>5390183936</_serializedValue>
+          </halfHeight>
+        </BaseGameColliderData>
+        <BaseGameColliderData xsi:type="RectColliderData">
+          <name>ColliderHead</name>
+          <gameColliderType>RectCollider</gameColliderType>
+          <center>
+            <x>
+              <_serializedValue>128849016</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>7430293504</_serializedValue>
+            </z>
+          </center>
+          <forward>
+            <x>
+              <_serializedValue>0</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>4294967296</_serializedValue>
+            </z>
+          </forward>
+          <halfWidth>
+            <_serializedValue>2104534016</_serializedValue>
+          </halfWidth>
+          <halfHeight>
+            <_serializedValue>5390183936</_serializedValue>
           </halfHeight>
         </BaseGameColliderData>
       </mLstData>
