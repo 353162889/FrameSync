@@ -27,6 +27,7 @@ namespace Game
         {
             position = curPosition;
             forward = curForward;
+            if (string.IsNullOrEmpty(name)) return null;
             Transform transform = null;
             bool hasHangPoint = false;
             if (m_cHangPointItem != null)

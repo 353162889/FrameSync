@@ -2,9 +2,10 @@
 	Properties{
 		_MainTex("Base (RGB)", 2D) = "white" {}               //序列帧动画纹理  
 		_Color("Color Tint", Color) = (1, 1, 1, 1)            //颜色
-		_HorizontalAmount("Horizontal Amount", float) = 6        // 行数
-		_VerticalAmount("Vertical Amount", float) = 1            // 列数 
-		_Speed("Speed", Range(1, 100)) = 7                     // 播放速度 
+		_Row("行",Int) = 1
+		_Column("列",Int) = 1
+		_Speed("speed",Range(0,10)) = 1
+
 	}
 
 	CGINCLUDE
@@ -15,8 +16,8 @@
 
 	uniform half4 _MainTex_ST;
 	uniform fixed4 _Color;
-	uniform float _HorizontalAmount;
-	uniform float _VerticalAmount;
+	uniform int _Row;
+	uniform int _Column;
 	uniform float _Speed;
 
 	struct appdata
@@ -46,39 +47,52 @@
 		return o;
 	}
 
-	fixed4 frag(v2f i) : SV_Target
+	fixed4 frag(v2f IN) : SV_Target
 	{
-		//所经过的时间,Unity内置变量_Timefloat4 _Time : Time (t/20, t, t*2, t*3)
-		float time = floor(_Time.y * _Speed);
-		//该时间渲染序列帧动画指定的行列
-		float row = floor(time / _HorizontalAmount);
-		float col = time - row * _HorizontalAmount;
+		float2 uv = IN.uv;
 
-		//将所显示的单张图片缩放到应有的大小区域
-		half2 uv = float2(i.uv.x / _HorizontalAmount, i.uv.y / _VerticalAmount);
-		//移动到对应缩放后的区域位置
-		uv.x += col / _HorizontalAmount;
-		uv.y -= row / _VerticalAmount;
-		fixed4 color = tex2D(_MainTex, uv);
-		color.rgb *= _Color.rgb;
-		return color;
+		float cellX = uv.x / _Column;
+		float cellY = uv.y / _Row;
+
+		//Sprite总数
+		int count = _Row * _Column;
+
+		//在0到count-1 范围内循环
+		int SpriteIndex = fmod(_Time.w*_Speed,count);
+
+		//当前Sprite所在行的下标
+		int SpriteRowIndx = (SpriteIndex / _Column);
+
+		//当前Sprite所在列的下标
+		int SpriteColumnIndex = fmod(SpriteIndex,_Column);
+
+		//因uv坐标左下角为（0,0），第一行为最底下一行，为了合乎我们常理，我们转换到最上面一行为第一行,eg:0,1,2-->2,1,0
+		SpriteRowIndx = (_Row - 1) - fmod(SpriteRowIndx,_Row);
+
+		//乘以1.0转为浮点数,不然加号右边，整数除以整数，还是整数（有误）
+		uv.x = cellX + SpriteColumnIndex*1.0 / _Column;
+		uv.y = cellY + SpriteRowIndx*1.0 / _Row;
+
+		half4 c = tex2D(_MainTex,uv);
+
+		c.rgb *= _Color.rgb;
+		return c;
 	}
 
 	ENDCG
 
 	SubShader {
 	Tags{ "Queue" = "Transparent" "RenderType" = "Transparent"}
-		Cull Back
+		Cull Off
 		ZWrite Off
 		Blend SrcAlpha OneMinusSrcAlpha
-
 		Pass{
 
 		CGPROGRAM
 
 		#pragma vertex vert
 		#pragma fragment frag
-		#pragma fragmentoption ARB_precision_hint_fastest 
+		//#pragma fragmentoption ARB_precision_hint_fastest 
 
 		ENDCG
 

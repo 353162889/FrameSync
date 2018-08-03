@@ -49,12 +49,13 @@ namespace Game
                 TSVector forward;
                 var transfrom = target.GetHangPoint(m_cCreateEffectData.hangPoint, out position, out forward);
                 bool autoDestory = m_cCreateEffectData.playTime <= 0;
-                m_cEffect = SceneEffectPool.Instance.CreateEffect(m_cCreateEffectData.effectName, autoDestory, transfrom);
+                var effect = SceneEffectPool.Instance.CreateEffect(m_cCreateEffectData.effectName, autoDestory, transfrom);
                 if(transfrom == null)
                 {
-                    m_cEffect.transform.position = position.ToUnityVector3();
-                    m_cEffect.transform.forward = forward.ToUnityVector3();
+                    effect.transform.position = position.ToUnityVector3();
+                    effect.transform.forward = forward.ToUnityVector3();
                 }
+                if (!autoDestory) m_cEffect = effect;
             }
             m_sEndTime = FrameSyncSys.time + m_cCreateEffectData.playTime;
         }
