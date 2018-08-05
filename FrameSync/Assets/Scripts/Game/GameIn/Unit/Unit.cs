@@ -8,6 +8,12 @@ using Proto;
 
 namespace Game
 {
+    public enum ForwardFromType
+    {
+        Init,
+        Player,
+        UnitMove,
+    }
     public partial class Unit : MonoBehaviour,IDynamicObj,IPoolable
     {
         public delegate void UnitDamageHandler(Unit unit, DamageInfo damageInfo);
@@ -58,7 +64,7 @@ namespace Game
             m_sCurPosition = m_sLastPosition = position;
             m_sCurForward = m_sLastForward = forward;
             SetPosition(position);
-            SetForward(forward);
+            SetForward(forward,ForwardFromType.Init);
             SubInit();
         }
 
@@ -79,6 +85,7 @@ namespace Game
 
         public void ReqSetForward(TSVector forward,bool immediately = true)
         {
+            if (!CanSetForward(ForwardFromType.Player)) return;
             if (TSMath.Abs(TSVector.Angle(m_sCurForward, forward)) < FP.EN1) return;
             Frame_ReqSetForward_Data data = new Frame_ReqSetForward_Data();
             data.unitId = id;
@@ -88,18 +95,29 @@ namespace Game
 
         }
 
-        public void SetForward(TSVector forward, bool immediately = true)
+        public void SetForward(TSVector forward, ForwardFromType fromType, bool immediately = true)
         {
             if (forward == TSVector.zero) return;
+            if (!CanSetForward(fromType)) return;
             if (immediately)
             {
                 curForward = forward;
                 SetViewForward(forward);
+                if(fromType != ForwardFromType.UnitMove)
+                {
+                    StopRotate();
+                }
             }
             else
             {
                 RotateToTarget(forward);
             }
+        }
+
+        public bool CanSetForward(ForwardFromType fromType)
+        {
+            //初始化设置方向，不判断是否禁止
+            return fromType == ForwardFromType.Init || !IsForbid(UnitForbidType.ForbidForward);
         }
 
         public void OnHurt(DamageInfo damageInfo)
@@ -112,47 +130,57 @@ namespace Game
             GlobalEventDispatcher.Instance.Dispatch(GameEvent.UnitHurt, damageInfo);
             if(this.hp <= 0)
             {
-                if(null != OnUnitDie)
-                {
-                    OnUnitDie(this, damageInfo);
-                }
-                GlobalEventDispatcher.Instance.Dispatch(GameEvent.UnitDie, damageInfo);
                 this.Die(damageInfo);
             }
         }
 
         protected virtual void Die(DamageInfo damageInfo)
         {
+            m_bIsDie = true;
+            if (null != OnUnitDie)
+            {
+                OnUnitDie(this, damageInfo);
+            }
+            GlobalEventDispatcher.Instance.Dispatch(GameEvent.UnitDie, damageInfo);
+            DieAI(damageInfo);
             DieAttr(damageInfo);
             DieMove(damageInfo);
             DieSkill(damageInfo);
             DieView(damageInfo);
+            DieForbid(damageInfo);
             BattleScene.Instance.DestroyUnit(this);
         }
 
         protected virtual void SubInit()
         {
+            InitForbid();
             InitAttr();
             InitMove();
             InitView();
             InitSkill();
+            InitAI();
         }
 
         public virtual void OnUpdate(FP deltaTime)
         {
+            if (m_bIsDie) return;
+            UpdateAI(deltaTime);
             UpdateAttr(deltaTime);
             UpdateMove(deltaTime);
             UpdateView(deltaTime);
             UpdateSkill(deltaTime);
+            UpdateForbid(deltaTime);
         }
 
         public void Reset()
         {
+            ResetAI();
             ResetAttr();
             ResetMove();
             ResetView();
             ClearAgent();
             ResetSkill();
+            ResetForbid();
             OnUnitHurt = null;
             OnUnitDie = null;
         }

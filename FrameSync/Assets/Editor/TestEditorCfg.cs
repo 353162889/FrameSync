@@ -7,7 +7,6 @@ using System;
 using GameData;
 
 public class TestEditorCfg {
-    [MenuItem("Test/TestCfg")]
     public static void Test()
     {
         ResCfgSys.Instance.LoadResCfgs("Assets/ResourceEx",OnFinish);

@@ -14,7 +14,8 @@ namespace Game
         {
             m_cNEDataLoader = new NEDataLoader();
             List<string> files = new List<string>();
-            files.Add("Config/Remote/testRemote.bytes");
+            files.Add("Config/Remote/1.bytes");
+            files.Add("Config/Remote/2.bytes");
             Remote.Init();
             m_cNEDataLoader.Load(files, Remote.arrRemoteNodeDataType, onFinish);
         }

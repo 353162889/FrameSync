@@ -16,7 +16,7 @@ namespace NodeEditor
         public NECanvas canvas { get { return m_cCanvas; } }
         private NECanvas m_cCanvas;
 
-        private int m_nTreeComposeIndex = 0;
+        protected int m_nTreeComposeIndex = 0;
 
         private List<Type> m_lstNodeType;
         private List<Type> m_lstNodeDataType;
@@ -26,18 +26,42 @@ namespace NodeEditor
         private string[] m_arrComposeDesc;
 
         private NENode m_cRoot;
+        private string m_sLoadPath;
 
-        [MenuItem("Tools/NETreeWindow")]
-        static public void OpenWindow()
+        [MenuItem("Tools/NETreeSkillWindow _F1")]
+        static public void OpenSkillWindow()
         {
+            OpenWindow(0);
+        }
+
+        [MenuItem("Tools/NETreeRemoteWindow _F2")]
+        static public void OpenRemoteWindow()
+        {
+            OpenWindow(1);
+        }
+
+        [MenuItem("Tools/NETreeAIWindow _F3")]
+        static public void OpenAIWindow()
+        {
+            OpenWindow(2);
+        }
+
+        static public void OpenWindow(int index)
+        {
+            Debug.Log("OpenWindow");
             var window = EditorWindow.GetWindow<NETreeWindow>();
             window.titleContent = new GUIContent("NETreeWindow");
             var position = window.position;
             position.center = new Rect(0f, 0f, Screen.currentResolution.width, Screen.currentResolution.height).center;
             window.position = position;
-
             window.Show();
             window.FocusCanvasCenterPosition();
+            if (index > -1 && index < NEConfig.arrTreeComposeData.Length)
+            {
+                window.m_nTreeComposeIndex = index;
+            }
+            window.OnEnable();
+            window.Focus();
         }
 
         void OnEnable()
@@ -56,6 +80,7 @@ namespace NodeEditor
         private void Load(NETreeComposeType conposeType)
         {
             NEData neData = null;
+            m_sLoadPath = null;
             if (m_cRoot != null)
             {
                 foreach (var item in NEConfig.arrTreeComposeData)
@@ -286,8 +311,7 @@ namespace NodeEditor
             GUILayout.Label("", m_cToolBarBtnStyle, GUILayout.Width(10));
             GUILayout.EndHorizontal();
             GUILayout.EndArea();
-
-            if (GUI.changed) Repaint();
+            if (GUI.changed) { Repaint(); }
         }
 
         private void LoadTreeByTreeData()
@@ -305,6 +329,7 @@ namespace NodeEditor
             {
                 //通过前后缀确定当前数据是哪种类型,需要先切换到当前类型，在加载数据，否则数据有可能不对
                 NEData neData = NEUtil.DeSerializerObject(path, typeof(NEData), m_lstNodeDataType.ToArray()) as NEData;
+                m_sLoadPath = path;
                 CreateTreeByTreeData(neData);
             }
         }
@@ -325,7 +350,29 @@ namespace NodeEditor
             }
             string dir = composeData.fileDir;
             if (dir.StartsWith("Assets")) dir = dir.Replace("Assets", "");
-            string path = EditorUtility.SaveFilePanel("保存数据", Application.dataPath + dir, "", composeData.fileExt);
+            string defaultName = "";
+            if (!string.IsNullOrEmpty(m_sLoadPath))
+            {
+                m_sLoadPath = m_sLoadPath.Replace("\\", "/");
+                int index = m_sLoadPath.LastIndexOf("/");
+                defaultName = m_sLoadPath.Substring(index + 1);
+                defaultName = defaultName.Substring(0,defaultName.LastIndexOf("."));
+            }
+            else
+            {
+                Type type = data.data.GetType();
+                FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+                foreach (var item in fields)
+                {
+                    if (item.GetCustomAttributes(typeof(NEPropertyKeyAttribute), true).Length > 0)
+                    {
+                        object key = item.GetValue(data.data);
+                        defaultName = key.ToString();
+                        break;
+                    }
+                }
+            }
+            string path = EditorUtility.SaveFilePanel("保存数据", Application.dataPath + dir, defaultName, composeData.fileExt);
             if (path.Length != 0)
             {
                 NEUtil.SerializerObject(path, data, m_lstNodeDataType.ToArray());

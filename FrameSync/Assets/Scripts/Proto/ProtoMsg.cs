@@ -149,6 +149,13 @@ namespace Proto
       get { return _playerId; }
       set { _playerId = value; }
     }
+    private int _campId;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"campId", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int campId
+    {
+      get { return _campId; }
+      set { _campId = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }

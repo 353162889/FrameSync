@@ -18,7 +18,8 @@ namespace Game
         private TSQuaternion m_sTargetRotation;
         private TSQuaternion m_sStartRotation;
         private FP m_sSpeed;
-        private bool m_nRotating;
+        private bool m_bRotating;
+        public bool rotating { get { return m_bRotating; } }
         private FP m_sLerp;
 
         public bool StartRotate(TSVector startForward,TSVector targetForward,FP time)
@@ -55,7 +56,7 @@ namespace Game
             {
                 m_sTargetRotation = TSQuaternion.FromToRotation(m_sStartForward, m_sTargetForward);
             }
-            m_nRotating = true;
+            m_bRotating = true;
             m_sLerp = 0;
             if(null != OnStartRotate)
             {
@@ -66,11 +67,14 @@ namespace Game
 
         public void StopRotate()
         {
-            if(null != OnStopRotate)
+            if (m_bRotating)
             {
-                OnStopRotate(m_sCurForward,m_sCurForward);
+                if (null != OnStopRotate)
+                {
+                    OnStopRotate(m_sCurForward, m_sCurForward);
+                }
+                m_bRotating = false;
             }
-            m_nRotating = false;
         }
 
         public void Clear()
@@ -83,7 +87,7 @@ namespace Game
 
         public void OnUpdate(FP deltaTime)
         {
-            if(m_nRotating)
+            if(m_bRotating)
             {
                 m_sLerp += m_sSpeed * deltaTime;
                 if(m_sLerp <= FP.One)

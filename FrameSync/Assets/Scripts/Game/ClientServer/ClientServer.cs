@@ -35,11 +35,12 @@ namespace Game
             //创建玩家
             Frame_CreatePlayer_Data createPlayerData = new Frame_CreatePlayer_Data();
             createPlayerData.playerId = 1;
+            createPlayerData.campId = (int)CampType.Camp1;
             NetSys.Instance.SendMsg(NetChannelType.Game, (short)PacketOpcode.Frame_CreatePlayer, createPlayerData);
 
-            Frame_CreatePlayer_Data createOtherPlayerData = new Frame_CreatePlayer_Data();
-            createOtherPlayerData.playerId = 2;
-            NetSys.Instance.SendMsg(NetChannelType.Game, (short)PacketOpcode.Frame_CreatePlayer, createOtherPlayerData);
+            //Frame_CreatePlayer_Data createOtherPlayerData = new Frame_CreatePlayer_Data();
+            //createOtherPlayerData.playerId = 2;
+            //NetSys.Instance.SendMsg(NetChannelType.Game, (short)PacketOpcode.Frame_CreatePlayer, createOtherPlayerData);
         }
 
     }

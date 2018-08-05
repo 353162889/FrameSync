@@ -10,13 +10,19 @@ namespace Game
     public class SkillExecutor
     {
         private AgentObject m_cAgentObject;
+        public List<Skill> lstSkill { get { return m_lstSkill; } }
         private List<Skill> m_lstSkill;
+        public List<Skill> lstCurSkill { get { return m_lstCurSkill; } }
         private List<Skill> m_lstCurSkill;
-        public SkillExecutor(AgentObject agentObject)
+        public SkillExecutor()
         {
-            m_cAgentObject = agentObject;
             m_lstSkill = new List<Skill>();
             m_lstCurSkill = new List<Skill>();
+        }
+
+        public void Init(AgentObject agentObject)
+        {
+            m_cAgentObject = agentObject;
         }
 
         public void AddSkill(int skillId)
@@ -147,6 +153,7 @@ namespace Game
             }
             m_lstCurSkill.Clear();
             m_lstSkill.Clear();
+            m_cAgentObject = null;
         }
     }
 }

@@ -102,14 +102,14 @@ namespace Game
          
             if (BattleInfo.userId == player.id)
             {
-                player.CreateUnit((int)CampType.Camp1);
+                player.CreateUnit();
                 PvpPlayerMgr.Instance.SetMainPlayer(player);
                 ViewSys.Instance.Close("LoadingView");
                 ViewSys.Instance.Open("FightView");
             }
             else
             {
-                player.CreateUnit((int)CampType.Camp1);
+                player.CreateUnit();
             }
             CLog.Log("初始化其他战斗的数据");
         }

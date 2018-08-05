@@ -19,9 +19,15 @@ namespace Game
             }
         }
 
-        public RemoteBlackBoard(Remote remote)
+        public void Init(Remote remote)
         {
             m_cRemote = remote;
+        }
+
+        public override void Clear()
+        {
+            m_cRemote = null;
+            base.Clear();
         }
     }
 }

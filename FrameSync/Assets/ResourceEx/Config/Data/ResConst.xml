@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
 	<resconst key="default_scene_id" p_int="1001" p_string=""/>
+	<resconst key="default_player_id" p_int="1" p_string=""/>
+	<resconst key="default_enemy_id" p_int="2" p_string=""/>
 </root>

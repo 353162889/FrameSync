@@ -57,66 +57,6 @@
       </mLstData>
     </HangPointItem>
     <HangPointItem>
-      <path>Assets/ResourceEx/Prefab/Unit/AirShip.prefab</path>
-      <mLstData>
-        <HangPointData>
-          <name>FirePos</name>
-          <position>
-            <x>
-              <_serializedValue>-34359740</_serializedValue>
-            </x>
-            <y>
-              <_serializedValue>1808181248</_serializedValue>
-            </y>
-            <z>
-              <_serializedValue>6777458176</_serializedValue>
-            </z>
-          </position>
-          <forward>
-            <x>
-              <_serializedValue>0</_serializedValue>
-            </x>
-            <y>
-              <_serializedValue>0</_serializedValue>
-            </y>
-            <z>
-              <_serializedValue>4294967296</_serializedValue>
-            </z>
-          </forward>
-        </HangPointData>
-      </mLstData>
-    </HangPointItem>
-    <HangPointItem>
-      <path>Assets/ResourceEx/Prefab/Effect/Bullet.prefab</path>
-      <mLstData>
-        <HangPointData>
-          <name>FirePos</name>
-          <position>
-            <x>
-              <_serializedValue>0</_serializedValue>
-            </x>
-            <y>
-              <_serializedValue>0</_serializedValue>
-            </y>
-            <z>
-              <_serializedValue>0</_serializedValue>
-            </z>
-          </position>
-          <forward>
-            <x>
-              <_serializedValue>4154573824</_serializedValue>
-            </x>
-            <y>
-              <_serializedValue>0</_serializedValue>
-            </y>
-            <z>
-              <_serializedValue>-1089157120</_serializedValue>
-            </z>
-          </forward>
-        </HangPointData>
-      </mLstData>
-    </HangPointItem>
-    <HangPointItem>
       <path>Assets/ResourceEx/Prefab/Unit/AirShip_1.prefab</path>
       <mLstData>
         <HangPointData>

@@ -19,9 +19,15 @@ namespace Game
             }
         }
 
-        public SkillBlackBoard(Skill skill)
+        public void Init(Skill skill)
         {
             m_cSkill = skill;
+        }
+
+        public override void Clear()
+        {
+            m_cSkill = null;
+            base.Clear();
         }
     }
 }

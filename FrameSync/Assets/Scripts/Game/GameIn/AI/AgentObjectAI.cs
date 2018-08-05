@@ -32,28 +32,48 @@ namespace Game
         private AITree m_cAITree;
         private AIData m_cAIData;
         private AIBlackBoard m_cBlackBoard;
-        public AgentObjectAI(AgentObject host, int configId)
+        private bool m_bStart;
+        static AgentObjectAI() { Init(); }
+
+        public void Init(AgentObject host,int configId)
         {
-            Init();
-            m_cHost = host;
+            if (m_cAIData != null && m_cAITree != null)
+            {
+                AITreePool.Instance.SaveAITree(m_cAIData.id, m_cAITree);
+            }
             m_cAITree = AITreePool.Instance.GetAITree(configId);
             m_cAIData = m_cAITree.data as AIData;
+
+            m_cHost = host;
             m_cBlackBoard = new AIBlackBoard(this);
+            m_bStart = false;
         }
 
         public void Start()
         {
-
+            m_bStart = true;
         }
 
         public void Stop()
         {
-
+            m_bStart = false;
+            if (m_cAITree != null)
+            {
+                m_cAITree.Clear();
+            }
         }
 
         public void Update(FP deltaTime)
         {
-
+            if(m_bStart && m_cAITree != null)
+            {
+                m_cBlackBoard.deltaTime = deltaTime;
+                BTResult result = m_cAITree.OnTick(m_cBlackBoard);
+                if(result != BTResult.Running)
+                {
+                    Stop();
+                }
+            }
         }
 
         public void Clear()
@@ -61,6 +81,10 @@ namespace Game
             if (m_cAIData != null && m_cAITree != null)
             {
                 AITreePool.Instance.SaveAITree(m_cAIData.id, m_cAITree);
+            }
+            if (m_cBlackBoard != null)
+            {
+                m_cBlackBoard.Clear();
             }
             m_cAIData = null;
             m_cAITree = null;

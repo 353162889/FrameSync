@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <editorPos>
+    <x>4996</x>
+    <y>4814</y>
+  </editorPos>
+  <data xsi:type="AIData">
+    <id>1</id>
+    <aiDesc>AI测试</aiDesc>
+  </data>
+  <lstChild>
+    <NEData>
+      <editorPos>
+        <x>4999</x>
+        <y>4983</y>
+      </editorPos>
+      <data xsi:type="BTRepeatDecoratorData">
+        <times>0</times>
+        <spaceTime>
+          <_serializedValue>0</_serializedValue>
+        </spaceTime>
+      </data>
+      <lstChild>
+        <NEData>
+          <editorPos>
+            <x>5007</x>
+            <y>5124</y>
+          </editorPos>
+          <data xsi:type="UnitDoSkillActionData" />
+        </NEData>
+      </lstChild>
+    </NEData>
+  </lstChild>
+</NEData>

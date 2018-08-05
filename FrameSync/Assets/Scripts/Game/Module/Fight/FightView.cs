@@ -27,7 +27,6 @@ namespace Game
             RectTransform rectTrans = this.MainGO.FindChildComponentRecursive<RectTransform>("JoystickRect");
             m_cBaseTrans = this.MainGO.FindChildComponentRecursive<RectTransform>("JoystickBase");
             m_cMoveTrans = this.MainGO.FindChildComponentRecursive<RectTransform>("JoystickMove");
-            m_cBtnSkillTest = this.MainGO.FindChildRecursive("btnSkillTest");
             GameObject joystickGO = this.MainGO.FindChildRecursive("Joystick");
             m_cJoystick = joystickGO.AddComponentOnce<UIJoystick>();
             m_cJoystick.Init(rectTrans, m_cBaseTrans, m_cMoveTrans, 100000 /*m_cBaseTrans.rect.width / 2f*/, false);
@@ -42,8 +41,6 @@ namespace Game
             m_cJoystick.AddKeyCode(KeyCode.S, Vector2.down);
             //m_cJoystick.enabled = false;
             SetJoystickActive(false);
-
-            UIEventTrigger.Get(m_cBtnSkillTest).AddListener(EventTriggerType.PointerClick, OnClick);
 
             //TouchDispatcher.instance.touchBeganListeners += OnTouch;
         }
@@ -63,20 +60,6 @@ namespace Game
                     }
                 }
             }
-        }
-
-        private void OnClick(BaseEventData data)
-        {
-            if(PvpPlayerMgr.Instance.mainPlayer != null)
-            {
-                Unit unit = PvpPlayerMgr.Instance.mainPlayer.unit;
-                if(unit != null)
-                {
-                    if (unit.GetSkill(1) == null) unit.AddSkill(1);
-                    unit.ReqDoSkill(1, 0, AgentObjectType.Unit, unit.curPosition, unit.curForward);
-                }
-            }
-            
         }
 
         private void SetJoystickActive(bool active)

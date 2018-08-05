@@ -19,7 +19,9 @@ namespace Game
                 CLog.LogError("已存在id="+msg.playerId+"的玩家");
                 return; 
             }
-            player = PvpPlayerMgr.Instance.CreatePlayer(msg.playerId);
+            PvpPlayerData data = new PvpPlayerData();
+            data.campId = msg.campId;
+            player = PvpPlayerMgr.Instance.CreatePlayer(msg.playerId,data);
             GlobalEventDispatcher.Instance.Dispatch(GameEvent.PvpPlayerCreate,player);
         }
     }

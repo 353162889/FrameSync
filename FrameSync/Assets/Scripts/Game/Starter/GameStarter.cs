@@ -30,6 +30,7 @@ namespace Game
         {
             m_nLastWidth = Screen.width;
             m_nLastHeight = Screen.height;
+            Application.runInBackground = true;
         }
         void Start()
         {

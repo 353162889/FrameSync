@@ -15,7 +15,7 @@ namespace Game
             Unit unit = BattleScene.Instance.GetUnit(msg.unitId);
             if (null != unit)
             {
-                unit.SetForward(GameInTool.ToTSVector(msg.forward));
+                unit.SetForward(GameInTool.ToTSVector(msg.forward),ForwardFromType.Player);
             }
         }
     }

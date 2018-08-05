@@ -13,6 +13,7 @@ namespace Game
         private static TSRandom mRandom;
         private static uint mStartUnitId;
         private static uint mStartRemoteId;
+        private static uint mStartForbidId;
         private static List<TSVector> mListTSVector = new List<TSVector>();
         private static List<Vector3> mListUnityVector = new List<Vector3>();
         public static void InitRandomSeed(int seed)
@@ -20,6 +21,7 @@ namespace Game
             mRandom = TSRandom.New(seed);
             mStartUnitId = 0;
             mStartRemoteId = 0;
+            mStartForbidId = 0;
         }
 
         public static uint GenerateUnitId()
@@ -30,6 +32,11 @@ namespace Game
         public static uint GenerateRemoteId()
         {
             return ++mStartRemoteId;
+        }
+
+        public static uint GenerateForbidId()
+        {
+            return ++mStartForbidId;
         }
 
         public static FP Random(FP max)

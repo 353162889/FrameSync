@@ -7,5 +7,6 @@ namespace Game
 {
     public class PvpPlayerData
     {
+        public int campId { get; set; }
     }
 }

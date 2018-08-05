@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <editorPos>
+    <x>5006</x>
+    <y>4814</y>
+  </editorPos>
+  <data xsi:type="AIData">
+    <id>2</id>
+    <aiDesc>AI测试</aiDesc>
+  </data>
+  <lstChild>
+    <NEData>
+      <editorPos>
+        <x>5009</x>
+        <y>4983</y>
+      </editorPos>
+      <data xsi:type="BTRepeatDecoratorData">
+        <times>0</times>
+        <spaceTime>
+          <_serializedValue>0</_serializedValue>
+        </spaceTime>
+      </data>
+      <lstChild>
+        <NEData>
+          <editorPos>
+            <x>5003</x>
+            <y>5114</y>
+          </editorPos>
+          <data xsi:type="BTSequenceData" />
+          <lstChild>
+            <NEData>
+              <editorPos>
+                <x>4879</x>
+                <y>5223</y>
+              </editorPos>
+              <data xsi:type="BTG_RandomWaitTimeData">
+                <minTime>
+                  <_serializedValue>4294967296</_serializedValue>
+                </minTime>
+                <maxTime>
+                  <_serializedValue>21474836480</_serializedValue>
+                </maxTime>
+              </data>
+            </NEData>
+            <NEData>
+              <editorPos>
+                <x>5129</x>
+                <y>5230</y>
+              </editorPos>
+              <data xsi:type="UnitDoSkillActionData" />
+            </NEData>
+          </lstChild>
+        </NEData>
+      </lstChild>
+    </NEData>
+  </lstChild>
+</NEData>

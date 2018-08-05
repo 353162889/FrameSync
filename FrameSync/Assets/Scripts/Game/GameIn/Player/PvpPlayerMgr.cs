@@ -24,10 +24,10 @@ namespace Game
             m_cMainPlayer = player;
         }
 
-        public PvpPlayer CreatePlayer(long id)
+        public PvpPlayer CreatePlayer(long id,PvpPlayerData playerData = null)
         {
             PvpPlayer player = new PvpPlayer();
-            player.Init(id);
+            player.Init(id, playerData);
             m_dic.Add(player.id, player);
             return player;
         }

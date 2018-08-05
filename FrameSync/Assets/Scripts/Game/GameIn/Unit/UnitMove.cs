@@ -91,12 +91,23 @@ namespace Game
 
         public void StopMove()
         {
-            m_cMove.StopMove();
+            if (m_cMove != null)
+            {
+                m_cMove.StopMove();
+            }
         }
 
         public bool CanMove()
         {
-            return true;
+            return !IsForbid(UnitForbidType.ForbidMove);
+        }
+
+        public void StopRotate()
+        {
+            if (m_cRotate != null)
+            {
+                m_cRotate.StopRotate();
+            }
         }
 
         protected void InitMove()
@@ -114,40 +125,40 @@ namespace Game
             m_cLerpMoveView.Init();
         }
 
-        private void RotateToTarget(TSVector targetForward)
+        protected virtual void RotateToTarget(TSVector targetForward)
         {
             m_cRotate.StartRotateBySpeed(m_sCurForward, targetForward, 360 * 8);
         }
 
-        private void OnStartRotate(TSVector preForward, TSVector newForward)
+        protected virtual void OnStartRotate(TSVector preForward, TSVector newForward)
         {
         }
 
-        private void OnRotate(TSVector preForward, TSVector newForward)
+        protected void OnRotate(TSVector preForward, TSVector newForward)
         {
-            SetForward(newForward, true);
+            SetForward(newForward,ForwardFromType.UnitMove, true);
         }
 
-        private void OnStopRotate(TSVector preForward, TSVector newForward)
+        protected virtual void OnStopRotate(TSVector preForward, TSVector newForward)
         {
         }
 
-        private void OnStartMove(TSVector position, TSVector forward)
+        protected virtual void OnStartMove(TSVector position, TSVector forward)
         {
             List<Vector3> lst = GameInTool.TSVectorToLstUnityVector3(m_cMove.lstNextPosition);
             m_cLerpMoveView.StartMove(transform.position, lst);
-            SetForward(forward, false);
+            SetForward(forward, ForwardFromType.UnitMove, false);
             //RotateToTarget(forward);
         }
 
-        private void OnMove(TSVector position, TSVector forward)
+        protected virtual void OnMove(TSVector position, TSVector forward)
         {
             curPosition = position;
-            SetForward(forward, false);
+            SetForward(forward, ForwardFromType.UnitMove, false);
             //RotateToTarget(forward);
         }
 
-        private void OnStopMove(TSVector position, TSVector forward)
+        protected virtual void OnStopMove(TSVector position, TSVector forward)
         {
             m_cLerpMoveView.StopMove();
             if (!(m_sCurForward - forward).IsNearlyZero())

@@ -33,7 +33,7 @@ namespace BTCore
             return null;
         }
 
-        public void Clear()
+        public virtual void Clear()
         {
             deltaTime = 0;
             m_lstVariable.Clear();

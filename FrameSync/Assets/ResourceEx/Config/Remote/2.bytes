@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <editorPos>
+    <x>5102</x>
+    <y>4790</y>
+  </editorPos>
+  <data xsi:type="RemoteData">
+    <remoteId>2</remoteId>
+    <remoteDesc>敌方远程</remoteDesc>
+    <remotePath>eff_bullet0</remotePath>
+    <remoteTarget>TargetForward</remoteTarget>
+  </data>
+  <lstChild>
+    <NEData>
+      <editorPos>
+        <x>5084</x>
+        <y>4927</y>
+      </editorPos>
+      <data xsi:type="BTTimeLineData" />
+      <lstChild>
+        <NEData>
+          <editorPos>
+            <x>5098</x>
+            <y>5050</y>
+          </editorPos>
+          <data xsi:type="BTTimeDecoratorData">
+            <time>
+              <_serializedValue>0</_serializedValue>
+            </time>
+          </data>
+          <lstChild>
+            <NEData>
+              <editorPos>
+                <x>5097</x>
+                <y>5170</y>
+              </editorPos>
+              <data xsi:type="BTParallelORData" />
+              <lstChild>
+                <NEData>
+                  <editorPos>
+                    <x>4960</x>
+                    <y>5439</y>
+                  </editorPos>
+                  <data xsi:type="RM_ConstantVelocityActionData">
+                    <time>
+                      <_serializedValue>0</_serializedValue>
+                    </time>
+                    <speed>
+                      <_serializedValue>42949672960</_serializedValue>
+                    </speed>
+                    <maxDistance>
+                      <_serializedValue>128849018880</_serializedValue>
+                    </maxDistance>
+                  </data>
+                </NEData>
+                <NEData>
+                  <editorPos>
+                    <x>5248</x>
+                    <y>5434</y>
+                  </editorPos>
+                  <data xsi:type="BTG_LastPosToCurPosSelectCompositeData">
+                    <time>
+                      <_serializedValue>0</_serializedValue>
+                    </time>
+                    <totalDuration>
+                      <_serializedValue>42945377992704</_serializedValue>
+                    </totalDuration>
+                    <oneDuration>
+                      <_serializedValue>0</_serializedValue>
+                    </oneDuration>
+                    <totalObjMaxCount>9999</totalObjMaxCount>
+                    <oneObjMaxCount>1</oneObjMaxCount>
+                    <selectType>UnitEnemy</selectType>
+                    <hangPoint />
+                  </data>
+                  <lstChild>
+                    <NEData>
+                      <editorPos>
+                        <x>5086</x>
+                        <y>5623</y>
+                      </editorPos>
+                      <data xsi:type="BTG_CreateHitEffectData">
+                        <time>
+                          <_serializedValue>0</_serializedValue>
+                        </time>
+                        <effectName>eff_blast0</effectName>
+                        <useHitPoint>true</useHitPoint>
+                        <useHitDirection>false</useHitDirection>
+                        <playTime>
+                          <_serializedValue>0</_serializedValue>
+                        </playTime>
+                      </data>
+                    </NEData>
+                    <NEData>
+                      <editorPos>
+                        <x>5415</x>
+                        <y>5611</y>
+                      </editorPos>
+                      <data xsi:type="BTG_HurtActionData">
+                        <time>
+                          <_serializedValue>0</_serializedValue>
+                        </time>
+                        <actionTarget>SelectTarget</actionTarget>
+                      </data>
+                    </NEData>
+                  </lstChild>
+                </NEData>
+              </lstChild>
+            </NEData>
+          </lstChild>
+        </NEData>
+      </lstChild>
+    </NEData>
+  </lstChild>
+</NEData>

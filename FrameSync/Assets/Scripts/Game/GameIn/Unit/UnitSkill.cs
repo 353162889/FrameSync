@@ -10,6 +10,8 @@ namespace Game
     public partial class Unit
     {
         protected SkillExecutor m_cSkillExecutor;
+        public List<Skill> lstSkill { get { return m_cSkillExecutor.lstSkill; } }
+        public List<Skill> lstCurSkill { get { return m_cSkillExecutor.lstCurSkill; } }
 
         public void ReqDoSkill(int skillId,uint targetAgentId,AgentObjectType targetAgentType,TSVector position,TSVector forward)
         {
@@ -91,7 +93,11 @@ namespace Game
 
         protected void InitSkill()
         {
-            m_cSkillExecutor = new SkillExecutor(this.agentObj);
+            if (m_cSkillExecutor == null)
+            {
+                m_cSkillExecutor = new SkillExecutor();
+            }
+            m_cSkillExecutor.Init(this.agentObj);
         }
 
         protected void UpdateSkill(FP deltaTime)

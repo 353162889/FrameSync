@@ -13,6 +13,7 @@ namespace Game
         private HangPoint m_cHangPoint;
         public GameCollider gameCollider { get { return m_cCollider; } }
         private GameCollider m_cCollider;
+        private AgentAnimation m_cAnimation;
 
         public Transform GetHangPoint(string name, out TSVector position, out TSVector forward)
         {
@@ -32,6 +33,11 @@ namespace Game
             m_cCollider.Init(PathTool.GetBasePrefabPath(m_sPrefab));
             m_cCollider.Update(curPosition, curForward);
 
+            if(m_cAnimation == null)
+            {
+                m_cAnimation = new AgentAnimation();
+            }
+
             SceneGOPool.Instance.GetObject(m_sPrefab, OnResLoad);
         }
 
@@ -41,6 +47,12 @@ namespace Game
             this.gameObject.AddChildToParent(m_cView);
             HangPointView hangPointView = m_cView.GetComponent<HangPointView>();
             m_cHangPoint.InitHangView(hangPointView);
+            var animator = m_cView.GetComponentInChildren<Animator>();
+            if(animator != null)
+            {
+                m_cAnimation.Init(animator);
+            }
+            m_cAnimation.ResetParam();
         }
 
         protected void ResetView()
@@ -51,7 +63,11 @@ namespace Game
                 m_cCollider = null;
             }
             m_cHangPoint.Clear();
-            if(m_cView != null)
+            if (m_cAnimation != null)
+            {
+                m_cAnimation.Clear();
+            }
+            if (m_cView != null)
             {
                 SceneGOPool.Instance.SaveObject(m_sPrefab, m_cView);
                 m_cView = null;
@@ -80,6 +96,36 @@ namespace Game
             {
                 m_cView.SetActive(false);
             }
+        }
+
+        public void SetAnimFloat(string strName, float fValue)
+        {
+            m_cAnimation.SetFloat(strName, fValue);
+        }
+
+        public void SetAnimBool(string strName, bool bState)
+        {
+            m_cAnimation.SetBool(strName, bState);
+        }
+
+        public void SetAnimInteger(string strName, int nValue)
+        {
+            m_cAnimation.SetInteger(strName, nValue);
+        }
+
+        public void SetAnimTrigger(string strName)
+        {
+            m_cAnimation.SetTrigger(strName);
+        }
+
+        public void ResetAnimTrigger(string strName)
+        {
+            m_cAnimation.ResetTrigger(strName);
+        }
+
+        public void ResetAnimParam()
+        {
+            m_cAnimation.ResetParam();
         }
     }
 }

@@ -260,8 +260,9 @@ namespace NodeEditor
                     else
                     {
                         HandleBlankMenu(e.mousePosition);
-                        e.Use();
+                        //e.Use();
                     }
+                    GUI.changed = true;
                 }
             }
             else if(e.button == 2)

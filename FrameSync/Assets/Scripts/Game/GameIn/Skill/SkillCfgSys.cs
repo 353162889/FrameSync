@@ -1,4 +1,5 @@
 ﻿using Framework;
+using GameData;
 using NodeEditor;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,18 @@ namespace Game
         {
             m_cNEDataLoader = new NEDataLoader();
             List<string> files = new List<string>();
-            files.Add("Config/Skill/test.bytes");
+            var lst = ResCfgSys.Instance.GetCfgLst<ResAirShip>();
+            for (int i = 0; i < lst.Count; i++)
+            {
+                for (int j = 0; j < lst[i].skills.Count; j++)
+                {
+                    string name = string.Format("Config/Skill/{0}.bytes", lst[i].skills[j]);
+                    if (!files.Contains(name))
+                    {
+                        files.Add(name);
+                    }
+                }
+            }
             Skill.Init();
             m_cNEDataLoader.Load(files, Skill.arrSkillNodeDataType,onFinish);
         }

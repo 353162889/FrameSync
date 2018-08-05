@@ -91,8 +91,9 @@ namespace Game
             m_sLastForward = forward;
             if(m_cBlackBoard == null)
             {
-                m_cBlackBoard = new RemoteBlackBoard(this);
+                m_cBlackBoard = new RemoteBlackBoard();
             }
+            m_cBlackBoard.Init(this);
 
             m_cTarget = AgentObject.GetAgentObject(targetAgentId, targetAgentType);
             m_sTargetPosition = targetPosition;
@@ -199,6 +200,7 @@ namespace Game
         protected void End()
         {
             m_cRemoteTree.Clear();
+            m_cBlackBoard.Clear();
             StopMove();
             //回收远程
             BattleScene.Instance.DestroyRemote(this);

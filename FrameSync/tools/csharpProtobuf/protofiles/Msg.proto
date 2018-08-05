@@ -46,6 +46,7 @@ message Frame_Msg_Test_Data
 message Frame_CreatePlayer_Data
 {
 	required int64 playerId = 1;
+	required int32 campId = 2;
 }
 
 message Frame_ReqMovePath_Data

@@ -59,7 +59,6 @@ namespace Game
             m_cSkillData = m_cNEData.data as SkillData;
             m_cSkillTree = CreateNode(m_cNEData) as SkillTree;
             m_cSkillTree.Clear();
-            m_cBlackBoard = new SkillBlackBoard(this);
             m_bIsDo = false;
             m_sStartTime = -1000;
             m_sEndTime = -1000;
@@ -68,6 +67,11 @@ namespace Game
         public void Init(AgentObject host)
         {
             m_cHost = host;
+            if (m_cBlackBoard == null)
+            {
+                m_cBlackBoard = new SkillBlackBoard();
+            }
+            m_cBlackBoard.Init(this);
         }
 
         public bool CanDo()
@@ -110,7 +114,6 @@ namespace Game
         public void End()
         {
             m_cSkillTree.Clear();
-            m_cBlackBoard.Clear();
             m_cTarget = null;
             m_sTargetPosition = TSVector.zero;
             m_sTargetForward = TSVector.zero;
@@ -120,6 +123,7 @@ namespace Game
         public void Clear()
         {
             End();
+            m_cBlackBoard.Clear();
             m_cHost = null;
         }
 

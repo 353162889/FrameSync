@@ -24,6 +24,29 @@ namespace Game
             this.hpLmt = 100;
             this.hp = this.hpLmt;
             this.attack = 10;
+            for (int i = 0; i < m_resInfo.skills.Count; i++)
+            {
+                AddSkill(m_resInfo.skills[i]);
+            }
+           
+        }
+
+        protected override void OnStartMove(TSVector position, TSVector forward)
+        {
+            base.OnStartMove(position, forward);
+            SetAnimFloat("xSpeed", forward.x.AsFloat());
+        }
+
+        protected override void OnMove(TSVector position, TSVector forward)
+        {
+            base.OnMove(position, forward);
+            SetAnimFloat("xSpeed", forward.x.AsFloat());
+        }
+
+        protected override void OnStopMove(TSVector position, TSVector forward)
+        {
+            base.OnStopMove(position, forward);
+            SetAnimFloat("xSpeed", 0);
         }
     }
 }
