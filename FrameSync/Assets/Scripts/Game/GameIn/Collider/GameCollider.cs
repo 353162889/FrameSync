@@ -210,17 +210,24 @@ namespace Game
 
         private void UpdateCollider2(Check2DCollider collider, TSVector curPosition,TSVector curForward,BaseGameColliderData colliderData)
         {
-
-            FP nAngle = TSVector.Angle(TSVector.forward, curForward);
-            if (curForward.x < 0)
+            if (colliderData.center == TSVector.zero && colliderData.forward == TSVector.forward)
             {
-                nAngle = 360 - nAngle;
+                collider.center = new TSVector2(curPosition.x, curPosition.z);
+                collider.forward = new TSVector2(curForward.x, curForward.z);
             }
-            TSQuaternion sQuat = TSQuaternion.AngleAxis(nAngle, TSVector.up);
-            TSVector center = curPosition + sQuat * colliderData.center;
-            TSVector forward = sQuat * colliderData.forward;
-            collider.center = new TSVector2(center.x,center.z);
-            collider.forward = new TSVector2(forward.x,forward.z);
+            else
+            {
+                FP nAngle = TSVector.Angle(TSVector.forward, curForward);
+                if (curForward.x < 0)
+                {
+                    nAngle = 360 - nAngle;
+                }
+                TSQuaternion sQuat = TSQuaternion.AngleAxis(nAngle, TSVector.up);
+                TSVector center = curPosition + sQuat * colliderData.center;
+                TSVector forward = sQuat * colliderData.forward;
+                collider.center = new TSVector2(center.x, center.z);
+                collider.forward = new TSVector2(forward.x, forward.z);
+            }
         }
 
         public void Reset()
