@@ -204,6 +204,16 @@ namespace NodeEditor
                         array.SetValue(newValue, i);
                     }
                 }
+                else if(type == typeof(TSVector))
+                {
+                    Vector3 oldVectorValue = ((TSVector)oldValue).ToUnityVector3();
+                    Vector3 newVectorValue = EditorGUILayout.Vector3Field(i.ToString(), oldVectorValue, options);
+                    var newValue = TSVector.FromUnitVector3(newVectorValue);
+                    if(newValue != (TSVector)oldValue)
+                    {
+                        array.SetValue(newValue, i);
+                    }
+                }
                 else if (type.IsEnum)
                 {
                     var newValue = EditorGUILayout.EnumPopup(i.ToString(), (Enum)oldValue, options);

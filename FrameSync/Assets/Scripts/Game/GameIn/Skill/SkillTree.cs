@@ -25,7 +25,6 @@ namespace Game
         [NEProperty("技能目标类型")]
         public SkillTargetType skillTarget;
         [NEProperty("技能CD")]
-        [NEPropertyBtn("按钮测试", "","")]
         public FP skillCD;
     }
 

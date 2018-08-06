@@ -42,7 +42,7 @@ namespace NodeEditor
                 Debug.LogError("在所有程序集中找不到类名="+className+"的类");
                 return;
             }
-            var method = t.GetMethod(this.classStaticFunc, BindingFlags.Static);
+            var method = t.GetMethod(this.classStaticFunc, BindingFlags.Static | BindingFlags.Public);
             if(method == null)
             {
                 Debug.LogError("在类名="+className + "找不到方法="+this.classStaticFunc);
