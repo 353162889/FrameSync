@@ -119,9 +119,19 @@ namespace NodeEditor
                     default:
                         break;
                 }
-
                 if (oldValue != newValue)
                     property.SetValue(newValue);
+
+                for (int i = 0; i < property.arrBtnAttr.Length; i++)
+                {
+                    NEPropertyBtnAttribute attr = property.arrBtnAttr[i];
+                    EditorGUILayout.BeginHorizontal();
+                    if (GUILayout.Button(attr.name))
+                    {
+                        attr.ExecuteBtn(property.fieldInfo, property.instance);
+                    }
+                    EditorGUILayout.EndHorizontal();
+                }
             }
 
             EditorGUILayout.EndVertical();
@@ -252,12 +262,19 @@ namespace NodeEditor
         private System.Object m_Instance;
         private FieldInfo m_Info;
         private NEDatapRropertyType m_Type;
+        private NEPropertyBtnAttribute[] m_arrBtnAttr;
         public bool isShow { get; set; }
+
+        public System.Object instance { get { return m_Instance; } }
+
+        public FieldInfo fieldInfo { get { return m_Info; } }
 
         public NEDatapRropertyType Type
         {
             get { return m_Type; }
         }
+
+        public NEPropertyBtnAttribute[] arrBtnAttr { get { return m_arrBtnAttr; } }
 
         private string m_sName;
 
@@ -273,6 +290,7 @@ namespace NodeEditor
         {
             m_Instance = instance;
             m_Info = info;
+            m_arrBtnAttr = (NEPropertyBtnAttribute[])m_Info.GetCustomAttributes(typeof(NEPropertyBtnAttribute),false);
             m_Type = propertyType;
             //m_sName = ObjectNames.NicifyVariableName(m_Info.Name);
             m_sName = m_Info.Name;

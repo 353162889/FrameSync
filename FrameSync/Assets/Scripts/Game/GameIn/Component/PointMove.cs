@@ -263,6 +263,7 @@ namespace Game
                 }
                 else
                 {
+                    //这里表示必定会经过当前点
                     position = m_sNextPosition;
                     if (!DequeuePoint(position,out forward))
                     {
