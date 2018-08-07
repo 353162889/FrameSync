@@ -13,7 +13,7 @@ namespace Game
         public FP time;
         [NEPropertyBtn("打开路径编辑器", "NENodeFuncExt", "ShowPathEditorWindow")]
         [NEProperty("移动路径")]
-        public TSVector[] lstPoint = new TSVector[] { TSVector.one, TSVector.zero };
+        public TSVector[] lstPoint;
     }
 
     [AINode(typeof(PointMoveActionData))]
