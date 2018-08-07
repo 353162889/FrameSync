@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-	<resairship ai="1" id="1" prefab="Prefab/Unit/AirShip_1" skills="1"/>
+	<resairship ai="1" id="1" prefab="Prefab/Unit/AirShip_1" skills="1,3"/>
 	<resairship ai="2" id="2" prefab="Prefab/Unit/AirShip_1" skills="2"/>
 </root>

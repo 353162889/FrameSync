@@ -144,6 +144,8 @@ namespace Game
             uiGO.AddComponentOnce<ViewSys>();
 
             gameObject.AddComponentOnce<FPSMono>();
+
+            ResetObjectPool<List<TSVector>>.Instance.Init(10,(List<TSVector> lst)=> { lst.Clear(); });
            
         }
 

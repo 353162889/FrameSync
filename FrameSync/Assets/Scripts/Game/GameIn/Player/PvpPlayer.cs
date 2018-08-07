@@ -44,8 +44,8 @@ namespace Game
             int aiId = ((UnitAirShip)m_cUnit).resInfo.ai;
             if (aiId > 0)
             {
-                m_cUnit.SetAI(aiId);
-                m_cUnit.StartAI();
+                //m_cUnit.SetAI(aiId);
+                //m_cUnit.StartAI();
             }
         }
 

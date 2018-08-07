@@ -74,6 +74,10 @@ namespace Game
         public bool Move(TSVector startPosition, List<TSVector> movePath, FP speed)
         {
             if (movePath.Count <= 0) return false;
+            if(m_bIsMoving)
+            {
+                StopMove();
+            }
             m_queuePath.Clear();
             m_sTargetPosition = startPosition;
             for (int i = 0; i < movePath.Count; i++)
@@ -102,6 +106,10 @@ namespace Game
 
         public bool Move(TSVector startPosition, TSVector targetPosition,FP speed)
         {
+            if (m_bIsMoving)
+            {
+                StopMove();
+            }
             m_queuePath.Clear();
             m_sTargetPosition = targetPosition;
             m_queuePath.Enqueue(targetPosition);
@@ -188,7 +196,6 @@ namespace Game
 
         private void SetPosition(TSVector position, TSVector forward)
         {
-            StopMove();
             m_sCurPosition = position;
             m_sCurForward = forward;
         }
