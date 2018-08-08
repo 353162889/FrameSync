@@ -46,6 +46,12 @@ namespace NodeEditor
             OpenWindow(2);
         }
 
+        [MenuItem("Tools/NETreeAIWindow _F4")]
+        static public void OpenGamingWindow()
+        {
+            OpenWindow(3);
+        }
+
         static public void OpenWindow(int index)
         {
             Debug.Log("OpenWindow");

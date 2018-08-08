@@ -16,6 +16,7 @@ namespace NodeEditor
         Skill.SkillComposeType,
         Remote.RemoteComposeType,
         AgentObjectAI.AIComposeType,
+        GamingLogic.GamingComposeType,
         };
     }
 }
