@@ -42,7 +42,7 @@ namespace Game
         }
 
 
-        public void Update(FP deltaTime)
+        public bool Update(FP deltaTime)
         {
             if (m_bIsDo && m_cGamingTree != null)
             {
@@ -51,8 +51,11 @@ namespace Game
                 if (result != BTResult.Running)
                 {
                     End();
+                    return false;
                 }
+                return true;
             }
+            return false;
         }
 
         public void End()

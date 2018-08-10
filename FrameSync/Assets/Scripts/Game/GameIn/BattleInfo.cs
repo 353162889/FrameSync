@@ -7,12 +7,14 @@ namespace Game
 {
     public static class BattleInfo
     {
-        public static long userId;
-        public static int sceneId;
+        public static long userId;//用户id
+        public static int levelId;//关卡id
+        public static int sceneId;//场景id
 
         public static void Clear()
         {
             userId = 0;
+            levelId = 0;
             sceneId = 0;
         }
     }

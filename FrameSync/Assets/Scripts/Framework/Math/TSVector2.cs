@@ -31,6 +31,7 @@ SOFTWARE.
 #endregion License
 
 using System;
+using UnityEngine;
 
 namespace Framework
 {
@@ -495,8 +496,18 @@ namespace Framework
             return FP.Acos(a.normalized * b.normalized) * FP.Rad2Deg;
         }
 
+        public static TSVector2 FromUnitVector2(Vector2 v)
+        {
+            return new TSVector2(FP.FromFloat(v.x), FP.FromFloat(v.y));
+        }
+
         public TSVector ToTSVector() {
             return new TSVector(this.x, this.y, 0);
+        }
+
+        public Vector2 ToUnityVector2()
+        {
+            return new Vector2(this.x.AsFloat(), this.y.AsFloat());
         }
 
         public override string ToString() {

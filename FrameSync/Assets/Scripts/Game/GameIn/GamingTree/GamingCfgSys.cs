@@ -1,4 +1,5 @@
 ﻿using Framework;
+using GameData;
 using NodeEditor;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,15 @@ namespace Game
         {
             m_cNEDataLoader = new NEDataLoader();
             List<string> files = new List<string>();
+            var lst = ResCfgSys.Instance.GetCfgLst<ResLevel>();
+            for (int i = 0; i < lst.Count; i++)
+            {
+                string name = string.Format("Config/Gaming/{0}.bytes", lst[i].gaming_id);
+                if (!files.Contains(name))
+                {
+                    files.Add(name);
+                }
+            }
             GamingLogic.Init();
             m_cNEDataLoader.Load(files, GamingLogic.arrGamingNodeDataType, onFinish);
         }

@@ -79,6 +79,21 @@ namespace NodeEditor
                     case NEDatapRropertyType.Vector3:
                         newValue = EditorGUILayout.Vector3Field(property.Name, (Vector3)oldValue, options);
                         break;
+                    case NEDatapRropertyType.TSVector2:
+                        Vector2 oldVector2Value = ((TSVector2)oldValue).ToUnityVector2();
+                        Vector2 newVector2Value = EditorGUILayout.Vector2Field(property.Name, oldVector2Value, options);
+                        newValue = TSVector2.FromUnitVector2(newVector2Value);
+                        break;
+                    case NEDatapRropertyType.TSVector3:
+                        Vector3 oldVector3Value = ((TSVector)oldValue).ToUnityVector3();
+                        Vector3 newVector3Value = EditorGUILayout.Vector3Field(property.Name, oldVector3Value, options);
+                        newValue = TSVector.FromUnitVector3(newVector3Value);
+                        break;
+                    case NEDatapRropertyType.TSRect:
+                        Rect oldRectValue = ((TSRect)oldValue).ToUnityRect();
+                        Rect newRectValue = EditorGUILayout.RectField(property.Name, oldRectValue, options);
+                        newValue = TSRect.FromUnityRect(newRectValue);
+                        break;
                     case NEDatapRropertyType.Enum:
                         EditorGUILayout.BeginHorizontal();
                         EditorGUILayout.LabelField(property.Name);
@@ -214,6 +229,27 @@ namespace NodeEditor
                         array.SetValue(newValue, i);
                     }
                 }
+                else if(type == typeof(TSVector2))
+                {
+                    Vector2 oldVectorValue = ((TSVector2)oldValue).ToUnityVector2();
+                    Vector2 newVectorValue = EditorGUILayout.Vector2Field(i.ToString(), oldVectorValue, options);
+                    var newValue = TSVector2.FromUnitVector2(newVectorValue);
+                    if(newValue != (TSVector2)oldValue)
+                    {
+                        array.SetValue(newValue, i);
+                    }
+                }
+                else if(type == typeof(TSRect))
+                {
+                    Rect oldRectValue = ((TSRect)oldValue).ToUnityRect();
+                    Rect newRectValue = EditorGUILayout.RectField(i.ToString(), oldRectValue, options);
+                    var newValue = TSRect.FromUnityRect(newRectValue);
+                    if(newValue != (TSRect)oldValue)
+                    {
+                        array.SetValue(newValue, i);
+                    }
+
+                }
                 else if (type.IsEnum)
                 {
                     var newValue = EditorGUILayout.EnumPopup(i.ToString(), (Enum)oldValue, options);
@@ -263,6 +299,9 @@ namespace NodeEditor
         String,
         Vector2,
         Vector3,
+        TSVector2,
+        TSVector3,
+        TSRect,
         Enum,
         Array,
     }
@@ -406,6 +445,23 @@ namespace NodeEditor
                 return true;
             }
 
+            if(type == typeof(TSVector2))
+            {
+                propertyType = NEDatapRropertyType.TSVector2;
+                return true;
+            }
+
+            if(type == typeof(TSVector))
+            {
+                propertyType = NEDatapRropertyType.TSVector3;
+                return true;
+            }
+
+            if(type == typeof(TSRect))
+            {
+                propertyType = NEDatapRropertyType.TSRect;
+                return true;
+            }
             if (type.IsEnum)
             {
                 propertyType = NEDatapRropertyType.Enum;
