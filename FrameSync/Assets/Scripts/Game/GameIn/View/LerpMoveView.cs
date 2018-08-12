@@ -7,12 +7,50 @@ using UnityEngine;
 
 namespace Game
 {
+    public struct LPM_CenterPoints
+    {
+        public List<Vector3> lstCenterPoint;
+
+        public void Init()
+        {
+            if (null == lstCenterPoint)
+            {
+                lstCenterPoint = ResetObjectPool<List<Vector3>>.Instance.GetObject();
+            }
+        }
+
+        public void Clear()
+        {
+            if (null != lstCenterPoint)
+            {
+                ResetObjectPool<List<Vector3>>.Instance.SaveObject(lstCenterPoint);
+                lstCenterPoint = null;
+            }
+        }
+
+        public static LPM_CenterPoints FromPM_CenterPoints(PM_CenterPoints centerPoints)
+        {
+            LPM_CenterPoints lpm_centerPoints = new LPM_CenterPoints();
+            if(centerPoints.lstCenterPoint != null)
+            {
+                lpm_centerPoints.Init();
+                for (int i = 0; i < centerPoints.lstCenterPoint.Count; i++)
+                {
+                    lpm_centerPoints.lstCenterPoint.Add(centerPoints.lstCenterPoint[i].ToUnityVector3());
+                }
+            }
+            return lpm_centerPoints;
+        }
+    }
+
     //差值过渡的表现移动处理
     public class LerpMoveView : MonoBehaviour
     {
         private Vector3 m_sStartPosition;
         private Vector3 m_sNextPosition;
+        private LPM_CenterPoints m_sNextCenterPoints;
         private Queue<Vector3> m_queuePosition = new Queue<Vector3>();
+        private Queue<LPM_CenterPoints> m_queueCenterPoints = new Queue<LPM_CenterPoints>();
         private float m_fStartTime;
         private float m_fAverageTime;
         private float m_fTargetAverageTime;
@@ -21,6 +59,8 @@ namespace Game
         private int m_nMoveCount;
         private bool m_bCanMove;
         private float m_fLerpTime;
+        private List<Vector3> m_lstCurStartAndNextPositions = new List<Vector3>();
+        private List<float> m_lstCurStartAndNextRate = new List<float>();
 
         public void Init()
         {
@@ -39,6 +79,7 @@ namespace Game
             {
                 Vector3 pos = Vector3.Lerp(m_sStartPosition, lastPosition, (i + 1) * percent);
                 m_queuePosition.Enqueue(pos);
+                m_queueCenterPoints.Enqueue(new LPM_CenterPoints());
             }
             m_bCanMove = DequeuePoint();
             m_nMoveCount = lstPosition.Count;
@@ -52,7 +93,13 @@ namespace Game
 
         public void StopMove()
         {
+            m_sNextCenterPoints.Clear();
             m_queuePosition.Clear();
+            while(m_queueCenterPoints.Count > 0)
+            {
+                var centerPoint = m_queueCenterPoints.Dequeue();
+                centerPoint.Clear();
+            }
             m_nMoveCount = 0;
             m_fStartTime = Time.time;
             m_fTargetAverageTime = m_fAverageTime = 0;
@@ -62,30 +109,30 @@ namespace Game
             m_bCanMove = false;
         }
 
-        public void Move(Vector3 pos, int logicPointCount)
+        public void Move(Vector3 pos,LPM_CenterPoints centerPoint, int logicPointCount)
         {
             m_nMoveCount++;
             m_queuePosition.Enqueue(pos);
+            m_queueCenterPoints.Enqueue(centerPoint);
             float nextAverageTime = (Time.time - m_fStartTime) / m_nMoveCount;
             int curPointCount = m_queuePosition.Count + 1;
             m_fTargetAverageTime = nextAverageTime;
            
             //如果表现位置与逻辑位置相差n个逻辑点位，开始加速或减速
-            if (Mathf.Abs(logicPointCount - curPointCount) > 2)
+            if (Mathf.Abs(logicPointCount - curPointCount) > 1)
             {
                 if (logicPointCount > curPointCount)
                 {
                     //当前表现位置减速
-                    m_fTargetAverageTime = nextAverageTime * 100f;
+                    m_fTargetAverageTime = nextAverageTime * 1.5f;
                 }
                 else if (logicPointCount < curPointCount)
                 {
                     //当前表现位置加速
-                    m_fTargetAverageTime = nextAverageTime * 0.01f;
+                    m_fTargetAverageTime = nextAverageTime * 0.75f;
                 }
             }
-            m_fTargetAverageTimeSpeed = Mathf.Abs(m_fTargetAverageTime - nextAverageTime) * 0.1f;
-
+            m_fTargetAverageTimeSpeed = Mathf.Abs(m_fTargetAverageTime - nextAverageTime) * 0.3f;
             UpdateAverageTime(nextAverageTime);
         }
 
@@ -108,8 +155,13 @@ namespace Game
         {
             if (!m_bCanMove)
             {
+                m_sStartPosition = m_sNextPosition;
                 m_bCanMove = DequeuePoint();
                 if (!m_bCanMove) return;
+                else
+                {
+                    UpdateStartAndNextPosition();
+                }
             }
             else
             {
@@ -121,6 +173,7 @@ namespace Game
                     m_bCanMove = DequeuePoint();
                     if (m_bCanMove)
                     {
+                        UpdateStartAndNextPosition();
                         LerpPosition();
                     }
                     else
@@ -137,11 +190,66 @@ namespace Game
             }
         }
 
+        private void UpdateStartAndNextPosition()
+        {
+            m_lstCurStartAndNextPositions.Clear();
+            m_lstCurStartAndNextRate.Clear();
+            if (m_sNextCenterPoints.lstCenterPoint != null)
+            {
+                float totalLen = 0;
+                var startPos = m_sStartPosition;
+                m_lstCurStartAndNextPositions.Add(m_sStartPosition);
+                m_lstCurStartAndNextRate.Add(0);
+                for (int i = 0; i < m_sNextCenterPoints.lstCenterPoint.Count; i++)
+                {
+                    var pos = m_sNextCenterPoints.lstCenterPoint[i];
+                    float len = (pos - startPos).magnitude;
+                    m_lstCurStartAndNextPositions.Add(pos);
+                    m_lstCurStartAndNextRate.Add(len);
+                    totalLen += len;
+                }
+                m_lstCurStartAndNextPositions.Add(m_sNextPosition);
+                m_lstCurStartAndNextRate.Add(1f);
+                float dis = 0;
+                for (int i = 1; i < m_lstCurStartAndNextPositions.Count - 1; i++)
+                {
+                    dis += m_lstCurStartAndNextRate[i];
+                    m_lstCurStartAndNextRate[i] = dis / totalLen;
+
+                    if(m_lstCurStartAndNextRate[i] > 1)
+                    {
+                        CLog.LogError("算出来的比率大于1，有问题");
+                        m_lstCurStartAndNextRate[i] = Mathf.Clamp01(m_lstCurStartAndNextRate[i]);
+                    }
+                }
+            }
+        }
+
         private void LerpPosition()
         {
             if (m_fAverageTime > 0)
             {
-                var pos = Vector3.Lerp(m_sStartPosition, m_sNextPosition, m_fLerpTime / m_fAverageTime);
+                Vector3 pos;
+                float lerpTime = m_fLerpTime / m_fAverageTime;
+                lerpTime = Mathf.Clamp01(lerpTime);
+                if (m_sNextCenterPoints.lstCenterPoint != null)
+                {
+                    int i = 1;
+                    for (; i < m_lstCurStartAndNextRate.Count; i++)
+                    {
+                        if(lerpTime <= m_lstCurStartAndNextRate[i])
+                        {
+                            break;
+                        }
+                    }
+                    float lerp = (lerpTime - m_lstCurStartAndNextRate[i - 1]) / (m_lstCurStartAndNextRate[i] - m_lstCurStartAndNextRate[i - 1]);
+                    pos = Vector3.Lerp(m_lstCurStartAndNextPositions[i - 1],m_lstCurStartAndNextPositions[i],lerp);
+                    //pos = Vector3.Lerp(m_sStartPosition, m_sNextPosition, lerpTime);
+                }
+                else
+                {
+                    pos = Vector3.Lerp(m_sStartPosition, m_sNextPosition, lerpTime);
+                }
                 SetPosition(pos);
                 //过渡差值
                 float nextAverageTime = Mathf.MoveTowards(m_fAverageTime, m_fTargetAverageTime, m_fTargetAverageTimeSpeed);
@@ -151,6 +259,7 @@ namespace Game
             {
                 m_sStartPosition = m_sNextPosition;
                 m_bCanMove = DequeuePoint();
+                if (m_bCanMove) UpdateStartAndNextPosition();
                 SetPosition(m_sStartPosition);
             }
         }
@@ -165,6 +274,8 @@ namespace Game
             if (m_queuePosition.Count > 0)
             {
                 m_sNextPosition = m_queuePosition.Dequeue();
+                m_sNextCenterPoints.Clear();
+                m_sNextCenterPoints = m_queueCenterPoints.Dequeue();
                 return true;
             }
             else

@@ -41,7 +41,6 @@ namespace Game
             m_bIsDo = true;
         }
 
-
         public bool Update(FP deltaTime)
         {
             if (m_bIsDo && m_cGamingTree != null)

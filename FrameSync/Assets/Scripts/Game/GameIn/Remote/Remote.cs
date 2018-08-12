@@ -157,9 +157,9 @@ namespace Game
             SetForward(m_sCurPosition - m_sLastPosition);
         }
 
-        public void WillMove(TSVector position, int logicPointCount)
+        public void WillMove(TSVector position,PM_CenterPoints centerPoint, int logicPointCount)
         {
-            m_cLerpView.Move(position.ToUnityVector3(), logicPointCount);
+            m_cLerpView.Move(position.ToUnityVector3(),LPM_CenterPoints.FromPM_CenterPoints(centerPoint), logicPointCount);
         }
 
         public void StopMove()

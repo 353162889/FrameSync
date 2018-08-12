@@ -24,8 +24,10 @@ namespace NodeEditor
         private NENodePoint m_cOutNodePoint;
         private Dictionary<string, List<Type>> m_dicNodeType;
         private Func<Type, object> m_fCreateNodeFunc;
+        private object m_cCopyObj;
+        private Func<object, object> m_cCopyFunc;
 
-        public NECanvas(List<Type> lstNodeType,Func<Type,object> createNodeDataFunc)
+        public NECanvas(List<Type> lstNodeType,Func<Type,object> createNodeDataFunc, Func<object,object> copyFunc = null)
         {
             m_fCreateNodeFunc = createNodeDataFunc;
             m_dicNodeType = new Dictionary<string, List<Type>>();
@@ -55,11 +57,13 @@ namespace NodeEditor
                     lst.Add(lstNodeType[i]);
                 }
             }
+            m_cCopyFunc = copyFunc;
             scrollPos = new Vector2(scrollViewRect.width / 2f, scrollViewRect.height / 2f);
             m_cSelectedNode = null;
             m_cDragNode = null;
             m_cInNodePoint = null;
             m_cOutNodePoint = null;
+            m_cCopyObj = null;
         }
 
         public void Draw(Rect position)
@@ -241,7 +245,7 @@ namespace NodeEditor
                 }
             }
             //右键按下
-            else if (e.button == 1)
+            else if (e.button == 1 && e.type == EventType.ContextClick)
             {
                 if (m_cInNodePoint != null || m_cOutNodePoint != null)
                 {
@@ -263,6 +267,7 @@ namespace NodeEditor
                         //e.Use();
                     }
                     GUI.changed = true;
+                    return;
                 }
             }
             else if(e.button == 2)
@@ -340,6 +345,10 @@ namespace NodeEditor
                 }
                 count--;
             }
+            if(m_cCopyObj != null)
+            {
+                menu.AddItem(new GUIContent("粘贴"), false, () => { CreateNode(mousePosition, m_cCopyObj); });
+            }
             menu.ShowAsContext();
             GUI.changed = true;
         }
@@ -347,9 +356,15 @@ namespace NodeEditor
         private void HandleNodeMenu(NENode node, Vector2 mousePosition)
         {
             GUI.changed = true;
-            //GenericMenu menu = new GenericMenu();
-            //menu.AddItem(new GUIContent("删除节点"), false, () => { m_lstNode.Remove(node); });
-            //menu.ShowAsContext();
+            GenericMenu menu = new GenericMenu();
+            menu.AddItem(new GUIContent("拷贝节点"), false, () => {
+                if (m_cCopyFunc != null)
+                {
+                    INENode neNode = node.node as INENode;
+                    m_cCopyObj = m_cCopyFunc.Invoke(neNode.data);
+                }
+            });
+            menu.ShowAsContext();
         }
 
         private void DrawGrid()
@@ -388,6 +403,8 @@ namespace NodeEditor
             m_lstNode.Clear();
             m_lstConnection.Clear();
             m_fCreateNodeFunc = null;
+            m_cCopyFunc = null;
+            m_cCopyObj = null;
         }
     }
 }

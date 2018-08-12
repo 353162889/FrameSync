@@ -64,7 +64,8 @@ namespace Game
                 {
                     m_nRefreshSpaceTime -= m_cRefreshData.refreshSpaceTime;
                     m_nRefreshTimes--;
-                    BattleScene.Instance.CreateUnit(m_cRefreshData.configId, (int)m_cRefreshData.campType, m_cRefreshData.unitType, m_cRefreshData.point, m_cRefreshData.forward);
+                    var unit = BattleScene.Instance.CreateUnit(m_cRefreshData.configId, (int)m_cRefreshData.campType, m_cRefreshData.unitType, m_cRefreshData.point, m_cRefreshData.forward);
+                    unit.StartAI();
                 }
                 m_nRefreshSpaceTime += blackBoard.deltaTime;
             }

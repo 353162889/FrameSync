@@ -17,7 +17,8 @@ namespace Framework
 			{
 				this._capicity = capicity;
 				_pool = new Queue<T> (_capicity);
-				_inited = true;
+                CacheObject(_capicity / 2);
+                _inited = true;
 			}
 		}
 
@@ -53,7 +54,13 @@ namespace Framework
 			}
 		}
 
-		public override void Dispose ()
+        public void CacheObject(int count, params object[] param)
+        {
+            T obj = (T)Activator.CreateInstance(typeof(T), param);
+            SaveObject(obj);
+        }
+
+        public override void Dispose ()
 		{
 			_inited = false;
 			base.Dispose ();

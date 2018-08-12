@@ -28,7 +28,10 @@ namespace Game
             {
                 AddSkill(m_resInfo.skills[i]);
             }
-           
+           if(m_resInfo.ai > 0)
+            {
+                this.SetAI(m_resInfo.ai);
+            }
         }
 
         protected override void OnStartMove(TSVector position, TSVector forward)

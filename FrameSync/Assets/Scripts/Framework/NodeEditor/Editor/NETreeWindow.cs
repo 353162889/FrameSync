@@ -111,7 +111,7 @@ namespace NodeEditor
                 if (!IsRootType(m_lstNodeType[i])) lst.Add(m_lstNodeType[i]);
             }
             if (m_cCanvas != null) m_cCanvas.Dispose();
-            m_cCanvas = new NECanvas(lst, CreateNENodeByNENodeType);
+            m_cCanvas = new NECanvas(lst, CreateNENodeByNENodeType, CopyNENodeData);
             CreateTreeByTreeData(neData);
         }
 
@@ -186,7 +186,7 @@ namespace NodeEditor
             Type dataType = m_lstNodeDataType[index];
             return CreateNENode(neNodeType, dataType, null);
         }
-
+       
         private object CreateNENodeByData(object data)
         {
             Type dataType = data.GetType();
@@ -221,6 +221,20 @@ namespace NodeEditor
             //}
             //return node;
         }
+
+        private object CopyNENodeData(object data)
+        {
+            NEData neData = new NEData();
+            neData.data = data;
+            byte[] buff = NEUtil.SerializerObjectToBuff(neData, m_lstNodeDataType.ToArray());
+            if (buff != null)
+            {
+                neData = NEUtil.DeSerializerObjectFromBuff(buff, typeof(NEData), m_lstNodeDataType.ToArray()) as NEData;
+                return CreateNENodeByData(neData.data);
+            }
+            return null;
+        }
+
 
         void OnDisable()
         {

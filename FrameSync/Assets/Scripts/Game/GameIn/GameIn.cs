@@ -92,7 +92,7 @@ namespace Game
             }
             if(null != m_cGamingLogic)
             {
-                if(!m_cGamingLogic.Update(deltaTime))
+                if (!m_cGamingLogic.Update(deltaTime))
                 {
                     //this.ParentSwitchState((int)GameStateType.GameOut);
                 }

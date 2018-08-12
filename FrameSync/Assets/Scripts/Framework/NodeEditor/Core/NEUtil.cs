@@ -114,7 +114,7 @@ namespace NodeEditor
                     {
                         Directory.CreateDirectory(strDirectory);
                     }
-                    XmlSerializer xs = null; ;
+                    XmlSerializer xs = null;
                     if (extraTypes != null)
                     {
                         xs = new XmlSerializer(obj.GetType(), extraTypes);
@@ -132,6 +132,39 @@ namespace NodeEditor
                 }
             }
         }
+
+        public static byte[] SerializerObjectToBuff(object obj, Type[] extraTypes = null)
+        {
+            byte[] buffRet = null;
+            using (MemoryStream stream = new MemoryStream())
+            {
+                try
+                {
+                    XmlSerializer xs = null;
+                    if (extraTypes != null)
+                    {
+                        xs = new XmlSerializer(obj.GetType(), extraTypes);
+                    }
+                    else
+                    {
+                        xs = new XmlSerializer(obj.GetType());
+                    }
+                    TextWriter writer = new StreamWriter(stream, Encoding.UTF8);
+                    xs.Serialize(writer, obj);
+                    stream.Position = 0;
+                    buffRet = new byte[stream.Length];
+                    stream.Read(buffRet, 0, buffRet.Length);
+                    return buffRet;
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.Log("Deserialize Error:" + ex.ToString());
+                }
+            }
+            return buffRet;
+
+        }
+
         public static void LoadTreeComposeTypes(NETreeComposeType composeType,out List<Type> lstNodeType,out List<Type> lstNodeDataType)
         {
             lstNodeType = new List<Type>();

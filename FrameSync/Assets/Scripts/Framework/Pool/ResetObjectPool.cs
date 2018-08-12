@@ -21,6 +21,7 @@ namespace Framework
                 this._capicity = capicity;
                 this._resetAction = resetAction;   
                 _pool = new Queue<T>(_capicity);
+                CacheObject(_capicity / 2);
                 _inited = true;
             }
         }
@@ -55,6 +56,12 @@ namespace Framework
             {
                 CLog.Log("<color='yellow'>" + typeof(T) + " over capicity:" + _capicity + "</color>");
             }
+        }
+
+        public void CacheObject(int count,params object[] param)
+        {
+            T obj = (T)Activator.CreateInstance(typeof(T), param);
+            SaveObject(obj);
         }
 
         public override void Dispose()
