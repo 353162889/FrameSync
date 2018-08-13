@@ -11,10 +11,16 @@ namespace Game
     //unit的移动部分
     public partial class Unit
     {
+        public delegate void UnitMoveHandler(TSVector position, TSVector forward);
+        public event UnitMoveHandler OnUnitMoveStart;
+        public event UnitMoveHandler OnUnitMove;
+        public event UnitMoveHandler OnUnitMoveStop;
         protected PointMove m_cMove;
         protected ForwardRotate m_cRotate;
         protected LerpMoveView m_cLerpMoveView;
         protected FP m_sMoveSpeed = 30;
+
+        public bool isMoving { get { return m_cMove.isMoving; } }
 
         public void ReqMove(List<TSVector> movePath)
         {
@@ -149,27 +155,40 @@ namespace Game
             m_cLerpMoveView.StartMove(transform.position, lst);
             SetForward(forward, ForwardFromType.UnitMove, false);
             //RotateToTarget(forward);
+            if(null != OnUnitMoveStart)
+            {
+                OnUnitMoveStart(position, forward);
+            }
         }
 
         protected virtual void OnMove(TSVector position, TSVector forward)
         {
             curPosition = position;
             SetForward(forward, ForwardFromType.UnitMove, false);
+            if(null != OnUnitMove)
+            {
+                OnUnitMove(position, forward);
+            }
             //RotateToTarget(forward);
         }
 
         protected virtual void OnStopMove(TSVector position, TSVector forward)
         {
             m_cLerpMoveView.StopMove();
+            //CLog.LogArgs("offset:",position.ToUnityVector3(),m_cLerpMoveView.transform.position,(position.ToUnityVector3()- m_cLerpMoveView.transform.position).magnitude);
             if (!(m_sCurForward - forward).IsNearlyZero())
             {
                 m_cRotate.StartRotate(m_sCurForward, forward,0);
             }
+            if(null != OnUnitMoveStop)
+            {
+                OnUnitMoveStop(position, forward);
+            }
         }
 
-        private void OnWillMove(TSVector position, TSVector forward)
+        private void OnWillMove(TSVector position, TSVector forward,PM_CenterPoints centerPoints)
         {
-            m_cLerpMoveView.Move(position.ToUnityVector3(), m_cMove.lstNextPosition.Count);
+            m_cLerpMoveView.Move(position.ToUnityVector3(),LPM_CenterPoints.FromPM_CenterPoints(centerPoints), m_cMove.lstNextPosition.Count);
         }
 
         protected void ResetMove()
@@ -179,16 +198,16 @@ namespace Game
             m_cLerpMoveView.StopMove();
         }
 
-        //private GameObject box;
+        private GameObject box;
         protected void UpdateMove(FP deltaTime)
         {
             m_cMove.OnUpdate(deltaTime);
             m_cRotate.OnUpdate(deltaTime);
-            //if(null == box)
-            //{
-            //    box = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            //}
-            //box.transform.position = m_sCurPosition.ToUnityVector3();
+            if (null == box)
+            {
+                box = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            }
+            box.transform.position = m_sCurPosition.ToUnityVector3();
         }
 
         protected void DieMove(DamageInfo damageInfo)

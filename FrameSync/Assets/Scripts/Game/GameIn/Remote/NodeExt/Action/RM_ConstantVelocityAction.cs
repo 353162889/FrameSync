@@ -82,9 +82,9 @@ namespace Game
             m_eCurActionResult = BTActionResult.Ready;
         }
 
-        private void OnWillMove(TSVector position, TSVector forward)
+        private void OnWillMove(TSVector position, TSVector forward,PM_CenterPoints centerPoints)
         {
-            m_cRemote.WillMove(position, m_cPointMove.lstNextPosition.Count);
+            m_cRemote.WillMove(position, centerPoints, m_cPointMove.lstNextPosition.Count);
         }
 
         public override void OnExit(RemoteBlackBoard blackBoard)

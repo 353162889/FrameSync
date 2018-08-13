@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <editorPos>
-    <x>5102</x>
+    <x>5107</x>
     <y>4790</y>
   </editorPos>
   <data xsi:type="RemoteData">
@@ -13,14 +13,14 @@
   <lstChild>
     <NEData>
       <editorPos>
-        <x>5084</x>
+        <x>5089</x>
         <y>4927</y>
       </editorPos>
       <data xsi:type="BTTimeLineData" />
       <lstChild>
         <NEData>
           <editorPos>
-            <x>5098</x>
+            <x>5103</x>
             <y>5050</y>
           </editorPos>
           <data xsi:type="BTTimeDecoratorData">
@@ -31,15 +31,15 @@
           <lstChild>
             <NEData>
               <editorPos>
-                <x>5097</x>
+                <x>5102</x>
                 <y>5170</y>
               </editorPos>
               <data xsi:type="BTParallelORData" />
               <lstChild>
                 <NEData>
                   <editorPos>
-                    <x>4960</x>
-                    <y>5439</y>
+                    <x>4965</x>
+                    <y>5450</y>
                   </editorPos>
                   <data xsi:type="RM_ConstantVelocityActionData">
                     <time>
@@ -49,14 +49,14 @@
                       <_serializedValue>42949672960</_serializedValue>
                     </speed>
                     <maxDistance>
-                      <_serializedValue>128849018880</_serializedValue>
+                      <_serializedValue>343597383680</_serializedValue>
                     </maxDistance>
                   </data>
                 </NEData>
                 <NEData>
                   <editorPos>
-                    <x>5248</x>
-                    <y>5434</y>
+                    <x>5253</x>
+                    <y>5445</y>
                   </editorPos>
                   <data xsi:type="BTG_LastPosToCurPosSelectCompositeData">
                     <time>
@@ -76,8 +76,8 @@
                   <lstChild>
                     <NEData>
                       <editorPos>
-                        <x>5086</x>
-                        <y>5623</y>
+                        <x>5100</x>
+                        <y>5634</y>
                       </editorPos>
                       <data xsi:type="BTG_CreateHitEffectData">
                         <time>
@@ -93,8 +93,8 @@
                     </NEData>
                     <NEData>
                       <editorPos>
-                        <x>5415</x>
-                        <y>5611</y>
+                        <x>5444</x>
+                        <y>5622</y>
                       </editorPos>
                       <data xsi:type="BTG_HurtActionData">
                         <time>

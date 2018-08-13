@@ -18,6 +18,7 @@ public class PathEditorWindow : EditorWindow
     private bool m_bShowDrawPoints;
     private Vector2 showDrawPointPosition;
 
+    private int m_nGONodeCount;
     private bool m_bAwaysGeneratePath;
 
     public void Init(Vector3[] points,Action<Vector3[]> callback)
@@ -39,8 +40,10 @@ public class PathEditorWindow : EditorWindow
 
         if (m_arrInitPoints != null && m_cRoot != null)
         {
+            
             if (m_arrInitPoints.Length < 2)
             {
+                m_nGONodeCount = m_arrInitPoints.Length;
                 for (int i = 0; i < m_arrInitPoints.Length; i++)
                 {
                     CreateGO(m_arrInitPoints[i]);
@@ -48,7 +51,8 @@ public class PathEditorWindow : EditorWindow
             }
             else
             {
-                Vector3[] goPoints = EditorPathTool.GetPath(m_arrInitPoints, 5);
+                m_nGONodeCount = 5;
+                Vector3[] goPoints = EditorPathTool.GetPath(m_arrInitPoints, m_nGONodeCount);
                 for (int i = 0; i < goPoints.Length; i++)
                 {
                     CreateGO(goPoints[i]);
@@ -164,7 +168,33 @@ public class PathEditorWindow : EditorWindow
         {
             CreateGO(Vector3.zero);
         }
-     
+        EditorGUILayout.EndHorizontal();
+        EditorGUILayout.BeginHorizontal();
+        m_nGONodeCount = EditorGUILayout.IntField("显示节点数量", m_nGONodeCount);
+        if (GUILayout.Button("更新节点数量"))
+        {
+            if(m_arrDrawPoints == null)
+            {
+                EditorUtility.DisplayDialog("提示", "第一次编辑需要手动添加路径点（至少两个）", "确定");
+                return;
+            }
+            float oneGO = m_nCurPathPoints / (float)m_nGONodeCount;
+            int childCount = m_cRoot.transform.childCount;
+            //清楚当前所有go
+            GameObject[] gos = m_cRoot.GetChildren();
+            for (int i = 0; i < gos.Length; i++)
+            {
+                gos[i].transform.parent = null;
+                GameObject.DestroyImmediate(gos[i]);
+            }
+            Vector3[] goPoints = EditorPathTool.GetPath(m_arrDrawPoints, m_nCurPathPoints);
+            for (int i = 0; i < m_nGONodeCount - 1; i++)
+            {
+                int index = Mathf.FloorToInt(i * oneGO);
+                CreateGO(goPoints[index]);
+            }
+            CreateGO(goPoints[goPoints.Length - 1]);
+        }
         EditorGUILayout.EndHorizontal();
         EditorGUILayout.BeginHorizontal();
         m_bShowGOs = EditorGUILayout.Foldout(m_bShowGOs,"显示场景对象");

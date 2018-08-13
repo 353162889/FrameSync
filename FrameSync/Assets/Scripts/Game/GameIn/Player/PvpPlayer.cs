@@ -41,12 +41,7 @@ namespace Game
         {
             m_cUnit = BattleScene.Instance.CreateUnit(GameConst.Instance.GetInt("default_player_id"), m_cPlayerData.campId, UnitType.AirShip, bornPos, TSVector.forward);
             m_cUnit.Forbid(UnitForbidType.ForbidForward, UnitForbidFromType.Game);
-            int aiId = ((UnitAirShip)m_cUnit).resInfo.ai;
-            if (aiId > 0)
-            {
-                m_cUnit.SetAI(aiId);
-                m_cUnit.StartAI();
-            }
+            m_cUnit.StartAI();
         }
 
         public void FrameUpdate(FP deltaTime)

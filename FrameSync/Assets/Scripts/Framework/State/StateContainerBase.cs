@@ -42,6 +42,7 @@ namespace Framework
         {
             if (m_dicState.ContainsKey(key)) return false;
             m_dicState.Add(key, state);
+            state.Parent = this;
             state.UpdateKey(key);
             if (defaultState)
             {

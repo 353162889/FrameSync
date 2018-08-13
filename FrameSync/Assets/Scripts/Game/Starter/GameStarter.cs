@@ -41,13 +41,14 @@ namespace Game
         private int m_nConfingIndex;
         private void LoadConfigs()
         {
-            m_nConfingIndex = 6;
+            m_nConfingIndex = 7;
             ResCfgSys.Instance.LoadResCfgs("Config/Data", OnLoadOneConfig);
             SkillCfgSys.Instance.LoadResCfgs(OnLoadOneConfig);
             RemoteCfgSys.Instance.LoadResCfgs(OnLoadOneConfig);
             HangPointCfgSys.Instance.LoadResCfgs(OnLoadOneConfig);
             GameColliderCfgSys.Instance.LoadResCfgs(OnLoadOneConfig);
             AICfgSys.Instance.LoadResCfgs(OnLoadOneConfig);
+            GamingCfgSys.Instance.LoadResCfgs(OnLoadConfigs);
         }
 
         private void OnLoadOneConfig()
@@ -144,7 +145,10 @@ namespace Game
             uiGO.AddComponentOnce<ViewSys>();
 
             gameObject.AddComponentOnce<FPSMono>();
-           
+
+            ResetObjectPool<List<TSVector>>.Instance.Init(100,(List<TSVector> lst)=> { lst.Clear(); });
+            ResetObjectPool<List<Vector3>>.Instance.Init(100, (List<Vector3> lst) => { lst.Clear(); });
+
         }
 
        

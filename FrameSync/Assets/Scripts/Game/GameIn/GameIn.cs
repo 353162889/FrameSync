@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Framework;
 using Proto;
+using GameData;
 
 namespace Game
 {
@@ -11,12 +12,16 @@ namespace Game
     {
         private CommandSequence m_cJoinSequence;
         private GamingSysCompContainer m_cSysCompContainer;
+        private GamingLogic m_cGamingLogic;
+        private ResLevel m_cLevelInfo;
         protected override void OnEnter()
         {
             FrameSyncSys.Instance.StopRun();
             BattleInfo.Clear();
             BattleInfo.userId = 1;
-            BattleInfo.sceneId = GameConst.Instance.GetInt("default_scene_id");
+            BattleInfo.levelId = GameConst.Instance.GetInt("default_level_id");
+            m_cLevelInfo = ResCfgSys.Instance.GetCfg<ResLevel>(BattleInfo.levelId);
+            BattleInfo.sceneId = m_cLevelInfo.scene_id;
             SceneEffectPool.Instance.Clear();
             SceneGOPool.Instance.Clear();
             ViewSys.Instance.Open("LoadingView");
@@ -50,6 +55,8 @@ namespace Game
             //出事化战斗场景数据
             BattleScene.Instance.Init(BattleInfo.sceneId);
             CameraSys.Instance.Init();
+            m_cGamingLogic = new GamingLogic();
+            m_cGamingLogic.Init(m_cLevelInfo.gaming_id);
         }
 
         private void OnJoinScene(CommandBase obj)
@@ -60,7 +67,7 @@ namespace Game
             PvpPlayerMgr.Instance.Init();
             m_cSysCompContainer = new GamingSysCompContainer();
             //注册逻辑
-            m_cSysCompContainer.RegisterComp(GamingSysCompType.EnemyRefresh, new GSC_EnemyRefresh());
+            //m_cSysCompContainer.RegisterComp(GamingSysCompType.EnemyRefresh, new GSC_EnemyRefresh());
 
             GlobalEventDispatcher.Instance.AddEvent(GameEvent.StartBattle, OnStartBattle);
             GlobalEventDispatcher.Instance.AddEvent(GameEvent.PvpPlayerCreate, OnPlayerCreate);
@@ -82,6 +89,13 @@ namespace Game
             if(null != m_cSysCompContainer)
             {
                 m_cSysCompContainer.Update(deltaTime);
+            }
+            if(null != m_cGamingLogic)
+            {
+                if (!m_cGamingLogic.Update(deltaTime))
+                {
+                    //this.ParentSwitchState((int)GameStateType.GameOut);
+                }
             }
         }
 
@@ -116,6 +130,7 @@ namespace Game
 
         protected override void OnExit()
         {
+            CLog.Log("游戏结束");
             if(m_cSysCompContainer != null)
             {
                 m_cSysCompContainer.Exit();
@@ -125,6 +140,7 @@ namespace Game
             ViewSys.Instance.Close("FightView");
             CameraSys.Instance.Clear();
             PvpPlayerMgr.Instance.Clear();
+            BattleScene.Instance.Clear();
             SceneEffectPool.Instance.Clear();
             SceneGOPool.Instance.Clear();
             if (m_cJoinSequence != null)

@@ -16,6 +16,7 @@ namespace Game
         private RectTransform m_cMoveTrans;
         private GameObject m_cBtnSkillTest;
         private Text m_txtFps;
+        private Button m_btnTest;
         private float minDirLen;
         public FightView(GameObject go) : base(go)
         {
@@ -24,10 +25,12 @@ namespace Game
         protected override void BuidUI()
         {
             m_txtFps = this.MainGO.FindChildComponentRecursive<Text>("txtFps");
+            m_btnTest = this.MainGO.FindChildComponentRecursive<Button>("btnTest");
             RectTransform rectTrans = this.MainGO.FindChildComponentRecursive<RectTransform>("JoystickRect");
             m_cBaseTrans = this.MainGO.FindChildComponentRecursive<RectTransform>("JoystickBase");
             m_cMoveTrans = this.MainGO.FindChildComponentRecursive<RectTransform>("JoystickMove");
             GameObject joystickGO = this.MainGO.FindChildRecursive("Joystick");
+            
             m_cJoystick = joystickGO.AddComponentOnce<UIJoystick>();
             m_cJoystick.Init(rectTrans, m_cBaseTrans, m_cMoveTrans, 100000 /*m_cBaseTrans.rect.width / 2f*/, false);
             minDirLen = m_cBaseTrans.rect.width * 0.1f;
@@ -43,6 +46,20 @@ namespace Game
             SetJoystickActive(false);
 
             //TouchDispatcher.instance.touchBeganListeners += OnTouch;
+
+            UIEventTrigger.Get(m_btnTest.gameObject).AddListener(EventTriggerType.PointerClick, OnClickTest);
+        }
+
+        private void OnClickTest(BaseEventData arg0)
+        {
+            if (PvpPlayerMgr.Instance.mainPlayer != null)
+            {
+                Unit unit = PvpPlayerMgr.Instance.mainPlayer.unit;
+                if (unit != null)
+                {
+                    unit.ReqDoSkill(3, 0, AgentObjectType.Unit, TSVector.zero, TSVector.forward);
+                }
+            }
         }
 
         private void OnTouch(TouchEventParam obj)

@@ -103,5 +103,10 @@ namespace Framework
         {
             return new TSRect(FP.FromFloat(rect.x),FP.FromFloat(rect.y),FP.FromFloat(rect.width),FP.FromFloat(rect.height));
         }
+
+        public Rect ToUnityRect()
+        {
+            return new Rect(this.x.AsFloat(),this.y.AsFloat(),this.width.AsFloat(),this.height.AsFloat());
+        }
     }
 }

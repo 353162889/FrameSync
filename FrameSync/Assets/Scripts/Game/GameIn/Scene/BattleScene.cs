@@ -150,12 +150,12 @@ namespace Game
 
         private void OnFrameSyncUpdate(FP deltaTime)
         {
-            foreach (var item in m_dicCampUnitField)
+            foreach (KeyValuePair<int,AgentObjField> item in m_dicCampUnitField)
             {
                 item.Value.UpdateField(deltaTime);
             }
 
-            foreach (var item in m_dicCampRemoteField)
+            foreach (KeyValuePair<int, AgentObjField> item in m_dicCampRemoteField)
             {
                 item.Value.UpdateField(deltaTime);
             }
