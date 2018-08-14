@@ -88,7 +88,7 @@ namespace Game
             {
                 m_fOnFrameDistance = (lstPosition[1] - lstPosition[0]).magnitude;
             }
-            CLog.LogArgs("m_fOnFrameDistance", m_fOnFrameDistance);
+            //CLog.LogArgs("m_fOnFrameDistance", m_fOnFrameDistance);
             m_bCanMove = DequeuePoint();
             m_nMoveCount = lstPosition.Count;
             float onFrameTime = FrameSyncSys.OnFrameTime.AsFloat();
@@ -102,7 +102,7 @@ namespace Game
 
         public void StopMove()
         {
-            CLog.LogArgs("View StopMove");
+            //CLog.LogArgs("View StopMove");
             m_sNextCenterPoints.Clear();
             m_queuePosition.Clear();
             while(m_queueCenterPoints.Count > 0)
@@ -133,21 +133,21 @@ namespace Game
             int curPointCount = m_queuePosition.Count + 1;
             m_fTargetAverageTime = nextAverageTime;
             //大于一定距离开始加速或减速
-            CLog.LogArgs("move", curPosition, transform.position);
+            //CLog.LogArgs("move", curPosition, transform.position);
             float dis = (transform.position - curPosition).magnitude;
-            if (dis > 0.2f)
+            if (dis > 0.6f)
             {
                 //加速
                 if(m_nMoveTimes < moveTimes)
                 {
-                    m_fTargetAverageTime = nextAverageTime * 0.5f;
-                    CLog.LogArgs("加速:", dis , "m_nMoveTimes", m_nMoveTimes, "moveTimes", moveTimes);
+                    m_fTargetAverageTime = nextAverageTime * 0.9f;
+                    //CLog.LogArgs("加速:", dis , "m_nMoveTimes", m_nMoveTimes, "moveTimes", moveTimes);
                 }
                 //减速
                 else
                 {
-                    m_fTargetAverageTime = nextAverageTime * 2f;
-                    CLog.LogArgs("减速:", dis, "m_nMoveTimes", m_nMoveTimes, "moveTimes", moveTimes);
+                    m_fTargetAverageTime = nextAverageTime * 1.2f;
+                   // CLog.LogArgs("减速:", dis, "m_nMoveTimes", m_nMoveTimes, "moveTimes", moveTimes);
                 }
             }
 
@@ -165,7 +165,7 @@ namespace Game
             //        m_fTargetAverageTime = nextAverageTime * 0.75f;
             //    }
             //}
-            m_fTargetAverageTimeSpeed = Mathf.Abs(m_fTargetAverageTime - nextAverageTime) * 0.25f;
+            m_fTargetAverageTimeSpeed = Mathf.Abs(m_fTargetAverageTime - nextAverageTime) * 0.5f;
             UpdateAverageTime(nextAverageTime);
         }
 
@@ -300,7 +300,7 @@ namespace Game
         private void SetPosition(Vector3 position)
         {
             transform.position = position;
-            CLog.LogArgs("SetPosition", position);
+            //CLog.LogArgs("SetPosition", position);
         }
 
         private bool DequeuePoint()
