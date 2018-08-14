@@ -61,6 +61,8 @@ namespace Game
         private float m_fLerpTime;
         private List<Vector3> m_lstCurStartAndNextPositions = new List<Vector3>();
         private List<float> m_lstCurStartAndNextRate = new List<float>();
+        private int m_nMoveTimes;
+        private float m_fOnFrameDistance;
 
         public void Init()
         {
@@ -81,6 +83,12 @@ namespace Game
                 m_queuePosition.Enqueue(pos);
                 m_queueCenterPoints.Enqueue(new LPM_CenterPoints());
             }
+            m_fOnFrameDistance = 1f;
+            if(lstPosition.Count > 1)
+            {
+                m_fOnFrameDistance = (lstPosition[1] - lstPosition[0]).magnitude;
+            }
+            CLog.LogArgs("m_fOnFrameDistance", m_fOnFrameDistance);
             m_bCanMove = DequeuePoint();
             m_nMoveCount = lstPosition.Count;
             float onFrameTime = FrameSyncSys.OnFrameTime.AsFloat();
@@ -89,10 +97,12 @@ namespace Game
             //因为逻辑帧那边开始移动与更新移动是在同一帧中运行，这边初始时间多一个点的时间
             m_fStartTime = Time.time - m_fAverageTime * (m_nMoveCount + 1);
             m_fLerpTime = 0;
+            m_nMoveTimes = 0;
         }
 
         public void StopMove()
         {
+            CLog.LogArgs("View StopMove");
             m_sNextCenterPoints.Clear();
             m_queuePosition.Clear();
             while(m_queueCenterPoints.Count > 0)
@@ -107,32 +117,55 @@ namespace Game
             m_fLerpTime = 0;
             m_sNextPosition = Vector3.zero;
             m_bCanMove = false;
+            m_nMoveTimes = 0;
         }
 
-        public void Move(Vector3 pos,LPM_CenterPoints centerPoint, int logicPointCount)
+        public void WillMove(Vector3 position, LPM_CenterPoints willCenterPoint)
         {
             m_nMoveCount++;
-            m_queuePosition.Enqueue(pos);
-            m_queueCenterPoints.Enqueue(centerPoint);
+            m_queuePosition.Enqueue(position);
+            m_queueCenterPoints.Enqueue(willCenterPoint);
+        }
+
+        public void Move(Vector3 curPosition, int moveTimes)
+        {
             float nextAverageTime = (Time.time - m_fStartTime) / m_nMoveCount;
             int curPointCount = m_queuePosition.Count + 1;
             m_fTargetAverageTime = nextAverageTime;
-           
-            //如果表现位置与逻辑位置相差n个逻辑点位，开始加速或减速
-            if (Mathf.Abs(logicPointCount - curPointCount) > 1)
+            //大于一定距离开始加速或减速
+            CLog.LogArgs("move", curPosition, transform.position);
+            float dis = (transform.position - curPosition).magnitude;
+            if (dis > 0.2f)
             {
-                if (logicPointCount > curPointCount)
+                //加速
+                if(m_nMoveTimes < moveTimes)
                 {
-                    //当前表现位置减速
-                    m_fTargetAverageTime = nextAverageTime * 1.5f;
+                    m_fTargetAverageTime = nextAverageTime * 0.5f;
+                    CLog.LogArgs("加速:", dis , "m_nMoveTimes", m_nMoveTimes, "moveTimes", moveTimes);
                 }
-                else if (logicPointCount < curPointCount)
+                //减速
+                else
                 {
-                    //当前表现位置加速
-                    m_fTargetAverageTime = nextAverageTime * 0.75f;
+                    m_fTargetAverageTime = nextAverageTime * 2f;
+                    CLog.LogArgs("减速:", dis, "m_nMoveTimes", m_nMoveTimes, "moveTimes", moveTimes);
                 }
             }
-            m_fTargetAverageTimeSpeed = Mathf.Abs(m_fTargetAverageTime - nextAverageTime) * 0.3f;
+
+            ////如果表现位置与逻辑位置相差n个逻辑点位，开始加速或减速
+            //if (Mathf.Abs(logicPointCount - curPointCount) > 1)
+            //{
+            //    if (logicPointCount > curPointCount)
+            //    {
+            //        //当前表现位置减速
+            //        m_fTargetAverageTime = nextAverageTime * 1.5f;
+            //    }
+            //    else if (logicPointCount < curPointCount)
+            //    {
+            //        //当前表现位置加速
+            //        m_fTargetAverageTime = nextAverageTime * 0.75f;
+            //    }
+            //}
+            m_fTargetAverageTimeSpeed = Mathf.Abs(m_fTargetAverageTime - nextAverageTime) * 0.25f;
             UpdateAverageTime(nextAverageTime);
         }
 
@@ -267,6 +300,7 @@ namespace Game
         private void SetPosition(Vector3 position)
         {
             transform.position = position;
+            CLog.LogArgs("SetPosition", position);
         }
 
         private bool DequeuePoint()
@@ -276,6 +310,7 @@ namespace Game
                 m_sNextPosition = m_queuePosition.Dequeue();
                 m_sNextCenterPoints.Clear();
                 m_sNextCenterPoints = m_queueCenterPoints.Dequeue();
+                m_nMoveTimes++;
                 return true;
             }
             else

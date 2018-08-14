@@ -34,7 +34,7 @@ namespace Game
     public class PointMove
     {
         public delegate void UPointMoveHandler(TSVector position,TSVector forward);
-        public delegate void UPointMovePMHandler(TSVector position, TSVector forward,PM_CenterPoints centerPoints);
+        public delegate void UPointMovePMHandler(TSVector willPosition, TSVector willForward,PM_CenterPoints willCenterPoints);
         public event UPointMoveHandler OnMoveStart;
         public event UPointMoveHandler OnMove;
         public event UPointMovePMHandler OnWillMove;
@@ -50,6 +50,9 @@ namespace Game
         private List<TSVector> m_lstNextPosition;
         public List<PM_CenterPoints> lstNextPositionCenterPoint { get { return m_lstNextPositionCenterPoint; } }
         private List<PM_CenterPoints> m_lstNextPositionCenterPoint;
+        //本次移动经过的移动次数(最小一步的移动)
+        public int moveTimes { get { return m_nMoveTimes; } }
+        private int m_nMoveTimes;
         private List<TSVector> m_lstOnFrameCenterPosition;
         private List<TSVector> m_lstNextForward;
 
@@ -131,6 +134,7 @@ namespace Game
             m_bIsMoving = true;
             m_bIsCalculateFinish = false;
             m_sSpeed = speed;
+            m_nMoveTimes = 0;
             PreCalculate();
             m_sStartMoveTime = FrameSyncSys.time;
             if (null != OnMoveStart)
@@ -161,6 +165,7 @@ namespace Game
             m_bIsMoving = true;
             m_bIsCalculateFinish = false;
             m_sSpeed = speed;
+            m_nMoveTimes = 0;
             PreCalculate();
             m_sStartMoveTime = FrameSyncSys.time;
             if (null != OnMoveStart)
@@ -187,6 +192,7 @@ namespace Game
             m_bIsMoving = false;
             m_bIsCalculateFinish = false;
             m_sSpeed = 0;
+            m_nMoveTimes = 0;
         }
 
         public void SetSpeed(FP speed)
@@ -208,6 +214,7 @@ namespace Game
                     m_lstNextForward.RemoveAt(0);
                     m_lstNextPositionCenterPoint[0].Clear();
                     m_lstNextPositionCenterPoint.RemoveAt(0);
+                    m_nMoveTimes++;
                     if (null != OnMove)
                     {
                         OnMove(m_sCurPosition,m_sCurForward);
@@ -268,7 +275,7 @@ namespace Game
                         }
                     }
                 }
-                else
+                if(m_lstNextPosition.Count <= 0)
                 {
                     StopMove();
                 }

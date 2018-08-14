@@ -68,7 +68,7 @@ namespace Game
 
         private void OnMove(TSVector position, TSVector forward)
         {
-            m_cRemote.Move(position);
+            m_cRemote.Move(position,m_cPointMove.moveTimes);
             m_sDistance += (m_cRemote.curPosition - m_cRemote.lastPosition).magnitude;
             if (m_sDistance >= m_cActionData.maxDistance)
             {
@@ -82,9 +82,9 @@ namespace Game
             m_eCurActionResult = BTActionResult.Ready;
         }
 
-        private void OnWillMove(TSVector position, TSVector forward,PM_CenterPoints centerPoints)
+        private void OnWillMove(TSVector willPosition, TSVector willforward,PM_CenterPoints willCenterPoints)
         {
-            m_cRemote.WillMove(position, centerPoints, m_cPointMove.lstNextPosition.Count);
+            m_cRemote.WillMove(willPosition, willforward, willCenterPoints);
         }
 
         public override void OnExit(RemoteBlackBoard blackBoard)

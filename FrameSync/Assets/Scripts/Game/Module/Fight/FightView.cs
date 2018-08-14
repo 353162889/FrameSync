@@ -57,7 +57,7 @@ namespace Game
                 Unit unit = PvpPlayerMgr.Instance.mainPlayer.unit;
                 if (unit != null)
                 {
-                    unit.ReqDoSkill(3, 0, AgentObjectType.Unit, TSVector.zero, TSVector.forward);
+                    unit.ReqDoSkill(1, 0, AgentObjectType.Unit, TSVector.zero, TSVector.forward);
                 }
             }
         }

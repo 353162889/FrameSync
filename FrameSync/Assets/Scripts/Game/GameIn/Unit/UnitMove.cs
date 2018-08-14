@@ -165,6 +165,7 @@ namespace Game
         {
             curPosition = position;
             SetForward(forward, ForwardFromType.UnitMove, false);
+            m_cLerpMoveView.Move(position.ToUnityVector3(), m_cMove.moveTimes);
             if(null != OnUnitMove)
             {
                 OnUnitMove(position, forward);
@@ -186,9 +187,9 @@ namespace Game
             }
         }
 
-        private void OnWillMove(TSVector position, TSVector forward,PM_CenterPoints centerPoints)
+        private void OnWillMove(TSVector willPosition, TSVector willforward, PM_CenterPoints willCenterPoints)
         {
-            m_cLerpMoveView.Move(position.ToUnityVector3(),LPM_CenterPoints.FromPM_CenterPoints(centerPoints), m_cMove.lstNextPosition.Count);
+            m_cLerpMoveView.WillMove(willPosition.ToUnityVector3(), LPM_CenterPoints.FromPM_CenterPoints(willCenterPoints));
         }
 
         protected void ResetMove()

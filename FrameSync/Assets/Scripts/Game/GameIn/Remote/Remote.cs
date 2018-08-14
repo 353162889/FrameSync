@@ -151,15 +151,16 @@ namespace Game
             m_cLerpView.StartMove(transform.position, lst);
         }
 
-        public void Move(TSVector position)
+        public void Move(TSVector position,int moveTimes)
         {
             SetPosition(position);
             SetForward(m_sCurPosition - m_sLastPosition);
+            m_cLerpView.Move(position.ToUnityVector3(), moveTimes);
         }
 
-        public void WillMove(TSVector position,PM_CenterPoints centerPoint, int logicPointCount)
+        public void WillMove(TSVector willPosition, TSVector willforward, PM_CenterPoints willCenterPoints)
         {
-            m_cLerpView.Move(position.ToUnityVector3(),LPM_CenterPoints.FromPM_CenterPoints(centerPoint), logicPointCount);
+            m_cLerpView.WillMove(willPosition.ToUnityVector3(), LPM_CenterPoints.FromPM_CenterPoints(willCenterPoints));
         }
 
         public void StopMove()
