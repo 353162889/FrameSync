@@ -168,12 +168,14 @@ namespace Game
             m_nMoveTimes = 0;
             PreCalculate();
             m_sStartMoveTime = FrameSyncSys.time;
+            tempT = UnityEngine.Time.time;
             if (null != OnMoveStart)
             {
                 OnMoveStart(m_sCurPosition,m_sCurForward);
             }
             return true;
         }
+        private float tempT;
 
         public void StopMove()
         {
@@ -200,11 +202,12 @@ namespace Game
             if (m_sSpeed == speed) return;
             m_sSpeed = speed;
         }
-        //执行完Move后立即回执行OnUpdate(即开始移动与移动在同一帧内)(为了处理在移动的同时更改移动方向，会卡一帧的问题)
         public void OnUpdate(FP deltaTime)
         {
             if (m_bIsMoving)
             {
+                //同一帧不开始运行
+                if (m_sStartMoveTime == FrameSyncSys.time) return;
                 if (m_lstNextPosition.Count > 0)
                 {
                     TSVector lastPosition = m_sCurPosition;
@@ -214,11 +217,7 @@ namespace Game
                     m_lstNextForward.RemoveAt(0);
                     m_lstNextPositionCenterPoint[0].Clear();
                     m_lstNextPositionCenterPoint.RemoveAt(0);
-                    m_nMoveTimes++;
-                    if (null != OnMove)
-                    {
-                        OnMove(m_sCurPosition,m_sCurForward);
-                    }
+                   
                     if (!m_bIsCalculateFinish)
                     {
                         TSVector position;
@@ -273,6 +272,12 @@ namespace Game
                         {
                             m_bIsCalculateFinish = true;
                         }
+                    }
+                    //先产生移动点，在移动
+                    m_nMoveTimes++;
+                    if (null != OnMove)
+                    {
+                        OnMove(m_sCurPosition, m_sCurForward);
                     }
                 }
                 if(m_lstNextPosition.Count <= 0)

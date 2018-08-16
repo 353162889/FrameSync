@@ -9,6 +9,7 @@ namespace Game
     public partial class Unit
     {
         private AgentObjectAI m_cAgentObjectAI;
+        public bool isAIRunning { get { return m_cAgentObjectAI.start; } }
         public void InitAI()
         {
             m_cAgentObjectAI = new AgentObjectAI();

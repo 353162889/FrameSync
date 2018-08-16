@@ -81,7 +81,7 @@ namespace Game
                     unit.Move(lst);
                     ResetObjectPool<List<TSVector>>.Instance.SaveObject(lst);
                 }
-                unit.StartAI();
+                //unit.StartAI();
             }
         }
 

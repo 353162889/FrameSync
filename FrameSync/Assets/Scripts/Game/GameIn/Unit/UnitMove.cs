@@ -176,6 +176,7 @@ namespace Game
         protected virtual void OnStopMove(TSVector position, TSVector forward)
         {
             m_cLerpMoveView.StopMove();
+            //停止运行时检查逻辑位置与表现位置是否相差很大，（如果表现位置还没到达逻辑位置，表现位置差值到逻辑位置，如果表现位置超过逻辑位置,误差范围内不动，误差范围外移动到逻辑位置（表现会有点奇怪））
             //CLog.LogArgs("offset:",position.ToUnityVector3(),m_cLerpMoveView.transform.position,(position.ToUnityVector3()- m_cLerpMoveView.transform.position).magnitude);
             if (!(m_sCurForward - forward).IsNearlyZero())
             {

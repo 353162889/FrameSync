@@ -33,6 +33,7 @@ namespace Game
         private AIData m_cAIData;
         private AIBlackBoard m_cBlackBoard;
         private bool m_bStart;
+        public bool start { get { return m_bStart; } }
         static AgentObjectAI() { Init(); }
 
         public void Init(AgentObject host,int configId)

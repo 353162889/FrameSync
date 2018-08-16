@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <editorPos>
-    <x>4999</x>
+    <x>5004</x>
     <y>4850</y>
   </editorPos>
   <data xsi:type="GamingData">
@@ -11,19 +11,19 @@
   <lstChild>
     <NEData>
       <editorPos>
-        <x>4997</x>
+        <x>5002</x>
         <y>4967</y>
       </editorPos>
       <data xsi:type="BTTimeLineData" />
       <lstChild>
         <NEData>
           <editorPos>
-            <x>4998</x>
-            <y>5122</y>
+            <x>5003</x>
+            <y>5133</y>
           </editorPos>
           <data xsi:type="GL_PathRefreshData">
             <time>
-              <_serializedValue>6442450944</_serializedValue>
+              <_serializedValue>21474836480</_serializedValue>
             </time>
             <configId>1</configId>
             <unitType>AirShip</unitType>
