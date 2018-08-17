@@ -24,6 +24,7 @@ namespace Game
             this.hpLmt = 100;
             this.hp = this.hpLmt;
             this.attack = 10;
+            this.moveSpeed = 30;
             for (int i = 0; i < m_resInfo.skills.Count; i++)
             {
                 AddSkill(m_resInfo.skills[i]);

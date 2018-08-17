@@ -10,5 +10,6 @@ namespace Game
         HP = 1001,//血量
         HPLmt = 1002,//血量上限
         Attack = 1003,//攻击力
+        MoveSpeed = 1004,//移动速度
     }
 }

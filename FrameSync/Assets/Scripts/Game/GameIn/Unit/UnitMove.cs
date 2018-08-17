@@ -18,7 +18,6 @@ namespace Game
         protected PointMove m_cMove;
         protected ForwardRotate m_cRotate;
         protected LerpMoveView m_cLerpMoveView;
-        protected FP m_sMoveSpeed = 30;
 
         public bool isMoving { get { return m_cMove.isMoving; } }
 
@@ -41,7 +40,7 @@ namespace Game
         {
             if (CanMove())
             {
-                m_cMove.Move(m_sCurPosition, movePath, m_sMoveSpeed);
+                m_cMove.Move(m_sCurPosition, movePath, this.moveSpeed);
             }
         }
 
@@ -60,7 +59,7 @@ namespace Game
         {
             if (CanMove())
             {
-                m_cMove.Move(m_sCurPosition, targetPosition, m_sMoveSpeed);
+                m_cMove.Move(m_sCurPosition, targetPosition, this.moveSpeed);
             }
         }
 
@@ -81,7 +80,7 @@ namespace Game
             if(CanMove())
             {
                 TSVector nextPoint = direction * len;
-                m_cMove.Move(m_sCurPosition, nextPoint, m_sMoveSpeed);
+                m_cMove.Move(m_sCurPosition, nextPoint, this.moveSpeed);
             }
         }
 
@@ -175,7 +174,9 @@ namespace Game
 
         protected virtual void OnStopMove(TSVector position, TSVector forward)
         {
-            m_cLerpMoveView.StopMove();
+            //停止移动时，差值到逻辑位置
+            m_cLerpMoveView.StopMove(transform.position, curPosition.ToUnityVector3(), this.moveSpeed.AsFloat());
+            //m_cLerpMoveView.StopMove();
             //停止运行时检查逻辑位置与表现位置是否相差很大，（如果表现位置还没到达逻辑位置，表现位置差值到逻辑位置，如果表现位置超过逻辑位置,误差范围内不动，误差范围外移动到逻辑位置（表现会有点奇怪））
             //CLog.LogArgs("offset:",position.ToUnityVector3(),m_cLerpMoveView.transform.position,(position.ToUnityVector3()- m_cLerpMoveView.transform.position).magnitude);
             if (!(m_sCurForward - forward).IsNearlyZero())

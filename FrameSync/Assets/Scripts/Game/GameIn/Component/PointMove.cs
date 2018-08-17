@@ -110,9 +110,14 @@ namespace Game
         public bool Move(TSVector startPosition, List<TSVector> movePath, FP speed)
         {
             if (movePath.Count <= 0) return false;
-            if(m_bIsMoving)
+            if (m_bIsMoving)
             {
-                StopMove();
+                ClearData();
+                m_sStartMoveTime = FrameSyncSys.time - FrameSyncSys.OnFrameTime;
+            }
+            else
+            {
+                m_sStartMoveTime = FrameSyncSys.time;
             }
             m_queuePath.Clear();
             m_sTargetPosition = startPosition;
@@ -126,7 +131,7 @@ namespace Game
             TSVector position = m_sNextPosition;
             TSVector forward = TSVector.forward;
             //主要用来初始化下一个position与方向,因此movelen可以为0
-            if (!DequeuePoint(ref m_sNextPosition,ref position, ref forward, 0,false))
+            if (!DequeuePoint(ref m_sNextPosition, ref position, ref forward, 0, false))
             {
                 return false;
             }
@@ -136,10 +141,10 @@ namespace Game
             m_sSpeed = speed;
             m_nMoveTimes = 0;
             PreCalculate();
-            m_sStartMoveTime = FrameSyncSys.time;
+            //m_sStartMoveTime = FrameSyncSys.time;
             if (null != OnMoveStart)
             {
-                OnMoveStart(m_sCurPosition,m_sCurForward);
+                OnMoveStart(m_sCurPosition, m_sCurForward);
             }
             return true;
         }
@@ -148,7 +153,12 @@ namespace Game
         {
             if (m_bIsMoving)
             {
-                StopMove();
+                ClearData();
+                m_sStartMoveTime = FrameSyncSys.time - FrameSyncSys.OnFrameTime;
+            }
+            else
+            {
+                m_sStartMoveTime = FrameSyncSys.time;
             }
             m_queuePath.Clear();
             m_sTargetPosition = targetPosition;
@@ -168,14 +178,12 @@ namespace Game
             m_nMoveTimes = 0;
             PreCalculate();
             m_sStartMoveTime = FrameSyncSys.time;
-            tempT = UnityEngine.Time.time;
             if (null != OnMoveStart)
             {
                 OnMoveStart(m_sCurPosition,m_sCurForward);
             }
             return true;
         }
-        private float tempT;
 
         public void StopMove()
         {
@@ -183,6 +191,12 @@ namespace Game
             {
                 OnMoveStop(m_sCurPosition, m_sCurForward);
             }
+            
+            ClearData();
+        }
+
+        private void ClearData()
+        {
             m_queuePath.Clear();
             m_lstNextPosition.Clear();
             for (int i = 0; i < m_lstNextPositionCenterPoint.Count; i++)
@@ -202,12 +216,18 @@ namespace Game
             if (m_sSpeed == speed) return;
             m_sSpeed = speed;
         }
+
         public void OnUpdate(FP deltaTime)
+        {
+            //同一帧不开始运行
+            if (m_sStartMoveTime == FrameSyncSys.time) return;
+            UpdateMove(deltaTime);
+        }
+
+        private void UpdateMove(FP deltaTime)
         {
             if (m_bIsMoving)
             {
-                //同一帧不开始运行
-                if (m_sStartMoveTime == FrameSyncSys.time) return;
                 if (m_lstNextPosition.Count > 0)
                 {
                     TSVector lastPosition = m_sCurPosition;
@@ -217,13 +237,14 @@ namespace Game
                     m_lstNextForward.RemoveAt(0);
                     m_lstNextPositionCenterPoint[0].Clear();
                     m_lstNextPositionCenterPoint.RemoveAt(0);
-                   
+                    CLog.LogArgs("sub", (m_sCurPosition - lastPosition).magnitude);
+
                     if (!m_bIsCalculateFinish)
                     {
                         TSVector position;
                         TSVector forward;
                         m_lstOnFrameCenterPosition.Clear();
-                        bool canCalculate = CalculateNextPosition(deltaTime, out position,out forward);
+                        bool canCalculate = CalculateNextPosition(deltaTime, out position, out forward);
                         if (canCalculate)
                         {
                             PM_CenterPoints centerPositions = new PM_CenterPoints();
@@ -280,7 +301,7 @@ namespace Game
                         OnMove(m_sCurPosition, m_sCurForward);
                     }
                 }
-                if(m_lstNextPosition.Count <= 0)
+                if (m_lstNextPosition.Count <= 0)
                 {
                     StopMove();
                 }

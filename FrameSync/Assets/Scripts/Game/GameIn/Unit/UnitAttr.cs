@@ -19,6 +19,7 @@ namespace Game
         public FP hp { get { return GetAttrValue((int)AttrType.HP); } set { SetAttrValue((int)AttrType.HP,value); } }
         public FP hpLmt { get { return GetAttrValue((int)AttrType.HPLmt); } set { SetAttrValue((int)AttrType.HPLmt, value); } }
         public FP attack { get { return GetAttrValue((int)AttrType.Attack); } set { SetAttrValue((int)AttrType.Attack, value); } }
+        public FP moveSpeed { get { return GetAttrValue((int)AttrType.MoveSpeed); } set { SetAttrValue((int)AttrType.MoveSpeed, value); } }
 
         protected void InitAttr()
         {
@@ -29,6 +30,7 @@ namespace Game
             m_cValueContainer.Add((int)AttrType.HP);
             m_cValueContainer.Add((int)AttrType.HPLmt);
             m_cValueContainer.Add((int)AttrType.Attack);
+            m_cValueContainer.Add((int)AttrType.MoveSpeed);
         }
 
         public FP GetAttrValue(int key)
