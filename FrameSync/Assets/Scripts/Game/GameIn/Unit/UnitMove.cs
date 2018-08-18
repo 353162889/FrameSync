@@ -44,10 +44,12 @@ namespace Game
             }
         }
 
+        private float m_fLastReqMoveTargetPositionTime;
         public void ReqMove(TSVector targetPosition)
         {
-            if(CanMove() && (!m_cMove.isMoving || m_cMove.targetPosition != targetPosition))
+            if(CanMove() && (Time.time - m_fLastReqMoveTargetPositionTime) > ViewConst.OnFrameTime && (!m_cMove.isMoving || m_cMove.targetPosition != targetPosition))
             {
+                m_fLastReqMoveTargetPositionTime = Time.time;
                 Frame_ReqMovePoint_Data data = new Frame_ReqMovePoint_Data();
                 data.unitId = id;
                 data.targetPosition = GameInTool.ToProtoVector2(targetPosition);
@@ -128,6 +130,7 @@ namespace Game
             m_cRotate.OnStopRotate += OnStopRotate;
             m_cLerpMoveView = this.gameObject.AddComponentOnce<LerpMoveView>();
             m_cLerpMoveView.Init();
+            m_fLastReqMoveTargetPositionTime = float.MinValue;
         }
 
         protected virtual void RotateToTarget(TSVector targetForward)
@@ -148,10 +151,10 @@ namespace Game
         {
         }
 
-        protected virtual void OnStartMove(TSVector position, TSVector forward)
+        protected virtual void OnStartMove(TSVector position, TSVector forward,bool stopToMove)
         {
             List<Vector3> lst = GameInTool.TSVectorToLstUnityVector3(m_cMove.lstNextPosition);
-            m_cLerpMoveView.StartMove(transform.position, lst);
+            m_cLerpMoveView.StartMove(transform.position, lst, stopToMove);
             SetForward(forward, ForwardFromType.UnitMove, false);
             //RotateToTarget(forward);
             if(null != OnUnitMoveStart)
@@ -187,6 +190,8 @@ namespace Game
             {
                 OnUnitMoveStop(position, forward);
             }
+
+            m_fLastReqMoveTargetPositionTime = float.MinValue;
         }
 
         private void OnWillMove(TSVector willPosition, TSVector willforward, PM_CenterPoints willCenterPoints)

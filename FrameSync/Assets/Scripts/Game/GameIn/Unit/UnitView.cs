@@ -14,6 +14,7 @@ namespace Game
         public GameCollider gameCollider { get { return m_cCollider; } }
         private GameCollider m_cCollider;
         private AgentAnimation m_cAnimation;
+        private SimpleLerpView m_cSimpleLerpView;
 
         public Transform GetHangPoint(string name, out TSVector position, out TSVector forward)
         {
@@ -37,6 +38,8 @@ namespace Game
             {
                 m_cAnimation = new AgentAnimation();
             }
+            m_cSimpleLerpView = gameObject.AddComponentOnce<SimpleLerpView>();
+            m_cSimpleLerpView.Stop();
 
             SceneGOPool.Instance.GetObject(m_sPrefab, OnResLoad);
         }
@@ -72,12 +75,24 @@ namespace Game
                 SceneGOPool.Instance.SaveObject(m_sPrefab, m_cView);
                 m_cView = null;
             }
+            if (m_cSimpleLerpView != null)
+            {
+                m_cSimpleLerpView.Stop();
+                m_cSimpleLerpView = null;
+            }
             SceneGOPool.Instance.RemoveCallback(m_sPrefab, OnResLoad);
         }
 
-        protected void SetViewPosition(TSVector position)
+        protected void SetViewPosition(TSVector position,bool immediately)
         {
-            transform.position = position.ToUnityVector3();
+            if (immediately)
+            {
+                transform.position = position.ToUnityVector3();
+            }
+            else
+            {
+                m_cSimpleLerpView.LerpTo(position.ToUnityVector3(), ViewConst.OnFrameTime);
+            }
         }
 
         protected void SetViewForward(TSVector forward)

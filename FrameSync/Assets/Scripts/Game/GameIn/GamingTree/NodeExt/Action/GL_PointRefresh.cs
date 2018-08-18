@@ -27,6 +27,8 @@ namespace Game
         public int refreshTimes;
         [NEProperty("刷新间隔时间")]
         public FP refreshSpaceTime;
+        [NEProperty("销毁时机")]
+        public UnitDestoryType[] destoryTypes;
     }
     [GamingNode(typeof(GL_PointRefreshData))]
     [NENodeDesc("在位置刷新对象")]
@@ -66,6 +68,13 @@ namespace Game
                     m_nRefreshTimes--;
                     var unit = BattleScene.Instance.CreateUnit(m_cRefreshData.configId, (int)m_cRefreshData.campType, m_cRefreshData.unitType, m_cRefreshData.point, m_cRefreshData.forward);
                     unit.StartAI();
+                    if (m_cRefreshData.destoryTypes != null)
+                    {
+                        for (int i = 0; i < m_cRefreshData.destoryTypes.Length; i++)
+                        {
+                            GlobalEventDispatcher.Instance.DispatchByParam(GameEvent.AddUnitDestory, m_cRefreshData.destoryTypes[i], unit);
+                        }
+                    }
                 }
                 m_nRefreshSpaceTime += blackBoard.deltaTime;
             }

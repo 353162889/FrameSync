@@ -35,9 +35,9 @@ namespace Game
             }
         }
 
-        protected override void OnStartMove(TSVector position, TSVector forward)
+        protected override void OnStartMove(TSVector position, TSVector forward,bool stopToMove)
         {
-            base.OnStartMove(position, forward);
+            base.OnStartMove(position, forward,stopToMove);
             SetAnimFloat("xSpeed", forward.x.AsFloat());
         }
 

@@ -12,11 +12,13 @@ namespace Game
         private Camera m_cMainCamera;
         public Camera mainCamera { get { return m_cMainCamera; } }
         private Transform m_cCameraParentTrans;
-        public Rect viewPort { get { return m_sViewPort; } }
-        private Rect m_sViewPort;
+
+        //当前相机的逻辑视口
+        public CameraViewport cameraViewPort { get { return m_cCameraViewPort; } }
+        private CameraViewport m_cCameraViewPort;
+
         private float m_fSceneScreenRate;
         private string m_sPath;
-        private MoveBound m_cBound;
 
         public void Init()
         {
@@ -27,7 +29,7 @@ namespace Game
             go.Reset();
             m_cCameraParentTrans = go.transform;
             m_cMainCamera = m_cCameraParentTrans.GetComponentInChildren<Camera>();
-            m_cBound = m_cCameraParentTrans.GetComponentInChildren<MoveBound>();
+            m_cCameraViewPort = m_cCameraParentTrans.GetComponent<CameraViewport>();
             InitViewPort();
             GlobalEventDispatcher.Instance.AddEvent(GameEvent.ResolutionUpdate, OnReolutionUpdate);
         }
@@ -61,12 +63,7 @@ namespace Game
                 height = len * Mathf.Tan(m_cMainCamera.fieldOfView / 2f * Mathf.Deg2Rad) * 2;
                 width = height * radio;
             }
-            m_sViewPort = new Rect(m_cCameraParentTrans.position.x - width / 2, m_cCameraParentTrans.position.z - height / 2, width, height);
-            m_fSceneScreenRate = m_sViewPort.width / Screen.width;
-            if(m_cBound != null)
-            {
-                m_cBound.SetRect(m_sViewPort);
-            }
+            m_fSceneScreenRate = width / Screen.width;
         }
 
         public void Clear()

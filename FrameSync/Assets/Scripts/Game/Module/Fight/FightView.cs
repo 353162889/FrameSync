@@ -93,9 +93,14 @@ namespace Game
         {
             //SetJoystickActive(true);
             if (PvpPlayerMgr.Instance.mainPlayer != null && PvpPlayerMgr.Instance.mainPlayer.unit != null)
+            {
                 startPosition = PvpPlayerMgr.Instance.mainPlayer.unit.curPosition.ToUnityVector3();
+                CLog.LogArgs("startPosition", startPosition);
+            }
         }
 
+        private float m_fLastReqSetPositionTime = float.MinValue;
+        private float m_fLastReqStopTime = float.MinValue;
         private void OnJoystickMove(Vector2 screenPos, Vector2 offset, Vector2 delta)
         {
             if (PvpPlayerMgr.Instance.mainPlayer != null && PvpPlayerMgr.Instance.mainPlayer.unit != null)
@@ -105,36 +110,119 @@ namespace Game
                 {
                     if ((!Mathf.Approximately(offset.x, 0) || !Mathf.Approximately(offset.y, 0)) && offset.magnitude > minDirLen)
                     {
-                        var dir = new Vector3(offset.x, 0, offset.y);
+                        var curOffset = offset.normalized;
+                        TSVector2 start = new TSVector2(unit.curPosition.x,unit.curPosition.z);
+                        TSVector2 dir = new TSVector2(FP.FromFloat(curOffset.x), FP.FromFloat(curOffset.y));
                         dir.Normalize();
-                        var curPos = unit.curPosition.ToUnityVector3();
-                        var nextPos = curPos + dir * 1000;
-                        RaycastHit hit;
-                        if(Physics.Linecast(curPos, nextPos, out hit, LayerDefine.MoveBoundMask))
+                        FP dis =TSMath.Min(CameraSys.Instance.cameraViewPort.mRect.halfWidth, CameraSys.Instance.cameraViewPort.mRect.halfHeight);
+
+                        TSVector2 end = start + dir * dis;
+                        TSVector2 result = GetViewPortPositionByLine(start, end);
+                        if(result == start)
                         {
-                            nextPos = hit.point;
+                            if (Time.time - m_fLastReqStopTime > ViewConst.OnFrameTime)
+                            {
+                                m_fLastReqStopTime = Time.time;
+                                unit.ReqStopMove();
+                            }
                         }
-                        //CLog.LogArgs("nextPos", nextPos);
-                        unit.ReqMove(TSVector.FromUnitVector3(nextPos));
+                        else
+                        {
+                            unit.ReqMove(new TSVector(result.x, unit.curPosition.y, result.y));
+                        }
+                       
                     }
                 }
                 else
                 {
-                    if (!Mathf.Approximately(delta.x, 0) || !Mathf.Approximately(delta.y, 0))
+                    if (Time.time - m_fLastReqSetPositionTime > ViewConst.OnFrameTime && !Mathf.Approximately(delta.x, 0) || !Mathf.Approximately(delta.y, 0))
                     {
                         var curPos = unit.curPosition.ToUnityVector3();
                         var scenePosDelta = CameraSys.Instance.GetSceneDeltaByScreenDelta(offset);
+
                         var nextPos = startPosition + new Vector3(scenePosDelta.x,0,scenePosDelta.y);
-                        RaycastHit hit;
-                        if (Physics.Linecast(curPos, nextPos, out hit, LayerDefine.MoveBoundMask))
-                        {
-                            nextPos = hit.point;
-                        }
-                        //CLog.LogArgs("nextPos", nextPos);
-                        unit.ReqMove(TSVector.FromUnitVector3(nextPos));
+                        TSVector2 start = new TSVector2(unit.curPosition.x, unit.curPosition.z);
+                        TSVector2 end = new TSVector2(FP.FromFloat(nextPos.x),FP.FromFloat(nextPos.z));
+                        TSVector2 result = GetViewPortPositionByLine(start, end);
+                        unit.ReqSetPosition(new TSVector(result.x, unit.curPosition.y, result.y), false);
+                        m_fLastReqSetPositionTime = Time.time;
                     }
                 }
             }
+        }
+
+        public TSVector2 GetViewPortPositionByLine(TSVector2 start, TSVector2 end)
+        {
+            TSRect rect = CameraSys.Instance.cameraViewPort.mRect;
+            if (rect.Contains(end)) return end;
+            TSVector2 result;
+            var dir = (end - start);
+            var startLen = dir.magnitude;
+            if (dir == TSVector2.zero)
+            {
+                result = start;
+            }   
+            else
+            {
+                dir.Normalize();
+                FP nDis = TSCheck2D.CheckAabbAndLine(new TSVector2(rect.xCenter, rect.yCenter), rect.width / 2, rect.height / 2, start, dir, startLen);
+                if (nDis < 0)
+                {
+                    result = start;
+                }
+                else
+                {
+                    result = start + dir * nDis;
+                }
+            }
+            FP endLen = (result - start).magnitude;
+            if(endLen < startLen && endLen < FP.EN8)
+            {
+                TSVector2 nextPos = result;
+                if (dir.x < 0 && dir.y < 0)
+                {
+                    nextPos = new TSVector2(rect.xMin, rect.yMin);
+                }
+                else if(dir.x > 0 && dir.y < 0)
+                {
+                    nextPos = new TSVector2(rect.xMax,rect.yMin);
+                }
+                else if(dir.x < 0 && dir.y > 0)
+                {
+                    nextPos = new TSVector2(rect.xMin, rect.yMax);
+                }
+                else if(dir.x > 0 && dir.y > 0)
+                {
+                    nextPos = new TSVector2(rect.xMax, rect.yMax);
+                }
+                var nextDir = nextPos - result;
+                if (nextDir != TSVector2.zero)
+                {
+                    var nextLen = nextDir.magnitude;
+                    nextDir.Normalize();
+                    FP subLen = 0;
+                    if(nextDir.x != 0)
+                    {
+                        subLen = TSMath.Abs(end.x - start.x) - TSMath.Abs(result.x - start.x);
+                    }
+                    else if(nextDir.y != 0)
+                    {
+                        subLen = TSMath.Abs(end.y - start.y) - TSMath.Abs(result.y - start.y);
+                    }
+                    if (subLen > 0)
+                    {
+                        if (subLen <= nextLen)
+                        {
+                            result = result + nextDir * subLen;
+                        }
+                        else
+                        {
+                            result = nextPos;
+                        }
+                    }
+                }
+            }
+            return result;           
         }
 
         private void OnJoystickEnd(Vector2 screenPos, Vector2 offset,Vector2 delta)

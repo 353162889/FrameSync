@@ -140,7 +140,7 @@ namespace Game
             return m_cHangPoint.GetHangPoint(name, cPosition, cForward, out position, out forward);
         }
 
-        public void StartMove(TSVector startPosition, List<TSVector> lstPosition)
+        public void StartMove(TSVector startPosition, List<TSVector> lstPosition,bool stopToMove)
         {
             TSVector forward = m_sCurForward;
             if (lstPosition.Count > 0) forward = lstPosition[0] - startPosition;
@@ -148,7 +148,7 @@ namespace Game
             SetForward(forward);
             SetPosition(startPosition);
             List<Vector3> lst = GameInTool.TSVectorToLstUnityVector3(lstPosition);
-            m_cLerpView.StartMove(transform.position, lst);
+            m_cLerpView.StartMove(transform.position, lst,stopToMove);
         }
 
         public void Move(TSVector position,int moveTimes)

@@ -33,9 +33,10 @@ namespace Game
     
     public class PointMove
     {
+        public delegate void UPointStartMoveHandler(TSVector position, TSVector forward,bool stopToMove);
         public delegate void UPointMoveHandler(TSVector position,TSVector forward);
         public delegate void UPointMovePMHandler(TSVector willPosition, TSVector willForward,PM_CenterPoints willCenterPoints);
-        public event UPointMoveHandler OnMoveStart;
+        public event UPointStartMoveHandler OnMoveStart;
         public event UPointMoveHandler OnMove;
         public event UPointMovePMHandler OnWillMove;
         public event UPointMoveHandler OnMoveStop;
@@ -83,7 +84,7 @@ namespace Game
 
         private bool m_bIsCalculateFinish;
 
-        private FP m_sStartMoveTime;
+        private int m_nFirstStartMoveFrameIdx;
 
         public PointMove()
         {
@@ -100,24 +101,32 @@ namespace Game
 
         public void Clear()
         {
-            StopMove();
             OnMoveStart = null;
             OnMove = null;
             OnMoveStop = null;
             OnWillMove = null;
+            StopMove();
         }
 
+        //（移动中与非移动中调用移动方法的处理是不一样的）
         public bool Move(TSVector startPosition, List<TSVector> movePath, FP speed)
         {
             if (movePath.Count <= 0) return false;
+            bool stopToMove = true;
             if (m_bIsMoving)
             {
+                //如果是同一帧调用了多次move
+                var oldStartMoveFrameIdx = m_nFirstStartMoveFrameIdx;
+                //这里不会回调stopmove方法
                 ClearData();
-                m_sStartMoveTime = FrameSyncSys.time - FrameSyncSys.OnFrameTime;
+                stopToMove = oldStartMoveFrameIdx == FrameSyncSys.frameIndex;
+                //(在移动时调用move方法时，不会跳过第一帧)
+                m_nFirstStartMoveFrameIdx = stopToMove ? FrameSyncSys.frameIndex : oldStartMoveFrameIdx;
+
             }
             else
             {
-                m_sStartMoveTime = FrameSyncSys.time;
+                m_nFirstStartMoveFrameIdx = FrameSyncSys.frameIndex;
             }
             m_queuePath.Clear();
             m_sTargetPosition = startPosition;
@@ -141,24 +150,30 @@ namespace Game
             m_sSpeed = speed;
             m_nMoveTimes = 0;
             PreCalculate();
-            //m_sStartMoveTime = FrameSyncSys.time;
             if (null != OnMoveStart)
             {
-                OnMoveStart(m_sCurPosition, m_sCurForward);
+                OnMoveStart(m_sCurPosition, m_sCurForward,stopToMove);
             }
             return true;
         }
 
+        //（移动中与非移动中调用移动方法的处理是不一样的）
         public bool Move(TSVector startPosition, TSVector targetPosition,FP speed)
         {
+            bool stopToMove = true;
             if (m_bIsMoving)
             {
+                //如果是同一帧调用了多次move
+                var oldStartMoveFrameIdx = m_nFirstStartMoveFrameIdx;
+                //这里不会回调stopmove方法
                 ClearData();
-                m_sStartMoveTime = FrameSyncSys.time - FrameSyncSys.OnFrameTime;
+                stopToMove = oldStartMoveFrameIdx == FrameSyncSys.frameIndex;
+                //(在移动时调用move方法时，不会跳过第一帧)
+                m_nFirstStartMoveFrameIdx = stopToMove ? FrameSyncSys.frameIndex : oldStartMoveFrameIdx;
             }
             else
             {
-                m_sStartMoveTime = FrameSyncSys.time;
+                m_nFirstStartMoveFrameIdx = FrameSyncSys.frameIndex;
             }
             m_queuePath.Clear();
             m_sTargetPosition = targetPosition;
@@ -177,10 +192,9 @@ namespace Game
             m_sSpeed = speed;
             m_nMoveTimes = 0;
             PreCalculate();
-            m_sStartMoveTime = FrameSyncSys.time;
             if (null != OnMoveStart)
             {
-                OnMoveStart(m_sCurPosition,m_sCurForward);
+                OnMoveStart(m_sCurPosition,m_sCurForward,stopToMove);
             }
             return true;
         }
@@ -219,8 +233,11 @@ namespace Game
 
         public void OnUpdate(FP deltaTime)
         {
-            //同一帧不开始运行
-            if (m_sStartMoveTime == FrameSyncSys.time) return;
+            //同一帧不开始运行(在移动时调用move方法时，不会跳过)
+            if (m_nFirstStartMoveFrameIdx == FrameSyncSys.frameIndex)
+            {
+                return;
+            }
             UpdateMove(deltaTime);
         }
 
@@ -237,7 +254,6 @@ namespace Game
                     m_lstNextForward.RemoveAt(0);
                     m_lstNextPositionCenterPoint[0].Clear();
                     m_lstNextPositionCenterPoint.RemoveAt(0);
-                    CLog.LogArgs("sub", (m_sCurPosition - lastPosition).magnitude);
 
                     if (!m_bIsCalculateFinish)
                     {

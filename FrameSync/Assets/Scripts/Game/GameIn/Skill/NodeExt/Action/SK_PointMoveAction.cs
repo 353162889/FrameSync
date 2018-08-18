@@ -56,6 +56,7 @@ namespace Game
                     }
                     unit.Move(lst);
                     unit.OnUnitMoveStop += OnOneMoveStop;
+                    unit.OnUnitMoveStart += OnOneMoveStop;
                     ResetObjectPool<List<TSVector>>.Instance.SaveObject(lst);
                 }
                 else
@@ -95,6 +96,7 @@ namespace Game
             {
                 Unit unit = (Unit)blackBoard.host.agent;
                 unit.OnUnitMoveStop -= OnOneMoveStop;
+                unit.OnUnitMoveStart -= OnOneMoveStop;
             }
             base.OnExit(blackBoard);
         }

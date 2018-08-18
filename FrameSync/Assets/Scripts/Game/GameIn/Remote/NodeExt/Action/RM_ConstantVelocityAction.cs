@@ -61,9 +61,9 @@ namespace Game
             m_eCurActionResult = BTActionResult.Running;
         }
 
-        private void OnStartMove(TSVector position, TSVector forward)
+        private void OnStartMove(TSVector position, TSVector forward,bool stopToMove)
         {
-            m_cRemote.StartMove(position, m_cPointMove.lstNextPosition);
+            m_cRemote.StartMove(position, m_cPointMove.lstNextPosition,stopToMove);
         }
 
         private void OnMove(TSVector position, TSVector forward)

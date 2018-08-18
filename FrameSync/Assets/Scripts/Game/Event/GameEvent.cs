@@ -17,5 +17,6 @@ namespace Game
         public static int UnitRemove = "UnitRemove".GetHashCode();//单位移除
         public static int UnitHurt = "UnitHurt".GetHashCode();
         public static int UnitDie = "UnitDie".GetHashCode();
+        public static int AddUnitDestory = "AddUnitDestory".GetHashCode();
     }
 }

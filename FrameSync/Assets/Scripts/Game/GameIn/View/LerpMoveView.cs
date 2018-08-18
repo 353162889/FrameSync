@@ -71,7 +71,7 @@ namespace Game
         }
 
         //表现移动，开始时每次直接移动到最后一个点lstPosition.Count-1
-        public void StartMove(Vector3 startPosition, List<Vector3> lstPosition)
+        public void StartMove(Vector3 startPosition, List<Vector3> lstPosition,bool stopToMove)
         {
             StopMove();
             if (lstPosition.Count <= 0) return;
@@ -97,12 +97,20 @@ namespace Game
             float onFrameTime = FrameSyncSys.OnFrameTime.AsFloat();
             m_fTargetAverageTime = m_fAverageTime = onFrameTime;
             m_fTargetAverageTimeSpeed = 0;
-            //因为逻辑帧那边开始移动与更新移动是在同一帧中运行，这边初始时间多一个点的时间
-            //m_fStartTime = Time.time - m_fAverageTime * (m_nMoveCount + 1);
-            m_fStartTime = Time.time - m_fAverageTime * (m_nMoveCount);
+            if(stopToMove)
+            {
+                m_fStartTime = Time.time - m_fAverageTime * (m_nMoveCount);
+            }
+            else
+            {
+                //如果当前移动不是从停止开始移动的，那么move方法会在同一帧中调用，所以，时间需要靠前处理
+                m_fStartTime = Time.time - m_fAverageTime * (m_nMoveCount + 1);
+            }
+            
             m_fLerpTime = 0;
             m_nMoveTimes = 0;
-            m_bRealMove = false;
+            //延时过渡
+            m_bRealMove = !stopToMove;
         }
 
         public void StopMove()
@@ -124,6 +132,7 @@ namespace Game
             m_sNextPosition = Vector3.zero;
             m_bCanMove = false;
             m_nMoveTimes = 0;
+            //表现位置延迟一帧再移动（影子跟随）
             m_bRealMove = false;
         }
 
@@ -161,7 +170,6 @@ namespace Game
             m_bRealMove = true;
             m_nStartMoveCount--;
             float nextAverageTime = (Time.time - m_fStartTime) / m_nMoveCount;
-           
             m_fTargetAverageTime = nextAverageTime;
             //大于一定距离开始加速或减速(缓慢，不保证最终一定不相差很大的距离)
             //CLog.LogArgs("move", curPosition, transform.position,"sub", (curPosition - transform.position).magnitude, "nextAverageTime", nextAverageTime,"subTime",Time.time - m_fStartTime,"count",m_nMoveCount);
@@ -175,19 +183,19 @@ namespace Game
                     //加速
                     if (m_nMoveTimes < moveTimes)
                     {
-                        m_fTargetAverageTime = nextAverageTime * 0.75f;
-                        CLog.LogArgs("加速:", dis, "m_nMoveTimes", m_nMoveTimes, "moveTimes", moveTimes);
+                        m_fTargetAverageTime = nextAverageTime * 0.5f;
+                        //CLog.LogArgs("加速:", dis, "m_nMoveTimes", m_nMoveTimes, "moveTimes", moveTimes);
                     }
                     //减速
                     else
                     {
-                        m_fTargetAverageTime = nextAverageTime * 1.5f;
-                        CLog.LogArgs("减速:", dis, "m_nMoveTimes", m_nMoveTimes, "moveTimes", moveTimes);
+                        m_fTargetAverageTime = nextAverageTime * 2f;
+                        //CLog.LogArgs("减速:", dis, "m_nMoveTimes", m_nMoveTimes, "moveTimes", moveTimes);
                     }
                 }
             }
 
-            m_fTargetAverageTimeSpeed = Mathf.Abs(m_fTargetAverageTime - nextAverageTime) * 0.1f;
+            m_fTargetAverageTimeSpeed = Mathf.Abs(m_fTargetAverageTime - nextAverageTime) * 0.2f;
             UpdateAverageTime(nextAverageTime);
         }
 
@@ -237,7 +245,7 @@ namespace Game
                         {
                             SetPosition(m_sNextPosition);
                             m_fLerpTime = 0;
-                            CLog.LogColorArgs(CLogColor.Red, "wait");
+                            //CLog.LogColorArgs(CLogColor.Red, "wait");
                         }
                     }
                     else

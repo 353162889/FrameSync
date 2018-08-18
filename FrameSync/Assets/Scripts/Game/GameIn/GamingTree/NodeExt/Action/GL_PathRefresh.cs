@@ -25,6 +25,8 @@ namespace Game
         public int refreshTimes;
         [NEProperty("刷新间隔时间")]
         public FP refreshSpaceTime;
+        [NEProperty("销毁时机")]
+        public UnitDestoryType[] destoryTypes;
     }
     [GamingNode(typeof(GL_PathRefreshData))]
     [NENodeDesc("刷新对象，并在路径上移动")]
@@ -81,7 +83,14 @@ namespace Game
                     unit.Move(lst);
                     ResetObjectPool<List<TSVector>>.Instance.SaveObject(lst);
                 }
-                //unit.StartAI();
+                unit.StartAI();
+                if (m_cRefreshData.destoryTypes != null)
+                {
+                    for (int i = 0; i < m_cRefreshData.destoryTypes.Length; i++)
+                    {
+                        GlobalEventDispatcher.Instance.DispatchByParam(GameEvent.AddUnitDestory, m_cRefreshData.destoryTypes[i], unit);
+                    }
+                }
             }
         }
 

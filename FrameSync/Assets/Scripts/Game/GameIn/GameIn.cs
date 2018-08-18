@@ -67,7 +67,7 @@ namespace Game
             PvpPlayerMgr.Instance.Init();
             m_cSysCompContainer = new GamingSysCompContainer();
             //注册逻辑
-            //m_cSysCompContainer.RegisterComp(GamingSysCompType.EnemyRefresh, new GSC_EnemyRefresh());
+            m_cSysCompContainer.RegisterComp(GamingSysCompType.UnitDestory, new GSC_UnitDestory());
 
             GlobalEventDispatcher.Instance.AddEvent(GameEvent.StartBattle, OnStartBattle);
             GlobalEventDispatcher.Instance.AddEvent(GameEvent.PvpPlayerCreate, OnPlayerCreate);
@@ -92,10 +92,10 @@ namespace Game
             }
             if(null != m_cGamingLogic)
             {
-                //if (!m_cGamingLogic.Update(deltaTime))
-                //{
+                if (!m_cGamingLogic.Update(deltaTime))
+                {
                     //this.ParentSwitchState((int)GameStateType.GameOut);
-                //}
+                }
             }
         }
 

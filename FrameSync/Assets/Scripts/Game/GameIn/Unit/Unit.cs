@@ -63,24 +63,25 @@ namespace Game
             m_bIsDie = false;
             m_sCurPosition = m_sLastPosition = position;
             m_sCurForward = m_sLastForward = forward;
-            SetPosition(position);
+            SetPosition(position,true);
             SetForward(forward,ForwardFromType.Init);
             SubInit();
         }
 
-        public void ReqSetPosition(TSVector position)
+        public void ReqSetPosition(TSVector position,bool immediately)
         {
             if (position == m_sCurPosition) return;
             Frame_ReqSetPosition_Data data = new Frame_ReqSetPosition_Data();
             data.unitId = id;
             data.position = GameInTool.ToProtoVector2(position);
+            data.immediately = immediately;
             NetSys.Instance.SendMsg(NetChannelType.Game, (short)PacketOpcode.Frame_ReqSetPosition, data);
         }
 
-        public void SetPosition(TSVector position)
+        public void SetPosition(TSVector position,bool immediately)
         {
             curPosition = position;
-            SetViewPosition(position);
+            SetViewPosition(position,immediately);
         }
 
         public void ReqSetForward(TSVector forward,bool immediately = true)
@@ -148,7 +149,6 @@ namespace Game
             DieSkill(damageInfo);
             DieView(damageInfo);
             DieForbid(damageInfo);
-            BattleScene.Instance.DestroyUnit(this);
         }
 
         protected virtual void SubInit()

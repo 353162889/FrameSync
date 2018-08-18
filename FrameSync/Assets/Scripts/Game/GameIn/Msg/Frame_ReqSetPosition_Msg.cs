@@ -15,7 +15,7 @@ namespace Game
             Unit unit = BattleScene.Instance.GetUnit(msg.unitId);
             if(null != unit)
             {
-                unit.SetPosition(GameInTool.ToTSVector(msg.position));
+                unit.SetPosition(GameInTool.ToTSVector(msg.position),msg.immediately);
             }
         }
     }

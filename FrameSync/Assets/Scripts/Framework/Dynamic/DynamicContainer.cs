@@ -72,12 +72,16 @@ namespace Framework
         private ObjectPool<DCEntity> m_cEntityPool;
         private bool m_bIsUpdating = false;
 
+        static DynamicContainer()
+        {
+            ObjectPool<DCEntity>.Instance.Init(20);
+        }
+
         public DynamicContainer()
         {
             m_lstEntity = new List<DCEntity>();
             m_lstOperateEntity = new List<DCEntity>();
             m_cEntityPool = ObjectPool<DCEntity>.Instance;
-            m_cEntityPool.Init(20);
         }
 
         public bool Add(IDynamicObj obj, object param = null)

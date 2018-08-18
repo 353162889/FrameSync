@@ -70,6 +70,8 @@ namespace Framework
             get { return y + height / 2; }
             set { y = value - height / 2; }
         }
+        public FP halfWidth { get { return width / 2; } }
+        public FP halfHeight { get { return height / 2; } }
 
         public static bool operator ==(TSRect rect1,TSRect rect2)
         {
@@ -97,6 +99,11 @@ namespace Framework
             TSRect other = (TSRect)obj;
 
             return (((x == other.x) && (y == other.y)) && (width == other.width) && (height == other.height));
+        }
+
+        public bool Contains(TSVector2 position)
+        {
+            return !(position.x < xMin || position.x > xMax || position.y < yMin || position.y > yMax);
         }
 
         public static TSRect FromUnityRect(Rect rect)

@@ -7,6 +7,6 @@ namespace Game
 {
     public enum GamingSysCompType
     {
-        EnemyRefresh,
+        UnitDestory,
     }
 }
