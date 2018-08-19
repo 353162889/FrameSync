@@ -284,11 +284,20 @@ namespace Framework
                     t2 = fTemp;
                 }
                 //射线原点在圆外
-                if ((t1 >= 0) && (t1 - nDis) <= 0)
+                if ((t1 >= 0))
                 {
-                    sCrossPoint.x = sOrgPos.x + t1 * d.x;
-                    sCrossPoint.y = sOrgPos.y + t1 * d.y;
-                    return true;
+                    //如果第二个点在圆内
+                    if ((t1 - nDis) <= 0)
+                    {
+                        sCrossPoint.x = sOrgPos.x + t1 * d.x;
+                        sCrossPoint.y = sOrgPos.y + t1 * d.y;
+                        return true;
+                    }
+                    //两个点都在圆外
+                    else
+                    {
+                        return false;
+                    }
                 }
 
                 //这里说明射线原点在圆内

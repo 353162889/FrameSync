@@ -149,8 +149,15 @@ namespace Proto
       get { return _playerId; }
       set { _playerId = value; }
     }
+    private int _configId;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"configId", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int configId
+    {
+      get { return _configId; }
+      set { _configId = value; }
+    }
     private int _campId;
-    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"campId", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"campId", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
     public int campId
     {
       get { return _campId; }

@@ -12,6 +12,7 @@ namespace Game
     {
         [NEProperty("触发时间", true)]
         public FP time;
+        [NEPropertyBtn("打开选择单位编辑器", "NENodeFuncExt", "ShowSelectSingleAirShipWindow")]
         [NEProperty("配置ID")]
         public int configId;
         [NEProperty("刷新对象类型")]
@@ -22,7 +23,7 @@ namespace Game
         [NEProperty("刷新点")]
         public TSVector point;
         [NEProperty("刷新方向")]
-        public TSVector forward;
+        public TSVector forward = TSVector.forward;
         [NEProperty("刷新次数")]
         public int refreshTimes;
         [NEProperty("刷新间隔时间")]
@@ -66,7 +67,16 @@ namespace Game
                 {
                     m_nRefreshSpaceTime -= m_cRefreshData.refreshSpaceTime;
                     m_nRefreshTimes--;
-                    var unit = BattleScene.Instance.CreateUnit(m_cRefreshData.configId, (int)m_cRefreshData.campType, m_cRefreshData.unitType, m_cRefreshData.point, m_cRefreshData.forward);
+                    TSVector forward = TSVector.forward;
+                    if(m_cRefreshData.forward != TSVector.zero)
+                    {
+                        forward = m_cRefreshData.forward;
+                    }
+                    else
+                    {
+                        CLog.LogError("配置的方向不能为(0,0,0)");
+                    }
+                    var unit = BattleScene.Instance.CreateUnit(m_cRefreshData.configId, (int)m_cRefreshData.campType, m_cRefreshData.unitType, m_cRefreshData.point, forward);
                     unit.StartAI();
                     if (m_cRefreshData.destoryTypes != null)
                     {

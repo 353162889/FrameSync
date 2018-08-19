@@ -206,16 +206,16 @@ namespace Game
             m_cLerpMoveView.StopMove();
         }
 
-        private GameObject box;
+        //private GameObject box;
         protected void UpdateMove(FP deltaTime)
         {
             m_cMove.OnUpdate(deltaTime);
             m_cRotate.OnUpdate(deltaTime);
-            if (null == box)
-            {
-                box = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            }
-            box.transform.position = m_sCurPosition.ToUnityVector3();
+            //if (null == box)
+            //{
+            //    box = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            //}
+            //box.transform.position = m_sCurPosition.ToUnityVector3();
         }
 
         protected void DieMove(DamageInfo damageInfo)

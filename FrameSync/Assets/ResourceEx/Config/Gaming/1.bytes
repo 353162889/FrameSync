@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <editorPos>
-    <x>5024</x>
+    <x>5029</x>
     <y>4850</y>
   </editorPos>
   <data xsi:type="GamingData">
@@ -11,462 +11,265 @@
   <lstChild>
     <NEData>
       <editorPos>
-        <x>5022</x>
+        <x>5027</x>
         <y>4967</y>
       </editorPos>
       <data xsi:type="BTTimeLineData" />
       <lstChild>
         <NEData>
           <editorPos>
-            <x>5023</x>
-            <y>5177</y>
+            <x>5014</x>
+            <y>5152</y>
           </editorPos>
-          <data xsi:type="GL_PathRefreshData">
+          <data xsi:type="GL_PathRandomRefreshData">
             <time>
               <_serializedValue>8589934592</_serializedValue>
             </time>
-            <configId>1</configId>
+            <configIds>
+              <int>1001</int>
+              <int>1002</int>
+              <int>1003</int>
+              <int>1004</int>
+              <int>1006</int>
+              <int>1007</int>
+              <int>1008</int>
+              <int>1009</int>
+              <int>1010</int>
+              <int>1011</int>
+              <int>1012</int>
+              <int>1013</int>
+              <int>1014</int>
+              <int>1015</int>
+              <int>1016</int>
+              <int>1017</int>
+              <int>1018</int>
+              <int>1021</int>
+              <int>1022</int>
+              <int>1023</int>
+              <int>1024</int>
+              <int>1025</int>
+            </configIds>
             <unitType>AirShip</unitType>
             <campType>Camp2</campType>
             <points>
               <TSVector>
                 <x>
-                  <_serializedValue>133573484544</_serializedValue>
+                  <_serializedValue>136579956736</_serializedValue>
                 </x>
                 <y>
                   <_serializedValue>0</_serializedValue>
                 </y>
                 <z>
-                  <_serializedValue>134432473088</_serializedValue>
+                  <_serializedValue>109521666048</_serializedValue>
                 </z>
               </TSVector>
               <TSVector>
                 <x>
-                  <_serializedValue>117295759360</_serializedValue>
+                  <_serializedValue>79753134080</_serializedValue>
                 </x>
                 <y>
                   <_serializedValue>0</_serializedValue>
                 </y>
                 <z>
-                  <_serializedValue>131538190336</_serializedValue>
+                  <_serializedValue>108013576192</_serializedValue>
                 </z>
               </TSVector>
               <TSVector>
                 <x>
-                  <_serializedValue>100571013120</_serializedValue>
+                  <_serializedValue>19595042816</_serializedValue>
                 </x>
                 <y>
                   <_serializedValue>0</_serializedValue>
                 </y>
                 <z>
-                  <_serializedValue>128821526528</_serializedValue>
+                  <_serializedValue>106870169600</_serializedValue>
                 </z>
               </TSVector>
               <TSVector>
                 <x>
-                  <_serializedValue>83920764928</_serializedValue>
+                  <_serializedValue>-38183567360</_serializedValue>
                 </x>
                 <y>
                   <_serializedValue>0</_serializedValue>
                 </y>
                 <z>
-                  <_serializedValue>126075256832</_serializedValue>
+                  <_serializedValue>105466273792</_serializedValue>
                 </z>
               </TSVector>
               <TSVector>
                 <x>
-                  <_serializedValue>67866558464</_serializedValue>
+                  <_serializedValue>-87871946752</_serializedValue>
                 </x>
                 <y>
                   <_serializedValue>0</_serializedValue>
                 </y>
                 <z>
-                  <_serializedValue>123092156416</_serializedValue>
+                  <_serializedValue>103176708096</_serializedValue>
                 </z>
               </TSVector>
               <TSVector>
                 <x>
-                  <_serializedValue>52929912832</_serializedValue>
+                  <_serializedValue>-123909660672</_serializedValue>
                 </x>
                 <y>
                   <_serializedValue>0</_serializedValue>
                 </y>
                 <z>
-                  <_serializedValue>119664992256</_serializedValue>
+                  <_serializedValue>99402661888</_serializedValue>
                 </z>
               </TSVector>
               <TSVector>
                 <x>
-                  <_serializedValue>39585832960</_serializedValue>
+                  <_serializedValue>-146197889024</_serializedValue>
                 </x>
                 <y>
                   <_serializedValue>0</_serializedValue>
                 </y>
                 <z>
-                  <_serializedValue>115612622848</_serializedValue>
+                  <_serializedValue>94296170496</_serializedValue>
                 </z>
               </TSVector>
               <TSVector>
                 <x>
-                  <_serializedValue>27694639104</_serializedValue>
+                  <_serializedValue>-158398119936</_serializedValue>
                 </x>
                 <y>
                   <_serializedValue>0</_serializedValue>
                 </y>
                 <z>
-                  <_serializedValue>111035662336</_serializedValue>
+                  <_serializedValue>88155717632</_serializedValue>
                 </z>
               </TSVector>
               <TSVector>
                 <x>
-                  <_serializedValue>16906113024</_serializedValue>
+                  <_serializedValue>-163648274432</_serializedValue>
                 </x>
                 <y>
                   <_serializedValue>0</_serializedValue>
                 </y>
                 <z>
-                  <_serializedValue>106041212928</_serializedValue>
+                  <_serializedValue>81113579520</_serializedValue>
                 </z>
               </TSVector>
               <TSVector>
                 <x>
-                  <_serializedValue>6907326464</_serializedValue>
+                  <_serializedValue>-165086232576</_serializedValue>
                 </x>
                 <y>
                   <_serializedValue>0</_serializedValue>
                 </y>
                 <z>
-                  <_serializedValue>100705419264</_serializedValue>
+                  <_serializedValue>73301975040</_serializedValue>
                 </z>
               </TSVector>
               <TSVector>
                 <x>
-                  <_serializedValue>-2614628352</_serializedValue>
+                  <_serializedValue>-165806456832</_serializedValue>
                 </x>
                 <y>
                   <_serializedValue>0</_serializedValue>
                 </y>
                 <z>
-                  <_serializedValue>95104442368</_serializedValue>
+                  <_serializedValue>64530456576</_serializedValue>
                 </z>
               </TSVector>
               <TSVector>
                 <x>
-                  <_serializedValue>-11972673536</_serializedValue>
+                  <_serializedValue>-166147850240</_serializedValue>
                 </x>
                 <y>
                   <_serializedValue>0</_serializedValue>
                 </y>
                 <z>
-                  <_serializedValue>89314443264</_serializedValue>
+                  <_serializedValue>53567430656</_serializedValue>
                 </z>
               </TSVector>
               <TSVector>
                 <x>
-                  <_serializedValue>-21332326400</_serializedValue>
+                  <_serializedValue>-162718138368</_serializedValue>
                 </x>
                 <y>
                   <_serializedValue>0</_serializedValue>
                 </y>
                 <z>
-                  <_serializedValue>83288883200</_serializedValue>
+                  <_serializedValue>41685671936</_serializedValue>
                 </z>
               </TSVector>
               <TSVector>
                 <x>
-                  <_serializedValue>-30478364672</_serializedValue>
+                  <_serializedValue>-151886479360</_serializedValue>
                 </x>
                 <y>
                   <_serializedValue>0</_serializedValue>
                 </y>
                 <z>
-                  <_serializedValue>76914679808</_serializedValue>
+                  <_serializedValue>30544297984</_serializedValue>
                 </z>
               </TSVector>
               <TSVector>
                 <x>
-                  <_serializedValue>-39236976640</_serializedValue>
+                  <_serializedValue>-130022039552</_serializedValue>
                 </x>
                 <y>
                   <_serializedValue>0</_serializedValue>
                 </y>
                 <z>
-                  <_serializedValue>70297059328</_serializedValue>
+                  <_serializedValue>21802459136</_serializedValue>
                 </z>
               </TSVector>
               <TSVector>
                 <x>
-                  <_serializedValue>-47436808192</_serializedValue>
+                  <_serializedValue>-93039714304</_serializedValue>
                 </x>
                 <y>
                   <_serializedValue>0</_serializedValue>
                 </y>
                 <z>
-                  <_serializedValue>63544733696</_serializedValue>
+                  <_serializedValue>16701089792</_serializedValue>
                 </z>
               </TSVector>
               <TSVector>
                 <x>
-                  <_serializedValue>-54906503168</_serializedValue>
+                  <_serializedValue>-41218097152</_serializedValue>
                 </x>
                 <y>
                   <_serializedValue>0</_serializedValue>
                 </y>
                 <z>
-                  <_serializedValue>56766431232</_serializedValue>
+                  <_serializedValue>14435072000</_serializedValue>
                 </z>
               </TSVector>
               <TSVector>
                 <x>
-                  <_serializedValue>-61554782208</_serializedValue>
+                  <_serializedValue>19392069632</_serializedValue>
                 </x>
                 <y>
                   <_serializedValue>0</_serializedValue>
                 </y>
                 <z>
-                  <_serializedValue>50061135872</_serializedValue>
+                  <_serializedValue>13821166592</_serializedValue>
                 </z>
               </TSVector>
               <TSVector>
                 <x>
-                  <_serializedValue>-68384595968</_serializedValue>
+                  <_serializedValue>82587189248</_serializedValue>
                 </x>
                 <y>
                   <_serializedValue>0</_serializedValue>
                 </y>
                 <z>
-                  <_serializedValue>43343785984</_serializedValue>
+                  <_serializedValue>13693173760</_serializedValue>
                 </z>
               </TSVector>
               <TSVector>
                 <x>
-                  <_serializedValue>-75036663808</_serializedValue>
+                  <_serializedValue>142163427328</_serializedValue>
                 </x>
                 <y>
                   <_serializedValue>0</_serializedValue>
                 </y>
                 <z>
-                  <_serializedValue>36576411648</_serializedValue>
-                </z>
-              </TSVector>
-              <TSVector>
-                <x>
-                  <_serializedValue>-80587145216</_serializedValue>
-                </x>
-                <y>
-                  <_serializedValue>0</_serializedValue>
-                </y>
-                <z>
-                  <_serializedValue>29773910016</_serializedValue>
-                </z>
-              </TSVector>
-              <TSVector>
-                <x>
-                  <_serializedValue>-84112154624</_serializedValue>
-                </x>
-                <y>
-                  <_serializedValue>0</_serializedValue>
-                </y>
-                <z>
-                  <_serializedValue>22951190528</_serializedValue>
-                </z>
-              </TSVector>
-              <TSVector>
-                <x>
-                  <_serializedValue>-84687863808</_serializedValue>
-                </x>
-                <y>
-                  <_serializedValue>0</_serializedValue>
-                </y>
-                <z>
-                  <_serializedValue>16123154432</_serializedValue>
-                </z>
-              </TSVector>
-              <TSVector>
-                <x>
-                  <_serializedValue>-81422630912</_serializedValue>
-                </x>
-                <y>
-                  <_serializedValue>0</_serializedValue>
-                </y>
-                <z>
-                  <_serializedValue>9145935872</_serializedValue>
-                </z>
-              </TSVector>
-              <TSVector>
-                <x>
-                  <_serializedValue>-74481418240</_serializedValue>
-                </x>
-                <y>
-                  <_serializedValue>0</_serializedValue>
-                </y>
-                <z>
-                  <_serializedValue>1767830528</_serializedValue>
-                </z>
-              </TSVector>
-              <TSVector>
-                <x>
-                  <_serializedValue>-64959156224</_serializedValue>
-                </x>
-                <y>
-                  <_serializedValue>0</_serializedValue>
-                </y>
-                <z>
-                  <_serializedValue>-5676266496</_serializedValue>
-                </z>
-              </TSVector>
-              <TSVector>
-                <x>
-                  <_serializedValue>-53973417984</_serializedValue>
-                </x>
-                <y>
-                  <_serializedValue>0</_serializedValue>
-                </y>
-                <z>
-                  <_serializedValue>-12821279744</_serializedValue>
-                </z>
-              </TSVector>
-              <TSVector>
-                <x>
-                  <_serializedValue>-42641772544</_serializedValue>
-                </x>
-                <y>
-                  <_serializedValue>0</_serializedValue>
-                </y>
-                <z>
-                  <_serializedValue>-19302137856</_serializedValue>
-                </z>
-              </TSVector>
-              <TSVector>
-                <x>
-                  <_serializedValue>-32074766336</_serializedValue>
-                </x>
-                <y>
-                  <_serializedValue>0</_serializedValue>
-                </y>
-                <z>
-                  <_serializedValue>-24755642368</_serializedValue>
-                </z>
-              </TSVector>
-              <TSVector>
-                <x>
-                  <_serializedValue>-22546071552</_serializedValue>
-                </x>
-                <y>
-                  <_serializedValue>0</_serializedValue>
-                </y>
-                <z>
-                  <_serializedValue>-29071773696</_serializedValue>
-                </z>
-              </TSVector>
-              <TSVector>
-                <x>
-                  <_serializedValue>-13240889344</_serializedValue>
-                </x>
-                <y>
-                  <_serializedValue>0</_serializedValue>
-                </y>
-                <z>
-                  <_serializedValue>-32521525248</_serializedValue>
-                </z>
-              </TSVector>
-              <TSVector>
-                <x>
-                  <_serializedValue>-3362021376</_serializedValue>
-                </x>
-                <y>
-                  <_serializedValue>0</_serializedValue>
-                </y>
-                <z>
-                  <_serializedValue>-35388014592</_serializedValue>
-                </z>
-              </TSVector>
-              <TSVector>
-                <x>
-                  <_serializedValue>7887720448</_serializedValue>
-                </x>
-                <y>
-                  <_serializedValue>0</_serializedValue>
-                </y>
-                <z>
-                  <_serializedValue>-37954359296</_serializedValue>
-                </z>
-              </TSVector>
-              <TSVector>
-                <x>
-                  <_serializedValue>21305544704</_serializedValue>
-                </x>
-                <y>
-                  <_serializedValue>0</_serializedValue>
-                </y>
-                <z>
-                  <_serializedValue>-40503672832</_serializedValue>
-                </z>
-              </TSVector>
-              <TSVector>
-                <x>
-                  <_serializedValue>37689737216</_serializedValue>
-                </x>
-                <y>
-                  <_serializedValue>0</_serializedValue>
-                </y>
-                <z>
-                  <_serializedValue>-43204153344</_serializedValue>
-                </z>
-              </TSVector>
-              <TSVector>
-                <x>
-                  <_serializedValue>57109667840</_serializedValue>
-                </x>
-                <y>
-                  <_serializedValue>0</_serializedValue>
-                </y>
-                <z>
-                  <_serializedValue>-45728735232</_serializedValue>
-                </z>
-              </TSVector>
-              <TSVector>
-                <x>
-                  <_serializedValue>78637006848</_serializedValue>
-                </x>
-                <y>
-                  <_serializedValue>0</_serializedValue>
-                </y>
-                <z>
-                  <_serializedValue>-48093663232</_serializedValue>
-                </z>
-              </TSVector>
-              <TSVector>
-                <x>
-                  <_serializedValue>101288296448</_serializedValue>
-                </x>
-                <y>
-                  <_serializedValue>0</_serializedValue>
-                </y>
-                <z>
-                  <_serializedValue>-50373443584</_serializedValue>
-                </z>
-              </TSVector>
-              <TSVector>
-                <x>
-                  <_serializedValue>124080078848</_serializedValue>
-                </x>
-                <y>
-                  <_serializedValue>0</_serializedValue>
-                </y>
-                <z>
-                  <_serializedValue>-52642578432</_serializedValue>
-                </z>
-              </TSVector>
-              <TSVector>
-                <x>
-                  <_serializedValue>146028888064</_serializedValue>
-                </x>
-                <y>
-                  <_serializedValue>0</_serializedValue>
-                </y>
-                <z>
-                  <_serializedValue>-54975578112</_serializedValue>
+                  <_serializedValue>12884901888</_serializedValue>
                 </z>
               </TSVector>
             </points>

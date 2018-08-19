@@ -30,9 +30,32 @@ public class NENodeFuncExt
         for (int i = 0; i < initArr.Length; i++)
         {
             initArr[i] = ps[i].ToUnityVector3();
-            Debug.Log("init:"+initArr[i]);
         }
         window.Show();
         window.Init(initArr, action);
+    }
+
+    public static void ShowSelectSingleAirShipWindow(FieldInfo fieldInfo, System.Object obj)
+    {
+        var window = EditorWindow.GetWindow<SelectUnitWindow>();
+        Action<List<int>> action = (List<int> lst) => {
+            if (lst.Count <= 0) return;
+            int id = lst[0];
+            fieldInfo.SetValue(obj, id);
+        };
+        window.Show();
+        window.Init(Game.UnitType.AirShip, action);
+    }
+
+    public static void ShowSelectMultiAirShipWindow(FieldInfo fieldInfo, System.Object obj)
+    {
+        var window = EditorWindow.GetWindow<SelectUnitWindow>();
+        Action<List<int>> action = (List<int> lst) =>
+        {
+            if (lst.Count <= 0) return;
+            fieldInfo.SetValue(obj, lst.ToArray());
+        };
+        window.Show();
+        window.Init(Game.UnitType.AirShip, action);
     }
 }

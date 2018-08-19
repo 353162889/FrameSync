@@ -12,6 +12,7 @@ namespace Game
     {
         [NEProperty("触发时间", true)]
         public FP time;
+        [NEPropertyBtn("打开选择单位编辑器", "NENodeFuncExt", "ShowSelectSingleAirShipWindow")]
         [NEProperty("配置ID")]
         public int configId;
         [NEProperty("刷新对象类型")]

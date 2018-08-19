@@ -52,6 +52,7 @@ namespace Game
 
         protected bool m_bIsDie;
         public bool isDie { get { return m_bIsDie; } }
+        protected bool m_bDieTime;
 
         public void Init(uint id,int configId,int campId, UnitType type, TSVector position, TSVector forward)
         {

@@ -21,6 +21,7 @@ namespace Game
             }
             PvpPlayerData data = new PvpPlayerData();
             data.campId = msg.campId;
+            data.configId = msg.configId;
             player = PvpPlayerMgr.Instance.CreatePlayer(msg.playerId,data);
             GlobalEventDispatcher.Instance.Dispatch(GameEvent.PvpPlayerCreate,player);
         }

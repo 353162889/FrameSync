@@ -83,34 +83,16 @@ public class TestCheck2D : MonoBehaviour
         //FP dis = TSCheck2D.DistanceFromPointToLine(To(Box.position), To(A.position), To(B.position));
         //Debug.Log(dis);
 
-        //var offset = To(B.position) - To(A.position);
-        //TSVector2 crossPoint;
-        //if (TSCheck2D.CheckCicleAndLine(To(A.position), offset,To(Sphere.position),FP.FromFloat(Sphere.localScale.x / 2),out crossPoint))
-        //{
-        //    if (go == null)
-        //    {
-        //        go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        //        go.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-        //    }
-        //    go.transform.position = new Vector3(crossPoint.x.AsFloat(),0,crossPoint.y.AsFloat());
-        //}
-        //else
-        //{
-        //    if (go != null)
-        //    {
-        //        GameObject.Destroy(go);
-        //        go = null;
-        //    }
-        //}
-
-        if (TSCheck2D.CheckRectangleAndCircle(To(Box.position), To(Box.forward), FP.FromFloat(Box.localScale.x / 2f), FP.FromFloat(Box.localScale.z / 2f),To(Sphere.position),FP.FromFloat(Sphere.localScale.x / 2)))
+        var offset = To(B.position) - To(A.position);
+        TSVector2 crossPoint;
+        if (TSCheck2D.CheckCicleAndLine(To(A.position), offset, To(Sphere.position), FP.FromFloat(Sphere.localScale.x / 2), out crossPoint))
         {
             if (go == null)
             {
                 go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                 go.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
             }
-            go.transform.position = new Vector3(2,0,0);
+            go.transform.position = new Vector3(crossPoint.x.AsFloat(), 0, crossPoint.y.AsFloat());
         }
         else
         {
@@ -120,6 +102,24 @@ public class TestCheck2D : MonoBehaviour
                 go = null;
             }
         }
+
+        //if (TSCheck2D.CheckRectangleAndCircle(To(Box.position), To(Box.forward), FP.FromFloat(Box.localScale.x / 2f), FP.FromFloat(Box.localScale.z / 2f),To(Sphere.position),FP.FromFloat(Sphere.localScale.x / 2)))
+        //{
+        //    if (go == null)
+        //    {
+        //        go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        //        go.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+        //    }
+        //    go.transform.position = new Vector3(2,0,0);
+        //}
+        //else
+        //{
+        //    if (go != null)
+        //    {
+        //        GameObject.Destroy(go);
+        //        go = null;
+        //    }
+        //}
     }
 
     private GameObject go;

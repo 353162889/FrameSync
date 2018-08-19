@@ -95,7 +95,6 @@ namespace Game
             if (PvpPlayerMgr.Instance.mainPlayer != null && PvpPlayerMgr.Instance.mainPlayer.unit != null)
             {
                 startPosition = PvpPlayerMgr.Instance.mainPlayer.unit.curPosition.ToUnityVector3();
-                CLog.LogArgs("startPosition", startPosition);
             }
         }
 

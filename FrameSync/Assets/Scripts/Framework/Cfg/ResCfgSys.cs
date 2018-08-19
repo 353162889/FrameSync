@@ -36,6 +36,12 @@ namespace Framework
                 return true;
             }
 
+            public static void Dispose()
+            {
+                m_lstData.Clear();
+                m_dicData.Clear();
+            }
+
         }
         protected struct ResCfgInfo
         {
@@ -172,6 +178,11 @@ namespace Framework
             return DataReader<T>.lstData;
         }
 
+        public void Dispose<T>()
+        {
+            DataReader<T>.Dispose();
+        }
+
         public override void Dispose()
         {
             if (m_resLoader != null)
@@ -180,6 +191,16 @@ namespace Framework
                 m_resLoader = null;
             }
             m_finishAction = null;
+            if(m_dicCfgInfo != null)
+            {
+                foreach (var item in m_dicCfgInfo)
+                {
+                    Type dataReaderTType = typeof(DataReader<>);
+                    Type dataReaderDataType = dataReaderTType.MakeGenericType(new Type[] { item.Value.type });
+                    MethodInfo disposeMethod = dataReaderDataType.GetMethod("Dispose", BindingFlags.Static | BindingFlags.Public);
+                    disposeMethod.Invoke(null,new object[] { });
+                }
+            }
             base.Dispose();
         }
 

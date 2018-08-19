@@ -9,13 +9,21 @@ namespace GameData
 	{
 		[ResCfgKey]
 		public int id { get; private set; }
+		public string name { get; private set; }
 		public string prefab { get; private set; }
+		public FP hp { get; private set; }
+		public FP attack { get; private set; }
+		public FP move_speed { get; private set; }
 		public List<int> skills { get; private set; }
 		public int ai { get; private set; }
 		public ResAirShip(SecurityElement node)
 		{
 			id = int.Parse(node.Attribute("id"));
+			name = node.Attribute("name");
 			prefab = node.Attribute("prefab");
+			hp = FP.FromSourceLong(long.Parse(node.Attribute("hp")));
+			attack = FP.FromSourceLong(long.Parse(node.Attribute("attack")));
+			move_speed = FP.FromSourceLong(long.Parse(node.Attribute("move_speed")));
 			skills = new List<int>();
 			string[] skillsArr = node.Attribute("skills").Split(',');
 			if (skillsArr != null || skillsArr.Length > 0)

@@ -21,10 +21,10 @@ namespace Game
             }
             m_sPrefab = m_resInfo.prefab;
             base.SubInit();
-            this.hpLmt = 100;
+            this.hpLmt = m_resInfo.hp;
             this.hp = this.hpLmt;
-            this.attack = 10;
-            this.moveSpeed = 30;
+            this.attack = m_resInfo.attack;
+            this.moveSpeed = m_resInfo.move_speed;
             for (int i = 0; i < m_resInfo.skills.Count; i++)
             {
                 AddSkill(m_resInfo.skills[i]);
