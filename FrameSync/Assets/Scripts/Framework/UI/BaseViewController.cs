@@ -22,6 +22,39 @@ namespace Framework
         Close
     }
 
+    public class UIViewMono : MonoBehaviour
+    {
+        private List<UIGraphicRaycaster> m_lstRaycaster;
+        public List<UIGraphicRaycaster> lstRaycaster { get { return m_lstRaycaster; } }
+
+        void Awake()
+        {
+            m_lstRaycaster = new List<UIGraphicRaycaster>();
+            FindOrAddUIGraphicRaycaster(this.transform, m_lstRaycaster);
+        }
+
+        void OnDestroy()
+        {
+            m_lstRaycaster.Clear();
+        }
+
+        public void FindOrAddUIGraphicRaycaster(Transform trans, List<UIGraphicRaycaster> lst)
+        {
+            var canvas = trans.GetComponent<Canvas>();
+            if (canvas != null)
+            {
+                var uiRaycaster = trans.gameObject.AddComponentOnce<UIGraphicRaycaster>();
+                lst.Add(uiRaycaster);
+            }
+            int count = trans.childCount;
+            for (int i = 0; i < count; i++)
+            {
+                var child = trans.GetChild(i);
+                FindOrAddUIGraphicRaycaster(child, lst);
+            }
+        }
+    }
+
 
     public class BaseViewController : IDynamicObj
     {
@@ -154,9 +187,42 @@ namespace Framework
 
             if (this.MainGO != null)
             {
+                Canvas canvas = this.MainGO.AddComponentOnce<Canvas>();
+                canvas.overrideSorting = true;
+                this.MainGO.AddComponentOnce<UIViewMono>();
+                canvas.sortingOrder = 0;
+            }
+
+            if (this.MainGO != null)
+            {
                 this.MainGO.SetActive(false);
             }
             OnResLoad();
+        }
+
+        private void SortViewPosition()
+        {
+            Transform parent = this.MainGO.transform.parent;
+            int childCount = parent.childCount;
+            int index = 0;
+            for (int i = childCount - 1; i > -1; i--)
+            {
+                Transform child = parent.GetChild(i);
+                if (!child.gameObject.activeSelf) continue;
+                float z = index * 1000f;
+                Vector3 pos = child.localPosition;
+                child.localPosition = new Vector3(pos.x, pos.y, z);
+                var viewMono = child.GetComponent<UIViewMono>();
+                var lstRaycaster = viewMono.lstRaycaster;
+                for (int j = 0; j < lstRaycaster.Count; j++)
+                {
+                    var raycaster = lstRaycaster[j];
+                    var position = child.InverseTransformPoint(raycaster.transform.position);
+                    raycaster.priority = (int)-parent.localPosition.z + i * 1000 - (int)position.z;
+                }
+                index++;
+            }
+
         }
 
         private void DoOpen()
@@ -164,6 +230,7 @@ namespace Framework
             this.m_eStatus = ViewStatus.Openning;
             this.MainGO.SetActive(true);
             this.MainGO.transform.SetAsLastSibling();
+            SortViewPosition();
 
             this.OnVisualEvent(0);
             this.PlayEnterAnimation();

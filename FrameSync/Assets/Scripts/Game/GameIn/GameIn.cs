@@ -68,6 +68,7 @@ namespace Game
             m_cSysCompContainer = new GamingSysCompContainer();
             //注册逻辑
             m_cSysCompContainer.RegisterComp(GamingSysCompType.UnitDestory, new GSC_UnitDestory());
+            m_cSysCompContainer.RegisterComp(GamingSysCompType.UnitDieEffect, new GSC_UnitDieEffect());
 
             GlobalEventDispatcher.Instance.AddEvent(GameEvent.StartBattle, OnStartBattle);
             GlobalEventDispatcher.Instance.AddEvent(GameEvent.PvpPlayerCreate, OnPlayerCreate);

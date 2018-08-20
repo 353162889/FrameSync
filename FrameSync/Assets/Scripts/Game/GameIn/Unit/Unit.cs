@@ -52,7 +52,10 @@ namespace Game
 
         protected bool m_bIsDie;
         public bool isDie { get { return m_bIsDie; } }
-        protected bool m_bDieTime;
+        protected FP m_sDieTime;
+        public FP dieTime { get { return m_sDieTime; } }
+        protected FP m_sStartDieTime;
+        public FP startDieTime { get { return m_sStartDieTime; } }
 
         public void Init(uint id,int configId,int campId, UnitType type, TSVector position, TSVector forward)
         {
@@ -139,6 +142,7 @@ namespace Game
         protected virtual void Die(DamageInfo damageInfo)
         {
             m_bIsDie = true;
+            m_sStartDieTime = FrameSyncSys.time;
             if (null != OnUnitDie)
             {
                 OnUnitDie(this, damageInfo);

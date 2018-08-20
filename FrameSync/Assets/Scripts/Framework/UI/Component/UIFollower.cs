@@ -19,6 +19,7 @@ namespace Framework
         void Awake()
         {
             m_cCanvas = (transform as RectTransform).GetComponentInParent<Canvas>();
+            if (m_cCanvas != null) m_cCanvas = m_cCanvas.rootCanvas;
             m_cParent = transform.parent as RectTransform;
             m_cRectTransform = transform as RectTransform;
             m_bNotOutUI = false;
@@ -28,6 +29,7 @@ namespace Framework
         public void SetTarget(Camera camera, Transform target, bool notOutUI = false, bool inUINotShow = false)
         {
             m_cCanvas = (transform as RectTransform).GetComponentInParent<Canvas>();
+            if (m_cCanvas != null) m_cCanvas = m_cCanvas.rootCanvas;
             m_cParent = transform.parent as RectTransform;
             m_cRectTransform = transform as RectTransform;
             m_cCamera = camera;
@@ -36,14 +38,14 @@ namespace Framework
             m_bInUINotShow = inUINotShow;
         }
 
-        void Update()
+        void LateUpdate()
         {
             if (m_cCanvas != null && m_cCamera != null && m_cTarget != null)
             {
                 Vector3 screenPos = m_cCamera.WorldToScreenPoint(m_cTarget.transform.position);
                 screenPos.z = 0;
                 Vector2 pos = Vector2.zero;
-                if (m_cCanvas.renderMode == RenderMode.ScreenSpaceCamera && m_cCanvas.worldCamera != null && !m_cCanvas.worldCamera.orthographic)
+                if (m_cCanvas.renderMode == RenderMode.ScreenSpaceCamera && m_cCanvas.worldCamera != null /*&& !m_cCanvas.worldCamera.orthographic*/)
                 {
                     RectTransformUtility.ScreenPointToLocalPointInRectangle(m_cParent, screenPos, m_cCanvas.worldCamera, out pos);
                 }
@@ -67,34 +69,24 @@ namespace Framework
 
                 if (showUI && m_bNotOutUI)
                 {
-                    float w = m_cRectTransform.rect.width / 2f;
-                    float h = m_cRectTransform.rect.height / 2f;
-
-                    if (pos.x < min.x + w)
+                    if (pos.x < min.x)
                     {
-                        pos.x = min.x + w;
+                        pos.x = min.x;
                     }
-                    if (pos.x > max.x - w)
+                    if (pos.x > max.x)
                     {
-                        pos.x = max.x - w;
+                        pos.x = max.x;
                     }
-                    bool inHeight = true;
-                    if (pos.y < min.y + h)
+                    if (pos.y < min.y)
                     {
-                        pos.y = min.y + h;
-                        inHeight = false;
+                        pos.y = min.y;
                     }
-                    if (pos.y > max.y - h)
+                    if (pos.y > max.y)
                     {
-                        pos.y = max.y - h;
-                        inHeight = false;
-                    }
-                    if (inHeight)
-                    {
-                        pos.y += h;
+                        pos.y = max.y;
                     }
                 }
-
+                transform.localScale = m_cCamera.transform.localScale;
                 m_cRectTransform.anchoredPosition = pos;
             }
         }

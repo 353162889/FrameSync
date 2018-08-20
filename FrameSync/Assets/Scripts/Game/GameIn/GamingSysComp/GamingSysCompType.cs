@@ -8,5 +8,6 @@ namespace Game
     public enum GamingSysCompType
     {
         UnitDestory,
+        UnitDieEffect,
     }
 }

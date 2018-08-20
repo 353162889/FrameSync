@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace Game
     {
         protected override bool Check(Unit unit)
         {
-            return unit.isDie;
+            return unit.isDie && FrameSyncSys.time - unit.startDieTime >= unit.dieTime;
         }
     }
 }

@@ -28,25 +28,25 @@ namespace NodeEditor
         private NENode m_cRoot;
         private string m_sLoadPath;
 
-        [MenuItem("Tools/NETreeSkillWindow _F1")]
+        [MenuItem("Tools/NETreeSkillWindow &F1")]
         static public void OpenSkillWindow()
         {
             OpenWindow(0);
         }
 
-        [MenuItem("Tools/NETreeRemoteWindow _F2")]
+        [MenuItem("Tools/NETreeRemoteWindow &F2")]
         static public void OpenRemoteWindow()
         {
             OpenWindow(1);
         }
 
-        [MenuItem("Tools/NETreeAIWindow _F3")]
+        [MenuItem("Tools/NETreeAIWindow &F3")]
         static public void OpenAIWindow()
         {
             OpenWindow(2);
         }
 
-        [MenuItem("Tools/NETreeAIWindow _F4")]
+        [MenuItem("Tools/NETreeAIWindow &F4")]
         static public void OpenGamingWindow()
         {
             OpenWindow(3);

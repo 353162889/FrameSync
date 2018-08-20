@@ -9,6 +9,39 @@ using System.Linq;
 
 namespace Framework
 {
+    //添加UI特效专用函数
+    public static class UIViewUtil
+    {
+        public static void AddUIEffect(this GameObject go, GameObject effect)
+        {
+            go.AddChildToParent(effect);
+#if UNITY_EDITOR
+            Renderer[] renders = effect.GetComponentsInChildren<Renderer>();
+            for (int i = 0; i < renders.Length; i++)
+            {
+                if (renders[i].material.renderQueue != 3000 || renders[i].sortingOrder != 0 || renders[i].sortingLayerName != "Default")
+                {
+                    CLog.LogError("特效name=" + effect.name + "中的render=" + renders[i].gameObject.name + "渲染层次不符合法，请美术重新修改");
+                }
+            }
+#endif
+        }
+
+        public static void AddUIEffect(this Transform go, GameObject effect)
+        {
+            go.gameObject.AddChildToParent(effect);
+#if UNITY_EDITOR
+            Renderer[] renders = effect.GetComponentsInChildren<Renderer>();
+            for (int i = 0; i < renders.Length; i++)
+            {
+                if (renders[i].material.renderQueue != 3000 || renders[i].sortingOrder != 0 || renders[i].sortingLayerName != "Default")
+                {
+                    CLog.LogError("特效name=" + effect.name + "中的render=" + renders[i].gameObject.name + "渲染层次不符合法，请美术重新修改");
+                }
+            }
+#endif
+        }
+    }
     public class ViewSys : SingletonMonoBehaviour<ViewSys>
     {
 

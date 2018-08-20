@@ -68,7 +68,7 @@ namespace Framework
         {
             m_cDispatcher = new EDynamicDispatcher();
         }
-
+        //lua这边如果要使用，不允许同名函数
         public void AddEvent(int key, EventHandler callback,bool once = false, EventPriority priority = EventPriority.NORMAL)
         {
             DispatcherCallback dc = new DispatcherCallback();

@@ -48,7 +48,7 @@ namespace Game
                 TSVector2 center2 = m_lstColliders[i].center;
                 m_sCenter = m_sCenter + new TSVector(center2.x, 0, center2.y);
             }
-            if (m_lstColliders.Count > 0)
+            if (m_lstColliders.Count > 1)
             {
                 m_sCenter /= m_lstColliders.Count;
             }
@@ -67,6 +67,21 @@ namespace Game
                     collider2.CheckLine(sCenter2, collider2.center - sCenter2, out sCrossPoint2);
                     sCrossPoint.x = sCrossPoint2.x;
                     sCrossPoint.z = sCrossPoint2.y;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool CheckCircle(TSVector sCenter, FP nRadius)
+        {
+            TSVector2 sCenter2 = new TSVector2(sCenter.x, sCenter.z);
+            TSVector2 sCrossPoint2 = sCenter2;
+            for (int i = m_lstColliders.Count - 1; i > -1; i--)
+            {
+                var collider2 = m_lstColliders[i];
+                if (m_lstColliders[i].CheckCircle(sCenter2, nRadius))
+                {
                     return true;
                 }
             }
@@ -93,6 +108,26 @@ namespace Game
                     }
                 }
                 
+            }
+            return false;
+        }
+
+        public bool CheckCollider(GameCollider otherCollider)
+        {
+            TSVector2 sCenter2 = new TSVector2(otherCollider.center.x, otherCollider.center.z);
+            TSVector2 sCrossPoint2 = sCenter2;
+            for (int i = m_lstColliders.Count - 1; i > -1; i--)
+            {
+                var collider2 = m_lstColliders[i];
+                var lstOtherCollders = otherCollider.lstCollider;
+                for (int j = 0; j < lstOtherCollders.Count; j++)
+                {
+                    if (collider2.CheckCollider(lstOtherCollders[j]))
+                    {
+                        return true;
+                    }
+                }
+
             }
             return false;
         }
@@ -144,6 +179,21 @@ namespace Game
                     collider2.CheckLine(sCenter2, collider2.center - sCenter2, out sCrossPoint2);
                     sCrossPoint.x = sCrossPoint2.x;
                     sCrossPoint.z = sCrossPoint2.y;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool CheckRect(TSVector sCenter, TSVector sDir, FP nHalfWidth, FP nHalfHeight)
+        {
+            TSVector2 sCenter2 = new TSVector2(sCenter.x, sCenter.z);
+            TSVector2 sDir2 = new TSVector2(sDir.x, sDir.z);
+            for (int i = m_lstColliders.Count - 1; i > -1; i--)
+            {
+                var collider2 = m_lstColliders[i];
+                if (collider2.CheckRect(sCenter2, sDir2, nHalfWidth, nHalfHeight))
+                {
                     return true;
                 }
             }
