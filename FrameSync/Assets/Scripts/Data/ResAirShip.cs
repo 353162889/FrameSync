@@ -16,6 +16,7 @@ namespace GameData
 		public FP move_speed { get; private set; }
 		public List<int> skills { get; private set; }
 		public int ai { get; private set; }
+		public string die_effect { get; private set; }
 		public ResAirShip(SecurityElement node)
 		{
 			id = int.Parse(node.Attribute("id"));
@@ -34,6 +35,7 @@ namespace GameData
 				}
 			}
 			ai = int.Parse(node.Attribute("ai"));
+			die_effect = node.Attribute("die_effect");
 		}
 	}
 }

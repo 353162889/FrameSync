@@ -15,11 +15,12 @@ namespace Game
 
         private void OnUnitDie(object args)
         {
-            Unit unit = (Unit)args;
+            DamageInfo damageInfo = (DamageInfo)args;
+            Unit unit = (Unit)damageInfo.defence.agent;
             if(unit.unitType == UnitType.AirShip)
             {
                 UnitAirShip airShip = (UnitAirShip)unit;
-                var effect = SceneEffectPool.Instance.CreateEffect("eff_blast0", true, null);
+                var effect = SceneEffectPool.Instance.CreateEffect(airShip.resInfo.die_effect, true, null);
                 effect.transform.position = unit.curPosition.ToUnityVector3();
             }
         }

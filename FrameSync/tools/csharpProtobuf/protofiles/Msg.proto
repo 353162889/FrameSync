@@ -46,7 +46,8 @@ message Frame_Msg_Test_Data
 message Frame_CreatePlayer_Data
 {
 	required int64 playerId = 1;
-	required int32 campId = 2;
+	required int32 configId = 2;
+	required int32 campId = 3;
 }
 
 message Frame_ReqMovePath_Data
@@ -65,6 +66,7 @@ message Frame_ReqSetPosition_Data
 {
 	required uint32 unitId = 1;
 	required ProtoVector2 position = 2;
+	required bool immediately = 3;
 }
 
 message Frame_ReqSetForward_Data

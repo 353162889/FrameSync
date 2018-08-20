@@ -19,13 +19,13 @@ enum PacketOpcode
 	//帧同步包 >= 10000
 	Frame_Msg_Test = 10000;
 
-	Frame_CreatePlayer = 10001;
-	Frame_ReqMovePath = 10002;
-	Frame_ReqMovePoint = 10003;
-	Frame_ReqSetPosition = 10004;
-	Frame_ReqSetForward = 10005;
-	Frame_ReqMoveForward = 10006;
-	Frame_ReqStopMove = 10007;
-	Frame_ReqDoSkill = 10008;
-	Frame_ReqBreakSkill = 10009;
+	Frame_CreatePlayer = 10001;	//服务器发送创建玩家命令
+	Frame_ReqMovePath = 10002;	//路径移动
+	Frame_ReqMovePoint = 10003;	//移动到某点
+	Frame_ReqSetPosition = 10004;//直接设置位置
+	Frame_ReqSetForward = 10005;//直接设置方向
+	Frame_ReqMoveForward = 10006;//方向移动
+	Frame_ReqStopMove = 10007;//停止移动
+	Frame_ReqDoSkill = 10008;//释放技能
+	Frame_ReqBreakSkill = 10009;//打断技能
 }

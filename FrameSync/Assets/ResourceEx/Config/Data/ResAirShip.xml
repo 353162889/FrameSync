@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-	<resairship ai="1" attack="42949672960" hp="429496729600" id="1" move_speed="128849018880" name="player1" prefab="Prefab/Unit/AirShip_1" skills="1"/>
-	<resairship ai="1" attack="42949672960" hp="429496729600" id="2" move_speed="128849018880" name="player2" prefab="Prefab/Unit/AirShip_2" skills="1"/>
-	<resairship ai="1" attack="42949672960" hp="429496729600" id="3" move_speed="128849018880" name="player3" prefab="Prefab/Unit/AirShip_3" skills="1"/>
-	<resairship ai="1" attack="42949672960" hp="429496729600" id="4" move_speed="128849018880" name="player4" prefab="Prefab/Unit/AirShip_4" skills="1"/>
-	<resairship ai="2" attack="42949672960" hp="429496729600" id="1001" move_speed="85899345920" name="enemy1001" prefab="Prefab/Unit/AirShip_1001" skills="2"/>
-	<resairship ai="2" attack="42949672960" hp="429496729600" id="1002" move_speed="85899345920" name="enemy1002" prefab="Prefab/Unit/AirShip_1002" skills="2"/>
-	<resairship ai="2" attack="42949672960" hp="429496729600" id="1003" move_speed="85899345920" name="enemy1003" prefab="Prefab/Unit/AirShip_1003" skills="2"/>
-	<resairship ai="2" attack="42949672960" hp="429496729600" id="1004" move_speed="85899345920" name="enemy1004" prefab="Prefab/Unit/AirShip_1004" skills="2"/>
-	<resairship ai="2" attack="42949672960" hp="429496729600" id="1006" move_speed="85899345920" name="enemy1006" prefab="Prefab/Unit/AirShip_1006" skills="2"/>
-	<resairship ai="2" attack="42949672960" hp="429496729600" id="1007" move_speed="85899345920" name="enemy1007" prefab="Prefab/Unit/AirShip_1007" skills="2"/>
-	<resairship ai="2" attack="42949672960" hp="429496729600" id="1008" move_speed="85899345920" name="enemy1008" prefab="Prefab/Unit/AirShip_1008" skills="2"/>
-	<resairship ai="2" attack="42949672960" hp="429496729600" id="1009" move_speed="85899345920" name="enemy1009" prefab="Prefab/Unit/AirShip_1009" skills="2"/>
-	<resairship ai="2" attack="42949672960" hp="429496729600" id="1010" move_speed="85899345920" name="enemy1010" prefab="Prefab/Unit/AirShip_1010" skills="2"/>
-	<resairship ai="2" attack="42949672960" hp="429496729600" id="1011" move_speed="85899345920" name="enemy1011" prefab="Prefab/Unit/AirShip_1011" skills="2"/>
-	<resairship ai="2" attack="42949672960" hp="429496729600" id="1012" move_speed="85899345920" name="enemy1012" prefab="Prefab/Unit/AirShip_1012" skills="2"/>
-	<resairship ai="2" attack="42949672960" hp="429496729600" id="1013" move_speed="85899345920" name="enemy1013" prefab="Prefab/Unit/AirShip_1013" skills="2"/>
-	<resairship ai="2" attack="42949672960" hp="429496729600" id="1014" move_speed="85899345920" name="enemy1014" prefab="Prefab/Unit/AirShip_1014" skills="2"/>
-	<resairship ai="2" attack="42949672960" hp="4294967296000000" id="1015" move_speed="85899345920" name="enemy1015" prefab="Prefab/Unit/AirShip_1015" skills="2"/>
-	<resairship ai="2" attack="42949672960" hp="429496729600" id="1016" move_speed="85899345920" name="enemy1016" prefab="Prefab/Unit/AirShip_1016" skills="2"/>
-	<resairship ai="2" attack="42949672960" hp="429496729600" id="1017" move_speed="85899345920" name="enemy1017" prefab="Prefab/Unit/AirShip_1017" skills="2"/>
-	<resairship ai="2" attack="42949672960" hp="429496729600" id="1018" move_speed="85899345920" name="enemy1018" prefab="Prefab/Unit/AirShip_1018" skills="2"/>
-	<resairship ai="2" attack="42949672960" hp="429496729600" id="1021" move_speed="85899345920" name="enemy1021" prefab="Prefab/Unit/AirShip_1021" skills="2"/>
-	<resairship ai="2" attack="42949672960" hp="429496729600" id="1022" move_speed="85899345920" name="enemy1022" prefab="Prefab/Unit/AirShip_1022" skills="2"/>
-	<resairship ai="2" attack="42949672960" hp="429496729600" id="1023" move_speed="85899345920" name="enemy1023" prefab="Prefab/Unit/AirShip_1023" skills="2"/>
-	<resairship ai="2" attack="42949672960" hp="429496729600" id="1024" move_speed="85899345920" name="enemy1024" prefab="Prefab/Unit/AirShip_1024" skills="2"/>
-	<resairship ai="2" attack="42949672960" hp="429496729600" id="1025" move_speed="85899345920" name="enemy1025" prefab="Prefab/Unit/AirShip_1025" skills="2"/>
+	<resairship ai="1" attack="42949672960" die_effect="eff_blast0" hp="429496729600" id="1" move_speed="128849018880" name="player1" prefab="Prefab/Unit/AirShip_1" skills="1"/>
+	<resairship ai="1" attack="42949672960" die_effect="eff_blast0" hp="429496729600" id="2" move_speed="128849018880" name="player2" prefab="Prefab/Unit/AirShip_2" skills="1"/>
+	<resairship ai="1" attack="42949672960" die_effect="eff_blast0" hp="429496729600" id="3" move_speed="128849018880" name="player3" prefab="Prefab/Unit/AirShip_3" skills="1"/>
+	<resairship ai="1" attack="42949672960" die_effect="eff_blast0" hp="429496729600" id="4" move_speed="128849018880" name="player4" prefab="Prefab/Unit/AirShip_4" skills="1"/>
+	<resairship ai="2" attack="42949672960" die_effect="eff_blast0" hp="429496729600" id="1001" move_speed="85899345920" name="enemy1001" prefab="Prefab/Unit/AirShip_1001" skills="2"/>
+	<resairship ai="2" attack="42949672960" die_effect="eff_blast0" hp="429496729600" id="1002" move_speed="85899345920" name="enemy1002" prefab="Prefab/Unit/AirShip_1002" skills="2"/>
+	<resairship ai="2" attack="42949672960" die_effect="eff_blast0" hp="429496729600" id="1003" move_speed="85899345920" name="enemy1003" prefab="Prefab/Unit/AirShip_1003" skills="2"/>
+	<resairship ai="2" attack="42949672960" die_effect="eff_blast0" hp="429496729600" id="1004" move_speed="85899345920" name="enemy1004" prefab="Prefab/Unit/AirShip_1004" skills="2"/>
+	<resairship ai="2" attack="42949672960" die_effect="eff_blast0" hp="429496729600" id="1006" move_speed="85899345920" name="enemy1006" prefab="Prefab/Unit/AirShip_1006" skills="2"/>
+	<resairship ai="2" attack="42949672960" die_effect="eff_blast0" hp="429496729600" id="1007" move_speed="85899345920" name="enemy1007" prefab="Prefab/Unit/AirShip_1007" skills="2"/>
+	<resairship ai="2" attack="42949672960" die_effect="eff_blast0" hp="429496729600" id="1008" move_speed="85899345920" name="enemy1008" prefab="Prefab/Unit/AirShip_1008" skills="2"/>
+	<resairship ai="2" attack="42949672960" die_effect="eff_blast0" hp="429496729600" id="1009" move_speed="85899345920" name="enemy1009" prefab="Prefab/Unit/AirShip_1009" skills="2"/>
+	<resairship ai="2" attack="42949672960" die_effect="eff_blast0" hp="429496729600" id="1010" move_speed="85899345920" name="enemy1010" prefab="Prefab/Unit/AirShip_1010" skills="2"/>
+	<resairship ai="2" attack="42949672960" die_effect="eff_blast0" hp="429496729600" id="1011" move_speed="85899345920" name="enemy1011" prefab="Prefab/Unit/AirShip_1011" skills="2"/>
+	<resairship ai="2" attack="42949672960" die_effect="eff_blast0" hp="429496729600" id="1012" move_speed="85899345920" name="enemy1012" prefab="Prefab/Unit/AirShip_1012" skills="2"/>
+	<resairship ai="2" attack="42949672960" die_effect="eff_blast0" hp="429496729600" id="1013" move_speed="85899345920" name="enemy1013" prefab="Prefab/Unit/AirShip_1013" skills="2"/>
+	<resairship ai="2" attack="42949672960" die_effect="eff_blast0" hp="429496729600" id="1014" move_speed="85899345920" name="enemy1014" prefab="Prefab/Unit/AirShip_1014" skills="2"/>
+	<resairship ai="2" attack="42949672960" die_effect="eff_blast0" hp="4294967296000000" id="1015" move_speed="85899345920" name="enemy1015" prefab="Prefab/Unit/AirShip_1015" skills="2"/>
+	<resairship ai="2" attack="42949672960" die_effect="eff_blast0" hp="429496729600" id="1016" move_speed="85899345920" name="enemy1016" prefab="Prefab/Unit/AirShip_1016" skills="2"/>
+	<resairship ai="2" attack="42949672960" die_effect="eff_blast0" hp="429496729600" id="1017" move_speed="85899345920" name="enemy1017" prefab="Prefab/Unit/AirShip_1017" skills="2"/>
+	<resairship ai="2" attack="42949672960" die_effect="eff_blast0" hp="429496729600" id="1018" move_speed="85899345920" name="enemy1018" prefab="Prefab/Unit/AirShip_1018" skills="2"/>
+	<resairship ai="2" attack="42949672960" die_effect="eff_blast0" hp="429496729600" id="1021" move_speed="85899345920" name="enemy1021" prefab="Prefab/Unit/AirShip_1021" skills="2"/>
+	<resairship ai="2" attack="42949672960" die_effect="eff_blast0" hp="429496729600" id="1022" move_speed="85899345920" name="enemy1022" prefab="Prefab/Unit/AirShip_1022" skills="2"/>
+	<resairship ai="2" attack="42949672960" die_effect="eff_blast0" hp="429496729600" id="1023" move_speed="85899345920" name="enemy1023" prefab="Prefab/Unit/AirShip_1023" skills="2"/>
+	<resairship ai="2" attack="42949672960" die_effect="eff_blast0" hp="429496729600" id="1024" move_speed="85899345920" name="enemy1024" prefab="Prefab/Unit/AirShip_1024" skills="2"/>
+	<resairship ai="2" attack="42949672960" die_effect="eff_blast0" hp="429496729600" id="1025" move_speed="85899345920" name="enemy1025" prefab="Prefab/Unit/AirShip_1025" skills="2"/>
 </root>
