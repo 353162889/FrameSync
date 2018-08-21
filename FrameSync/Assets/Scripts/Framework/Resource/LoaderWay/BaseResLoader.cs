@@ -14,7 +14,7 @@ namespace Framework
             _resUtil = gameObject.AddComponentOnce<ResourceFileUtil>();
         }
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             _resUtil = null;
         }

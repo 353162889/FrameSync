@@ -11,17 +11,11 @@ namespace Framework
     {
         public override void Load(Resource res)
         {
-            StartCoroutine(LoadDirectResource(res));
-        }
-
-        IEnumerator LoadDirectResource(Resource res)
-        {
             string loadPath = GetInResPath(res);
             UnityEngine.Object go = null;
 #if UNITY_EDITOR
             go = UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(loadPath);
 #endif
-            yield return null;
             res.isDone = true;
             if (go == null)
             {
