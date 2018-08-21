@@ -191,9 +191,9 @@ namespace Framework
         /// <summary>
         /// 异步加载资源
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="path"></param>
         /// <returns></returns>
-        public IEnumerator GetAssetAsync(string name, Action<UnityEngine.Object> callback)
+        public IEnumerator GetAssetAsync(string path, Action<string,UnityEngine.Object> callback)
         {
             UnityEngine.Object asset = null;
             if (resType == ResourceType.AssetBundle)
@@ -201,12 +201,12 @@ namespace Framework
                 if (_assetBundle != null)
                 {
                     string[] arr = _assetBundle.GetAllAssetNames();
-                    if (string.IsNullOrEmpty(name))
+                    if (string.IsNullOrEmpty(path))
                     {
                         if (arr.Length > 1)
                         {
-                            string realName = BundleRootName + name.ToLower();
-                            AssetBundleRequest request = _assetBundle.LoadAssetAsync(name);
+                            string realName = BundleRootName + path.ToLower();
+                            AssetBundleRequest request = _assetBundle.LoadAssetAsync(path);
                             yield return request;
                             asset = request.asset;
                         }
@@ -219,7 +219,7 @@ namespace Framework
                     }
                     else
                     {
-                        string realName = BundleRootName + name.ToLower();
+                        string realName = BundleRootName + path.ToLower();
                         AssetBundleRequest request = _assetBundle.LoadAssetAsync(realName);
                         yield return request;
                         asset = request.asset;
@@ -241,7 +241,7 @@ namespace Framework
                     asset = _directObj;
                 }
             }
-            callback.Invoke(asset);
+            callback.Invoke(path,asset);
         }
 
         public void SetDependsRes(List<Resource> list)

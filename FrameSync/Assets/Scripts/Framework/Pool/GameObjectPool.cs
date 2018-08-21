@@ -1,5 +1,6 @@
 ﻿using Framework;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,7 @@ namespace Framework
     {
         public struct ResourceObjectQueue
         {
+            public UnityEngine.Object prefab;
             public Resource res;
             public Queue<GameObject> queue;
         }
@@ -28,12 +30,14 @@ namespace Framework
         private Dictionary<string, ResourceObjectQueue> m_dicGO;
         private Dictionary<string, List<GameObjectPoolHandler>> m_dicCallback;
         private Dictionary<string, List<CacheCallbackStruct>> m_dicCacheCallback;
+        private LinkedList<IEnumerator> m_lstAsyncQueue;
 
         protected override void Init()
         {
             m_dicGO = new Dictionary<string, ResourceObjectQueue>();
             m_dicCallback = new Dictionary<string, List<GameObjectPoolHandler>>();
             m_dicCacheCallback = new Dictionary<string, List<CacheCallbackStruct>>();
+            m_lstAsyncQueue = new LinkedList<IEnumerator>();
             base.Init();
         }
 
@@ -44,7 +48,7 @@ namespace Framework
             {
                 for (int i = 0; i < count; i++)
                 {
-                    var go = GetGameObject(resQueue.res, path);
+                    var go = GetGameObject(resQueue.prefab, path);
                     SaveObject(path, go);
                 }
                 if (callback != null)
@@ -112,7 +116,7 @@ namespace Framework
                     }
                     else
                     {
-                        go = GetGameObject(item.Value.res,item.Key);
+                        go = GetGameObject(item.Value.prefab,item.Key);
                     }
                     go.SetActive(true);
                     if (null != callback)
@@ -178,6 +182,7 @@ namespace Framework
                     GameObject.Destroy(resQueue.queue.Dequeue());
                 }
                 resQueue.res.Release();
+                resQueue.prefab = null;
             }
             m_dicGO.Remove(path);
         }
@@ -191,18 +196,19 @@ namespace Framework
             m_dicCallback.Clear();
             foreach (var item in m_dicGO)
             {
-                while (item.Value.queue.Count > 0)
+                var resQueue = item.Value;
+                while (resQueue.queue.Count > 0)
                 {
-                    GameObject.Destroy(item.Value.queue.Dequeue());
+                    GameObject.Destroy(resQueue.queue.Dequeue());
                 }
-                item.Value.res.Release();
+                resQueue.res.Release();
+                resQueue.prefab = null;
             }
             m_dicGO.Clear();
         }
 
-        private GameObject GetGameObject(Resource res,string path)
+        private GameObject GetGameObject(UnityEngine.Object prefab,string path)
         {
-            UnityEngine.Object prefab = res.GetAsset(path);
             GameObject go = (GameObject)GameObject.Instantiate(prefab);
             return go;
         }
@@ -218,33 +224,71 @@ namespace Framework
                     resQueue.res = res;
                     res.Retain();
                     resQueue.queue = new Queue<GameObject>();
+                    resQueue.prefab = null;
                     m_dicGO.Add(path, resQueue);
                 }
-                
-                List<GameObjectPoolHandler> lstCallback = null;
-                if(m_dicCallback.TryGetValue(res.realPath, out lstCallback))
-                {
-                    while(lstCallback.Count > 0)
-                    {
-                        GameObject go = null;
-                        if (resQueue.queue.Count > 0)
-                        {
-                            go = resQueue.queue.Dequeue();
-                        }
-                        else
-                        {
-                            go = GetGameObject(res,path);
-                        }
-                        var callback = lstCallback[0];
-                        lstCallback.RemoveAt(0);
-                        go.SetActive(true);
-                        callback.Invoke(go);
-                    }
-                }
+
+                m_lstAsyncQueue.AddLast(LoadAssetAndCallback(path,resQueue));
             }
             else
             {
                 CLog.LogError("加载GameObject资源" + path + "失败");
+            }
+        }
+
+        private void Update()
+        {
+            if (m_lstAsyncQueue.Count == 0) return;
+            var node = m_lstAsyncQueue.First;
+            while (node != null)
+            {
+                CLog.LogArgs("current",node.Value.Current);
+                if(!node.Value.MoveNext() && node == m_lstAsyncQueue.First)
+                {
+                    m_lstAsyncQueue.RemoveFirst();
+                    node = m_lstAsyncQueue.First;
+                }
+                else
+                {
+                    node = node.Next;
+                }
+            }
+        }
+
+        private IEnumerator LoadAssetAndCallback(string path, ResourceObjectQueue resQueue)
+        {
+            if(resQueue.prefab == null)
+            {
+                yield return resQueue.res.GetAssetAsync(path, OnLoadAsset);
+            }
+            List<GameObjectPoolHandler> lstCallback = null;
+            if (m_dicCallback.TryGetValue(path, out lstCallback))
+            {
+                while (lstCallback.Count > 0)
+                {
+                    GameObject go = null;
+                    if (resQueue.queue.Count > 0)
+                    {
+                        go = resQueue.queue.Dequeue();
+                    }
+                    else
+                    {
+                        go = GetGameObject(resQueue.prefab, path);
+                    }
+                    var callback = lstCallback[0];
+                    lstCallback.RemoveAt(0);
+                    go.SetActive(true);
+                    callback.Invoke(go);
+                }
+            }
+        }
+
+        private void OnLoadAsset(string path,UnityEngine.Object prefab)
+        {
+            ResourceObjectQueue resQueue;
+            if (m_dicGO.TryGetValue(path, out resQueue))
+            {
+                resQueue.prefab = prefab;
             }
         }
 
@@ -259,11 +303,12 @@ namespace Framework
                     resQueue.res = res;
                     res.Retain();
                     resQueue.queue = new Queue<GameObject>();
+                    resQueue.prefab = res.GetAsset(path);
                     m_dicGO.Add(path, resQueue);
                 }
 
                 List<CacheCallbackStruct> lstCallbackStruct = null;
-                if (m_dicCacheCallback.TryGetValue(res.realPath, out lstCallbackStruct))
+                if (m_dicCacheCallback.TryGetValue(path, out lstCallbackStruct))
                 {
                     while (lstCallbackStruct.Count > 0)
                     {
@@ -271,7 +316,7 @@ namespace Framework
                         lstCallbackStruct.RemoveAt(0);
                         for (int i = 0; i < callbackStruct.count; i++)
                         {
-                            var go = GetGameObject(resQueue.res, path);
+                            var go = GetGameObject(resQueue.prefab, path);
                             SaveObject(path, go);
                         }
                         callbackStruct.callback.Invoke(path);
