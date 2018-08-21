@@ -13,10 +13,15 @@ namespace Framework
         private Queue<EffectCtrl> m_queuePool = new Queue<EffectCtrl>();
         private List<string> m_lstPath = new List<string>();
 
-        public void CacheObject(Resource res, int count)
+        public void CacheObject(string path, int count,Action<string> callback)
         {
-            if (!m_lstPath.Contains(res.path)) m_lstPath.Add(res.path);
-            GameObjectPool.Instance.CacheObject(res, count);
+            if (!m_lstPath.Contains(path)) m_lstPath.Add(path);
+            GameObjectPool.Instance.CacheObject(path, count,callback);
+        }
+
+        public void RemoveCacheObject(string path, Action<string> callback)
+        {
+            GameObjectPool.Instance.RemoveCacheObject(path, callback);
         }
 
         public virtual GameObject CreateEffect(string path,bool autoDestory, Transform parent = null)

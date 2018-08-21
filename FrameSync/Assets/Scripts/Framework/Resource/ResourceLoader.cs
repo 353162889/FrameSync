@@ -89,15 +89,20 @@ namespace Framework
                 Resource loadingRes = _waitingList.First.Value;
                 _waitingList.RemoveFirst();
                 _loadingList.AddLast(loadingRes);
-                if (!_resContainer.ResourcesLoadMode)
+                if (!_resContainer.DirectLoadMode)
                 {
                     _wwwLoader.Load(loadingRes);
                 }
                 else
                 {
-                    _outResourcesLoader.Load(loadingRes);
-                    //这里不用res目录
-                    //_inResourcesLoader.Load(loadingRes);
+                    if(_resContainer.DirInResources)
+                    {
+                        _inResourcesLoader.Load(loadingRes);
+                    }
+                    else
+                    {
+                        _outResourcesLoader.Load(loadingRes);
+                    }
                 }
             }
         }

@@ -11,17 +11,17 @@ namespace Framework
     {
         public override void Load(Resource res)
         {
-            LoadDirectResource(res);
+            StartCoroutine(LoadDirectResource(res));
         }
 
-        void LoadDirectResource(Resource res)
+        IEnumerator LoadDirectResource(Resource res)
         {
             string loadPath = GetInResPath(res);
             UnityEngine.Object go = null;
 #if UNITY_EDITOR
             go = UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(loadPath);
 #endif
-
+            yield return null;
             res.isDone = true;
             if (go == null)
             {
@@ -37,7 +37,7 @@ namespace Framework
 
         protected override string GetInResPath(Resource res)
         {
-            return _resUtil.FullPathForFileOutRes(res.path, res.resType);
+            return _resUtil.FullPathForFile(res.realPath, res.resType);
         }
     }
 }

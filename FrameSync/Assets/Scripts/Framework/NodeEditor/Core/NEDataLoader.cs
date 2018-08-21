@@ -46,7 +46,7 @@ namespace NodeEditor
                     var textAsset = UnityEditor.AssetDatabase.LoadAssetAtPath<TextAsset>(files[i]);
                     if (textAsset != null)
                     {
-                        ParseData(files[i], textAsset.bytes);
+                        ParseData(textAsset.bytes);
                     }
                 }
                 if (null != m_finishAction)
@@ -71,16 +71,16 @@ namespace NodeEditor
             }
         }
 
-        private void OnProgress(Resource res)
+        private void OnProgress(Resource res,string path)
         {
             if (res.isSucc)
             {
                 byte[] data = res.GetBytes();
-                ParseData(res.path, data);
+                ParseData(data);
             }
         }
 
-        private void ParseData(string path, byte[] bytesData)
+        private void ParseData(byte[] bytesData)
         {
             NEData neData = NEUtil.DeSerializerObjectFromBuff(bytesData, typeof(NEData), m_arrParseTypes) as NEData;
             Type type = neData.data.GetType();

@@ -10,11 +10,11 @@ namespace Framework
         private int _finishCount;
         private List<string> _loadList;
         private Action<MultiResourceLoader> _OnComplete;
-        private Action<Resource> _OnProgress;
+        private Action<Resource,string> _OnProgress;
 
         private Dictionary<string, Resource> _mapRes;
 
-        private Dictionary<string, List<Action<Resource>>> _mapTryGetRes;
+        private Dictionary<string, List<Action<Resource,string>>> _mapTryGetRes;
         private ResourceContainer _resourceContainer;
 
         public MultiResourceLoader(ResourceContainer resourceContainer)
@@ -22,11 +22,11 @@ namespace Framework
             _resourceContainer = resourceContainer;
             _loadList = new List<string>();
             _mapRes = new Dictionary<string, Resource>();
-            _mapTryGetRes = new Dictionary<string, List<Action<Resource>>>();
+            _mapTryGetRes = new Dictionary<string, List<Action<Resource,string>>>();
             _finishCount = 0;
         }
 
-        public void LoadList(List<string> names, Action<MultiResourceLoader> OnComplete = null, Action<Resource> OnProgress = null, ResourceType resType = ResourceType.UnKnow)
+        public void LoadList(List<string> names, Action<MultiResourceLoader> OnComplete = null, Action<Resource,string> OnProgress = null, ResourceType resType = ResourceType.UnKnow)
         {
             if (names == null || names.Count == 0)
                 return;
@@ -50,17 +50,7 @@ namespace Framework
             }
         }
 
-        public List<Resource> GetResources()
-        {
-            List<Resource> listResources = new List<Resource>(_mapRes.Count);
-            foreach (var item in _mapRes)
-            {
-                listResources.Add(item.Value);
-            }
-            return listResources;
-        }
-
-        public Resource TryGetRes(string path, Action<Resource> callback = null)
+        public Resource TryGetRes(string path, Action<Resource,string> callback = null)
         {
             Resource res;
             _mapRes.TryGetValue(path, out res);
@@ -68,17 +58,17 @@ namespace Framework
             {
                 if (callback != null)
                 {
-                    callback.Invoke(res);
+                    callback.Invoke(res,path);
                 }
                 return res;
             }
             if (callback != null)
             {
-                List<Action<Resource>> list;
+                List<Action<Resource,string>> list;
                 _mapTryGetRes.TryGetValue(path, out list);
                 if (list == null)
                 {
-                    list = new List<Action<Resource>>();
+                    list = new List<Action<Resource,string>>();
                     _mapTryGetRes.Add(path, list);
                 }
                 if (!list.Contains(callback))
@@ -89,32 +79,32 @@ namespace Framework
             return null;
         }
 
-        private void OnFinish(Resource res)
+        private void OnFinish(Resource res,string path)
         {
             if (res.isSucc)
             {
                 res.Retain();
-                _mapRes.Add(res.path, res);
+                _mapRes.Add(path, res);
             }
             else
             {
-                CLog.LogError("[MultiResourceLoader] load " + res.path + " fail!");
+                CLog.LogError("[MultiResourceLoader] load " + path + " fail!");
             }
             _finishCount++;
-            List<Action<Resource>> list;
-            _mapTryGetRes.TryGetValue(res.path, out list);
+            List<Action<Resource,string>> list;
+            _mapTryGetRes.TryGetValue(path, out list);
             if (list != null)
             {
-                _mapTryGetRes.Remove(res.path);
+                _mapTryGetRes.Remove(path);
                 for (int i = 0; i < list.Count; i++)
                 {
-                    list[i].Invoke(res);
+                    list[i].Invoke(res,path);
                 }
             }
             if (_OnProgress != null)
             {
-                Action<Resource> tempAction = _OnProgress;
-                tempAction.Invoke(res);
+                Action<Resource,string> tempAction = _OnProgress;
+                tempAction.Invoke(res,path);
             }
             if (_finishCount == _loadList.Count)
             {
@@ -126,7 +116,7 @@ namespace Framework
                         continue;
                     for (int i = 0; i < item.Value.Count; i++)
                     {
-                        item.Value[i].Invoke(tempRes);
+                        item.Value[i].Invoke(tempRes,path);
                     }
                 }
                 _mapTryGetRes.Clear();

@@ -32,18 +32,7 @@ namespace Framework
 
         protected override string GetInResPath(Resource res)
         {
-            return _resUtil.FullPathForFile(res.path, res.resType);
-            //string path = res.path;
-            //int lastIndexPoint = path.LastIndexOf('.');
-            //if (lastIndexPoint != -1)
-            //{
-            //    int lastIndexSlash = path.LastIndexOf('/');
-            //    if ((lastIndexSlash != -1 && lastIndexSlash < lastIndexPoint) || (lastIndexSlash == -1))
-            //    {
-            //        path = path.Substring(0, lastIndexPoint);
-            //    }
-            //}
-            //return path;
+            return _resUtil.FullPathForFile(res.realPath, res.resType);
         }
 
     }

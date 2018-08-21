@@ -9,33 +9,40 @@ namespace Game
     public class Cmd_Preload : CommandBase
     {
         private Dictionary<string, int> m_dic = new Dictionary<string, int>();
-        private MultiResourceLoader m_cMultiLoader;
         public override void Execute(ICommandContext context)
         {
             base.Execute(context);
-            m_cMultiLoader = new MultiResourceLoader(ResourceSys.Instance);
             m_dic.Clear();
             m_dic.Add(PathTool.GetBasePrefabPath("Prefab/Scene/Camera"),1);
-            m_cMultiLoader.LoadList(m_dic.Keys.ToList(),OnComplete,OnProgress);
+            if (m_dic.Count == 0)
+            {
+                this.OnExecuteDone(CmdExecuteState.Success);
+            }
+            else
+            {
+                string[] keys = m_dic.Keys.ToArray<string>();
+                int[] values = m_dic.Values.ToArray<int>();
+                for (int i = 0; i < keys.Length; i++)
+                {
+                    SceneGOPool.Instance.CacheObject(keys[i], values[i], OnCallback);
+                }
+            }
         }
 
-        private void OnProgress(Resource res)
+        private void OnCallback(string path)
         {
-            int count = m_dic[res.path];
-            SceneGOPool.Instance.CacheObject(res, count);
-        }
-
-        private void OnComplete(MultiResourceLoader obj)
-        {
-            this.OnExecuteDone(CmdExecuteState.Success);
+            m_dic.Remove(path);
+            if(m_dic.Count == 0)
+            {
+                this.OnExecuteDone(CmdExecuteState.Success);
+            }
         }
 
         public override void OnDestroy()
         {
-            if(m_cMultiLoader != null)
+            foreach (var item in m_dic)
             {
-                m_cMultiLoader.Clear();
-                m_cMultiLoader = null;
+                SceneGOPool.Instance.RemoveCacheObject(item.Key, OnCallback);
             }
             base.OnDestroy();
         }

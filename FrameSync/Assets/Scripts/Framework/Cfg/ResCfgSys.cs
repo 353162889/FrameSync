@@ -138,12 +138,12 @@ namespace Framework
             }
         }
 
-        private void OnProgress(Resource res)
+        private void OnProgress(Resource res,string path)
         {
             if (res.isSucc)
             {
                 string data = res.GetText();
-                ParseData(res.path, data);
+                ParseData(path, data);
             }
         }
 

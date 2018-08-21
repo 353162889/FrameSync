@@ -161,12 +161,12 @@ namespace Framework
             ResourceSys.Instance.GetResource(viewPath, OnResourceLoaded);
         }
 
-        private void OnResourceLoaded(Resource res)
+        private void OnResourceLoaded(Resource res,string path)
         {
             if (m_cResource != null) m_cResource.Release();
             m_cResource = res;
             m_cResource.Retain();
-            UnityEngine.Object objPrefab = m_cResource.GetAsset(null);
+            UnityEngine.Object objPrefab = m_cResource.GetAsset(path);
             this.MainGO = GameObject.Instantiate(objPrefab) as GameObject;
            
             if (this.MainGO != null)

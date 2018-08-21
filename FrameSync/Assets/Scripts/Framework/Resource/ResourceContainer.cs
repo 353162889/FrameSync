@@ -6,29 +6,40 @@ namespace Framework
 { 
     public class ResourceContainer : MonoBehaviour
     {
-        public delegate void ResourceHandler(Resource res);
+        public struct ResourceHandlerStruct
+        {
+            public string path;
+            public ResourceHandler callback;
+        }
 
-        private Dictionary<Resource, List<ResourceHandler>> _succCallbacks;
-        private Dictionary<Resource, List<ResourceHandler>> _failCallbacks;
+        public delegate void ResourceHandler(Resource res,string path);
+
+        private Dictionary<Resource, List<ResourceHandlerStruct>> _succCallbacks;
+        private Dictionary<Resource, List<ResourceHandlerStruct>> _failCallbacks;
         private Dictionary<string, Resource> _mapRes;
 
         private ResourceLoader _resLoader;
         private AssetBundleFile _assetBundleFile;
 
-        public bool ResourcesLoadMode { get; private set; }
+        //资源直接加载模式
+        public bool DirectLoadMode { get; private set; }
         private string _resRootDir;
         public string ResRootDir { get { return _resRootDir; } }
+        private bool _dirInResources;
+        public bool DirInResources { get { return _dirInResources; } }
 
-        public void Init(bool resourceLoadMode,string resRootDir)
+        public void Init(bool directLoadMode,string resRootDir)
         {
-            _succCallbacks = new Dictionary<Resource, List<ResourceHandler>>();
-            _failCallbacks = new Dictionary<Resource, List<ResourceHandler>>();
+            _resRootDir = resRootDir;
+            //根据传入的目录判断是直接用Resources.Load还是外部加载
+            _dirInResources = _resRootDir == "Assets/Resources";
+            _succCallbacks = new Dictionary<Resource, List<ResourceHandlerStruct>>();
+            _failCallbacks = new Dictionary<Resource, List<ResourceHandlerStruct>>();
             _mapRes = new Dictionary<string, Resource>();
             _resLoader = ResourceLoader.GetResLoader(this.gameObject);
             _resLoader.OnDone += OnResourceDone;
-            ResourcesLoadMode = resourceLoadMode;
+            DirectLoadMode = directLoadMode;
             ResourceFileUtil resUtil = gameObject.AddComponentOnce<ResourceFileUtil>();
-            _resRootDir = resRootDir;
             resUtil.Init(resRootDir);
             _assetBundleFile = gameObject.AddComponentOnce<AssetBundleFile>();
         }
@@ -60,7 +71,7 @@ namespace Framework
         /// <param name="path">资源路径</param>
         /// <param name="onSucc">成功时的回调</param>
         /// <param name="onFail">失败时的回调</param>
-        /// <param name="resType">资源类型，默认是UnKnow，如果是在bundle模式下，并且传入Unknow类型，会改成AssetBundle类型</param>
+        /// <param name="resType">资源类型，默认是UnKnow，如果是在bundle模式下，并且传入Unknow类型，会改成AssetBundle类型，如果text或AudioClip不打成bungle，必须传入类型，获取资源使用特定的方法</param>
         /// <returns>返回当前加载的Resource</returns>
         public Resource GetResource(string path, ResourceHandler onSucc = null, ResourceHandler onFail = null,
             ResourceType resType = ResourceType.UnKnow)
@@ -70,9 +81,8 @@ namespace Framework
                 CLog.LogError("[GetResource]ResName can not is null!");
                 return null;
             }
-       
             Resource res;
-            _mapRes.TryGetValue(GetCacheResourceKey(path), out res);
+            _mapRes.TryGetValue(GetRealResourcePath(path), out res);
             if (res != null)
             {
                 if (res.isDone)
@@ -81,24 +91,24 @@ namespace Framework
                     {
                         ResourceHandler tempOnSucc = onSucc;
                         onSucc = null;
-                        tempOnSucc.Invoke(res);
+                        tempOnSucc.Invoke(res,path);
                         tempOnSucc = null;
                     }
                 }
                 else
                 {
-                    AddListener(res, onSucc, onFail);
+                    AddListener(res,path, onSucc, onFail);
                 }
                 return res;
             }
             res = new Resource();
-            res.path = path;
-            res.resType = (!ResourcesLoadMode && resType == ResourceType.UnKnow) ? ResourceType.AssetBundle : resType;
+            res.realPath = GetRealResourcePath(path);
+            res.resType = (!DirectLoadMode && resType == ResourceType.UnKnow) ? ResourceType.AssetBundle : resType;
 
             //获取到当前资源的依赖资源(可能没法保证顺序，所以拿的时候需要保证所有依赖资源都已经加载好)
-            if (!ResourcesLoadMode && res.resType == ResourceType.AssetBundle)
+            if (!DirectLoadMode && res.resType == ResourceType.AssetBundle)
             {
-                string[] listDependResPath = GetDependResPath(res);
+                string[] listDependResPath = GetDependResPath(path);
                 if (listDependResPath != null && listDependResPath.Length > 0)
                 {
                     List<Resource> listDependRes = new List<Resource>();
@@ -112,9 +122,9 @@ namespace Framework
                 }
             }
             //真正加载当前资源
-            _mapRes.Add(GetCacheResourceKey(res.path), res);
+            _mapRes.Add(res.realPath, res);
             res.Retain();
-            AddListener(res, onSucc, onFail);
+            AddListener(res,path, onSucc, onFail);
             _resLoader.Load(res);
             return res;
         }
@@ -123,16 +133,16 @@ namespace Framework
         {
             if (res.isSucc)
             {
-                List<ResourceHandler> succList;
+                List<ResourceHandlerStruct> succList;
                 _succCallbacks.TryGetValue(res, out succList);
                 _succCallbacks.Remove(res);
                 if (succList != null)
                 {
                     while(succList.Count > 0)
                     {
-                        var callback = succList[0];
+                        var callbackStruct = succList[0];
                         succList.RemoveAt(0);
-                        callback.Invoke(res);
+                        callbackStruct.callback.Invoke(res, callbackStruct.path);
                     }
                 }
                 res.Release();
@@ -142,22 +152,22 @@ namespace Framework
                 //失败的话，将资源先移除掉
                 if (res.refCount > 1)
                 {
-                    CLog.LogError("DestroyResource[resPath=" + res.path + "],RefCount>1.");
+                    CLog.LogError("DestroyResource[resPath=" + res.realPath + "],RefCount>1.");
                 }
                 else
                 { 
-                    _mapRes.Remove(GetCacheResourceKey(res.path));
+                    _mapRes.Remove(res.realPath);
                 }
-                List<ResourceHandler> failList;
+                List<ResourceHandlerStruct> failList;
                 _failCallbacks.TryGetValue(res, out failList);
                 _failCallbacks.Remove(res);
                 if (failList != null)
                 {
                     while (failList.Count > 0)
                     {
-                        var callback = failList[0];
+                        var callbackStruct = failList[0];
                         failList.RemoveAt(0);
-                        callback.Invoke(res);
+                        callbackStruct.callback.Invoke(res,callbackStruct.path);
                     }
                 }
                 res.Release();
@@ -168,67 +178,98 @@ namespace Framework
             }
         }
 
-        private string[] GetDependResPath(Resource res)
+        private string[] GetDependResPath(string path)
         {
-            string resName = _assetBundleFile.GetAssetBundleNameByAssetPath(res.path);
+            string resName = _assetBundleFile.GetAssetBundleNameByAssetPath(path);
             return _assetBundleFile.GetDirectDependencies(resName);
         }
 
-        public string GetCacheResourceKey(string resPath)
+        public string GetRealResourcePath(string resPath)
         {
             if (string.IsNullOrEmpty(resPath))
             {
                 return resPath;
             }
-            if (ResourcesLoadMode)
+            if (DirectLoadMode)
             {
                 return resPath;
             }
             return _assetBundleFile.GetAssetBundleNameByAssetPath(resPath);
         }
 
-        private void AddListener(Resource res, ResourceHandler onSucc = null, ResourceHandler onFail = null)
+        private void AddListener(Resource res,string path, ResourceHandler onSucc = null, ResourceHandler onFail = null)
         {
-
             if (onSucc != null)
             {
-                List<ResourceHandler> succList;
+                List<ResourceHandlerStruct> succList;
                 _succCallbacks.TryGetValue(res, out succList);
                 if (succList == null)
                 {
-                    succList = new List<ResourceHandler>();
+                    succList = new List<ResourceHandlerStruct>();
                     _succCallbacks.Add(res, succList);
                 }
-                if (!succList.Contains(onSucc))
+                bool contain = false;
+                for (int i = 0; i < succList.Count; i++)
                 {
-                    succList.Add(onSucc);
+                    if(succList[i].callback == onSucc && succList[i].path == path)
+                    {
+                        contain = true;
+                        break;
+                    }
+                }
+                if (!contain)
+                {
+                    var succCallback = new ResourceHandlerStruct();
+                    succCallback.callback = onSucc;
+                    succCallback.path = path;
+                    succList.Add(succCallback);
                 }
             }
             if (onFail != null)
             {
-                List<ResourceHandler> failList;
+                List<ResourceHandlerStruct> failList;
                 _failCallbacks.TryGetValue(res, out failList);
                 if (failList == null)
                 {
-                    failList = new List<ResourceHandler>();
+                    failList = new List<ResourceHandlerStruct>();
                     _failCallbacks.Add(res, failList);
                 }
-                if (!failList.Contains(onFail))
+
+                bool contain = false;
+                for (int i = 0; i < failList.Count; i++)
                 {
-                    failList.Add(onFail);
+                    if (failList[i].callback == onSucc && failList[i].path == path)
+                    {
+                        contain = true;
+                        break;
+                    }
+                }
+                if (!contain)
+                {
+                    var failCallback = new ResourceHandlerStruct();
+                    failCallback.callback = onFail;
+                    failCallback.path = path;
+                    failList.Add(failCallback);
                 }
             }
         }
 
-        public void RemoveListener(Resource res, ResourceHandler onSucc = null, ResourceHandler onFail = null)
+        public void RemoveListener(Resource res,string path, ResourceHandler onSucc = null, ResourceHandler onFail = null)
         {
             if (onSucc != null)
             {
-                List<ResourceHandler> succList;
+                List<ResourceHandlerStruct> succList;
                 _succCallbacks.TryGetValue(res, out succList);
                 if (succList != null)
                 {
-                    succList.Remove(onSucc);
+                    for (int i = succList.Count - 1; i > -1; i--)
+                    {
+                        if(succList[i].path == path && succList[i].callback == onSucc)
+                        {
+                            succList.RemoveAt(i);
+                            break;
+                        }
+                    }
                     if(succList.Count == 0)
                     {
                         _succCallbacks.Remove(res);
@@ -237,11 +278,18 @@ namespace Framework
             }
             if (onFail != null)
             {
-                List<ResourceHandler> failList;
+                List<ResourceHandlerStruct> failList;
                 _failCallbacks.TryGetValue(res, out failList);
                 if (failList != null)
                 {
-                    failList.Remove(onFail);
+                    for (int i = failList.Count - 1; i > -1; i--)
+                    {
+                        if (failList[i].path == path && failList[i].callback == onSucc)
+                        {
+                            failList.RemoveAt(i);
+                            break;
+                        }
+                    }
                     if(failList.Count == 0)
                     {
                         _failCallbacks.Remove(res);
@@ -253,10 +301,10 @@ namespace Framework
         public void RemoveListener(string path, ResourceHandler onSucc = null, ResourceHandler onFail = null)
         {
             Resource res;
-            _mapRes.TryGetValue(GetCacheResourceKey(path), out res);
+            _mapRes.TryGetValue(GetRealResourcePath(path), out res);
             if (res != null)
             {
-                RemoveListener(res, onSucc, onFail);
+                RemoveListener(res,path, onSucc, onFail);
             }
         }
 
@@ -269,22 +317,10 @@ namespace Framework
         public void RemoveAllListener(string path)
         {
             Resource res;
-            _mapRes.TryGetValue(GetCacheResourceKey(path), out res);
+            _mapRes.TryGetValue(GetRealResourcePath(path), out res);
             if (res != null)
             {
                 RemoveAllListener(res);
-            }
-        }
-
-        public void RemoveWaitLoadingRes(Resource res)
-        {
-            if (_resLoader.RemoveWaitingLoadingRes(res))
-            {
-                RemoveAllListener(res);
-                if (_mapRes.Remove(res.path))
-                {
-                    res.Release();
-                }
             }
         }
 

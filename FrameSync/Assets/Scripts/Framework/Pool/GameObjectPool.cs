@@ -13,30 +13,89 @@ namespace Framework
     /// </summary>
     public class GameObjectPool : SingletonMonoBehaviour<GameObjectPool>
     {
-       
-        private Dictionary<Resource, Queue<GameObject>> m_dicGO;
+        public struct ResourceObjectQueue
+        {
+            public Resource res;
+            public Queue<GameObject> queue;
+        }
+
+        public struct CacheCallbackStruct
+        {
+            public Action<string> callback;
+            public int count;
+        }
+
+        private Dictionary<string, ResourceObjectQueue> m_dicGO;
         private Dictionary<string, List<GameObjectPoolHandler>> m_dicCallback;
+        private Dictionary<string, List<CacheCallbackStruct>> m_dicCacheCallback;
 
         protected override void Init()
         {
-            m_dicGO = new Dictionary<Resource, Queue<GameObject>>();
+            m_dicGO = new Dictionary<string, ResourceObjectQueue>();
             m_dicCallback = new Dictionary<string, List<GameObjectPoolHandler>>();
+            m_dicCacheCallback = new Dictionary<string, List<CacheCallbackStruct>>();
             base.Init();
         }
 
-        public void CacheObject(Resource res,int count)
+        public void CacheObject(string path,int count,Action<string> callback)
         {
-            Queue<GameObject> queueGO = null;
-            if (!m_dicGO.TryGetValue(res, out queueGO))
+            ResourceObjectQueue resQueue;
+            if (m_dicGO.TryGetValue(path, out resQueue))
             {
-                queueGO = new Queue<GameObject>();
-                m_dicGO.Add(res, queueGO);
-                res.Retain();
+                for (int i = 0; i < count; i++)
+                {
+                    var go = GetGameObject(resQueue.res, path);
+                    SaveObject(path, go);
+                }
+                if (callback != null)
+                {
+                    callback.Invoke(path);
+                }
             }
-            for (int i = 0; i < count; i++)
+            else
             {
-                var go = GetGameObject(res);
-                SaveObject(res.path, go);
+                if(callback != null)
+                {
+                    List<CacheCallbackStruct> lstCallbackStruct;
+                    if (!m_dicCacheCallback.TryGetValue(path, out lstCallbackStruct))
+                    {
+                        lstCallbackStruct = new List<CacheCallbackStruct>();
+                        m_dicCacheCallback.Add(path,lstCallbackStruct);
+                    }
+                    bool contain = false;
+                    for (int i = 0; i < lstCallbackStruct.Count; i++)
+                    {
+                        if(lstCallbackStruct[i].callback == callback)
+                        {
+                            contain = true;
+                            break;
+                        }
+                    }
+                    if (!contain)
+                    {
+                        CacheCallbackStruct callbackStruct = new CacheCallbackStruct();
+                        callbackStruct.callback = callback;
+                        callbackStruct.count = count;
+                        lstCallbackStruct.Add(callbackStruct);
+                    }
+                }
+                ResourceSys.Instance.GetResource(path, OnResLoadCache);
+            }
+        }
+
+        public void RemoveCacheObject(string path,Action<string> callback)
+        {
+            List<CacheCallbackStruct> lst = null;
+            if (m_dicCacheCallback.TryGetValue(path, out lst))
+            {
+                for (int i = lst.Count - 1; i > -1; i--)
+                {
+                    if(lst[i].callback == callback)
+                    {
+                        lst.RemoveAt(i);
+                        break;
+                    }
+                }
             }
         }
 
@@ -44,16 +103,16 @@ namespace Framework
         {
             foreach (var item in m_dicGO)
             {
-                if(item.Key.path == path)
+                if(item.Key == path)
                 {
                     GameObject go = null;
-                    if (item.Value.Count > 0)
+                    if (item.Value.queue.Count > 0)
                     {
-                        go = item.Value.Dequeue();
+                        go = item.Value.queue.Dequeue();
                     }
                     else
                     {
-                        go = GetGameObject(item.Key);
+                        go = GetGameObject(item.Value.res,item.Key);
                     }
                     go.SetActive(true);
                     if (null != callback)
@@ -93,15 +152,16 @@ namespace Framework
 
         public void SaveObject(string path, GameObject go)
         {
-            foreach (var item in m_dicGO)
+            ResourceObjectQueue resQueue;
+            if(m_dicGO.TryGetValue(path,out resQueue))
             {
-                if (item.Key.path == path)
-                {
-                    this.gameObject.AddChildToParent(go);
-                    go.SetActive(false);
-                    item.Value.Enqueue(go);
-                    return;
-                }
+                this.gameObject.AddChildToParent(go);
+                go.SetActive(false);
+                resQueue.queue.Enqueue(go);
+            }
+            else
+            {
+                GameObject.Destroy(go);
             }
         }
 
@@ -109,26 +169,17 @@ namespace Framework
         {
             ResourceSys.Instance.RemoveListener(path, OnResLoad);
             m_dicCallback.Remove(path);
-            Resource resource = null;
-            Queue<GameObject> queue = null;
-            foreach (var item in m_dicGO)
+
+            ResourceObjectQueue resQueue;
+            if (m_dicGO.TryGetValue(path, out resQueue))
             {
-                if (item.Key.path == path)
+                while (resQueue.queue.Count > 0)
                 {
-                    resource = item.Key;
-                    queue = item.Value;
-                    break;
+                    GameObject.Destroy(resQueue.queue.Dequeue());
                 }
+                resQueue.res.Release();
             }
-            if(resource != null)
-            {
-                m_dicGO.Remove(resource);
-                while (queue.Count > 0)
-                {
-                    GameObject.Destroy(queue.Dequeue());
-                }
-                resource.Release();
-            }
+            m_dicGO.Remove(path);
         }
 
         public void Clear()
@@ -140,46 +191,49 @@ namespace Framework
             m_dicCallback.Clear();
             foreach (var item in m_dicGO)
             {
-                while (item.Value.Count > 0)
+                while (item.Value.queue.Count > 0)
                 {
-                    GameObject.Destroy(item.Value.Dequeue());
+                    GameObject.Destroy(item.Value.queue.Dequeue());
                 }
-                item.Key.Release();
+                item.Value.res.Release();
             }
             m_dicGO.Clear();
         }
 
-        private GameObject GetGameObject(Resource res)
+        private GameObject GetGameObject(Resource res,string path)
         {
-            UnityEngine.Object prefab = res.GetAsset(res.path);
+            UnityEngine.Object prefab = res.GetAsset(path);
             GameObject go = (GameObject)GameObject.Instantiate(prefab);
             return go;
         }
 
-        private void OnResLoad(Resource res)
+        private void OnResLoad(Resource res,string path)
         {
             if (res.isSucc)
             {
-                Queue<GameObject> queueGO = null;
-                if(!m_dicGO.TryGetValue(res, out queueGO))
+                ResourceObjectQueue resQueue;
+                if (!m_dicGO.TryGetValue(path, out resQueue))
                 {
-                    queueGO = new Queue<GameObject>();
-                    m_dicGO.Add(res, queueGO);
+                    resQueue = new ResourceObjectQueue();
+                    resQueue.res = res;
                     res.Retain();
+                    resQueue.queue = new Queue<GameObject>();
+                    m_dicGO.Add(path, resQueue);
                 }
+                
                 List<GameObjectPoolHandler> lstCallback = null;
-                if(m_dicCallback.TryGetValue(res.path, out lstCallback))
+                if(m_dicCallback.TryGetValue(res.realPath, out lstCallback))
                 {
                     while(lstCallback.Count > 0)
                     {
                         GameObject go = null;
-                        if (queueGO.Count > 0)
+                        if (resQueue.queue.Count > 0)
                         {
-                            go = queueGO.Dequeue();
+                            go = resQueue.queue.Dequeue();
                         }
                         else
                         {
-                            go = GetGameObject(res);
+                            go = GetGameObject(res,path);
                         }
                         var callback = lstCallback[0];
                         lstCallback.RemoveAt(0);
@@ -190,7 +244,43 @@ namespace Framework
             }
             else
             {
-                CLog.LogError("加载unit资源" + res.path + "失败");
+                CLog.LogError("加载GameObject资源" + path + "失败");
+            }
+        }
+
+        private void OnResLoadCache(Resource res, string path)
+        {
+            if (res.isSucc)
+            {
+                ResourceObjectQueue resQueue;
+                if (!m_dicGO.TryGetValue(path, out resQueue))
+                {
+                    resQueue = new ResourceObjectQueue();
+                    resQueue.res = res;
+                    res.Retain();
+                    resQueue.queue = new Queue<GameObject>();
+                    m_dicGO.Add(path, resQueue);
+                }
+
+                List<CacheCallbackStruct> lstCallbackStruct = null;
+                if (m_dicCacheCallback.TryGetValue(res.realPath, out lstCallbackStruct))
+                {
+                    while (lstCallbackStruct.Count > 0)
+                    {
+                        var callbackStruct = lstCallbackStruct[0];
+                        lstCallbackStruct.RemoveAt(0);
+                        for (int i = 0; i < callbackStruct.count; i++)
+                        {
+                            var go = GetGameObject(resQueue.res, path);
+                            SaveObject(path, go);
+                        }
+                        callbackStruct.callback.Invoke(path);
+                    }
+                }
+            }
+            else
+            {
+                CLog.LogError("加载GameObject资源" + path + "失败");
             }
         }
     }

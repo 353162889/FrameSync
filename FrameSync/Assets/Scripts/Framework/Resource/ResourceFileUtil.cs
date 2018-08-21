@@ -40,7 +40,6 @@ namespace Framework
         public static readonly string ASSET_BUNDLE_EXTENSION = ".assetbundle";
 
         private ResourceContainer _resourceContainer;
-        private AssetBundleFile _assetBundleMgr;
         //在unity加载资源的根路径
         private string ResRootDir;
 
@@ -71,7 +70,6 @@ namespace Framework
 #endif
 
             _resourceContainer = gameObject.AddComponentOnce<ResourceContainer>();
-            _assetBundleMgr = gameObject.AddComponentOnce<AssetBundleFile>();
         }
 
         public string GetRemotePath(string url,string path)
@@ -119,11 +117,7 @@ namespace Framework
         public string FullPathForFile(string file, ResourceType resType)
         {
             string fullPath;
-            if (resType == ResourceType.AssetBundle)
-            {
-                file = _assetBundleMgr.GetAssetBundleNameByAssetPath(file);
-            }
-            if (!_resourceContainer.ResourcesLoadMode)
+            if (!_resourceContainer.DirectLoadMode)
             {
                 file = file.ToLower();
                 fullPath = OUTER_FILE_SYMBOL + ResourceLoadPath + file;
@@ -132,35 +126,20 @@ namespace Framework
             }
             else
             {
-                //如果是resource模式加载，移除后缀
-                int index = file.LastIndexOf(".");
-                if (index > -1)
+                if (_resourceContainer.DirInResources)
                 {
-                    file = file.Substring(0, index);
+                    //如果是resource模式加载，移除后缀
+                    int index = file.LastIndexOf(".");
+                    if (index > -1)
+                    {
+                        file = file.Substring(0, index);
+                    }
+                    fullPath = file;
                 }
-                fullPath = file;
-            }
-            return fullPath;
-        }
-
-        public string FullPathForFileOutRes(string file, ResourceType resType)
-        {
-            string fullPath;
-            if (resType == ResourceType.AssetBundle)
-            {
-                file = _assetBundleMgr.GetAssetBundleNameByAssetPath(file);
-            }
-            if (!_resourceContainer.ResourcesLoadMode)
-            {
-                file = file.ToLower();
-                fullPath = OUTER_FILE_SYMBOL + ResourceLoadPath + file;
-                //暂时直接读streaming中bundle文件（后期做bundle压缩的时候再换）
-                //fullPath = FILE_SYMBOL + StreamingAssetsPath + file;
-            }
-            else
-            {
-                //如果是resource模式加载，移除后缀
-                fullPath = ResRootDir + file;
+                else
+                {
+                    fullPath = ResRootDir + file;
+                }
             }
             return fullPath;
         }

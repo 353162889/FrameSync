@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,7 +20,10 @@ namespace Framework
     public class Resource
     {
         private static string BundleRootName = "Assets/Resources/".ToLower();
-        public string path;
+        /// <summary>
+        /// 当前资源的真正路径（如果是bundle模式加载的，那么它是bundle的路径）
+        /// </summary>
+        public string realPath;
         public ResourceType resType;
 
         public bool isDone { get; set; }
@@ -128,16 +132,17 @@ namespace Framework
             }
         }
 
-        public static GameObject GetGameObject(Resource res, string name)
-        {
-            var prefab = (GameObject)res.GetAsset(name);
-            if(prefab != null)
-            {
-                return GameObject.Instantiate(prefab);
-            }
-            return null;
-        }
-        //如果是bundle模式，要注意，该bundle可能打入多个资源，需要传入资源名称
+        //public static GameObject GetGameObject(Resource res, string name)
+        //{
+        //    var prefab = (GameObject)res.GetAsset(name);
+        //    if(prefab != null)
+        //    {
+        //        return GameObject.Instantiate(prefab);
+        //    }
+        //    return null;
+        //}
+
+        //同步加载资源,如果是bundle模式，要注意，该bundle可能打入多个资源，需要传入资源名称
         public UnityEngine.Object GetAsset(string name)
         {
             UnityEngine.Object asset = null;
@@ -150,7 +155,7 @@ namespace Framework
                     {
                         if (arr.Length > 1)
                         {
-                            string realName = BundleRootName + path.ToLower();
+                            string realName = BundleRootName + name.ToLower();
                             asset = _assetBundle.LoadAsset(realName);
                         }
                         if (asset == null)
@@ -163,18 +168,6 @@ namespace Framework
                         string realName = BundleRootName + name.ToLower();
                         asset = _assetBundle.LoadAsset(realName);
                     }
-
-                    ////没有被引用，同时内部只有一个资源，才会自动释放二进制资源
-                    //int count = arr.Length;
-                    //if (count == 1 && !AssetBundleMgr.Instance.HasReferenced(this.path))
-                    //{
-                    //    _wwwAssetObj = asset;
-                    //    //音频不能立即清，因为它还在后台解码中
-                    //    if (!(_wwwAssetObj is AudioClip))
-                    //    {
-                    //        this.UnloadBinaryBytes();
-                    //    }
-                    //}
                 }
                 else
                 {
@@ -193,6 +186,62 @@ namespace Framework
                 }
             }
             return asset;
+        }
+
+        /// <summary>
+        /// 异步加载资源
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public IEnumerator GetAssetAsync(string name, Action<UnityEngine.Object> callback)
+        {
+            UnityEngine.Object asset = null;
+            if (resType == ResourceType.AssetBundle)
+            {
+                if (_assetBundle != null)
+                {
+                    string[] arr = _assetBundle.GetAllAssetNames();
+                    if (string.IsNullOrEmpty(name))
+                    {
+                        if (arr.Length > 1)
+                        {
+                            string realName = BundleRootName + name.ToLower();
+                            AssetBundleRequest request = _assetBundle.LoadAssetAsync(name);
+                            yield return request;
+                            asset = request.asset;
+                        }
+                        if (asset == null)
+                        {
+                            AssetBundleRequest request = _assetBundle.LoadAssetAsync(arr[0]);
+                            yield return request;
+                            asset = request.asset;
+                        }
+                    }
+                    else
+                    {
+                        string realName = BundleRootName + name.ToLower();
+                        AssetBundleRequest request = _assetBundle.LoadAssetAsync(realName);
+                        yield return request;
+                        asset = request.asset;
+                    }
+                }
+                else
+                {
+                    asset = _wwwAssetObj;
+                }
+            }
+            else
+            {
+                if (_wwwAssetObj != null)
+                {
+                    asset = _wwwAssetObj;
+                }
+                else
+                {
+                    asset = _directObj;
+                }
+            }
+            callback.Invoke(asset);
         }
 
         public void SetDependsRes(List<Resource> list)
