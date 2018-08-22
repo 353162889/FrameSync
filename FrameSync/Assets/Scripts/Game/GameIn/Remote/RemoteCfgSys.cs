@@ -29,5 +29,14 @@ namespace Game
             }
             return neData;
         }
+
+        public void Clear()
+        {
+            if (m_cNEDataLoader != null)
+            {
+                m_cNEDataLoader.Clear();
+                m_cNEDataLoader = null;
+            }
+        }
     }
 }

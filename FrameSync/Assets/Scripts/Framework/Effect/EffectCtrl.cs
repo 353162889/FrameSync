@@ -22,8 +22,9 @@ namespace Framework
 
         private EffectInfo m_cEffectInfo;
 
-        private void OnLoadResource(GameObject go)
+        private void OnLoadResource(string path, UnityEngine.Object obj)
         {
+            GameObject go = (GameObject)obj;
             this.gameObject.AddChildToParent(go);
             m_cEffectInfo = go.AddComponentOnce<EffectInfo>();
             m_fDuration = m_cEffectInfo.duration;
@@ -45,7 +46,7 @@ namespace Framework
             m_fDuration = 0;
             m_bDestory = false;
             m_cEffectInfo = null;
-            GameObjectPool.Instance.GetObject(m_sPath, OnLoadResource);
+            ResourceObjectPool.Instance.GetObject(m_sPath,false, OnLoadResource);
         }
 
         public void End()
@@ -54,11 +55,11 @@ namespace Framework
             m_bDestory = true;
             if (!string.IsNullOrEmpty(m_sPath))
             {
-                GameObjectPool.Instance.RemoveCallback(m_sPath, OnLoadResource);
+                ResourceObjectPool.Instance.RemoveCallback(m_sPath, OnLoadResource);
             }
             if (m_cEffectInfo != null)
             {
-                GameObjectPool.Instance.SaveObject(m_sPath, m_cEffectInfo.gameObject);
+                ResourceObjectPool.Instance.SaveObject(m_sPath, m_cEffectInfo.gameObject);
                 m_cEffectInfo = null;
             }
             m_sPath = null;

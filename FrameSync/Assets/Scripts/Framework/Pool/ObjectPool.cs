@@ -8,14 +8,16 @@ namespace Framework
 	{
 		private Queue<T> _pool;
 		private int _capicity;
+        private bool _autoIncrease;
 		private bool _inited;
         public bool inited { get { return _inited; } }
 
-		public void Init(int capicity)
+        public void Init(int capicity, bool autoIncrease = false)
 		{
 			if (!_inited)
 			{
 				this._capicity = capicity;
+                this._autoIncrease = autoIncrease;
 				_pool = new Queue<T> (_capicity);
                 CacheObject(_capicity / 2);
                 _inited = true;
@@ -50,7 +52,15 @@ namespace Framework
 			}
 			else
 			{
-				CLog.Log ("<color='yellow'>"+ typeof(T) +" over capicity:"+_capicity+"</color>");
+                if (_autoIncrease)
+                {
+                    _capicity++;
+                    _pool.Enqueue(obj);
+                }
+                else
+                {
+                    CLog.Log("<color='yellow'>" + typeof(T) + " over capicity:" + _capicity + "</color>");
+                }
 			}
 		}
 

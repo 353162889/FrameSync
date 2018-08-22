@@ -12,10 +12,23 @@ namespace Game
     /// </summary>
     public class UIEffectPool : EffectPool<UIEffectPool>
     {
-        public override GameObject CreateEffect(string name, bool autoDestory, Transform parent = null)
+
+        public void CacheObject(string name, int count, Action<string> callback)
         {
             string path = PathTool.GetUIEffectPath(name);
-            return base.CreateEffect(path, autoDestory, parent);
+            base._CacheObject(path, true, count, callback);
+        }
+
+        public void RemoveCacheObject(string name, Action<string> callback)
+        {
+            string path = PathTool.GetUIEffectPath(name);
+            base._RemoveCacheObject(path, callback);
+        }
+
+        public GameObject CreateEffect(string name, bool autoDestory, Transform parent = null)
+        {
+            string path = PathTool.GetUIEffectPath(name);
+            return base._CreateEffect(path, autoDestory, parent);
         }
     }
 }

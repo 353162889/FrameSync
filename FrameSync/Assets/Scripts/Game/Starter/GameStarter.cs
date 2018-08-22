@@ -130,9 +130,10 @@ namespace Game
             GameObject goPool = new GameObject();
             goPool.name = "GameObjectPool";
             GameObject.DontDestroyOnLoad(goPool);
-            goPool.AddComponentOnce<GameObjectPool>();
+            goPool.AddComponentOnce<ResourceObjectPool>();
             goPool.AddComponentOnce<CoreGOPool>();
             goPool.AddComponentOnce<SceneGOPool>();
+            goPool.AddComponentOnce<PrefabPool>();
 
             //初始化特效池
             GameObject sceneEffectPool = new GameObject();

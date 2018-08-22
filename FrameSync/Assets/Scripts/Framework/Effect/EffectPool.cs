@@ -7,24 +7,60 @@ using UnityEngine;
 
 namespace Framework
 {
-    public class EffectPool<T> : SingletonMonoBehaviour<EffectPool<T>>
+    public class EffectPool<T> : MonoBehaviour where T : EffectPool<T>
     {
         private List<EffectCtrl> m_lstEffect = new List<EffectCtrl>();
         private Queue<EffectCtrl> m_queuePool = new Queue<EffectCtrl>();
         private List<string> m_lstPath = new List<string>();
 
-        public void CacheObject(string path, int count,Action<string> callback)
+        private static T uniqueInstance;
+
+        public static T Instance
+        {
+            get
+            {
+                return uniqueInstance;
+            }
+        }
+
+        protected virtual void Awake()
+        {
+            if (uniqueInstance == null)
+            {
+                uniqueInstance = (T)this;
+                GameObject.DontDestroyOnLoad(this);
+                uniqueInstance.Init();
+            }
+            else if (uniqueInstance != this)
+            {
+                throw new InvalidOperationException("Cannot have two instances of a SingletonMonoBehaviour : " + typeof(T).ToString() + ".");
+            }
+        }
+
+        protected virtual void Init()
+        {
+        }
+
+        protected virtual void OnDestroy()
+        {
+            if (uniqueInstance == this)
+            {
+                uniqueInstance = null;
+            }
+        }
+
+        protected void _CacheObject(string path,bool isPrefab, int count,Action<string> callback)
         {
             if (!m_lstPath.Contains(path)) m_lstPath.Add(path);
-            GameObjectPool.Instance.CacheObject(path, count,callback);
+            ResourceObjectPool.Instance.CacheObject(path,isPrefab, count,callback);
         }
 
-        public void RemoveCacheObject(string path, Action<string> callback)
+        protected void _RemoveCacheObject(string path, Action<string> callback)
         {
-            GameObjectPool.Instance.RemoveCacheObject(path, callback);
+            ResourceObjectPool.Instance.RemoveCacheObject(path, callback);
         }
 
-        public virtual GameObject CreateEffect(string path,bool autoDestory, Transform parent = null)
+        protected GameObject _CreateEffect(string path,bool autoDestory, Transform parent = null)
         {
             if (!m_lstPath.Contains(path)) m_lstPath.Add(path);
             EffectCtrl effectCtrl = GetEffectCtrl();
@@ -62,6 +98,18 @@ namespace Framework
             }
         }
 
+        /// <summary>
+        /// 清楚某个特效池资源的引用，调用此方法时，需要保证当前所有特效已经回收,否则bundle下资源回收后会导致引用丢失的情况
+        /// </summary>
+        /// <param name="path"></param>
+        //public void Clear(string path)
+        //{
+        //    if(m_lstPath.Remove(path))
+        //    {
+        //        ResourceObjectPool.Instance.Clear(path);
+        //    }
+        //}
+
 
         public void Clear()
         {
@@ -74,7 +122,7 @@ namespace Framework
             m_lstEffect.Clear();
             for (int i = 0; i < m_lstPath.Count; i++)
             {
-                GameObjectPool.Instance.Clear(m_lstPath[i]);
+                ResourceObjectPool.Instance.Clear(m_lstPath[i]);
             }
             m_lstPath.Clear();
         }

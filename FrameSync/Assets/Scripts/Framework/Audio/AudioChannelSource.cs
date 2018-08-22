@@ -17,7 +17,6 @@ namespace Framework
         private bool m_bPlaying;
         private int m_nPriority;
         private string m_sPath;
-        private Resource m_cRes;
         
         public AudioChannelSource()
         {
@@ -28,7 +27,6 @@ namespace Framework
             m_cTransform.parent = AudioSys.Instance.audioChannelObj.transform;
             m_cTransform.localPosition = Vector3.zero;
             m_cAudioSource.clip = null;
-            m_cRes = null;
         }
 
         public void Play(string path,int priority,int maxPriority,Vector3 pos)
@@ -60,29 +58,20 @@ namespace Framework
             m_bPlaying = true;
 
             //音频资源在非editor下必须打bundle
-            ResourceSys.Instance.GetResource(m_sPath, OnLoad, OnLoad);
+            PrefabPool.Instance.GetObject(m_sPath, OnLoad);
         }
 
-        private void OnLoad(Resource res,string path)
+        private void OnLoad(string path, UnityEngine.Object obj)
         {
-            if(res.isSucc)
+            var clip = (AudioClip)obj;
+            if (clip != null)
             {
-                m_cRes = res;
-                m_cRes.Retain();
-                var clip = (AudioClip)m_cRes.GetAsset(m_sPath);
-                if(clip != null)
-                {
-                    m_cAudioSource.clip = clip;
-                    m_cAudioSource.Play();
-                }
-                else
-                {
-                    Stop();
-                }
+                m_cAudioSource.clip = clip;
+                m_cAudioSource.Play();
             }
             else
             {
-                CLog.LogError("播放音频资源"+m_sPath+"失败");
+                Stop();
             }
         }
 
@@ -101,17 +90,12 @@ namespace Framework
         {
             if (m_bPlaying)
             {
-                if(m_cRes != null)
-                {
-                    m_cRes.Release();
-                    m_cRes = null;
-                }
                 m_bPlaying = false;
                 m_cAudioSource.clip = null;
                 m_cTransform.parent = AudioSys.Instance.audioChannelObj.transform;
                 if (!string.IsNullOrEmpty(m_sPath))
                 {
-                    ResourceSys.Instance.RemoveListener(m_sPath, OnLoad, OnLoad);
+                    PrefabPool.Instance.RemoveCallback(m_sPath, OnLoad);
                 }
                 m_sPath = null;
             }

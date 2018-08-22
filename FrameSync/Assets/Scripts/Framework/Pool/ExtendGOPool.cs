@@ -6,42 +6,79 @@ using UnityEngine;
 
 namespace Framework
 {
-    public class ExtendGOPool<T> : SingletonMonoBehaviour<ExtendGOPool<T>>
+    public class ExtendGOPool<T> : MonoBehaviour where T : ExtendGOPool<T>
     {
+
+        private static T uniqueInstance;
+
+        public static T Instance
+        {
+            get
+            {
+                return uniqueInstance;
+            }
+        }
+
+        protected virtual void Awake()
+        {
+            if (uniqueInstance == null)
+            {
+                uniqueInstance = (T)this;
+                GameObject.DontDestroyOnLoad(this);
+                uniqueInstance.Init();
+            }
+            else if (uniqueInstance != this)
+            {
+                throw new InvalidOperationException("Cannot have two instances of a SingletonMonoBehaviour : " + typeof(T).ToString() + ".");
+            }
+        }
+
+        protected virtual void Init()
+        {
+        }
+
+        protected virtual void OnDestroy()
+        {
+            if (uniqueInstance == this)
+            {
+                uniqueInstance = null;
+            }
+        }
+
         private List<string> m_lstPath = new List<string>();
 
-        public void CacheObject(string path, int count, Action<string> callback)
+        protected void _CacheObject(string path,bool isPrefab, int count, Action<string> callback)
         {
             if (!m_lstPath.Contains(path)) m_lstPath.Add(path);
-            GameObjectPool.Instance.CacheObject(path, count,callback);
+            ResourceObjectPool.Instance.CacheObject(path,isPrefab, count,callback);
         }
 
-        public void RemoveCacheObject(string path, Action<string> callback)
+        protected void _RemoveCacheObject(string path, Action<string> callback)
         {
-            GameObjectPool.Instance.RemoveCacheObject(path, callback);
+            ResourceObjectPool.Instance.RemoveCacheObject(path, callback);
         }
 
-        public virtual GameObject GetObject(string path, GameObjectPoolHandler callback)
+        protected UnityEngine.Object _GetObject(string path,bool isPrefab, ResourceObjectPoolHandler callback)
         {
             if (!m_lstPath.Contains(path)) m_lstPath.Add(path);
-            return GameObjectPool.Instance.GetObject(path, callback);
+            return ResourceObjectPool.Instance.GetObject(path, isPrefab, callback);
         }
 
-        public virtual void RemoveCallback(string path, GameObjectPoolHandler callback)
+        protected void _RemoveCallback(string path, ResourceObjectPoolHandler callback)
         {
-            GameObjectPool.Instance.RemoveCallback(path, callback);
+            ResourceObjectPool.Instance.RemoveCallback(path, callback);
         }
 
-        public virtual void SaveObject(string path, GameObject go)
+        protected void _SaveObject(string path, GameObject go)
         {
-            GameObjectPool.Instance.SaveObject(path, go);
+            ResourceObjectPool.Instance.SaveObject(path, go);
         }
 
-        public virtual void Clear(string path)
+        protected void _Clear(string path)
         {
             if (m_lstPath.Remove(path))
             {
-                GameObjectPool.Instance.Clear(path);
+                ResourceObjectPool.Instance.Clear(path);
             }
         }
 
@@ -49,7 +86,7 @@ namespace Framework
         {
             for (int i = 0; i < m_lstPath.Count; i++)
             {
-                GameObjectPool.Instance.Clear(m_lstPath[i]);
+                ResourceObjectPool.Instance.Clear(m_lstPath[i]);
             }
             m_lstPath.Clear();
         }

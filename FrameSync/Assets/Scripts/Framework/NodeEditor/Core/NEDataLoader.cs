@@ -12,7 +12,7 @@ namespace NodeEditor
     {
         private Dictionary<object, NEData> m_dicData = new Dictionary<object, NEData>();
 
-        private MultiResourceLoader m_resLoader;
+        private MultiResourceObjectLoader m_resObjectLoader;
         private Action m_finishAction;
         private Type[] m_arrParseTypes;
 
@@ -36,8 +36,8 @@ namespace NodeEditor
             if (Application.isPlaying)
             {
                 //下载对应的资源
-                m_resLoader = new MultiResourceLoader(ResourceSys.Instance);
-                m_resLoader.LoadList(files, OnComplete, OnProgress, ResourceType.Bytes);
+                m_resObjectLoader = new MultiResourceObjectLoader();
+                m_resObjectLoader.LoadList(files, true, OnComplete, OnProgress);
             }
             else
             {
@@ -58,10 +58,24 @@ namespace NodeEditor
             }
         }
 
-        private void OnComplete(MultiResourceLoader loader)
+        public void Clear()
         {
-            m_resLoader.Clear();
-            m_resLoader = null;
+            m_dicData.Clear();
+            m_finishAction = null;
+            if(m_resObjectLoader != null)
+            {
+                m_resObjectLoader.Clear();
+            }
+            m_arrParseTypes = null;
+        }
+
+        private void OnComplete(MultiResourceObjectLoader loader)
+        {
+            if (m_resObjectLoader != null)
+            {
+                m_resObjectLoader.Clear();
+                m_resObjectLoader = null;
+            }
             m_arrParseTypes = null;
             if (null != m_finishAction)
             {
@@ -71,13 +85,10 @@ namespace NodeEditor
             }
         }
 
-        private void OnProgress(Resource res,string path)
+        private void OnProgress(UnityEngine.Object obj,string path)
         {
-            if (res.isSucc)
-            {
-                byte[] data = res.GetBytes();
-                ParseData(data);
-            }
+            byte[] data = ((TextAsset)obj).bytes;
+            ParseData(data);
         }
 
         private void ParseData(byte[] bytesData)
@@ -101,5 +112,7 @@ namespace NodeEditor
                 CLog.LogError(neData.data.GetType()+" can not find NEPropertyKeyAttribute!");
             }
         }
+
+        
     }
 }

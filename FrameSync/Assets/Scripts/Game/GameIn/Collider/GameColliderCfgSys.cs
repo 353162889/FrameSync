@@ -39,19 +39,17 @@ namespace Game
             if (!m_sRootDir.EndsWith("/")) m_sRootDir = m_sRootDir + "/";
             var path = GameColliderPath.Replace(m_sRootDir, "");
             //配置在非editor下必须打bundle
-            ResourceSys.Instance.GetResource(path, OnLoadSucc, OnLoadSucc);
+            PrefabPool.Instance.GetObject(path, OnLoadSucc);
         }
 
-        private void OnLoadSucc(Resource res,string path)
+        private void OnLoadSucc(string path, UnityEngine.Object obj)
         {
             var callback = m_cCallback;
             m_cCallback = null;
-            if (res.isSucc)
-            {
-                TextAsset textAsset =  (TextAsset)res.GetAsset(path);
-                byte[] bytes = textAsset.bytes;
-                m_cGameColliderSet = NEUtil.DeSerializerObjectFromBuff(bytes, typeof(GameColliderSet), RelateTypes) as GameColliderSet;
-            }
+            TextAsset textAsset = (TextAsset)obj;
+            byte[] bytes = textAsset.bytes;
+            m_cGameColliderSet = NEUtil.DeSerializerObjectFromBuff(bytes, typeof(GameColliderSet), RelateTypes) as GameColliderSet;
+            PrefabPool.Instance.Clear(path);
             if (callback != null)
             {
                 callback();

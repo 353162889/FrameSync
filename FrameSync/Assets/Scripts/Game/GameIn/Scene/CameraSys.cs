@@ -25,7 +25,7 @@ namespace Game
             //进入场景时保证预加载相机资源
             //初始化相机
             m_sPath = "Prefab/Scene/Camera";
-            var go = SceneGOPool.Instance.GetObject(m_sPath, null);
+            var go = (GameObject)SceneGOPool.Instance.GetObject(m_sPath,false, null);
             go.Reset();
             m_cCameraParentTrans = go.transform;
             m_cMainCamera = m_cCameraParentTrans.GetComponentInChildren<Camera>();

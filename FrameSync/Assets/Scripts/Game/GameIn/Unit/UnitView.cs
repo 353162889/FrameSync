@@ -41,12 +41,12 @@ namespace Game
             m_cSimpleLerpView = gameObject.AddComponentOnce<SimpleLerpView>();
             m_cSimpleLerpView.Stop();
 
-            SceneGOPool.Instance.GetObject(m_sPrefab, OnResLoad);
+            SceneGOPool.Instance.GetObject(m_sPrefab, false,OnResLoad);
         }
 
-        private void OnResLoad(GameObject go)
+        private void OnResLoad(string path, UnityEngine.Object go)
         {
-            m_cView = go;
+            m_cView = (GameObject)go;
             this.gameObject.AddChildToParent(m_cView);
             HangPointView hangPointView = m_cView.GetComponent<HangPointView>();
             m_cHangPoint.InitHangView(hangPointView);

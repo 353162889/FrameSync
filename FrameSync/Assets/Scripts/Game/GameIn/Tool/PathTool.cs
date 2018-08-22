@@ -21,7 +21,11 @@ namespace Game
 
         public static string GetBasePrefabPath(string name)
         {
-            return name + ".prefab";
+            if (!name.EndsWith(".prefab"))
+            {
+                return name + ".prefab";
+            }
+            return name;
         }
     }
 }

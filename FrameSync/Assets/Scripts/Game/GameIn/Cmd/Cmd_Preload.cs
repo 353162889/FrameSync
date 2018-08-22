@@ -13,7 +13,7 @@ namespace Game
         {
             base.Execute(context);
             m_dic.Clear();
-            m_dic.Add(PathTool.GetBasePrefabPath("Prefab/Scene/Camera"),1);
+            m_dic.Add("Prefab/Scene/Camera.prefab",1);
             if (m_dic.Count == 0)
             {
                 this.OnExecuteDone(CmdExecuteState.Success);
@@ -24,7 +24,7 @@ namespace Game
                 int[] values = m_dic.Values.ToArray<int>();
                 for (int i = 0; i < keys.Length; i++)
                 {
-                    SceneGOPool.Instance.CacheObject(keys[i], values[i], OnCallback);
+                    SceneGOPool.Instance.CacheObject(keys[i], false,values[i], OnCallback);
                 }
             }
         }

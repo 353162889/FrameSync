@@ -12,24 +12,34 @@ namespace Game
     /// </summary>
     public class CoreGOPool : ExtendGOPool<CoreGOPool>
     {
-        public override GameObject GetObject(string path, GameObjectPoolHandler callback)
+        public void CacheObject(string path, bool isPrefab, int count, Action<string> callback)
         {
-            return base.GetObject(PathTool.GetBasePrefabPath(path), callback);
+            base._CacheObject(PathTool.GetBasePrefabPath(path), isPrefab, count, callback);
         }
 
-        public override void RemoveCallback(string path, GameObjectPoolHandler callback)
+        public void RemoveCacheObject(string path, Action<string> callback)
         {
-            base.RemoveCallback(PathTool.GetBasePrefabPath(path), callback);
+            base._RemoveCacheObject(PathTool.GetBasePrefabPath(path), callback);
         }
 
-        public override void SaveObject(string path, GameObject go)
+        public UnityEngine.Object GetObject(string path,bool isPrefab, ResourceObjectPoolHandler callback)
         {
-            base.SaveObject(PathTool.GetBasePrefabPath(path), go);
+            return base._GetObject(PathTool.GetBasePrefabPath(path), isPrefab, callback);
         }
 
-        public override void Clear(string path)
+        public void RemoveCallback(string path, ResourceObjectPoolHandler callback)
         {
-            base.Clear(PathTool.GetBasePrefabPath(path));
+            base._RemoveCallback(PathTool.GetBasePrefabPath(path), callback);
+        }
+
+        public void SaveObject(string path, GameObject go)
+        {
+            base._SaveObject(PathTool.GetBasePrefabPath(path), go);
+        }
+
+        public void Clear(string path)
+        {
+            base._Clear(PathTool.GetBasePrefabPath(path));
         }
     }
 }

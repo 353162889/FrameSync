@@ -8,48 +8,70 @@ using UnityEngine;
 
 namespace Framework
 {
-    public delegate void GameObjectPoolHandler(GameObject go);
+    public delegate void ResourceObjectPoolHandler(string path,UnityEngine.Object go);
     /// <summary>
-    /// 游戏中全局对象池（上层逻辑池会调用当前池），不允许直接使用
+    /// 只允许给框架内部使用
+    /// 游戏中全局对象池（上层逻辑池会调用当前池），不允许直接使用，直接使用会造成一些对象清除不了
     /// </summary>
-    public class GameObjectPool : SingletonMonoBehaviour<GameObjectPool>
+    public class ResourceObjectPool : SingletonMonoBehaviour<ResourceObjectPool>
     {
-        public struct ResourceObjectQueue
+        public class ResourceObjectQueue : IPoolable
         {
             public UnityEngine.Object prefab;
             public Resource res;
-            public Queue<GameObject> queue;
+            public Queue<UnityEngine.Object> queue;
+
+            public void Reset()
+            {
+                prefab = null;
+                res = null;
+                if (queue != null)
+                {
+                    queue.Clear();
+                }
+            }
         }
 
         public struct CacheCallbackStruct
         {
             public Action<string> callback;
             public int count;
+            public bool isPrefab;
+        }
+
+        public struct GameObjectPoolCallbackStruct
+        {
+            public ResourceObjectPoolHandler callback;
+            public bool isPrefab;
         }
 
         private Dictionary<string, ResourceObjectQueue> m_dicGO;
-        private Dictionary<string, List<GameObjectPoolHandler>> m_dicCallback;
+        private Dictionary<string, List<GameObjectPoolCallbackStruct>> m_dicCallback;
         private Dictionary<string, List<CacheCallbackStruct>> m_dicCacheCallback;
         private LinkedList<IEnumerator> m_lstAsyncQueue;
 
         protected override void Init()
         {
+            ObjectPool<ResourceObjectQueue>.Instance.Init(100,true);
             m_dicGO = new Dictionary<string, ResourceObjectQueue>();
-            m_dicCallback = new Dictionary<string, List<GameObjectPoolHandler>>();
+            m_dicCallback = new Dictionary<string, List<GameObjectPoolCallbackStruct>>();
             m_dicCacheCallback = new Dictionary<string, List<CacheCallbackStruct>>();
             m_lstAsyncQueue = new LinkedList<IEnumerator>();
             base.Init();
         }
 
-        public void CacheObject(string path,int count,Action<string> callback)
+        public void CacheObject(string path,bool isPrefab, int count,Action<string> callback)
         {
             ResourceObjectQueue resQueue;
             if (m_dicGO.TryGetValue(path, out resQueue))
             {
-                for (int i = 0; i < count; i++)
+                if(!isPrefab)
                 {
-                    var go = GetGameObject(resQueue.prefab, path);
-                    SaveObject(path, go);
+                    for (int i = 0; i < count; i++)
+                    {
+                        var go = GetGameObject(resQueue.prefab, path);
+                        SaveObject(path, go);
+                    }
                 }
                 if (callback != null)
                 {
@@ -80,6 +102,7 @@ namespace Framework
                         CacheCallbackStruct callbackStruct = new CacheCallbackStruct();
                         callbackStruct.callback = callback;
                         callbackStruct.count = count;
+                        callbackStruct.isPrefab = isPrefab;
                         lstCallbackStruct.Add(callbackStruct);
                     }
                 }
@@ -103,65 +126,93 @@ namespace Framework
             }
         }
 
-        public GameObject GetObject(string path,GameObjectPoolHandler callback)
+        public UnityEngine.Object GetObject(string path, bool isPrefab,ResourceObjectPoolHandler callback)
         {
-            foreach (var item in m_dicGO)
+            ResourceObjectQueue resQueue;
+            if(m_dicGO.TryGetValue(path,out resQueue))
             {
-                if(item.Key == path)
+                UnityEngine.Object go = null;
+                if (isPrefab)
                 {
-                    GameObject go = null;
-                    if (item.Value.queue.Count > 0)
+                    go = resQueue.prefab;
+                }
+                else
+                {
+                    if (resQueue.queue.Count > 0)
                     {
-                        go = item.Value.queue.Dequeue();
+                        go = resQueue.queue.Dequeue();
                     }
                     else
                     {
-                        go = GetGameObject(item.Value.prefab,item.Key);
+                        go = GetGameObject(resQueue.prefab, path);
                     }
-                    go.SetActive(true);
-                    if (null != callback)
-                    {
-                        var tempCallback = callback;
-                        callback = null;
-                        tempCallback.Invoke(go);
-                    }
-                    return go;
+                    ((GameObject)go).SetActive(true);
                 }
+               
+                if (null != callback)
+                {
+                    var tempCallback = callback;
+                    callback = null;
+                    tempCallback.Invoke(path,go);
+                }
+                return go;
             }
             if (callback != null)
             {
-                List<GameObjectPoolHandler> lst = null;
+                List<GameObjectPoolCallbackStruct> lst = null;
                 if (!m_dicCallback.TryGetValue(path, out lst))
                 {
-                    lst = new List<GameObjectPoolHandler>();
+                    lst = new List<GameObjectPoolCallbackStruct>();
                     m_dicCallback.Add(path, lst);
                 }
-                if (!lst.Contains(callback))
+                bool contain = false;
+                for (int i = 0; i < lst.Count; i++)
                 {
-                    lst.Add(callback);
+                    if (lst[i].callback == callback)
+                    {
+                        contain = true;
+                        break;
+                    }
+                }
+                if (!contain)
+                {
+                    GameObjectPoolCallbackStruct callbackStruct = new GameObjectPoolCallbackStruct();
+                    callbackStruct.callback = callback;
+                    callbackStruct.isPrefab = isPrefab;
+                    lst.Add(callbackStruct);
                 }
             }
             ResourceSys.Instance.GetResource(path, OnResLoad);
             return null;
         }
 
-        public void RemoveCallback(string path,GameObjectPoolHandler callback)
+        public void RemoveCallback(string path,ResourceObjectPoolHandler callback)
         {
-            List<GameObjectPoolHandler> lst = null;
+            List<GameObjectPoolCallbackStruct> lst = null;
             if(m_dicCallback.TryGetValue(path, out lst))
             {
-                lst.Remove(callback);
+                for (int i = lst.Count - 1; i > -1; i--)
+                {
+                    if (lst[i].callback == callback)
+                    {
+                        lst.RemoveAt(i);
+                        break;
+                    }
+                }
             }
         }
 
-        public void SaveObject(string path, GameObject go)
+        public void SaveObject(string path, UnityEngine.Object go)
         {
             ResourceObjectQueue resQueue;
             if(m_dicGO.TryGetValue(path,out resQueue))
             {
-                this.gameObject.AddChildToParent(go);
-                go.SetActive(false);
-                resQueue.queue.Enqueue(go);
+                if (go != resQueue.prefab)
+                {
+                    this.gameObject.AddChildToParent((GameObject)go);
+                    ((GameObject)go).SetActive(false);
+                    resQueue.queue.Enqueue(go);
+                }
             }
             else
             {
@@ -182,7 +233,9 @@ namespace Framework
                     GameObject.Destroy(resQueue.queue.Dequeue());
                 }
                 resQueue.res.Release();
+                resQueue.res = null;
                 resQueue.prefab = null;
+                ObjectPool<ResourceObjectQueue>.Instance.SaveObject(resQueue);
             }
             m_dicGO.Remove(path);
         }
@@ -202,7 +255,9 @@ namespace Framework
                     GameObject.Destroy(resQueue.queue.Dequeue());
                 }
                 resQueue.res.Release();
+                resQueue.res = null;
                 resQueue.prefab = null;
+                ObjectPool<ResourceObjectQueue>.Instance.SaveObject(resQueue);
             }
             m_dicGO.Clear();
         }
@@ -217,18 +272,7 @@ namespace Framework
         {
             if (res.isSucc)
             {
-                ResourceObjectQueue resQueue;
-                if (!m_dicGO.TryGetValue(path, out resQueue))
-                {
-                    resQueue = new ResourceObjectQueue();
-                    resQueue.res = res;
-                    res.Retain();
-                    resQueue.queue = new Queue<GameObject>();
-                    resQueue.prefab = null;
-                    m_dicGO.Add(path, resQueue);
-                }
-
-                m_lstAsyncQueue.AddLast(LoadAssetAndCallback(path,resQueue));
+                m_lstAsyncQueue.AddLast(LoadAssetAndCallback(res, path));
             }
             else
             {
@@ -242,7 +286,6 @@ namespace Framework
             var node = m_lstAsyncQueue.First;
             while (node != null)
             {
-                CLog.LogArgs("current",node.Value.Current);
                 if(!node.Value.MoveNext() && node == m_lstAsyncQueue.First)
                 {
                     m_lstAsyncQueue.RemoveFirst();
@@ -255,30 +298,52 @@ namespace Framework
             }
         }
 
-        private IEnumerator LoadAssetAndCallback(string path, ResourceObjectQueue resQueue)
+        private IEnumerator LoadAssetAndCallback(Resource res, string path)
         {
-            if(resQueue.prefab == null)
+            ResourceObjectQueue resQueue;
+            if (!m_dicGO.TryGetValue(path, out resQueue))
             {
-                yield return resQueue.res.GetAssetAsync(path, OnLoadAsset);
+                resQueue = ObjectPool<ResourceObjectQueue>.Instance.GetObject();
+                resQueue.res = res;
+                res.Retain();
+                resQueue.queue = new Queue<UnityEngine.Object>();
+                resQueue.prefab = null;
+                m_dicGO.Add(path, resQueue);
             }
-            List<GameObjectPoolHandler> lstCallback = null;
+            if (resQueue.prefab == null)
+            {
+                IEnumerator enumerator = resQueue.res.GetAssetAsync(path, OnLoadAsset);
+                while (enumerator != null && enumerator.MoveNext())
+                {
+                    yield return null;
+                }
+                //yield return resQueue.res.GetAssetAsync(path, OnLoadAsset);
+            }
+            List<GameObjectPoolCallbackStruct> lstCallback = null;
             if (m_dicCallback.TryGetValue(path, out lstCallback))
             {
                 while (lstCallback.Count > 0)
                 {
-                    GameObject go = null;
-                    if (resQueue.queue.Count > 0)
+                    var callback = lstCallback[0];
+                    lstCallback.RemoveAt(0);
+                    UnityEngine.Object go = null;
+                    if(callback.isPrefab)
                     {
-                        go = resQueue.queue.Dequeue();
+                        go = resQueue.prefab;
                     }
                     else
                     {
-                        go = GetGameObject(resQueue.prefab, path);
+                        if (resQueue.queue.Count > 0)
+                        {
+                            go = resQueue.queue.Dequeue();
+                        }
+                        else
+                        {
+                            go = GetGameObject(resQueue.prefab, path);
+                        }
+                        ((GameObject)go).SetActive(true);
                     }
-                    var callback = lstCallback[0];
-                    lstCallback.RemoveAt(0);
-                    go.SetActive(true);
-                    callback.Invoke(go);
+                    callback.callback.Invoke(path,go);
                 }
             }
         }
@@ -299,10 +364,10 @@ namespace Framework
                 ResourceObjectQueue resQueue;
                 if (!m_dicGO.TryGetValue(path, out resQueue))
                 {
-                    resQueue = new ResourceObjectQueue();
+                    resQueue = ObjectPool<ResourceObjectQueue>.Instance.GetObject();
                     resQueue.res = res;
                     res.Retain();
-                    resQueue.queue = new Queue<GameObject>();
+                    resQueue.queue = new Queue<UnityEngine.Object>();
                     resQueue.prefab = res.GetAsset(path);
                     m_dicGO.Add(path, resQueue);
                 }
@@ -314,10 +379,13 @@ namespace Framework
                     {
                         var callbackStruct = lstCallbackStruct[0];
                         lstCallbackStruct.RemoveAt(0);
-                        for (int i = 0; i < callbackStruct.count; i++)
+                        if(!callbackStruct.isPrefab)
                         {
-                            var go = GetGameObject(resQueue.prefab, path);
-                            SaveObject(path, go);
+                            for (int i = 0; i < callbackStruct.count; i++)
+                            {
+                                var go = GetGameObject(resQueue.prefab, path);
+                                SaveObject(path, go);
+                            }
                         }
                         callbackStruct.callback.Invoke(path);
                     }

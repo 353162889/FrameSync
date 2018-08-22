@@ -18,7 +18,7 @@ public class TestEffectPool : MonoBehaviour
         GameObject goPool = new GameObject();
         goPool.name = "GameObjectPool";
         GameObject.DontDestroyOnLoad(goPool);
-        goPool.AddComponentOnce<GameObjectPool>();
+        goPool.AddComponentOnce<ResourceObjectPool>();
         //初始化特效池
         GameObject effectPool = new GameObject();
         effectPool.name = "EffectPool";

@@ -50,7 +50,7 @@ namespace Framework
             public string xmlPath;
         }
         private Dictionary<string, ResCfgInfo> m_dicCfgInfo;
-        private MultiResourceLoader m_resLoader;
+        private MultiResourceObjectLoader m_resObjectLoader;
         private Action m_finishAction;
 
 
@@ -103,9 +103,9 @@ namespace Framework
             //如果是播放模式
             if (Application.isPlaying)
             {
+                m_resObjectLoader = new MultiResourceObjectLoader();
                 //下载对应的资源
-                m_resLoader = new MultiResourceLoader(ResourceSys.Instance);
-                m_resLoader.LoadList(names, OnComplete, OnProgress, ResourceType.Text);
+                m_resObjectLoader.LoadList(names, true, OnComplete, OnProgress);
             }
             else
             {
@@ -126,10 +126,10 @@ namespace Framework
             }
         }
 
-        private void OnComplete(MultiResourceLoader loader)
+        private void OnComplete(MultiResourceObjectLoader loader)
         {
-            m_resLoader.Clear();
-            m_resLoader = null;
+            m_resObjectLoader.Clear();
+            m_resObjectLoader = null;
             if(null != m_finishAction)
             {
                 Action action = m_finishAction;
@@ -138,13 +138,10 @@ namespace Framework
             }
         }
 
-        private void OnProgress(Resource res,string path)
+        private void OnProgress(UnityEngine.Object obj,string path)
         {
-            if (res.isSucc)
-            {
-                string data = res.GetText();
-                ParseData(path, data);
-            }
+            string data = ((TextAsset)obj).text;
+            ParseData(path, data);
         }
 
         public void ParseData(string path,string strData)
@@ -185,10 +182,10 @@ namespace Framework
 
         public override void Dispose()
         {
-            if (m_resLoader != null)
+            if(m_resObjectLoader != null)
             {
-                m_resLoader.Clear();
-                m_resLoader = null;
+                m_resObjectLoader.Clear();
+                m_resObjectLoader = null;
             }
             m_finishAction = null;
             if(m_dicCfgInfo != null)
