@@ -180,8 +180,7 @@ namespace Framework
 
         private string[] GetDependResPath(string path)
         {
-            string resName = _assetBundleFile.GetAssetBundleNameByAssetPath(path);
-            return _assetBundleFile.GetDirectDependencies(resName);
+            return _assetBundleFile.GetDirectDependencies(path);
         }
 
         public string GetRealResourcePath(string resPath)

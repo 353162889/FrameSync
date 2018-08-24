@@ -36,9 +36,6 @@ namespace Framework
         //bundle时资源加载路径
         public static string ResourceLoadPath;
        
-
-        public static readonly string ASSET_BUNDLE_EXTENSION = ".assetbundle";
-
         private ResourceContainer _resourceContainer;
         //在unity加载资源的根路径
         private string ResRootDir;
