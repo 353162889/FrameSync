@@ -35,15 +35,29 @@ namespace Game
         void Start()
         {
             InitSingleton();
-            LoadConfigs();
+            if (ResourceSys.Instance.DirectLoadMode)
+            {
+                LoadConfigs();
+            }
+            else
+            {
+                ResourceSys.Instance.assetBundleFile.Init("assetpath_mapping", OnLoadAssetBundleFile);
+            }
         }
 
-        private int m_nConfingIndex;
+        private void OnLoadAssetBundleFile(bool succ)
+        {
+            if (succ)
+            {
+                LoadConfigs();
+            }
+        }
+
         private void LoadConfigs()
         {
             ResCfgSys.Instance.LoadResCfgs("Config/Data", OnLoadResCfg);
         }
-
+        private int m_nConfingIndex;
         private void OnLoadResCfg()
         {
             m_nConfingIndex = 6;
@@ -123,7 +137,11 @@ namespace Game
             }
             gameObject.AddComponentOnce<FrameSyncSys>();
             gameObject.AddComponentOnce<ResourceSys>();
-            ResourceSys.Instance.Init(true, "Assets/ResourceEx");
+            bool directLoadMode = true;
+#if !UNITY_EDITOR || BUNDLE_MODE
+            directLoadMode = false;
+#endif
+            ResourceSys.Instance.Init(directLoadMode, "Assets/ResourceEx");
             gameObject.AddComponentOnce<UpdateScheduler>();
             gameObject.AddComponentOnce<TouchDispatcher>();
             //初始化对象池

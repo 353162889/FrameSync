@@ -19,6 +19,7 @@ namespace Framework
         private Dictionary<string, Resource> _mapRes;
 
         private ResourceLoader _resLoader;
+        public AssetBundleFile assetBundleFile { get { return _assetBundleFile; } }
         private AssetBundleFile _assetBundleFile;
 
         //资源直接加载模式
@@ -31,6 +32,7 @@ namespace Framework
         public void Init(bool directLoadMode,string resRootDir)
         {
             _resRootDir = resRootDir;
+            Resource.BundlePreRootDir = _resRootDir.EndsWith("/") ? _resRootDir.ToLower() : (_resRootDir + "/").ToLower();
             //根据传入的目录判断是直接用Resources.Load还是外部加载
             _dirInResources = _resRootDir == "Assets/Resources";
             _succCallbacks = new Dictionary<Resource, List<ResourceHandlerStruct>>();
@@ -183,7 +185,7 @@ namespace Framework
             return _assetBundleFile.GetDirectDependencies(path);
         }
 
-        public string GetRealResourcePath(string resPath)
+        private string GetRealResourcePath(string resPath)
         {
             if (string.IsNullOrEmpty(resPath))
             {

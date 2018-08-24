@@ -39,6 +39,7 @@ namespace NodeEditor
                 m_resObjectLoader = new MultiResourceObjectLoader();
                 m_resObjectLoader.LoadList(files, true, OnComplete, OnProgress);
             }
+#if UNITY_EDITOR
             else
             {
                 for (int i = 0; i < files.Count; i++)
@@ -56,6 +57,7 @@ namespace NodeEditor
                     action();
                 }
             }
+#endif
         }
 
         public void Clear()

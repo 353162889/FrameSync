@@ -107,6 +107,7 @@ namespace Framework
                 //下载对应的资源
                 m_resObjectLoader.LoadList(names, true, OnComplete, OnProgress);
             }
+#if UNITY_EDITOR
             else
             {
                 for (int i = 0; i < names.Count; i++)
@@ -124,6 +125,7 @@ namespace Framework
                     action();
                 }
             }
+#endif
         }
 
         private void OnComplete(MultiResourceObjectLoader loader)

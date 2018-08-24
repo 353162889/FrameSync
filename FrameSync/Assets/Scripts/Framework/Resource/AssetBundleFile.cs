@@ -9,38 +9,78 @@ namespace Framework
 { 
     public class AssetBundleFile : MonoBehaviour
     {
-        private string m_cMainAssetBundlePath;
+        private Action<bool> m_cCallback;
         private AssetBundleManifest m_cManifest;
         private Dictionary<string, string> assetPathToAssetBundleNames = new Dictionary<string, string>();
 
-        public void Init(string assetBundleEntryXmlContent)
+        public void Init(string file,Action<bool> callback)
+        {
+            m_cCallback = callback;
+            ResourceSys.Instance.GetResource(file, OnLoadAssetMapping, OnLoadAssetMapping, ResourceType.Text);
+        }
+
+        private void OnLoadAssetMapping(Resource res, string path)
         {
             try
             {
-                XmlDocument document = new XmlDocument();
-                document.LoadXml(assetBundleEntryXmlContent);
-                foreach (XmlElement element in document.FirstChild.NextSibling.ChildNodes)
+                if(res.isSucc)
                 {
-                    if (element.Name == "AssetMappings")
+                    string text = res.GetText();
+                    XmlDocument document = new XmlDocument();
+                    document.LoadXml(text);
+                    string manifestFilePath = "";
+                    foreach (XmlElement element in document.FirstChild.NextSibling.ChildNodes)
                     {
-                        m_cMainAssetBundlePath = element.GetAttribute("manifest");
-                        foreach (XmlElement mapping in element.ChildNodes)
+                        if(element.Name == "manifest")
                         {
-                             assetPathToAssetBundleNames.Add(mapping.GetAttribute("assetName"), mapping.GetAttribute("bundleName"));
+                            manifestFilePath = element.GetAttribute("path");
+                        }
+                        if (element.Name == "assetmapping")
+                        {
+                            assetPathToAssetBundleNames.Add(element.GetAttribute("assetpath"), element.GetAttribute("assetbundlepath"));
                         }
                     }
+                    ResourceSys.Instance.GetResource(manifestFilePath, OnLoadManifest, OnLoadManifest, ResourceType.AssetBundle);
                 }
-
+                else
+                {
+                    if (m_cCallback != null)
+                    {
+                        CLog.LogError("AssetBundleFile文件初始化失败!");
+                        var callback = m_cCallback;
+                        m_cCallback = null;
+                        callback.Invoke(false);
+                    }
+                }
             }
             catch (Exception e)
             {
-                CLog.LogError(e.Message + "," +e.StackTrace);
+                CLog.LogError(e.Message + "," + e.StackTrace);
             }
         }
 
-        public string MainAssetBundlePath
+        private void OnLoadManifest(Resource res, string path)
         {
-            get { return m_cMainAssetBundlePath; }
+            if(res.isSucc)
+            {
+                m_cManifest = (AssetBundleManifest)res.GetAsset(null);
+            }
+            else
+            {
+                CLog.LogError("AssetBundleFile文件初始化失败!");
+            }
+            if (m_cCallback != null)
+            {
+                var callback = m_cCallback;
+                m_cCallback = null;
+                callback.Invoke(res.isSucc);
+            }
+        }
+
+        public void Clear()
+        {
+            m_cCallback = null;
+            m_cManifest = null;
         }
 
         public string[] GetDirectDependencies(string assetPath)

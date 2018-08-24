@@ -19,7 +19,8 @@ namespace Framework
 
     public class Resource
     {
-        private static string BundleRootName = "Assets/Resources/".ToLower();
+        //bundle内部资源路径的前缀
+        public static string BundlePreRootDir = "";
         /// <summary>
         /// 当前资源的真正路径（如果是bundle模式加载的，那么它是bundle的路径）
         /// </summary>
@@ -155,7 +156,7 @@ namespace Framework
                     {
                         if (arr.Length > 1)
                         {
-                            string realName = BundleRootName + name.ToLower();
+                            string realName = BundlePreRootDir + name.ToLower();
                             asset = _assetBundle.LoadAsset(realName);
                         }
                         if (asset == null)
@@ -165,7 +166,7 @@ namespace Framework
                     }
                     else
                     {
-                        string realName = BundleRootName + name.ToLower();
+                        string realName = BundlePreRootDir + name.ToLower();
                         asset = _assetBundle.LoadAsset(realName);
                     }
                 }
@@ -205,7 +206,7 @@ namespace Framework
                     {
                         if (arr.Length > 1)
                         {
-                            string realName = BundleRootName + path.ToLower();
+                            string realName = BundlePreRootDir + path.ToLower();
                             AssetBundleRequest request = _assetBundle.LoadAssetAsync(path);
                             yield return request;
                             asset = request.asset;
@@ -219,7 +220,7 @@ namespace Framework
                     }
                     else
                     {
-                        string realName = BundleRootName + path.ToLower();
+                        string realName = BundlePreRootDir + path.ToLower();
                         AssetBundleRequest request = _assetBundle.LoadAssetAsync(realName);
                         yield return request;
                         asset = request.asset;

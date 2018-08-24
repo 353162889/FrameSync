@@ -28,13 +28,12 @@ namespace Framework
 		    public static string RunPlatform = WebPlayer;
     #endif
 
-        public static bool ResourcesLoadMode = true;
-        public static string StreamingAssetsPath;
-        public static string FILE_SYMBOL;
-        public static string OUTER_FILE_SYMBOL;
+        private static string StreamingAssetsPath;
+        private static string FILE_SYMBOL;
+        private static string OUTER_FILE_SYMBOL;
 
         //bundle时资源加载路径
-        public static string ResourceLoadPath;
+        private static string PersistentLoadPath;
        
         private ResourceContainer _resourceContainer;
         //在unity加载资源的根路径
@@ -46,22 +45,22 @@ namespace Framework
             if (!ResRootDir.EndsWith("/")) ResRootDir += "/";
 #if UNITY_EDITOR
             StreamingAssetsPath = Application.dataPath + "/../AssetBundles/" + RunPlatform + "/";   //editor下的streaming就是打包的目录，稍微改了下(并不是工程目录下Streaming下的目录
-            ResourceLoadPath = Application.persistentDataPath + "/AssetBundles/" + RunPlatform + "/";
+            PersistentLoadPath = Application.persistentDataPath + "/AssetBundles/" + RunPlatform + "/";
             FILE_SYMBOL = @"file://";
             OUTER_FILE_SYMBOL = @"file:///";
 #elif (UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX)
             StreamingAssetsPath = Application.dataPath + "/StreamingAssets/AssetBundles/" + RunPlatform + "/";
-            ResourceLoadPath = Application.persistentDataPath + "/AssetBundles/" + RunPlatform + "/";
+            PersistentLoadPath = Application.persistentDataPath + "/AssetBundles/" + RunPlatform + "/";
             FILE_SYMBOL = @"file://";
             OUTER_FILE_SYMBOL = @"file:///";
 #elif UNITY_IOS
             StreamingAssetsPath = Application.dataPath+"/Raw/AssetBundles/" + RunPlatform + "/";
-            ResourceLoadPath = Application.persistentDataPath + "/AssetBundles/" + RunPlatform + "/";
+            PersistentLoadPath = Application.persistentDataPath + "/AssetBundles/" + RunPlatform + "/";
 		    FILE_SYMBOL = "file://";
 		    OUTER_FILE_SYMBOL = "file://";
 #elif UNITY_ANDROID
             StreamingAssetsPath = Application.dataPath+"!/assets/AssetBundles/" + RunPlatform + "/";
-            ResourceLoadPath = Application.persistentDataPath + "/AssetBundles/" + RunPlatform + "/";
+            PersistentLoadPath = Application.persistentDataPath + "/AssetBundles/" + RunPlatform + "/";
 		    FILE_SYMBOL = "jar:file://";
 		    OUTER_FILE_SYMBOL = "file://";
 #endif
@@ -117,9 +116,12 @@ namespace Framework
             if (!_resourceContainer.DirectLoadMode)
             {
                 file = file.ToLower();
-                fullPath = OUTER_FILE_SYMBOL + ResourceLoadPath + file;
-                //暂时直接读streaming中bundle文件（后期做bundle压缩的时候再换）
-                //fullPath = FILE_SYMBOL + StreamingAssetsPath + file;
+#if UNITY_EDITOR
+                //编辑器下的bundle模式直接读取StreamingAsset下的bundle文件
+                fullPath = FILE_SYMBOL + StreamingAssetsPath + file;
+#else
+                fullPath = OUTER_FILE_SYMBOL + PersistentLoadPath + file;
+#endif
             }
             else
             {

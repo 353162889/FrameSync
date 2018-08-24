@@ -37,7 +37,8 @@ namespace Framework
                 else
                 {
                     item.Value.errorTxt = item.Key.error;
-                    CLog.LogError("Load resource [" + item.Value.realPath + "] fail!");
+                    
+                    CLog.LogError("Load resource [" + item.Key.url + "] fail!");
                 }
                 m_dicLoadingQueue.Remove(item.Key);
                 item.Key.Dispose();

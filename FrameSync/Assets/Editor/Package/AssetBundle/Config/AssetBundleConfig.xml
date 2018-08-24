@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+searchDirectory：搜索目录，相对于Resources目录
+bundleNameExt:打成assetbundle扩展名称(可不填，默认为""，主要是用来做相同目录里面不同文件打不同bundle的处理)
+packingType:
+	Whole		所有目标文件打在一起
+	SubDir		子目录中的所有目标文件打在一起//加载的时候注意，需要传入名称进去
+	SingleFile	所有文件目标文件各自单独打包
+  //同样目录下打包优先级 Whole > SubDir > SingleFile
+searchPattern:文件搜索通配符（不支持正则表达式，只支持*(在该位置的零个或多个字符)与?(在该位置的零个或一个字符)）例如*.png表示只搜索结尾为.png的文件
+-->
+ 
+<AssetBundle>
+  <Build searchDirectory="Assets/ResourceEx/Config" packingType="SubDir" searchPattern="*.*" />
+  <Build searchDirectory="Assets/ResourceEx/Prefab/Effect" packingType="SingleFile" searchPattern="*.*" />
+  <Build searchDirectory="Assets/ResourceEx/Prefab/Scene" packingType="SingleFile" searchPattern="*.*" />
+  <Build searchDirectory="Assets/ResourceEx/Prefab/UI" packingType="SingleFile" searchPattern="*.*" />
+  <Build searchDirectory="Assets/ResourceEx/Prefab/Unit" packingType="SingleFile" searchPattern="*.*" />
+  <Build searchDirectory="Assets/ResourceEx/Shader" packingType="Whole" searchPattern="*.*" />
+</AssetBundle>
