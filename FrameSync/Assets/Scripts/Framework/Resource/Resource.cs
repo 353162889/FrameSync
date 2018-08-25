@@ -207,7 +207,7 @@ namespace Framework
                         if (arr.Length > 1)
                         {
                             string realName = BundlePreRootDir + path.ToLower();
-                            AssetBundleRequest request = _assetBundle.LoadAssetAsync(path);
+                            AssetBundleRequest request = _assetBundle.LoadAssetAsync(realName);
                             yield return request;
                             asset = request.asset;
                         }

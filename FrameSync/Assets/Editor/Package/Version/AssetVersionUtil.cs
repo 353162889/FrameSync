@@ -3,26 +3,27 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using System.IO;
-//using Framework;
 using System.Xml;
 using System.Text;
 
-namespace CustomizeEditor
+namespace EditorPackage
 {
     public static class AssetVersionUtil
     {
-        private static string VersionCodeFile = "/version/versioncode.txt";
-        private static string VersionManifestFile = "/version/versionmanifest.xml";
-        private static string AssetRootDirectory;
 
-        public static void GenerateVersionInfoFile(string assetRootDirectory)
+        /// <summary>
+        /// 产生版本文件
+        /// </summary>
+        /// <param name="pkgVersion">版本号</param>
+        /// <param name="rootDir">根目录</param>
+        public static void GenerateVersionInfoFile(int pkgVersion, string rootDir)
         {
-            //GameConfig.Load();
-            //AssetRootDirectory = assetRootDirectory;
-            //long hotVersion = GenerateVersionCode();
-            //WriteVersionCode(GameConfig.PkgVersion, hotVersion);
-            //List<FileVersionInfo> list = GenerateVersionManifest();
-            //WriteVersionManifest(GameConfig.ShowVersion, GameConfig.PkgVersion, hotVersion, GenerateVersionManifest());
+            rootDir = PathTools.FormatPath(rootDir);
+            if (rootDir.EndsWith("/")) rootDir = rootDir.Substring(0, rootDir.Length - 1);
+            long hotVersion = GenerateVersionCode();
+            WriteVersionCode(rootDir + "/" + PathConfig.VersionCodeFile, pkgVersion, hotVersion);
+            var lst = GenerateVersionManifest(rootDir);
+            WriteVersionManifest(rootDir + "/" + PathConfig.VersionManifestFile, pkgVersion, hotVersion,lst);
         }
 
         private static long GenerateVersionCode()
@@ -32,9 +33,8 @@ namespace CustomizeEditor
             return long.Parse(str);
         }
 
-        private static void WriteVersionCode(int pkgVersion,long hotVersion)
+        private static void WriteVersionCode(string path,int pkgVersion,long hotVersion)
         {
-            string path = AssetRootDirectory + VersionCodeFile;
             string dir = Path.GetDirectoryName(path);
             if (!Directory.Exists(dir))
             {
@@ -43,13 +43,13 @@ namespace CustomizeEditor
             File.WriteAllText(path, pkgVersion.ToString() + "," + hotVersion.ToString());
         }
 
-        private static List<FileVersionInfo> GenerateVersionManifest()
+        private static List<FileVersionInfo> GenerateVersionManifest(string rootDir)
         {
             List<FileVersionInfo> list = new List<FileVersionInfo>();
             FileVersionInfo info = null;
-            foreach(string filePath in Directory.GetFiles(AssetRootDirectory, "*.*", SearchOption.AllDirectories))
+            foreach (string filePath in Directory.GetFiles(rootDir, "*.*", SearchOption.AllDirectories))
             {
-                info = FileVersionInfo.Create(filePath, AssetRootDirectory);
+                info = FileVersionInfo.Create(filePath, rootDir);
                 if(info != null)
                 {
                     list.Add(info);
@@ -58,14 +58,13 @@ namespace CustomizeEditor
             return list;
         }
 
-        private static void WriteVersionManifest(string showVersion, int pkgVersion,long hotVersion, List<FileVersionInfo> list)
+        private static void WriteVersionManifest(string path, int pkgVersion,long hotVersion, List<FileVersionInfo> list)
         {
             list.Sort();
             try
             {
                 XmlDocument document = new XmlDocument();
                 XmlElement root = document.CreateElement("root");
-                root.SetAttribute("showVersion", showVersion.ToString());
                 root.SetAttribute("pkgVersion", pkgVersion.ToString());
                 root.SetAttribute("hotVersion", hotVersion.ToString());
                 document.AppendChild(root);
@@ -75,7 +74,7 @@ namespace CustomizeEditor
                 {
                     file = document.CreateElement("file");
                     file.SetAttribute("path", info.fileName);
-                    file.SetAttribute("crc", info.fileCrc.ToString());
+                    file.SetAttribute("md5", info.fileMD5.ToString());
                     file.SetAttribute("size", info.fileSize.ToString());
 
                     root.AppendChild(file);
@@ -86,7 +85,6 @@ namespace CustomizeEditor
                 setting.OmitXmlDeclaration = true;
                 setting.Encoding = Encoding.ASCII;
 
-                string path = AssetRootDirectory + VersionManifestFile;
                 string dir = Path.GetDirectoryName(path);
                 if (!Directory.Exists(dir))
                 {
@@ -109,35 +107,27 @@ namespace CustomizeEditor
     public class FileVersionInfo : IComparable<FileVersionInfo>
     {
         public string fileName;
-        public uint fileCrc;
+        public string fileMD5;
         public int fileSize;
 
         public FileVersionInfo() { }
 
-        public static FileVersionInfo Create(string filePath, string fileRootDir)
+        public static FileVersionInfo Create(string fileFullPath, string fileRootDir)
         {
-            if (filePath.EndsWith(".manifest"))
+            fileFullPath = PathTools.FormatPath(fileFullPath);
+            if (fileFullPath.EndsWith(".manifest"))
             {
                 return null;
             }
-            if (filePath.Contains("versioncode.txt") || filePath.Contains("versionmanifest.xml"))
+            if (fileFullPath.EndsWith(PathConfig.VersionCodeFile) || fileFullPath.EndsWith(PathConfig.VersionManifestFile))
             {
                 return null;
             }
             FileVersionInfo info = new FileVersionInfo();
-			if (filePath.EndsWith(".assetbundle"))
-            {
-                BuildPipeline.GetCRCForAssetBundle(filePath, out info.fileCrc);
-            }
-            else
-            {
-                //CRC32 crc = new CRC32();
-                //FileStream fs = new FileStream(filePath, FileMode.Open);
-                //info.fileCrc = (uint)crc.StreamCRC(fs);
-            }
-            FileInfo f = new FileInfo(filePath);
+            info.fileMD5 = PathTools.GetFileMD5(fileFullPath);
+            FileInfo f = new FileInfo(fileFullPath);
             info.fileSize = (int)f.Length;
-            info.fileName = filePath.Replace(fileRootDir, "").Replace("\\", "/");
+            info.fileName = fileFullPath.Replace(fileRootDir + "/", "");
             return info;
         }
 

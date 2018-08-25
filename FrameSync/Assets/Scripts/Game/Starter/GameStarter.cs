@@ -5,6 +5,8 @@ using System.Text;
 using UnityEngine;
 using Framework;
 using GameData;
+using System.Collections;
+using System.IO;
 
 namespace Game
 {
@@ -28,13 +30,49 @@ namespace Game
         private int m_nLastHeight;
         void Awake()
         {
+            Debug.Log("GameStarter[Awake]");
             m_nLastWidth = Screen.width;
             m_nLastHeight = Screen.height;
             Application.runInBackground = true;
         }
         void Start()
         {
+
+            Debug.Log("GameStarter[Start]");
             InitSingleton();
+
+            StartCoroutine(UnCompressPackage());
+        }
+
+        private IEnumerator UnCompressPackage()
+        {
+
+#if !UNITY_EDITOR
+            string unCompressPath = ResourceFileUtil.PersistentLoadPath;
+            string streamingAssetsPath = ResourceFileUtil.FILE_SYMBOL + ResourceFileUtil.StreamingAssetsPath;
+            if (!File.Exists(ResourceFileUtil.PersistentLoadPath + "versionmanifest"))
+            {
+                string url = streamingAssetsPath + "gameasset";
+                WWW www = new WWW(url);
+                yield return www;
+                if(!string.IsNullOrEmpty(www.error))
+                {
+                    Debug.LogError("下载资源:"+url+"失败");
+                    yield break;
+                }
+                var bytes = www.bytes;
+                Debug.Log("bytes.length:"+bytes.Length);
+                try
+                {
+                    CompressTools.UnCompress(bytes, unCompressPath);
+                }
+                catch(Exception e)
+                {
+                    Debug.LogError("解压文件:" + url + "到" + unCompressPath +"失败\n"+e.Message+"\n"+e.StackTrace);
+                    yield break;
+                }
+            }
+#endif
             if (ResourceSys.Instance.DirectLoadMode)
             {
                 LoadConfigs();
@@ -43,6 +81,7 @@ namespace Game
             {
                 ResourceSys.Instance.assetBundleFile.Init("assetpath_mapping", OnLoadAssetBundleFile);
             }
+            yield return null;
         }
 
         private void OnLoadAssetBundleFile(bool succ)
@@ -124,6 +163,7 @@ namespace Game
         //初始化所有单例
         protected void InitSingleton()
         {
+            var consoleLogger = gameObject.AddComponentOnce<ConsoleLogger>();
             gameObject.AddComponentOnce<NetSys>();
             if (netMode == GameNetMode.Network)
             {

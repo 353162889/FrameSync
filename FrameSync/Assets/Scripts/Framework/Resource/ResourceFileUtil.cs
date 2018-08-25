@@ -28,12 +28,14 @@ namespace Framework
 		    public static string RunPlatform = WebPlayer;
     #endif
 
-        private static string StreamingAssetsPath;
-        private static string FILE_SYMBOL;
-        private static string OUTER_FILE_SYMBOL;
+        public static string StreamingAssetsPath;
+        //内部文件的前缀，StreamingAssets目录
+        public static string FILE_SYMBOL;
+        //外部文件前缀，如persistentDataPath或网络地址
+        public static string OUTER_FILE_SYMBOL;
 
         //bundle时资源加载路径
-        private static string PersistentLoadPath;
+        public static string PersistentLoadPath;
        
         private ResourceContainer _resourceContainer;
         //在unity加载资源的根路径
@@ -44,8 +46,8 @@ namespace Framework
             ResRootDir = resRootDir;
             if (!ResRootDir.EndsWith("/")) ResRootDir += "/";
 #if UNITY_EDITOR
-            StreamingAssetsPath = Application.dataPath + "/../AssetBundles/" + RunPlatform + "/";   //editor下的streaming就是打包的目录，稍微改了下(并不是工程目录下Streaming下的目录
-            PersistentLoadPath = Application.persistentDataPath + "/AssetBundles/" + RunPlatform + "/";
+            StreamingAssetsPath = Application.dataPath + "/StreamingAssets/";
+            PersistentLoadPath = Application.dataPath + "/../AssetBundles/" + RunPlatform + "/";
             FILE_SYMBOL = @"file://";
             OUTER_FILE_SYMBOL = @"file:///";
 #elif (UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX)
@@ -68,21 +70,21 @@ namespace Framework
             _resourceContainer = gameObject.AddComponentOnce<ResourceContainer>();
         }
 
-        public string GetRemotePath(string url,string path)
-        {
-            if(!url.EndsWith("/"))
-            {
-                url += "/";
-            }
-            if(url.StartsWith("http"))
-            {
-                return url + "/AssetBundles/"+ RunPlatform + "/" + path;
-            }
-            else
-            {
-                return OUTER_FILE_SYMBOL + url + "/AssetBundles/" + RunPlatform + "/" + path;
-            }
-        }
+        //public string GetRemotePath(string url,string path)
+        //{
+        //    if(!url.EndsWith("/"))
+        //    {
+        //        url += "/";
+        //    }
+        //    if(url.StartsWith("http"))
+        //    {
+        //        return url + "/AssetBundles/"+ RunPlatform + "/" + path;
+        //    }
+        //    else
+        //    {
+        //        return OUTER_FILE_SYMBOL + url + "/AssetBundles/" + RunPlatform + "/" + path;
+        //    }
+        //}
 
         /// <summary>
         /// 统一路径格式 unifiedPath = unifiedPath.Replace ('\\', '/');
@@ -116,12 +118,7 @@ namespace Framework
             if (!_resourceContainer.DirectLoadMode)
             {
                 file = file.ToLower();
-#if UNITY_EDITOR
-                //编辑器下的bundle模式直接读取StreamingAsset下的bundle文件
-                fullPath = FILE_SYMBOL + StreamingAssetsPath + file;
-#else
                 fullPath = OUTER_FILE_SYMBOL + PersistentLoadPath + file;
-#endif
             }
             else
             {

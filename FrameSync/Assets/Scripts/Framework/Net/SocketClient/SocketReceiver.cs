@@ -92,7 +92,7 @@ namespace Framework
                         }
                         catch(Exception ex)
                         {
-                            CLog.LogError("SocketReceiver Deserialize fail!opcode=" + netData.recvOpcode);
+                            CLog.LogError("SocketReceiver Deserialize fail!opcode=" + netData.recvOpcode+"\n"+ ex.Message + "\n"+ex.StackTrace);
                             continue;
                         }
                     }

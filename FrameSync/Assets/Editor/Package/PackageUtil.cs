@@ -1,86 +1,59 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
+using System.Collections.Generic;
 using System.IO;
+using System;
 
-namespace CustomizeEditor
+namespace EditorPackage
 {
-    public enum PackageType
+    public static class PackageUtil
     {
-        Resource,
-        AssetBundle
-    }
-
-    public class PackageUtil
-    {
-        public static void Package(PackageType packageType, BuildTarget buildTarget,BuildOptions buildOptions)
+        public static void Build(BuildTarget buildTarget, BuildOptions buildOptions)
         {
-            if(packageType == PackageType.Resource)
-            {
-                BuildResource(buildTarget, buildOptions);
-            }
-            else if(packageType == PackageType.AssetBundle)
-            {
-                BuildAssetBundle(buildTarget, buildOptions);
-            }
-            Debug.Log("Build package finish!");
+            PlayerSettings.companyName = PathConfig.CompanyName;
+            PlayerSettings.productName = PathConfig.ProductName;
+            PlayerSettings.applicationIdentifier = PathConfig.ApplicationIdentifier;
+            PlayerSettings.bundleVersion = PathConfig.BundleVersion;
+            //删除StreamingAsset目录中所有东西
+            ClearStreamingAssetDir();
+            //将AssetBundle资源压缩并拷贝到StreamingAsset目录中
+            CompressABToStreamingAssetDir(buildTarget);
+            //构建包
+            BuildPackage(buildTarget,buildOptions);
+            //删除StreamingAsset目录中所有东西
+            ClearStreamingAssetDir();
         }
 
-        private static void BuildResource(BuildTarget buildTarget,BuildOptions buildOptions)
+        private static void BuildPackage(BuildTarget buildTarget, BuildOptions buildOptions)
         {
-            //新建resource文件下的Lua代码目录
-            PackageResourceLuaUtil.CheckAndCreateLuaTempDir();
-            //将lua文件拷贝到Resource下
-            PackageResourceLuaUtil.CopyLuaFileToResourceDirAndRenameExt();
-            //打包
-            string packageName = PackagePath.GetPackagePath(PackageType.Resource);
-            Directory.CreateDirectory(packageName);
-            BuildPipeline.BuildPlayer(GetAllBuildScenes(), packageName, buildTarget, buildOptions);
-            //最后删除临时目录
-            PackageResourceLuaUtil.ClearLuaTempDir();
-            AssetDatabase.Refresh();
-
-            //打开包所在的文件夹
-            System.Diagnostics.Process.Start(PackagePath.GetPackagePathDir(PackageType.Resource));
+            string packageName = string.Format("{0}_v{1}_{2}_{3}{4}", PlayerSettings.productName,PlayerSettings.bundleVersion, DateTime.Now.ToString("yyyyMMdd"), DateTime.Now.ToString("HHmm"), PathConfig.DicPlatformExt[buildTarget]);
+            string path = PathConfig.BuildPackageRootDir(buildTarget) + "/" + packageName;
+            BuildPipeline.BuildPlayer(GetAllBuildScenes(), path, buildTarget, buildOptions);
         }
 
-        private static void BuildAssetBundle(BuildTarget buildTarget,BuildOptions buildOptions)
+        //删除StreamingAsset目录中所有东西
+        public static void ClearStreamingAssetDir()
         {
-            //将所有的bundle文件拷贝到streamingasset文件
-            PackageAssetBundleUtil.CheckAndCreateAssetBundleDir();
-            //将assetbundle压缩到streamingAsset
-            //if(!PackageAssetBundleUtil.CopyABToStreamingAssetDir())
-            if(!PackageAssetBundleUtil.CompressABToStreamingAssetDir())
-            {
-                PackageAssetBundleUtil.ClearAssetBundleDir();
-                AssetDatabase.Refresh();
-                return;
-            }
-            //将版本文件拷贝到Resource目录
-            if(!PackageAssetBundleUtil.CopyVersionTxtToResourceDir())
-            {
-                PackageAssetBundleUtil.ClearAssetBundleDir();
-                AssetDatabase.Refresh();
-                return;
-            }
-            //打包
-            string packageName = PackagePath.GetPackagePath(PackageType.AssetBundle);
-            Directory.CreateDirectory(packageName);
-            Debug.Log("packageName:"+ packageName);
-
-            BuildPipeline.BuildPlayer(PackagePath.sceneNames,packageName, buildTarget, buildOptions);
-
-            //删除streamingAsset中的bundle目录
-            PackageAssetBundleUtil.ClearAssetBundleDir();
-            //删除拷贝到Resources目录的版本文件
-            PackageAssetBundleUtil.ClearResourceVersionFileDir();
+            PathTools.RemoveDir(PathConfig.StreamingAssetDir);
             AssetDatabase.Refresh();
+        }
 
-            //打开包所在的文件夹
-            System.Diagnostics.Process.Start(PackagePath.GetPackagePathDir(PackageType.AssetBundle));
+        public static bool CompressABToStreamingAssetDir(BuildTarget buildTarget)
+        {
+            try
+            {
+                EditorUtility.DisplayCancelableProgressBar("Package", "正在压缩AssetBundle", 0);
+                string streamingAssetDir = PathConfig.BuildStreamingAssetsRootDir(buildTarget);
+                if (!Directory.Exists(streamingAssetDir)) Directory.CreateDirectory(streamingAssetDir);
+                string compressPath = streamingAssetDir + "/" + PathConfig.CompressAssetBundleName;
+                CompressTools.CompressDir(PathConfig.BuildOuterAssetBundleRootDir(buildTarget), compressPath);
+                AssetDatabase.Refresh();
+                return true;
+            }
+            finally
+            {
+                EditorUtility.ClearProgressBar();
+            }
         }
 
         public static string[] GetAllBuildScenes()
@@ -97,5 +70,6 @@ namespace CustomizeEditor
             }
             return names.ToArray();
         }
+
     }
 }

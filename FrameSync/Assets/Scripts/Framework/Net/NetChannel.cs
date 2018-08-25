@@ -199,7 +199,7 @@ namespace Framework
                 m_cSocketClient.OnUpdate();
                 if (m_cSocketClient.Status == SocketClientStatus.Connected)
                 {
-                    int count = m_cSocketClient.RecvNetData(m_queueRecvData);
+                    m_cSocketClient.RecvNetData(m_queueRecvData);
                     //限制每帧处理包的最大个数可以在这里加
                     while (m_queueRecvData.Count > 0)
                     {

@@ -86,7 +86,6 @@ namespace Framework
                     CLog.LogError("配置名称:"+type.Name+ "找不到唯一key的定义ResCfgAttribute");
                     continue;
                 }
-                string path = resDir + type.Name + ".xml";
                 //考虑下需要过滤不在此目录的文件
                 ResCfgInfo cfgInfo = new ResCfgInfo();
                 cfgInfo.xmlPath = resDir + type.Name + ".xml";

@@ -50,7 +50,7 @@ namespace AssetBundleBrowser
         const float k_MenubarPadding = 32;
 
         [MenuItem("Window/AssetBundle Browser", priority = 2050)]
-        static void ShowWindow()
+        public static void ShowWindow()
         {
             s_instance = null;
             instance.titleContent = new GUIContent("AssetBundles");

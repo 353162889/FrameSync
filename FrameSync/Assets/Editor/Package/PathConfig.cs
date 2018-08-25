@@ -12,8 +12,17 @@ namespace EditorPackage
     public class PathConfig
     {
         #region 常量文件配置
+        public static string CompanyName = "Default";
+        public static string ProductName = "FrameSync";
+        public static string BundleVersion = "1.0.0";
+        //唯一包名
+        public static string ApplicationIdentifier = "com.frame.airplane";
+        public static string PackageBundleVersion = "1.0.0";
         public static string AssetBundleManifestName = "assetbundle_manifest".ToLower();
-        public static string assetPathMappingName = "assetpath_mapping".ToLower();
+        public static string AssetPathMappingName = "assetpath_mapping".ToLower();
+        public static string VersionCodeFile = "versioncode";
+        public static string VersionManifestFile = "versionmanifest";
+        public static string CompressAssetBundleName = "gameasset";
         #endregion
 
         #region 平台目录路径
@@ -28,6 +37,8 @@ namespace EditorPackage
             { BuildTarget.iOS, ".ipa"},
         };
         public static string PlatformDir(string parentDir, BuildTarget buildTarget) { return string.Format("{0}/{1}",parentDir, DicPlatformName[buildTarget]); }
+
+        
         #endregion
 
         //Assets目录路径
@@ -36,21 +47,27 @@ namespace EditorPackage
         public static string ProjectRootDir = ParentDir(AssetsRootDir, 1);
         //放置资源路径
         public static string ResourceRootDir = ChildDir(AssetsRootDir,"ResourceEx");
-        //StreamingAsset目录，放置打包好的bundle
+        //StreamingAsset目录
         public static string StreamingAssetDir = PathTools.FormatPath(Application.streamingAssetsPath);
+
 
         #region AssetBundle路径（各种路径）
 
         //打出的AssetBundle放置路径
-        public static string BuildAssetBundleRootDir(BuildTarget buildTarget) { return PlatformDir(AssetBundleRootDir(ProjectRootDir), buildTarget); }
-        //打包时，AssetBundle需要放置在StreamingAsset目录下
-        public static string BuildPackageAssetBundleRootDir(BuildTarget buildTarget) { return PlatformDir(AssetBundleRootDir(StreamingAssetDir), buildTarget); }
+        public static string BuildOuterAssetBundleRootDir(BuildTarget buildTarget) { return PlatformDir(AssetBundleRootDir(ProjectRootDir), buildTarget); }
+        public static string BuildStreamingAssetsRootDir(BuildTarget buildTarget) { return PlatformDir(AssetBundleRootDir(StreamingAssetDir), buildTarget); }
+        #endregion
+        //AssetBundle放置在目录名为AssetBundles的目录下
+        private static string AssetBundleRootDir(string parentDir) { return string.Format("{0}/AssetBundles", parentDir); }
 
-        private static string AssetBundleRootDir(string parentDir) { return string.Format("{0}/AssetBundles",parentDir); }
+        #region package 打包的路径
+        //包的根目录
+        public static string BuildPackageRootDir(BuildTarget buildTarget) { return PlatformDir(PackageRootDir(ProjectRootDir), buildTarget); }
+        private static string PackageRootDir(string parentDir) { return string.Format("{0}/Packages", parentDir); }
         #endregion
 
         //使用同一分隔符
-      
+
         //上层目录
         public static string ParentDir(string dir, int count)
         {

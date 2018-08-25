@@ -55,7 +55,7 @@ namespace Framework
                     }
                     catch(Exception e)
                     {
-                        CLog.LogError("接收帧消息顺序发生错误，当前包将丢失,opcode=" + recvData.recvOpcode);
+                        CLog.LogError("接收帧消息顺序发生错误，当前包将丢失,opcode=" + recvData.recvOpcode+"\n"+ e.Message);
                     }
                     return true;
                 }

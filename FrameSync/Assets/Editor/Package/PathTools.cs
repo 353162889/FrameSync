@@ -29,6 +29,20 @@ namespace EditorPackage
             }
         }
 
+
+        public static string GetStringMD5(string str)
+        {
+            byte[] data = Encoding.GetEncoding("utf-8").GetBytes(str);
+            MD5CryptoServiceProvider get_md5 = new MD5CryptoServiceProvider();
+            byte[] hash_byte = get_md5.ComputeHash(data);
+            string result = "";
+            for (int i = 0; i < hash_byte.Length; i++)
+            {
+                result += hash_byte[i].ToString("x2");
+            }
+            return result;
+        }
+
         /// <summary>
         /// 一般路径转换为unity资源加载路径
         /// </summary>
@@ -330,6 +344,49 @@ namespace EditorPackage
                     }
                 }
                 File.Copy(from, to, true);
+            }
+        }
+
+        /// <summary>
+        /// 将源文件拷贝到目的目录中
+        /// </summary>
+        /// <param name="from">当前目录</param>
+        /// <param name="to">目的目录</param>
+        /// <param name="files">需要拷贝的文件列表</param>
+        public static void CopyToPublish(string from, string to, List<string> files)
+        {
+            if(!Directory.Exists(from))
+            {
+                return;
+            }
+            if (!Directory.Exists(to))
+            {
+                return;
+            }
+            from = FormatPath(from);
+            to = FormatPath(to);
+            if (from.EndsWith("/")) from = from.Substring(0, from.Length - 1);
+            if (to.EndsWith("/")) to = to.Substring(0,from.Length - 1);
+            int count = files.Count;
+            for (int i = 0; i < count; ++i)
+            {
+                string file = files[i];
+                file = FormatPath(file);
+
+                string destFile = file.Replace(from, to);
+                if (File.Exists(destFile))
+                {
+                    File.Delete(destFile);
+                }
+
+                string destFileDir = GetFileDirForPath(destFile);
+                DirectoryInfo info = new DirectoryInfo(destFileDir);
+                if (!info.Exists)
+                {
+                    info.Create();
+                }
+
+                File.Copy(file, destFile);
             }
         }
 
