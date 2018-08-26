@@ -24,6 +24,15 @@ namespace EditorPackage
             m_arrBuildTarget = PathConfig.DicPlatformName.Keys.ToArray();
             m_arrBuildTargetDesc = PathConfig.DicPlatformName.Values.ToArray();
             m_nBuildTargetIdx = 0;
+            BuildTarget curBuildTarget = EditorUserBuildSettings.activeBuildTarget;
+            for (int i = 0; i < m_arrBuildTarget.Length; i++)
+            {
+                if (curBuildTarget == m_arrBuildTarget[i])
+                {
+                    m_nBuildTargetIdx = i;
+                    break;
+                }
+            }
             m_bOpenFolder = true;
             m_bUseMD5Name = false;
             m_nPkgVersion = 1;

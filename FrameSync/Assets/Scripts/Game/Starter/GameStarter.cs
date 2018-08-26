@@ -34,6 +34,8 @@ namespace Game
             m_nLastWidth = Screen.width;
             m_nLastHeight = Screen.height;
             Application.runInBackground = true;
+            GL.Clear(false, true, Color.black);
+            Screen.orientation = ScreenOrientation.Portrait;
         }
         void Start()
         {
@@ -163,7 +165,7 @@ namespace Game
         //初始化所有单例
         protected void InitSingleton()
         {
-            var consoleLogger = gameObject.AddComponentOnce<ConsoleLogger>();
+            gameObject.AddComponentOnce<ConsoleLogger>();
             gameObject.AddComponentOnce<NetSys>();
             if (netMode == GameNetMode.Network)
             {

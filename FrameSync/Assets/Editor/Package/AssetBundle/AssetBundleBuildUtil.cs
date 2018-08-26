@@ -13,6 +13,8 @@ namespace EditorPackage
     {
         public static bool BuildAssetBundle(BuildTarget buildTarget,bool md5Name = false)
         {
+            //切换平台
+            if (!SwitchBuildTarget(buildTarget)) return false;
             //清除bundle名称
             ClearAssetBundleNames();
             //设置bundle名称
@@ -28,6 +30,22 @@ namespace EditorPackage
             //清除bundle名称
             ClearAssetBundleNames();
             Debug.Log("BuildAssetBundle succ");
+            return true;
+        }
+
+        private static bool SwitchBuildTarget(BuildTarget buildTarget)
+        {
+            if(EditorUserBuildSettings.activeBuildTarget != buildTarget)
+            {
+                EditorUtility.DisplayProgressBar("AssetBundleFiles", "开始切换平台", 0);
+                bool result = EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Unknown, buildTarget);
+                EditorUtility.ClearProgressBar();
+                if(!result)
+                {
+                    Debug.LogError("切换平台"+buildTarget +"失败");
+                }
+                return result;
+            }
             return true;
         }
 

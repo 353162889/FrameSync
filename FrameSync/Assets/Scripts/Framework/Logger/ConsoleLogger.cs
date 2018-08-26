@@ -57,16 +57,53 @@ public class ConsoleLogger : MonoBehaviour
 #endif
     }
 
+    private Rect m_sLeftTopRect;
+    private Rect m_sLeftBottomRect;
+    private Rect m_sRightTopRect;
+    private Rect m_sRightBottomRect;
+    private int m_nClickIndex;
+    private void Start()
+    {
+        m_sLeftTopRect = new Rect(0, Screen.height - 50, 50, 50);
+        m_sLeftBottomRect = new Rect(0, 0, 50, 50);
+        m_sRightTopRect = new Rect(Screen.width - 50, Screen.height - 50, 50, 50);
+        m_sRightBottomRect = new Rect(Screen.width - 50, 0, 50, 50);
+    }
+
     private float prevToggleTime = 0;
 
     private void Update()
     {
+
         //在移动设备上通过五指同时触摸来激活
 #if !UNITY_STANDALONE && !UNITY_EDITOR
         if (Input.touches.Length >= 5 
             && (Time.time - prevToggleTime > .5f)) {
                 prevToggleTime = Time.time;
                 ToggleShowDebug();
+        }
+        else
+        {
+            if(Input.touches.Length > 0)
+            {
+                var position = Input.GetTouch(0).position;
+                if (m_sLeftTopRect.Contains(position))
+                {
+                    m_nClickIndex = 1;
+                }
+                if(m_nClickIndex == 1 && m_sLeftBottomRect.Contains(position))
+                {
+                    m_nClickIndex = 2;
+                }
+                if (m_nClickIndex == 2 && m_sRightTopRect.Contains(position))
+                {
+                    m_nClickIndex = 3;
+                }
+                if (m_nClickIndex == 3 && m_sRightBottomRect.Contains(position))
+                {
+                    ToggleShowDebug();
+                }
+            }
         }
 #endif
         if (Input.GetKeyDown(toggleKey)) {

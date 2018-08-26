@@ -43,7 +43,7 @@ namespace Game
             m_cJoystick.AddKeyCode(KeyCode.W, Vector2.up);
             m_cJoystick.AddKeyCode(KeyCode.S, Vector2.down);
             //m_cJoystick.enabled = false;
-            SetJoystickActive(false);
+            SetJoystickActive(true);
 
             //TouchDispatcher.instance.touchBeganListeners += OnTouch;
 

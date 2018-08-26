@@ -24,19 +24,33 @@ namespace EditorPackage
         private int m_nPkgVersion;
         private bool m_bDeleteAllOldPackage;//是否删除所有旧包
 
-        private BuildOptions[] optionArr = new BuildOptions[3] { BuildOptions.Development, BuildOptions.AllowDebugging, BuildOptions.ConnectWithProfiler };
-        private bool optionGroupState = false;
-        private bool[] optionState = new bool[3] { false, false, false };
+        private BuildOptions[] m_arrOption = new BuildOptions[] { BuildOptions.Development, BuildOptions.AllowDebugging, BuildOptions.ConnectWithProfiler, BuildOptions.AutoRunPlayer };
+        private bool[] m_arrOptionState;
 
         private Dictionary<BuildTarget, Action<BuildTarget, BuildOptions>> m_dic = new Dictionary<BuildTarget, Action<BuildTarget, BuildOptions>> {
-            { BuildTarget.StandaloneWindows,PackageWin32Util.Build}
+            { BuildTarget.StandaloneWindows,PackageWin32Util.Build},
+            { BuildTarget.Android,PackageAndroidUtil.Build},
         };
 
         private void OnEnable()
         {
+            m_arrOptionState = new bool[m_arrOption.Length];
+            for (int i = 0; i < m_arrOptionState.Length; i++)
+            {
+                m_arrOptionState[i] = false;
+            }
             m_arrBuildTarget = PathConfig.DicPlatformName.Keys.ToArray();
             m_arrBuildTargetDesc = PathConfig.DicPlatformName.Values.ToArray();
             m_nBuildTargetIdx = 0;
+            BuildTarget curBuildTarget = EditorUserBuildSettings.activeBuildTarget;
+            for (int i = 0; i < m_arrBuildTarget.Length; i++)
+            {
+                if(curBuildTarget == m_arrBuildTarget[i])
+                {
+                    m_nBuildTargetIdx = i;
+                    break;
+                }
+            }
             m_bOpenFolder = true;
             m_bRebuildAssetBundle = true;
             m_bUseMD5Name = false;
@@ -66,11 +80,15 @@ namespace EditorPackage
             m_nPkgVersion = EditorGUILayout.IntField("包版本号", m_nPkgVersion);
             EditorGUILayout.EndHorizontal();
 
-            optionGroupState = EditorGUILayout.BeginToggleGroup("Build Options", optionGroupState);
-            optionState[0] = EditorGUILayout.Toggle("Development", optionState[0]);
-            optionState[1] = EditorGUILayout.Toggle("AllowDebugging", optionState[1]);
-            optionState[2] = EditorGUILayout.Toggle("ConnectWithProfiler", optionState[2]);
-            EditorGUILayout.EndToggleGroup();
+            if (m_arrOption.Length > 0)
+            {
+                m_arrOptionState[0] = EditorGUILayout.BeginToggleGroup(m_arrOption[0].ToString(), m_arrOptionState[0]);
+                for (int i = 1; i < m_arrOptionState.Length; i++)
+                {
+                    m_arrOptionState[i] = EditorGUILayout.Toggle(m_arrOption[i].ToString(), m_arrOptionState[i]);
+                }
+                EditorGUILayout.EndToggleGroup();
+            }
 
             EditorGUILayout.BeginHorizontal();
             m_bDeleteAllOldPackage = EditorGUILayout.Toggle("删除所有旧包文件", m_bDeleteAllOldPackage);
@@ -122,13 +140,13 @@ namespace EditorPackage
         private BuildOptions GetBuildOpetions()
         {
             BuildOptions buildOption = BuildOptions.None;
-            if (optionGroupState)
+            if (m_arrOptionState.Length > 0 && m_arrOptionState[0])
             {
-                for (int i = 0; i < optionState.Length; ++i)
+                for (int i = 0; i < m_arrOptionState.Length; ++i)
                 {
-                    if (optionState[i])
+                    if (m_arrOptionState[i])
                     {
-                        buildOption |= optionArr[i];
+                        buildOption |= m_arrOption[i];
                     }
                 }
             }
