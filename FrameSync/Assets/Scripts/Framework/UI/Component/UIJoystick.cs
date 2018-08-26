@@ -46,10 +46,6 @@ namespace Framework
         public bool fixedBase = true;
         void Awake()
         {
-            m_nCurTouchId = -1;
-            m_cCanvas = gameObject.GetComponentInParent<Canvas>();
-            m_cCanvasCamera = m_cCanvas.renderMode != RenderMode.ScreenSpaceOverlay ? m_cCanvas.worldCamera : null;
-           
             //Init(radius,fixedBase);
             //AddKeyCode(KeyCode.A, new Vector2(-1f, 0));
             //AddKeyCode(KeyCode.D, new Vector2(1f, 0));
@@ -70,6 +66,9 @@ namespace Framework
         /// <param name="fixedBase"></param>
         public void Init(float moveRadius,bool fixedBase)
         {
+            m_nCurTouchId = -1;
+            m_cCanvas = gameObject.GetComponentInParent<Canvas>();
+            m_cCanvasCamera = m_cCanvas.renderMode != RenderMode.ScreenSpaceOverlay ? m_cCanvas.worldCamera : null;
             m_defaultAnchorPosition = mBase.anchoredPosition;
             m_defaultScreenPosition = RectTransformUtility.WorldToScreenPoint(m_cCanvasCamera,mBase.position);
             m_fMoveRadius = moveRadius;
@@ -117,7 +116,7 @@ namespace Framework
                 bool isOnUI = (EventSystem.current != null) ? EventSystem.current.IsPointerOverGameObject() : false;
                 if(!isOnUI)
                 {
-                    if(Input.GetMouseButton(MouseLeftKey))
+                    if(Input.GetMouseButtonDown(MouseLeftKey))
                     {
                         Vector3 screenPosition = Input.mousePosition;
                         bool inEffectRect = RectTransformUtility.RectangleContainsScreenPoint(mEffectTransfrom, screenPosition, m_cCanvasCamera);
@@ -128,6 +127,7 @@ namespace Framework
                             Vector2 localPosition;
                             RectTransformUtility.ScreenPointToLocalPointInRectangle(mBase.parent as RectTransform, screenPosition, m_cCanvasCamera, out localPosition);
                             BeginMovePosition(m_bFixedBase,screenPosition, localPosition);
+                            return;
                         }
                     }
                 }
@@ -149,6 +149,7 @@ namespace Framework
                         m_nCurTouchId = KeyTouchId;
                         Vector2 localPosition = m_defaultAnchorPosition + direct * m_fMoveRadius;
                         BeginMovePosition(true,localPosition);
+                        return;
                     }
                 }
 #else
@@ -173,7 +174,7 @@ namespace Framework
                                         Vector2 localPosition;
                                         RectTransformUtility.ScreenPointToLocalPointInRectangle(mBase.parent as RectTransform, touch.position, m_cCanvasCamera, out localPosition);
                                         BeginMovePosition(m_bFixedBase,touch.position,localPosition);
-                                        break;
+                                        return;
                                     }
                                 }
                             }
@@ -199,9 +200,12 @@ namespace Framework
                     else if (Input.GetMouseButton(MouseLeftKey))
                     {
                         Vector3 screenPosition = Input.mousePosition;
-                        Vector2 localPosition;
-                        RectTransformUtility.ScreenPointToLocalPointInRectangle(mMove.parent as RectTransform, screenPosition, m_cCanvasCamera, out localPosition);
-                        UpdateMovePosition(screenPosition,localPosition);
+                        if (!Mathf.Approximately(m_preScreenPosition.x - screenPosition.x, 0) || !Mathf.Approximately(m_preScreenPosition.y - screenPosition.y, 0))
+                        {
+                            Vector2 localPosition;
+                            RectTransformUtility.ScreenPointToLocalPointInRectangle(mMove.parent as RectTransform, screenPosition, m_cCanvasCamera, out localPosition);
+                            UpdateMovePosition(screenPosition, localPosition);
+                        }
                     }
                 }
                 else if(m_nCurTouchId == KeyTouchId)
@@ -217,8 +221,13 @@ namespace Framework
                     if (direct != Vector2.zero)
                     {
                         direct.Normalize();
-                        Vector2 localPosition = m_defaultAnchorPosition + direct * m_fMoveRadius;
-                        UpdateMovePosition(localPosition);
+                        Vector2 preDirect = (m_preScreenPosition - m_startScreenPosition);
+                        preDirect.Normalize();
+                        if (!Mathf.Approximately(preDirect.x - direct.x, 0) || !Mathf.Approximately(preDirect.y - direct.y, 0))
+                        {
+                            Vector2 localPosition = m_defaultAnchorPosition + direct * m_fMoveRadius;
+                            UpdateMovePosition(localPosition);
+                        }
                     }
                     else
                     {
@@ -231,12 +240,16 @@ namespace Framework
                     if(m_nCurTouchId < Input.touchCount)
                     {
                         Touch touch = Input.GetTouch(m_nCurTouchId);
-                        if(touch.phase == TouchPhase.Moved)
+                        if(touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary)
                         {
+                            Debug.Log("touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary");
                             Vector3 screenPosition = touch.position;
-                            Vector2 localPosition;
-                            RectTransformUtility.ScreenPointToLocalPointInRectangle(mMove.parent as RectTransform, screenPosition, m_cCanvasCamera, out localPosition);
-                            UpdateMovePosition(screenPosition,localPosition);
+                            if (!Mathf.Approximately(m_preScreenPosition.x - screenPosition.x, 0) || !Mathf.Approximately(m_preScreenPosition.y - screenPosition.y, 0))
+                            {
+                                Vector2 localPosition;
+                                RectTransformUtility.ScreenPointToLocalPointInRectangle(mMove.parent as RectTransform, screenPosition, m_cCanvasCamera, out localPosition);
+                                UpdateMovePosition(screenPosition,localPosition);
+                            }
                         }
                         else
                         {

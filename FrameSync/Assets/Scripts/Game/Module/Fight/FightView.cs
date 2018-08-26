@@ -43,7 +43,7 @@ namespace Game
             m_cJoystick.AddKeyCode(KeyCode.W, Vector2.up);
             m_cJoystick.AddKeyCode(KeyCode.S, Vector2.down);
             //m_cJoystick.enabled = false;
-            SetJoystickActive(true);
+            SetJoystickActive(false);
 
             //TouchDispatcher.instance.touchBeganListeners += OnTouch;
 
@@ -96,6 +96,7 @@ namespace Game
             {
                 startPosition = PvpPlayerMgr.Instance.mainPlayer.unit.curPosition.ToUnityVector3();
             }
+            OnJoystickMove(screenPos, offset, delta);
         }
 
         private float m_fLastReqSetPositionTime = float.MinValue;
@@ -113,7 +114,8 @@ namespace Game
                         TSVector2 start = new TSVector2(unit.curPosition.x,unit.curPosition.z);
                         TSVector2 dir = new TSVector2(FP.FromFloat(curOffset.x), FP.FromFloat(curOffset.y));
                         dir.Normalize();
-                        FP dis =TSMath.Min(CameraSys.Instance.cameraViewPort.mRect.halfWidth, CameraSys.Instance.cameraViewPort.mRect.halfHeight);
+                        //FP dis =TSMath.Min(CameraSys.Instance.cameraViewPort.mRect.halfWidth, CameraSys.Instance.cameraViewPort.mRect.halfHeight);
+                        FP dis = TSMath.Max(CameraSys.Instance.cameraViewPort.mRect.width, CameraSys.Instance.cameraViewPort.mRect.height);
 
                         TSVector2 end = start + dir * dis;
                         TSVector2 result = GetViewPortPositionByLine(start, end);

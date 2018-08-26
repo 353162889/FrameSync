@@ -101,6 +101,7 @@ namespace EditorPackage
                 {
                     PathTools.RemoveDir(PathConfig.BuildPackageRootDir(buildTarget));
                 }
+                BuildOptions buildOptions = GetBuildOptions();
                 Action<BuildTarget, BuildOptions> action = null;
                 if (!m_dic.TryGetValue(buildTarget, out action))
                 {
@@ -112,7 +113,7 @@ namespace EditorPackage
                     if (AssetBundleBuildUtil.BuildAssetBundle(buildTarget, m_bUseMD5Name))
                     {
                         AssetVersionUtil.GenerateVersionInfoFile(m_nPkgVersion, PathConfig.BuildOuterAssetBundleRootDir(buildTarget));
-                        action.Invoke(buildTarget, GetBuildOpetions());
+                        action.Invoke(buildTarget, buildOptions);
                     }
                     else
                     {
@@ -128,16 +129,20 @@ namespace EditorPackage
                         return;
                     }
                     AssetVersionUtil.GenerateVersionInfoFile(m_nPkgVersion, PathConfig.BuildOuterAssetBundleRootDir(buildTarget));
-                    action.Invoke(buildTarget, GetBuildOpetions());
+                    action.Invoke(buildTarget, buildOptions);
                 }
 
-                //打开包所在的文件夹
-                System.Diagnostics.Process.Start(PathConfig.BuildPackageRootDir(buildTarget));
+                if ((buildOptions & BuildOptions.AutoRunPlayer) == 0)
+                {
+                    //如果不是自动运行，打开包目录
+                    //打开包所在的文件夹
+                    System.Diagnostics.Process.Start(PathConfig.BuildPackageRootDir(buildTarget));
+                }
                 Debug.Log("打包成功");
             }
         }
 
-        private BuildOptions GetBuildOpetions()
+        private BuildOptions GetBuildOptions()
         {
             BuildOptions buildOption = BuildOptions.None;
             if (m_arrOptionState.Length > 0 && m_arrOptionState[0])
