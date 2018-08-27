@@ -119,6 +119,12 @@ namespace Game
             }
         }
 
+        public void SetForwardDirect(TSVector forward,bool viewImmediately = true)
+        {
+            curForward = forward;
+            SetViewForward(forward, viewImmediately);
+        }
+
         public bool CanSetForward(ForwardFromType fromType)
         {
             //初始化设置方向，不判断是否禁止

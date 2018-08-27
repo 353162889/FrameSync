@@ -39,7 +39,7 @@ namespace Framework
             m_arrChannel[(int)channel] = curChannel;
         }
 
-        protected NetChannel GetChannel(NetChannelType type)
+        public NetChannel GetChannel(NetChannelType type)
         {
             return m_arrChannel[(int)type];
         }

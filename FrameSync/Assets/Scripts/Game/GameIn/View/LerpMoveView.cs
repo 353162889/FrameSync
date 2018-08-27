@@ -184,13 +184,13 @@ namespace Game
                     if (m_nMoveTimes < moveTimes)
                     {
                         m_fTargetAverageTime = nextAverageTime * 0.5f;
-                        //CLog.LogArgs("加速:", dis, "m_nMoveTimes", m_nMoveTimes, "moveTimes", moveTimes);
+                        CLog.LogArgs("加速:", dis, "m_nMoveTimes", m_nMoveTimes, "moveTimes", moveTimes);
                     }
                     //减速
                     else
                     {
                         m_fTargetAverageTime = nextAverageTime * 2f;
-                        //CLog.LogArgs("减速:", dis, "m_nMoveTimes", m_nMoveTimes, "moveTimes", moveTimes);
+                        CLog.LogArgs("减速:", dis, "m_nMoveTimes", m_nMoveTimes, "moveTimes", moveTimes);
                     }
                 }
             }
@@ -271,20 +271,21 @@ namespace Game
                     var pos = m_sNextCenterPoints.lstCenterPoint[i];
                     float len = (pos - startPos).magnitude;
                     m_lstCurStartAndNextPositions.Add(pos);
-                    m_lstCurStartAndNextRate.Add(len);
+                    m_lstCurStartAndNextRate.Add(len + totalLen);
                     totalLen += len;
+                    startPos = pos;
                 }
                 m_lstCurStartAndNextPositions.Add(m_sNextPosition);
-                m_lstCurStartAndNextRate.Add(1f);
-                float dis = 0;
-                for (int i = 1; i < m_lstCurStartAndNextPositions.Count - 1; i++)
+                totalLen = totalLen + (m_sNextPosition - startPos).magnitude;
+                m_lstCurStartAndNextRate.Add(totalLen);
+                for (int i = 1; i < m_lstCurStartAndNextPositions.Count; i++)
                 {
-                    dis += m_lstCurStartAndNextRate[i];
+                    float dis = m_lstCurStartAndNextRate[i];
                     m_lstCurStartAndNextRate[i] = dis / totalLen;
 
-                    if(m_lstCurStartAndNextRate[i] > 1)
+                    if(m_lstCurStartAndNextRate[i] - 1f > float.Epsilon)
                     {
-                        CLog.LogError("算出来的比率大于1，有问题");
+                        //CLog.LogError("算出来的比率大于1，有问题:"+ m_lstCurStartAndNextRate[i]);
                         m_lstCurStartAndNextRate[i] = Mathf.Clamp01(m_lstCurStartAndNextRate[i]);
                     }
                 }
@@ -303,19 +304,20 @@ namespace Game
                     int i = 1;
                     for (; i < m_lstCurStartAndNextRate.Count; i++)
                     {
-                        if(lerpTime <= m_lstCurStartAndNextRate[i])
+                        if (lerpTime <= m_lstCurStartAndNextRate[i])
                         {
                             break;
                         }
                     }
                     float lerp = (lerpTime - m_lstCurStartAndNextRate[i - 1]) / (m_lstCurStartAndNextRate[i] - m_lstCurStartAndNextRate[i - 1]);
-                    pos = Vector3.Lerp(m_lstCurStartAndNextPositions[i - 1],m_lstCurStartAndNextPositions[i],lerp);
+                    pos = Vector3.Lerp(m_lstCurStartAndNextPositions[i - 1], m_lstCurStartAndNextPositions[i], lerp);
                     //pos = Vector3.Lerp(m_sStartPosition, m_sNextPosition, lerpTime);
                 }
                 else
                 {
                     pos = Vector3.Lerp(m_sStartPosition, m_sNextPosition, lerpTime);
                 }
+
                 SetPosition(pos);
                 //过渡差值
                 float nextAverageTime = Mathf.MoveTowards(m_fAverageTime, m_fTargetAverageTime, m_fTargetAverageTimeSpeed);

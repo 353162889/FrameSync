@@ -28,6 +28,10 @@ namespace Game
 
         private void OnClientGameReady(object netObj)
         {
+            //开始帧同步
+            var channel = NetSys.Instance.GetChannel(NetChannelType.Game);
+            ((StandAloneSocketClient)channel.socketClient).StartFrameSync();
+
             //先发送开始战斗协议
             S2C_StartBattle_Data startBattleData = new S2C_StartBattle_Data();
             startBattleData.seed = UnityEngine.Random.Range(0, int.MaxValue);

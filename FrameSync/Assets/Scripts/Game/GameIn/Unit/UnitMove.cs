@@ -132,7 +132,7 @@ namespace Game
 
         protected virtual void RotateToTarget(TSVector targetForward)
         {
-            m_cRotate.StartRotateBySpeed(m_sCurForward, targetForward, 360 * 8);
+            m_cRotate.StartRotateBySpeed(m_sCurForward, targetForward, 360 * 4);
         }
 
         protected virtual void OnStartRotate(TSVector preForward, TSVector newForward)
@@ -141,7 +141,8 @@ namespace Game
 
         protected void OnRotate(TSVector preForward, TSVector newForward)
         {
-            SetForward(newForward,ForwardFromType.UnitMove, true);
+            //这里直接改方向
+            SetForwardDirect(newForward,false);
         }
 
         protected virtual void OnStopRotate(TSVector preForward, TSVector newForward)

@@ -26,6 +26,7 @@ namespace Game
 
         public void StartAI()
         {
+            return;
             m_cAgentObjectAI.Start();
         }
 

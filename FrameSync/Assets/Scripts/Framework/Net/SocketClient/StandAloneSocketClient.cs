@@ -14,12 +14,14 @@ namespace Framework
         private Queue<NetRecvData> m_queueRecv;
         private float m_fTime;
         private int m_nFrameIndex;
+        private bool m_bStart;
         public StandAloneSocketClient()
         {
             m_queueSend = new Queue<NetSendData>();
             m_queueFrameSend = new Queue<NetSendData>();
             m_queueRecv = new Queue<NetRecvData>();
             m_nFrameIndex = 0;
+            m_bStart = false;
         }
         public override int RecvNetData(Queue<NetRecvData> queue)
         {
@@ -39,8 +41,25 @@ namespace Framework
             }
             else
             {
-                m_queueFrameSend.Enqueue(data);
+                if (m_bStart)
+                {
+                    m_queueFrameSend.Enqueue(data);
+                }
             }
+        }
+
+        public void StartFrameSync()
+        {
+            m_bStart = true;
+            m_fTime = 0;
+            m_nFrameIndex = 0;
+        }
+
+        public void StopFrameSync()
+        {
+            m_bStart = false;
+            m_fTime = 0;
+            m_nFrameIndex = 0;
         }
 
         protected override bool BeginConnect(string ip, int port)
@@ -68,31 +87,34 @@ namespace Framework
                 recvData.len = 0;//这里的长度直接填0（不需要反序列化）
                 m_queueRecv.Enqueue(recvData);
             }
-            //每隔50毫秒一次帧同步
-            m_fTime += Time.deltaTime;
-            if(m_fTime >= FrameSpaceTime)
+            if (m_bStart)
             {
-                m_fTime -= FrameSpaceTime;
-                m_nFrameIndex++;
-                //获取到所有的帧包
-                NetRecvData recvFrameData = new NetRecvData();
-                recvFrameData.data = m_nFrameIndex;
-                recvFrameData.recvOpcode = 0;
-                int len = m_queueFrameSend.Count;
-                if(len > 255)
+                //每隔50毫秒一次帧同步
+                m_fTime += Time.deltaTime;
+                if (m_fTime >= FrameSpaceTime)
                 {
-                    len = 255;
-                }
-                recvFrameData.len = (short)len;
-                m_queueRecv.Enqueue(recvFrameData);
-                for (int i = 0; i < len; i++)
-                {
-                    NetRecvData recvData = new NetRecvData();
-                    var sendData = m_queueFrameSend.Dequeue();
-                    recvData.recvOpcode = sendData.sendOpcode;
-                    recvData.data = sendData.data;
-                    recvData.len = 0;//这里的长度直接填0（不需要反序列化）
-                    m_queueRecv.Enqueue(recvData);
+                    m_fTime -= FrameSpaceTime;
+                    m_nFrameIndex++;
+                    //获取到所有的帧包
+                    NetRecvData recvFrameData = new NetRecvData();
+                    recvFrameData.data = m_nFrameIndex;
+                    recvFrameData.recvOpcode = 0;
+                    int len = m_queueFrameSend.Count;
+                    if (len > 255)
+                    {
+                        len = 255;
+                    }
+                    recvFrameData.len = (short)len;
+                    m_queueRecv.Enqueue(recvFrameData);
+                    for (int i = 0; i < len; i++)
+                    {
+                        NetRecvData recvData = new NetRecvData();
+                        var sendData = m_queueFrameSend.Dequeue();
+                        recvData.recvOpcode = sendData.sendOpcode;
+                        recvData.data = sendData.data;
+                        recvData.len = 0;//这里的长度直接填0（不需要反序列化）
+                        m_queueRecv.Enqueue(recvData);
+                    }
                 }
             }
         }

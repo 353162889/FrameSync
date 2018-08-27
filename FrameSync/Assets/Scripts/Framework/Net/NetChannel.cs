@@ -71,6 +71,7 @@ namespace Framework
 
         private NetChannelType m_eChannelType;
         private Queue<NetRecvData> m_queueRecvData;
+        public SocketClient socketClient { get { return m_cSocketClient; } }
         private SocketClient m_cSocketClient;
         private Action<bool, NetChannelType> m_cCallback;
         private Dictionary<short, List<IServerMsg>> m_dicServerMsg;
