@@ -10,6 +10,10 @@ using System;
 /// </summary>
 public class CompressTools
 {
+    static CompressTools()
+    {
+        ZipConstants.DefaultCodePage = 0;
+    }
     /// <summary>
     /// 压缩单个文件
     /// </summary>

@@ -45,8 +45,6 @@ namespace Game
             //m_cJoystick.enabled = false;
             SetJoystickActive(false);
 
-            //TouchDispatcher.instance.touchBeganListeners += OnTouch;
-
             UIEventTrigger.Get(m_btnTest.gameObject).AddListener(EventTriggerType.PointerClick, OnClickTest);
         }
 
@@ -58,23 +56,6 @@ namespace Game
                 if (unit != null)
                 {
                     unit.ReqDoSkill(1, 0, AgentObjectType.Unit, TSVector.zero, TSVector.forward);
-                }
-            }
-        }
-
-        private void OnTouch(TouchEventParam obj)
-        {
-            Ray ray = Camera.main.ScreenPointToRay(obj.GetTouch(0).position);
-            RaycastHit hitInfo;
-            if(Physics.Raycast(ray,out hitInfo))
-            {
-                if (PvpPlayerMgr.Instance.mainPlayer != null)
-                {
-                    Unit unit = PvpPlayerMgr.Instance.mainPlayer.unit;
-                    if (unit != null)
-                    {
-                        unit.ReqMove(TSVector.FromUnitVector3(hitInfo.point));
-                    }
                 }
             }
         }
@@ -101,6 +82,8 @@ namespace Game
 
         private float m_fLastReqSetPositionTime = float.MinValue;
         private float m_fLastReqStopTime = float.MinValue;
+        private float m_fLastReqMoveTime = float.MinValue;
+        private List<TSVector> m_lstMovePath = new List<TSVector>();
         private void OnJoystickMove(Vector2 screenPos, Vector2 offset, Vector2 delta)
         {
             if (PvpPlayerMgr.Instance.mainPlayer != null && PvpPlayerMgr.Instance.mainPlayer.unit != null)
@@ -118,8 +101,10 @@ namespace Game
                         FP dis = TSMath.Max(CameraSys.Instance.cameraViewPort.mRect.width, CameraSys.Instance.cameraViewPort.mRect.height);
 
                         TSVector2 end = start + dir * dis;
-                        TSVector2 result = GetViewPortPositionByLine(start, end);
-                        if(result == start)
+                        TSVector2 hitPoint;
+                        TSVector2 resultPoint;
+                        bool hit = GetViewPortPositionByLine(start, end, out hitPoint, out resultPoint);
+                        if(resultPoint == start)
                         {
                             if (Time.time - m_fLastReqStopTime > ViewConst.OnFrameTime)
                             {
@@ -129,7 +114,21 @@ namespace Game
                         }
                         else
                         {
-                            unit.ReqMove(new TSVector(result.x, unit.curPosition.y, result.y));
+                            if (Time.time - m_fLastReqMoveTime > ViewConst.OnFrameTime)
+                            {
+                                m_fLastReqMoveTime = Time.time;
+                                if (hit)
+                                {
+                                    m_lstMovePath.Clear();
+                                    m_lstMovePath.Add(new TSVector(hitPoint.x, unit.curPosition.y, hitPoint.y));
+                                    m_lstMovePath.Add(new TSVector(resultPoint.x, unit.curPosition.y, resultPoint.y));
+                                    unit.ReqMove(m_lstMovePath);
+                                }
+                                else
+                                {
+                                    unit.ReqMove(new TSVector(resultPoint.x, unit.curPosition.y, resultPoint.y));
+                                }
+                            }
                         }
                        
                     }
@@ -144,21 +143,26 @@ namespace Game
                         var nextPos = startPosition + new Vector3(scenePosDelta.x,0,scenePosDelta.y);
                         TSVector2 start = new TSVector2(unit.curPosition.x, unit.curPosition.z);
                         TSVector2 end = new TSVector2(FP.FromFloat(nextPos.x),FP.FromFloat(nextPos.z));
-                        TSVector2 result = GetViewPortPositionByLine(start, end);
-                        unit.ReqSetPosition(new TSVector(result.x, unit.curPosition.y, result.y), false);
+                        TSVector2 hitPoint;
+                        TSVector2 resultPoint;
+                        bool hit = GetViewPortPositionByLine(start, end,out hitPoint,out resultPoint);
+                        unit.ReqSetPosition(new TSVector(resultPoint.x, unit.curPosition.y, resultPoint.y), false);
                         m_fLastReqSetPositionTime = Time.time;
                     }
                 }
             }
         }
 
-        public TSVector2 GetViewPortPositionByLine(TSVector2 start, TSVector2 end)
+        public bool GetViewPortPositionByLine(TSVector2 start, TSVector2 end,out TSVector2 hitPoint,out TSVector2 resultPoint)
         {
+            hitPoint = start;
+            resultPoint = end;
             TSRect rect = CameraSys.Instance.cameraViewPort.mRect;
-            if (rect.Contains(end)) return end;
+            if (rect.Contains(end)) return false;
             TSVector2 result;
             var dir = (end - start);
             var startLen = dir.magnitude;
+            bool hit = false;
             if (dir == TSVector2.zero)
             {
                 result = start;
@@ -174,8 +178,10 @@ namespace Game
                 else
                 {
                     result = start + dir * nDis;
+                    hit = true;
                 }
             }
+            hitPoint = result;
             FP endLen = (result - start).magnitude;
             if(endLen < startLen && endLen < FP.EN8)
             {
@@ -223,7 +229,8 @@ namespace Game
                     }
                 }
             }
-            return result;           
+            resultPoint = result;  
+            return hit;           
         }
 
         private void OnJoystickEnd(Vector2 screenPos, Vector2 offset,Vector2 delta)
