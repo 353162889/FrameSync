@@ -209,6 +209,8 @@ namespace Game
             GameObject uiGO = transform.Find("UIContainer").gameObject;
             uiGO.AddComponentOnce<ViewSys>();
 
+            gameObject.AddComponentOnce<AudioSys>();
+
             gameObject.AddComponentOnce<FPSMono>();
 
             ResetObjectPool<List<TSVector>>.Instance.Init(100,(List<TSVector> lst)=> { lst.Clear(); });
