@@ -141,8 +141,7 @@ namespace Game
 
         protected void OnRotate(TSVector preForward, TSVector newForward)
         {
-            //这里直接改方向
-            SetForwardDirect(newForward,false);
+            SetForward(newForward, ForwardFromType.UnitMove, true,false);
         }
 
         protected virtual void OnStopRotate(TSVector preForward, TSVector newForward)

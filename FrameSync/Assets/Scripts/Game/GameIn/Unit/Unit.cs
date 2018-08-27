@@ -100,14 +100,14 @@ namespace Game
 
         }
 
-        public void SetForward(TSVector forward, ForwardFromType fromType, bool immediately = true)
+        public void SetForward(TSVector forward, ForwardFromType fromType, bool immediately = true,bool viewImmediately = true)
         {
             if (forward == TSVector.zero) return;
             if (!CanSetForward(fromType)) return;
             if (immediately)
             {
                 curForward = forward;
-                SetViewForward(forward);
+                SetViewForward(forward, viewImmediately);
                 if(fromType != ForwardFromType.UnitMove)
                 {
                     StopRotate();
@@ -117,12 +117,6 @@ namespace Game
             {
                 RotateToTarget(forward);
             }
-        }
-
-        public void SetForwardDirect(TSVector forward,bool viewImmediately = true)
-        {
-            curForward = forward;
-            SetViewForward(forward, viewImmediately);
         }
 
         public bool CanSetForward(ForwardFromType fromType)

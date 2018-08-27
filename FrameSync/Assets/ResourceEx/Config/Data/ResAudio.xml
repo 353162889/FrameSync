@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<resaudio id="1" loop="TRUE" name="atk_ac_01.ogg" priority="1" type="UI"/>
+</root>
