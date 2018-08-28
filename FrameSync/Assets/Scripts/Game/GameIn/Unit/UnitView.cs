@@ -19,11 +19,23 @@ namespace Game
 
         public Transform GetHangPoint(string name, out TSVector position, out TSVector forward)
         {
+            if(m_cHangPoint == null)
+            {
+                position = curPosition;
+                forward = curForward;
+                return null;
+            }
             return m_cHangPoint.GetHangPoint(name, curPosition, curForward, out position, out forward);
         }
 
         public Transform GetHangPoint(string name,TSVector cPosition,TSVector cForward,out TSVector position,out TSVector forward)
         {
+            if (m_cHangPoint == null)
+            {
+                position = cPosition;
+                forward = cForward;
+                return null;
+            }
             return m_cHangPoint.GetHangPoint(name, cPosition, cForward, out position, out forward);
         }
 
@@ -69,7 +81,10 @@ namespace Game
                 ObjectPool<GameCollider>.Instance.SaveObject(m_cCollider);
                 m_cCollider = null;
             }
-            m_cHangPoint.Clear();
+            if (m_cHangPoint != null)
+            {
+                m_cHangPoint.Clear();
+            }
             if (m_cAnimation != null)
             {
                 m_cAnimation.Clear();
@@ -89,7 +104,7 @@ namespace Game
 
         protected void SetViewPosition(TSVector position,bool immediately)
         {
-            if (immediately)
+            if (immediately || m_cSimpleLerpView == null)
             {
                 transform.position = position.ToUnityVector3();
             }
@@ -101,7 +116,7 @@ namespace Game
 
         protected void SetViewForward(TSVector forward, bool immediately = true)
         {
-            if (immediately)
+            if (immediately || m_cLerpRotateView == null)
             {
                 transform.forward = forward.ToUnityVector3();
             }
@@ -113,7 +128,10 @@ namespace Game
 
         protected void UpdateView(FP deltaTime)
         {
-            m_cCollider.Update(curPosition, curForward);
+            if (m_cCollider != null)
+            {
+                m_cCollider.Update(curPosition, curForward);
+            }
         }
 
         protected virtual void DieView(DamageInfo damageInfo)
@@ -126,32 +144,50 @@ namespace Game
 
         public void SetAnimFloat(string strName, float fValue)
         {
-            m_cAnimation.SetFloat(strName, fValue);
+            if (m_cAnimation != null)
+            {
+                m_cAnimation.SetFloat(strName, fValue);
+            }
         }
 
         public void SetAnimBool(string strName, bool bState)
         {
-            m_cAnimation.SetBool(strName, bState);
+            if (m_cAnimation != null)
+            {
+                m_cAnimation.SetBool(strName, bState);
+            }
         }
 
         public void SetAnimInteger(string strName, int nValue)
         {
-            m_cAnimation.SetInteger(strName, nValue);
+            if (m_cAnimation != null)
+            {
+                m_cAnimation.SetInteger(strName, nValue);
+            }
         }
 
         public void SetAnimTrigger(string strName)
         {
-            m_cAnimation.SetTrigger(strName);
+            if (m_cAnimation != null)
+            {
+                m_cAnimation.SetTrigger(strName);
+            }
         }
 
         public void ResetAnimTrigger(string strName)
         {
-            m_cAnimation.ResetTrigger(strName);
+            if (m_cAnimation != null)
+            {
+                m_cAnimation.ResetTrigger(strName);
+            }
         }
 
         public void ResetAnimParam()
         {
-            m_cAnimation.ResetParam();
+            if (m_cAnimation != null)
+            {
+                m_cAnimation.ResetParam();
+            }
         }
     }
 }

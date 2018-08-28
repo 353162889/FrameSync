@@ -11,10 +11,13 @@ namespace Game
         private PvpPlayer m_cMainPlayer;
         public PvpPlayer mainPlayer { get { return m_cMainPlayer; } }
         private Dictionary<long, PvpPlayer> m_dic;
+        public List<PvpPlayer> lstPlayer { get { return m_lstPlayer; } }
+        private List<PvpPlayer> m_lstPlayer;
 
         public void Init()
         {
             m_dic = new Dictionary<long, PvpPlayer>();
+            m_lstPlayer = new List<PvpPlayer>();
             m_cMainPlayer = null;
             FrameSyncSys.Instance.OnFrameSyncUpdate += FrameUpdate;
         }
@@ -29,6 +32,7 @@ namespace Game
             PvpPlayer player = new PvpPlayer();
             player.Init(id, playerData);
             m_dic.Add(player.id, player);
+            m_lstPlayer.Add(player);
             return player;
         }
 
@@ -42,10 +46,19 @@ namespace Game
         public bool RemovePlayer(long id)
         {
             PvpPlayer player = null;
-            if(m_dic.TryGetValue(id, out player))
+            for (int i = m_lstPlayer.Count - 1; i > -1; i--)
+            {
+                if(m_lstPlayer[i].id == id)
+                {
+                    m_lstPlayer.RemoveAt(i);
+                    break;
+                }
+            }
+            if (m_dic.TryGetValue(id, out player))
             {
                 player.Clear();
             }
+            
             return m_dic.Remove(id);
         }
 
@@ -64,6 +77,7 @@ namespace Game
             {
                 item.Value.Clear();
             }
+            m_lstPlayer.Clear();
             m_dic.Clear();
         }
 

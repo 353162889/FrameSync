@@ -35,29 +35,42 @@ namespace Game
 
         public FP GetAttrValue(int key)
         {
-            return m_cValueContainer.GetValue(key);
+            if (m_cValueContainer != null)
+            {
+                return m_cValueContainer.GetValue(key);
+            }
+            return 0;
         }
         public void SetAttrValue(int key, FP value)
         {
-            switch(key)
+            if (m_cValueContainer != null)
             {
-                case (int)AttrType.HP:
-                    if (value > hpLmt) value = hpLmt;
-                    break;
+                switch (key)
+                {
+                    case (int)AttrType.HP:
+                        if (value > hpLmt) value = hpLmt;
+                        break;
+                }
+                m_cValueContainer.SetValue(key, value);
             }
-            m_cValueContainer.SetValue(key, value);
         }
 
         protected void UpdateAttr(FP deltaTime) { }
 
         protected void ResetAttr()
         {
-            m_cValueContainer.Clear();
+            if (m_cValueContainer != null)
+            {
+                m_cValueContainer.Clear();
+            }
         }
 
         protected void DieAttr(DamageInfo damageInfo)
         {
-            m_cValueContainer.Reset();
+            if (m_cValueContainer != null)
+            {
+                m_cValueContainer.Reset();
+            }
         }
     }
 }

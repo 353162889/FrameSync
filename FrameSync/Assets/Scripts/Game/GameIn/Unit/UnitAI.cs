@@ -20,28 +20,40 @@ namespace Game
             if(m_cAgentObjectAI != null)
             {
                 m_cAgentObjectAI.Clear();
+                m_cAgentObjectAI.Init(this.agentObj, configId);
             }
-            m_cAgentObjectAI.Init(this.agentObj, configId);
         }
 
         public void StartAI()
         {
-            m_cAgentObjectAI.Start();
+            if (m_cAgentObjectAI != null)
+            {
+                m_cAgentObjectAI.Start();
+            }
         }
 
         public void StopAI()
         {
-            m_cAgentObjectAI.Stop();
+            if (m_cAgentObjectAI != null)
+            {
+                m_cAgentObjectAI.Stop();
+            }
         }
 
         public void ResetAI()
         {
-            m_cAgentObjectAI.Clear();
+            if (m_cAgentObjectAI != null)
+            {
+                m_cAgentObjectAI.Clear();
+            }
         }
 
         public void UpdateAI(FP deltaTime)
         {
-            m_cAgentObjectAI.Update(deltaTime);
+            if (m_cAgentObjectAI != null)
+            {
+                m_cAgentObjectAI.Update(deltaTime);
+            }
         }
 
         public void DieAI(DamageInfo damageInfo)

@@ -69,6 +69,7 @@ namespace Game
             //注册逻辑
             m_cSysCompContainer.RegisterComp(GamingSysCompType.UnitDestory, new GSC_UnitDestory());
             m_cSysCompContainer.RegisterComp(GamingSysCompType.UnitDieEffect, new GSC_UnitDieEffect());
+            m_cSysCompContainer.RegisterComp(GamingSysCompType.UnitHitItem, new GSC_UnitHitItem());
 
             GlobalEventDispatcher.Instance.AddEvent(GameEvent.StartBattle, OnStartBattle);
             GlobalEventDispatcher.Instance.AddEvent(GameEvent.PvpPlayerCreate, OnPlayerCreate);
@@ -117,14 +118,14 @@ namespace Game
          
             if (BattleInfo.userId == player.id)
             {
-                player.CreateUnit();
+                player.CreateUnit(TSVector.zero);
                 PvpPlayerMgr.Instance.SetMainPlayer(player);
                 ViewSys.Instance.Close("LoadingView");
                 ViewSys.Instance.Open("FightView");
             }
             else
             {
-                player.CreateUnit();
+                player.CreateUnit(TSVector.zero);
             }
             CLog.Log("初始化其他战斗的数据");
         }

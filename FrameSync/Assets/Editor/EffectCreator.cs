@@ -71,6 +71,10 @@ public class EffectCreator
             Material mat = new Material(shader);
             mat.SetTexture("_MainTex", tex);
             mat.SetInt("_Column", count);
+            if(!AssetDatabase.IsValidFolder(fileDir + "/Materials"))
+            {
+                AssetDatabase.CreateFolder(fileDir, "Materials");
+            }
             AssetDatabase.CreateAsset(mat, fileDir + "/Materials/" + fileName + ".mat");
             AssetDatabase.SaveAssets();
 

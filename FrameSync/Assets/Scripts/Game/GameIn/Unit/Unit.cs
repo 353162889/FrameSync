@@ -63,8 +63,8 @@ namespace Game
             m_nConfigId = configId;
             m_nCampId = campId;
             m_eUnitType = type;
-            m_cAgentObj = new AgentUnit(this);
             m_bIsDie = false;
+            m_cAgentObj = new AgentUnit(this);
             m_sCurPosition = m_sLastPosition = position;
             m_sCurForward = m_sLastForward = forward;
             SetPosition(position,true);

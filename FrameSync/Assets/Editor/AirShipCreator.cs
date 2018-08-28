@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 public class AirShipCreator
 {
-    [MenuItem("Assets/Custom/CreateAirShip")]
+    [MenuItem("Assets/Custom/CreateIdleAnimAirShip")]
     public static void Create()
     {
         var obj = Selection.activeObject;
@@ -43,13 +43,51 @@ public class AirShipCreator
         dir = dir.Substring(0, dir.LastIndexOf("/"));
         int lastIdx = dir.LastIndexOf("/");
         string name = dir.Substring(lastIdx+1, dir.Length -lastIdx - 1);
-        AnimationClip animClip = BuildAnimClip(dir, "Idle", lstSprite, true);
+        AnimationClip animClip = BuildAnimClip(dir, "Idle", lstSprite, true, typeof(SpriteRenderer), "m_Sprite");
         AnimatorController animController = BuildAnimatorController(dir, name, new List<AnimationClip> { animClip});
         BuildPrefab("Assets/ResourceEx/Prefab/Unit", name, animController, lstSprite[0]);
         AssetDatabase.Refresh();
     }
 
-    private static AnimationClip BuildAnimClip(string dir,string animName, List<Sprite> lst,bool loop)
+    [MenuItem("Assets/Custom/CreateUIIdleAnimAndCtrl")]
+    public static void CreateUIIdleAndAnim()
+    {
+        var obj = Selection.activeObject;
+        if (obj == null || !(obj is Texture2D))
+        {
+            EditorUtility.DisplayDialog("提示", "请选择图片", "确定");
+            return;
+        }
+        string path = AssetDatabase.GetAssetPath(obj);
+        Debug.Log(path);
+        var arr = AssetDatabase.LoadAllAssetsAtPath(path);
+        List<Sprite> lstSprite = new List<Sprite>();
+        for (int i = 0; i < arr.Length; i++)
+        {
+            if (arr[i] is Sprite)
+            {
+                lstSprite.Add((Sprite)arr[i]);
+            }
+        }
+        if (lstSprite.Count == 0)
+        {
+            EditorUtility.DisplayDialog("提示", "当前图片必须是sprite格式", "确定");
+            return;
+        }
+        if (lstSprite.Count > 1)
+        {
+            lstSprite.Add(lstSprite[0]);
+        }
+        string dir = path.Replace("\\", "/");
+        dir = dir.Substring(0, dir.LastIndexOf("/"));
+        int lastIdx = dir.LastIndexOf("/");
+        string name = dir.Substring(lastIdx + 1, dir.Length - lastIdx - 1);
+        AnimationClip animClip = BuildAnimClip(dir, "Idle", lstSprite, true, typeof(Image), "m_Sprite");
+        AnimatorController animController = BuildAnimatorController(dir, name, new List<AnimationClip> { animClip });
+        AssetDatabase.Refresh();
+    }
+
+    private static AnimationClip BuildAnimClip(string dir,string animName, List<Sprite> lst,bool loop,Type bindingType,string bindingPropertyName)
     {
         AnimationClip animClip = new AnimationClip();
         animClip.frameRate = 60;
@@ -62,8 +100,8 @@ public class AirShipCreator
         }
 
         EditorCurveBinding binding = new EditorCurveBinding();
-        binding.type = typeof(SpriteRenderer);
-        binding.propertyName = "m_Sprite";
+        binding.type = bindingType;
+        binding.propertyName = bindingPropertyName;
         binding.path = "";
 
         double frameTime = 1d / 10d;

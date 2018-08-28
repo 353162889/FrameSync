@@ -12,6 +12,7 @@ namespace Game
     public enum UnitType
     {
         AirShip,//飞船
+        Item,//可被吃的东西
     }
 
     public enum CampType
@@ -50,6 +51,8 @@ namespace Game
         private Dictionary<int, List<Unit>> m_dicCampUnits;
         public Dictionary<int, List<Unit>> dicCampUnits { get { return m_dicCampUnits; } }
         private DynamicContainer m_cUnitContainer;
+        public List<UnitItem> lstItem { get { return m_lstItem;} }
+        private List<UnitItem> m_lstItem;
 
         private GameObject m_cRemoteRoot;
         public GameObject remoteRoot { get { return m_cRemoteRoot; } }
@@ -82,6 +85,7 @@ namespace Game
 
             m_dicUnit = new Dictionary<uint, Unit>();
             m_dicCampUnits = new Dictionary<int, List<Unit>>();
+            m_lstItem = new List<UnitItem>();
             m_cUnitContainer = new DynamicContainer();
             m_cUnitContainer.OnAdd += OnAddUnit;
             m_cUnitContainer.OnRemove += OnRemoveUnit;
@@ -112,6 +116,7 @@ namespace Game
             }
 
             BehaviourPool<UnitAirShip>.Instance.Init(30);
+            BehaviourPool<UnitItem>.Instance.Init(10);
             BehaviourPool<Remote>.Instance.Init(100);
             ObjectPool<GameCollider>.Instance.Init(200);
             ObjectPool<DamageInfo>.Instance.Init(20);
@@ -168,6 +173,7 @@ namespace Game
         {
             Unit unit = (Unit)obj;
             m_dicUnit.Add(unit.id, unit);
+            if (unit.unitType == UnitType.Item) m_lstItem.Add((UnitItem)unit);
             List<Unit> lst;
             m_dicCampUnits.TryGetValue(unit.campId, out lst);
             if(lst == null)
@@ -183,6 +189,7 @@ namespace Game
         {
             Unit unit = (Unit)obj;
             m_dicUnit.Remove(unit.id);
+            if (unit.unitType == UnitType.Item) m_lstItem.Remove((UnitItem)unit);
             List<Unit> lst;
             if(m_dicCampUnits.TryGetValue(unit.campId, out lst))
             {
@@ -192,6 +199,9 @@ namespace Game
             {
                 case UnitType.AirShip:
                     BehaviourPool<UnitAirShip>.Instance.SaveObject((UnitAirShip)unit);
+                    break;
+                case UnitType.Item:
+                    BehaviourPool<UnitItem>.Instance.SaveObject((UnitItem)unit);
                     break;
             }
             GlobalEventDispatcher.Instance.Dispatch(GameEvent.UnitRemove, unit);
@@ -241,6 +251,9 @@ namespace Game
             {
                 case UnitType.AirShip:
                     unit = BehaviourPool<UnitAirShip>.Instance.GetObject(m_cUnitRoot.transform);
+                    break;
+                case UnitType.Item:
+                    unit = BehaviourPool<UnitItem>.Instance.GetObject(m_cUnitRoot.transform);
                     break;
             }
 
@@ -293,6 +306,7 @@ namespace Game
             m_dicCampUnits.Clear();
             m_dicCampRemotes.Clear();
             m_dicUnit.Clear();
+            m_lstItem.Clear();
             m_dicRemote.Clear();
             if (m_cUnitContainer != null)
             {

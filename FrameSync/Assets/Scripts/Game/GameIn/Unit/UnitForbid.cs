@@ -37,32 +37,52 @@ namespace Game
 
         public void DieForbid(DamageInfo damageInfo)
         {
-            m_cForbid.Clear();
+            if (m_cForbid != null)
+            {
+                m_cForbid.Clear();
+            }
         }
 
         public void ResetForbid()
         {
-            m_cForbid.Clear();
+            if (m_cForbid != null)
+            {
+                m_cForbid.Clear();
+            }
         }
 
         public uint Forbid(UnitForbidType forbidType, UnitForbidFromType forbidFromType)
         {
-            return m_cForbid.Forbid((uint)forbidType, (byte)forbidFromType);
+            if (m_cForbid != null)
+            {
+                return m_cForbid.Forbid((uint)forbidType, (byte)forbidFromType);
+            }
+            return 0;
         }
 
         public void Resume(uint id)
         {
-            m_cForbid.Resume(id);
+            if (m_cForbid != null)
+            {
+                m_cForbid.Resume(id);
+            }
         }
 
         public void Resume(UnitForbidType forbidType)
         {
-            m_cForbid.Resume((uint)forbidType);
+            if (m_cForbid != null)
+            {
+                m_cForbid.Resume((uint)forbidType);
+            }
         }
 
         public bool IsForbid(UnitForbidType forbidType)
         {
-            return m_cForbid.IsForbid((uint)forbidType);
+            if (m_cForbid != null)
+            {
+                return m_cForbid.IsForbid((uint)forbidType);
+            }
+            return false;
         }
     }
 }

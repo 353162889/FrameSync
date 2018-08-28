@@ -67,7 +67,7 @@ namespace Game
 
         public bool CanDoSkill(int skillId)
         {
-            return m_cSkillExecutor.CanDo(skillId);
+            return m_cSkillExecutor != null && m_cSkillExecutor.CanDo(skillId);
         }
 
         public bool CanBreakSkill(int skillId)

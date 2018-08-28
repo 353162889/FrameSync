@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <editorPos>
-    <x>5029</x>
+    <x>5044</x>
     <y>4850</y>
   </editorPos>
   <data xsi:type="GamingData">
@@ -11,15 +11,15 @@
   <lstChild>
     <NEData>
       <editorPos>
-        <x>5027</x>
+        <x>5042</x>
         <y>4967</y>
       </editorPos>
       <data xsi:type="BTTimeLineData" />
       <lstChild>
         <NEData>
           <editorPos>
-            <x>5014</x>
-            <y>5152</y>
+            <x>5029</x>
+            <y>5185</y>
           </editorPos>
           <data xsi:type="GL_PathRandomRefreshData">
             <time>

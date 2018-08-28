@@ -86,7 +86,7 @@ namespace Game
 
         public void ReqStopMove()
         {
-            if(m_cMove.isMoving)
+            if(m_cMove != null && m_cMove.isMoving)
             {
                 Frame_ReqStopMove_Data data = new Frame_ReqStopMove_Data();
                 data.unitId = id;
@@ -104,7 +104,7 @@ namespace Game
 
         public bool CanMove()
         {
-            return !IsForbid(UnitForbidType.ForbidMove);
+            return m_cMove != null && !IsForbid(UnitForbidType.ForbidMove);
         }
 
         public void StopRotate()
@@ -196,16 +196,31 @@ namespace Game
 
         protected void ResetMove()
         {
-            m_cMove.Clear();
-            m_cRotate.Clear();
-            m_cLerpMoveView.StopMove();
+            if (m_cMove != null)
+            {
+                m_cMove.Clear();
+            }
+            if (m_cRotate != null)
+            {
+                m_cRotate.Clear();
+            }
+            if (m_cLerpMoveView != null)
+            {
+                m_cLerpMoveView.StopMove();
+            }
         }
 
         //private GameObject box;
         protected void UpdateMove(FP deltaTime)
         {
-            m_cMove.OnUpdate(deltaTime);
-            m_cRotate.OnUpdate(deltaTime);
+            if (m_cMove != null)
+            {
+                m_cMove.OnUpdate(deltaTime);
+            }
+            if(m_cRotate != null)
+            {
+                m_cRotate.OnUpdate(deltaTime);
+            }
             //if (null == box)
             //{
             //    box = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -215,9 +230,18 @@ namespace Game
 
         protected void DieMove(DamageInfo damageInfo)
         {
-            m_cMove.StopMove();
-            m_cRotate.StopRotate();
-            m_cLerpMoveView.StopMove();
+            if (m_cMove != null)
+            {
+                m_cMove.StopMove();
+            }
+            if (m_cRotate != null)
+            {
+                m_cRotate.StopRotate();
+            }
+            if (m_cLerpMoveView != null)
+            {
+                m_cLerpMoveView.StopMove();
+            }
         }
     }
 }

@@ -38,6 +38,8 @@ namespace Game
                     for (int i = 0; i < lst.Count; i++)
                     {
                         if (lst[i].isDie) continue;
+                        //物品类型不能作为视野对象
+                        if (lst[i].unitType == UnitType.Item) continue;
                         if (lst[i].campId == m_nCampId)
                         {
                             lstFriend.Add(lst[i].agentObj);
