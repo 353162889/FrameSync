@@ -155,6 +155,7 @@ namespace NodeEditor
             }
             object neNode = CreateNENodeByData(neData.data);
             NENode parentNode = m_cCanvas.CreateNode(neData.editorPos, neNode);
+            parentNode.isEnable = neData.enable;
             if (neData.lstChild != null)
             {
                 for (int i = 0; i < neData.lstChild.Count; i++)
@@ -434,6 +435,7 @@ namespace NodeEditor
             NEData neData = new NEData();
             neData.data = neNode.data;
             neData.editorPos = node.rect.center;
+            neData.enable = node.isEnable;
 
             List<NENode> lstSubNode = new List<NENode>();
             for (int i = 0; i < lst.Count; i++)
@@ -450,6 +452,7 @@ namespace NodeEditor
             {
                 NENode childNode = lstSubNode[i];
                 NEData childNEData = GetNodeNEData(childNode, lst, handNodes);
+                if (childNEData == null) continue;
                 if (neData.lstChild == null) neData.lstChild = new List<NEData>();
                 neData.lstChild.Add(childNEData);
             }

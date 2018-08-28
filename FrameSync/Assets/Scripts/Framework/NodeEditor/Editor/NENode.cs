@@ -19,10 +19,12 @@ namespace NodeEditor
         private GUIStyle m_cNormalStyle;
         private GUIStyle m_cSelectStyle;
         private GUIStyle m_cStyle;
+        private GUIStyle m_cEnableStyle;
         private GUIStyle m_cContentStyle;
         private GUIStyle m_cExtendStyle;
         private GUIStyle m_cCloseStyle;
         private Texture2D m_cImg;
+        private Texture2D m_cUnEnableImg;
         private float m_fImgWidth = 40;
         private string m_sName;
         public string desc { get; private set; }
@@ -31,6 +33,8 @@ namespace NodeEditor
         private bool m_bShowClose;
         public bool isSelected { get { return m_bIsSelected; } }
         private bool m_bIsSelected;
+        public bool isEnable { get { return m_bIsEnable; }set { m_bIsEnable = value; } }
+        private bool m_bIsEnable;
 
         public NENodePoint inPoint { get { return m_cInPoint; } }
         private NENodePoint m_cInPoint;
@@ -44,12 +48,14 @@ namespace NodeEditor
             m_cSelectStyle = null;
             m_cCloseStyle = null;
             m_cImg = null;
+            m_cUnEnableImg = null;
 
             m_sName = "";
             desc = "";
             m_bShowInPoint = true;
             m_bShowOutPoint = true;
             m_bShowClose = true;
+            m_bIsEnable = true;
             if (this.node != null)
             {
                 var type = this.node.GetType();
@@ -148,6 +154,10 @@ namespace NodeEditor
                 m_cSelectStyle = new GUIStyle((GUIStyle)"flow node 0 on");
                 m_cStyle = m_bIsSelected ? m_cSelectStyle : m_cNormalStyle;
             }
+            if (m_cEnableStyle == null)
+            {
+                m_cEnableStyle = new GUIStyle((GUIStyle)"CN EntryWarnIcon");
+            }
             if (m_cCloseStyle == null)
             {
                 m_cCloseStyle = new GUIStyle((GUIStyle)"TL SelectionBarCloseButton");
@@ -155,6 +165,10 @@ namespace NodeEditor
             if (m_cImg == null)
             {
                 m_cImg = EditorGUIUtility.FindTexture("Favorite Icon");
+            }
+            if(m_cUnEnableImg == null)
+            {
+                m_cUnEnableImg = EditorGUIUtility.FindTexture("console.erroricon");
             }
             if (m_cInPoint != null)
             {
@@ -194,6 +208,17 @@ namespace NodeEditor
                 if (null != onClickRemoveNode)
                 {
                     onClickRemoveNode(this);
+                }
+            }
+            if (m_bShowClose)
+            {
+                if (GUI.Button(new Rect(rect.x + rect.width - closeWidth * 1.5f, rect.y - closeHeight / 2, closeWidth, closeHeight), "", m_cEnableStyle))
+                {
+                    m_bIsEnable = !m_bIsEnable;
+                }
+                if (!m_bIsEnable && m_cUnEnableImg != null)
+                {
+                    GUI.DrawTexture(new Rect(rect.x + (rect.width - (rect.height - 10)) / 2, rect.y + 5, rect.height - 10, rect.height - 10), m_cUnEnableImg);
                 }
             }
         }

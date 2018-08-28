@@ -129,6 +129,7 @@ namespace Game
 
         public static BTNode CreateNode(NEData neData)
         {
+            if (!neData.enable) return null;
             Type neDataType = neData.data.GetType();
             int index = m_lstSkillNodeDataType.IndexOf(neDataType);
             if (index == -1)
@@ -144,7 +145,10 @@ namespace Game
                 for (int i = 0; i < neData.lstChild.Count; i++)
                 {
                     BTNode childNode = CreateNode(neData.lstChild[i]);
-                    neNode.AddChild(childNode);
+                    if (childNode != null)
+                    {
+                        neNode.AddChild(childNode);
+                    }
                 }
             }
             return neNode;

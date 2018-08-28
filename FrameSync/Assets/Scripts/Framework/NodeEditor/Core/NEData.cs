@@ -9,6 +9,7 @@ namespace NodeEditor
     public class NEData
     {
         public Vector2 editorPos;
+        public bool enable = true;
         public object data;
         public List<NEData> lstChild;
     }

@@ -14,14 +14,24 @@ namespace BTCore
 
     public class BTTimeLineData
     {
+        [NEProperty("初始时间(Editor下生效)",true)]
+        public FP startRunTime;
     }
     [BTNode(typeof(BTTimeLineData))]
     public class BTTimeLine : BTComposite
     {
+        private BTTimeLineData m_cTimeLineData;
         private bool m_bIsEnd = true;
         private FP m_sTime;
         private int m_nCount = 0;
         protected List<BTResult> m_lstResults = new List<BTResult>();
+
+        protected override void OnInitData(object data)
+        {
+            base.OnInitData(data);
+            m_cTimeLineData = data as BTTimeLineData;
+        }
+
         public override void AddChild(BTNode child)
         {
             if (child is IBTTimeLineNode)
@@ -51,7 +61,11 @@ namespace BTCore
             if(m_bIsEnd)
             {
                 m_bIsEnd = false;
+#if UNITY_EDITOR
+                m_sTime = m_cTimeLineData.startRunTime;
+#else
                 m_sTime = 0;
+#endif
                 m_nCount = 0;
             }
             int count = m_lstChild.Count;

@@ -24,7 +24,7 @@ namespace Game
         public void ReqMove(List<TSVector> movePath)
         {
             if (movePath.Count <= 0) return;
-            if(CanMove())
+            if(!IsForbid(UnitForbidType.ForbidPlayerMove) && CanMove())
             {
                 Frame_ReqMovePath_Data data = new Frame_ReqMovePath_Data();
                 data.unitId = id;
@@ -46,7 +46,7 @@ namespace Game
 
         public void ReqMove(TSVector targetPosition)
         {
-            if(CanMove() && (!m_cMove.isMoving || m_cMove.targetPosition != targetPosition))
+            if(!IsForbid(UnitForbidType.ForbidPlayerMove) && CanMove() && (!m_cMove.isMoving || m_cMove.targetPosition != targetPosition))
             {
                 Frame_ReqMovePoint_Data data = new Frame_ReqMovePoint_Data();
                 data.unitId = id;
@@ -65,7 +65,7 @@ namespace Game
 
         public void ReqMoveForward(TSVector direction,FP len)
         {
-            if(CanMove() && (TSVector.Angle(curForward,direction) > FP.EN1 || !m_cMove.isMoving))
+            if(!IsForbid(UnitForbidType.ForbidPlayerMove) && CanMove() && (TSVector.Angle(curForward,direction) > FP.EN1 || !m_cMove.isMoving))
             {
                 Frame_ReqMoveForward_Data data = new Frame_ReqMoveForward_Data();
                 data.unitId = id;

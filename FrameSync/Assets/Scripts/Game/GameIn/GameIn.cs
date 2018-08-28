@@ -55,8 +55,6 @@ namespace Game
             //出事化战斗场景数据
             BattleScene.Instance.Init(BattleInfo.sceneId);
             CameraSys.Instance.Init();
-            m_cGamingLogic = new GamingLogic();
-            m_cGamingLogic.Init(m_cLevelInfo.gaming_id);
         }
 
         private void OnJoinScene(CommandBase obj)
@@ -109,6 +107,8 @@ namespace Game
             {
                 m_cSysCompContainer.Enter();
             }
+            m_cGamingLogic = new GamingLogic();
+            m_cGamingLogic.Init(m_cLevelInfo.gaming_id);
         }
 
         private void OnPlayerCreate(object args)
@@ -118,14 +118,14 @@ namespace Game
          
             if (BattleInfo.userId == player.id)
             {
-                player.CreateUnit(TSVector.zero);
+                //player.CreateUnit(TSVector.zero);
                 PvpPlayerMgr.Instance.SetMainPlayer(player);
                 ViewSys.Instance.Close("LoadingView");
                 ViewSys.Instance.Open("FightView");
             }
             else
             {
-                player.CreateUnit(TSVector.zero);
+                //player.CreateUnit(TSVector.zero);
             }
             CLog.Log("初始化其他战斗的数据");
         }

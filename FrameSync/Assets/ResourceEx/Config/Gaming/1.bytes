@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <editorPos>
-    <x>5044</x>
+    <x>5104</x>
     <y>4850</y>
   </editorPos>
+  <enable>true</enable>
   <data xsi:type="GamingData">
     <id>1</id>
     <aiDesc>刷新小兵</aiDesc>
@@ -11,19 +12,61 @@
   <lstChild>
     <NEData>
       <editorPos>
-        <x>5042</x>
-        <y>4967</y>
+        <x>5110</x>
+        <y>4984</y>
       </editorPos>
-      <data xsi:type="BTTimeLineData" />
+      <enable>true</enable>
+      <data xsi:type="BTTimeLineData">
+        <startRunTime>
+          <_serializedValue>0</_serializedValue>
+        </startRunTime>
+      </data>
       <lstChild>
         <NEData>
           <editorPos>
-            <x>5029</x>
-            <y>5185</y>
+            <x>4979</x>
+            <y>5146</y>
           </editorPos>
+          <enable>true</enable>
+          <data xsi:type="GL_StartGameRefreshPlayerData">
+            <time>
+              <_serializedValue>0</_serializedValue>
+            </time>
+            <points>
+              <TSVector>
+                <x>
+                  <_serializedValue>0</_serializedValue>
+                </x>
+                <y>
+                  <_serializedValue>0</_serializedValue>
+                </y>
+                <z>
+                  <_serializedValue>-132284989440</_serializedValue>
+                </z>
+              </TSVector>
+              <TSVector>
+                <x>
+                  <_serializedValue>0</_serializedValue>
+                </x>
+                <y>
+                  <_serializedValue>0</_serializedValue>
+                </y>
+                <z>
+                  <_serializedValue>-41231663104</_serializedValue>
+                </z>
+              </TSVector>
+            </points>
+          </data>
+        </NEData>
+        <NEData>
+          <editorPos>
+            <x>5213</x>
+            <y>5136</y>
+          </editorPos>
+          <enable>true</enable>
           <data xsi:type="GL_PathRandomRefreshData">
             <time>
-              <_serializedValue>8589934592</_serializedValue>
+              <_serializedValue>21474836480</_serializedValue>
             </time>
             <configIds>
               <int>1001</int>
