@@ -15,12 +15,12 @@ namespace Game
             m_cAgentObjectAI = new AgentObjectAI();
         }
 
-        public void SetAI(int configId)
+        public void SetAI(string aiPath)
         {
             if(m_cAgentObjectAI != null)
             {
                 m_cAgentObjectAI.Clear();
-                m_cAgentObjectAI.Init(this.agentObj, configId);
+                m_cAgentObjectAI.Init(this.agentObj, aiPath);
             }
         }
 

@@ -8,19 +8,15 @@ using NodeEditor;
 
 namespace Game
 {
-    public class RM_ConstantVelocityActionData
+    public class RM_TemplateConstantVelocityActionData
     {
         [NEProperty("触发时间",true)]
         public FP time;
-        [NEProperty("移动速度")]
-        public FP speed;
-        [NEProperty("最大移动距离")]
-        public FP maxDistance = 100;
     }
-    [RemoteNode(typeof(RM_ConstantVelocityActionData))]
-    public class RM_ConstantVelocityAction : BaseTimeLineRemoteAction
+    [RemoteNode(typeof(RM_TemplateConstantVelocityActionData))]
+    public class RM_TemplateConstantVelocityAction : BaseTimeLineRemoteAction
     {
-        private RM_ConstantVelocityActionData m_cActionData;
+        private RM_TemplateConstantVelocityActionData m_cActionData;
         public override FP time { get { return m_cActionData.time; } }
         private FP m_sDistance;
         private TSVector m_sTargetPosition;
@@ -31,7 +27,7 @@ namespace Game
         protected override void OnInitData(object data)
         {
             base.OnInitData(data);
-            m_cActionData = data as RM_ConstantVelocityActionData;
+            m_cActionData = data as RM_TemplateConstantVelocityActionData;
             m_cPointMove = new PointMove();
         }
 
@@ -39,14 +35,14 @@ namespace Game
         {
             m_sDistance = 0;
             m_cRemote = blackBoard.remote;
-            var remoteTargetType = blackBoard.remote.remoteData.remoteTarget;
+            var remoteTargetType = blackBoard.remote.remoteTargetType;
             switch(remoteTargetType)
             {
                 case RemoteTargetType.Target:
                     m_sTargetPosition = m_cRemote.target.curPosition;
                     break;
                 case RemoteTargetType.TargetForward:
-                    m_sTargetPosition = m_cRemote.curPosition + m_cRemote.targetForward * m_cActionData.maxDistance;
+                    m_sTargetPosition = m_cRemote.curPosition + m_cRemote.targetForward * m_cRemote.resInfo.max_move_distance;
                     break;
                 case RemoteTargetType.TargetPosition:
                     m_sTargetPosition = m_cRemote.targetPosition;
@@ -57,7 +53,7 @@ namespace Game
             m_cPointMove.OnMove += OnMove;
             m_cPointMove.OnMoveStop += OnStopMove;
             m_cPointMove.OnWillMove += OnWillMove;
-            m_cPointMove.Move(m_cRemote.curPosition, m_sTargetPosition,m_cActionData.speed);
+            m_cPointMove.Move(m_cRemote.curPosition, m_sTargetPosition,m_cRemote.resInfo.move_speed);
             m_eCurActionResult = BTActionResult.Running;
         }
 
@@ -70,7 +66,7 @@ namespace Game
         {
             m_cRemote.Move(position,m_cPointMove.moveTimes);
             m_sDistance += (m_cRemote.curPosition - m_cRemote.lastPosition).magnitude;
-            if (m_sDistance >= m_cActionData.maxDistance)
+            if (m_sDistance >= m_cRemote.resInfo.max_move_distance)
             {
                 m_eCurActionResult = BTActionResult.Ready;
             }
@@ -98,13 +94,13 @@ namespace Game
         {
             m_cPointMove.OnUpdate(blackBoard.deltaTime);
             Remote remote = blackBoard.remote;
-            if(remote.remoteData.remoteTarget == RemoteTargetType.Target)
+            if(remote.remoteTargetType == RemoteTargetType.Target)
             {
                 var nextTargetPosition = remote.target.curPosition;
                 if(nextTargetPosition != m_sTargetPosition)
                 {
                     m_sTargetPosition = nextTargetPosition;
-                    m_cPointMove.Move(remote.curPosition, m_sTargetPosition, m_cActionData.speed);
+                    m_cPointMove.Move(remote.curPosition, m_sTargetPosition, remote.resInfo.move_speed);
                     m_eCurActionResult = BTActionResult.Running;
                 }
             }

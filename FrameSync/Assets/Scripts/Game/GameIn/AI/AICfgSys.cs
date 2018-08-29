@@ -18,22 +18,22 @@ namespace Game
             var lst = ResCfgSys.Instance.GetCfgLst<ResAirShip>();
             for (int i = 0; i < lst.Count; i++)
             {
-                string name = string.Format("Config/AI/{0}.bytes", lst[i].ai);
-                if (!files.Contains(name))
+                var aiPath = lst[i].ai_path;
+                if (!string.IsNullOrEmpty(aiPath) && !files.Contains(aiPath))
                 {
-                    files.Add(name);
+                    files.Add(aiPath);
                 }
             }
             AgentObjectAI.Init();
             m_cNEDataLoader.Load(files, AgentObjectAI.arrAINodeDataType, onFinish);
         }
 
-        public NEData GetAIData(int aiId)
+        public NEData GetAIData(string aiPath)
         {
-            NEData neData = m_cNEDataLoader.Get(aiId);
+            NEData neData = m_cNEDataLoader.Get(aiPath);
             if (neData == null)
             {
-                CLog.LogError("can not find aiId = " + aiId + " cfgs!");
+                CLog.LogError("找不到路径 = " + aiPath + " AI配置!");
             }
             return neData;
         }

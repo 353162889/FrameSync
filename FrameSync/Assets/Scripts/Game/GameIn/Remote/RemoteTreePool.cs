@@ -22,7 +22,7 @@ namespace Game
                     return queue.Dequeue();
                 }
             }
-            NEData neData = RemoteCfgSys.Instance.GetSkillData(configId);
+            NEData neData = RemoteCfgSys.Instance.GetRemoteData(configId);
             RemoteTree remoteTree = CreateNode(neData) as RemoteTree;
             return remoteTree;
         }

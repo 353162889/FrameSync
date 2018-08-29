@@ -26,6 +26,7 @@ namespace Game
     {
         public delegate void UnitDamageHandler(Unit unit, DamageInfo damageInfo);
         public event UnitDamageHandler OnUnitHurt;
+        public event UnitDamageHandler OnUnitRecovery;
         public event UnitDamageHandler OnUnitDie;
         public int key{ get { return (int)m_nId; } }
 
@@ -138,14 +139,25 @@ namespace Game
         public void OnHurt(DamageInfo damageInfo)
         {
             this.hp -= damageInfo.damage;
-            if(null != OnUnitHurt)
+            if (damageInfo.damage >= 0)
             {
-                OnUnitHurt(this, damageInfo);
+                if (null != OnUnitHurt)
+                {
+                    OnUnitHurt(this, damageInfo);
+                }
+                GlobalEventDispatcher.Instance.Dispatch(GameEvent.UnitHurt, damageInfo);
+                if (this.hp <= 0)
+                {
+                    this.Die(damageInfo);
+                }
             }
-            GlobalEventDispatcher.Instance.Dispatch(GameEvent.UnitHurt, damageInfo);
-            if(this.hp <= 0)
+            else
             {
-                this.Die(damageInfo);
+                if (null != OnUnitRecovery)
+                {
+                    OnUnitRecovery(this, damageInfo);
+                }
+                GlobalEventDispatcher.Instance.Dispatch(GameEvent.UnitRecovery, damageInfo);
             }
         }
 

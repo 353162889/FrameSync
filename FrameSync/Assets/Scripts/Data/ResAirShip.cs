@@ -15,7 +15,7 @@ namespace GameData
 		public FP attack { get; private set; }
 		public FP move_speed { get; private set; }
 		public List<int> skills { get; private set; }
-		public int ai { get; private set; }
+		public string ai_path { get; private set; }
 		public string die_effect { get; private set; }
 		public ResAirShip(SecurityElement node)
 		{
@@ -34,7 +34,7 @@ namespace GameData
 					skills.Add(int.Parse(skillsArr[i]));
 				}
 			}
-			ai = int.Parse(node.Attribute("ai"));
+			ai_path = node.Attribute("ai_path");
 			die_effect = node.Attribute("die_effect");
 		}
 	}

@@ -17,15 +17,6 @@ namespace Game
     }
     public class RemoteData
     {
-        [NEPropertyKey]
-        [NEProperty("远程ID")]
-        public int remoteId;
-        [NEProperty("远程描述")]
-        public string remoteDesc;
-        [NEProperty("远程资源路径")]
-        public string remotePath;
-        [NEProperty("远程目标类型")]
-        public RemoteTargetType remoteTarget;
     }
 
     [BTNode(typeof(RemoteData))]

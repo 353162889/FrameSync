@@ -18,22 +18,21 @@ namespace Game
             var lst = ResCfgSys.Instance.GetCfgLst<ResLevel>();
             for (int i = 0; i < lst.Count; i++)
             {
-                string name = string.Format("Config/Gaming/{0}.bytes", lst[i].gaming_id);
-                if (!files.Contains(name))
+                if (!files.Contains(lst[i].logic_path))
                 {
-                    files.Add(name);
+                    files.Add(lst[i].logic_path);
                 }
             }
             GamingLogic.Init();
             m_cNEDataLoader.Load(files, GamingLogic.arrGamingNodeDataType, onFinish);
         }
 
-        public NEData GetGamingData(int aiId)
+        public NEData GetGamingData(string logicPath)
         {
-            NEData neData = m_cNEDataLoader.Get(aiId);
+            NEData neData = m_cNEDataLoader.Get(logicPath);
             if (neData == null)
             {
-                CLog.LogError("can not find gamingId = " + aiId + " cfgs!");
+                CLog.LogError("找不到路径 = " + logicPath + " 游戏逻辑配置!");
             }
             return neData;
         }

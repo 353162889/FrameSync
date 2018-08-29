@@ -108,7 +108,7 @@ namespace Game
                 m_cSysCompContainer.Enter();
             }
             m_cGamingLogic = new GamingLogic();
-            m_cGamingLogic.Init(m_cLevelInfo.gaming_id);
+            m_cGamingLogic.Init(m_cLevelInfo.logic_path);
         }
 
         private void OnPlayerCreate(object args)

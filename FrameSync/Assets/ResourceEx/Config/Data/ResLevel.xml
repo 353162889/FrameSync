@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-	<reslevel gaming_id="1" id="1" scene_id="1001"/>
+	<reslevel id="1" logic_path="Config/Gaming/Level_1.bytes" scene_id="1001"/>
 </root>

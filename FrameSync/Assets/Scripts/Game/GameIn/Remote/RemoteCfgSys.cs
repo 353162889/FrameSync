@@ -1,4 +1,5 @@
 ﻿using Framework;
+using GameData;
 using NodeEditor;
 using System;
 using System.Collections.Generic;
@@ -14,18 +15,29 @@ namespace Game
         {
             m_cNEDataLoader = new NEDataLoader();
             List<string> files = new List<string>();
-            files.Add("Config/Remote/1.bytes");
-            files.Add("Config/Remote/2.bytes");
+            var lst = ResCfgSys.Instance.GetCfgLst<ResRemote>();
+            for (int i = 0; i < lst.Count; i++)
+            {
+                if(!files.Contains(lst[i].logic_path))
+                {
+                    files.Add(lst[i].logic_path);
+                }
+            }
             Remote.Init();
             m_cNEDataLoader.Load(files, Remote.arrRemoteNodeDataType, onFinish);
         }
 
-        public NEData GetSkillData(int remoteId)
+        public NEData GetRemoteData(int configId)
         {
-            NEData neData = m_cNEDataLoader.Get(remoteId);
+            var resInfo = ResCfgSys.Instance.GetCfg<ResRemote>(configId);
+            if (resInfo == null)
+            {
+                CLog.LogError("找不到ID = " + configId + " 的远程配置!");
+            }
+            NEData neData = m_cNEDataLoader.Get(resInfo.logic_path);
             if (neData == null)
             {
-                CLog.LogError("can not find remoteId = " + remoteId + " cfgs!");
+                CLog.LogError("找不到路径= " + resInfo.logic_path + "远程配置");
             }
             return neData;
         }

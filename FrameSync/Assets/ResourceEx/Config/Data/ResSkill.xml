@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<resskill cd="429496729" id="1" logic_path="Config/Skill/Template_Create_Remote.bytes" name="子弹1" target_type="TargetForward" template_create_remote_id="0"/>
+</root>

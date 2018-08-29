@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<resremote effect_name="eff_blast0" id="1" logic_path="Config/Remote/Template_Move_Forward.bytes" max_move_distance="214748364800" move_speed="42949672960" name="子弹1" target_type="TargetForward"/>
+</root>

@@ -1,5 +1,6 @@
 ﻿using BTCore;
 using Framework;
+using GameData;
 using NodeEditor;
 using System;
 using System.Collections.Generic;
@@ -36,8 +37,10 @@ namespace Game
         protected int m_nConfigId;
         public int campId { get { return m_nCampId; } }
         protected int m_nCampId;
-        public RemoteData remoteData { get { return m_cRemoteData; } }
-        protected RemoteData m_cRemoteData;
+        protected RemoteTargetType m_eTargetType;
+        public RemoteTargetType remoteTargetType { get { return m_eTargetType; } }
+        public ResRemote resInfo { get { return m_cResInfo; } }
+        protected ResRemote m_cResInfo;
         protected RemoteTree m_cRemoteTree;
         public TSVector curPosition { get { return m_sCurPosition; } }
         protected TSVector m_sCurPosition;
@@ -80,8 +83,10 @@ namespace Game
             m_nConfigId = configId;
             m_nCampId = campId;
             this.gameObject.name = "remote_" + m_nId + "_" + m_nConfigId;
+            m_cResInfo = ResCfgSys.Instance.GetCfg<ResRemote>(configId);
+            if (m_cResInfo == null) CLog.LogError("找不到ID="+configId+"的远程配置");
+            m_eTargetType = (RemoteTargetType)Enum.Parse(typeof(RemoteTargetType),m_cResInfo.target_type);
             m_cRemoteTree = RemoteTreePool.Instance.GetRemoteTree(m_nConfigId);
-            m_cRemoteData = m_cRemoteTree.data as RemoteData;
             m_cAgentObj = new AgentRemote(this);
             SetPosition(position);
             SetViewPosition(position);
@@ -98,13 +103,13 @@ namespace Game
             m_cTarget = AgentObject.GetAgentObject(targetAgentId, targetAgentType);
             m_sTargetPosition = targetPosition;
             m_sTargetForward = targetForward;
-            m_cView = SceneEffectPool.Instance.CreateEffect(m_cRemoteData.remotePath, false, this.transform);
+            m_cView = SceneEffectPool.Instance.CreateEffect(m_cResInfo.effect_name, false, this.transform);
             m_cLerpView = gameObject.AddComponentOnce<LerpMoveView>();
             m_cLerpView.Init();
             m_cLerpView.StopMove();
 
             m_cHangPoint = gameObject.AddComponentOnce<HangPoint>();
-            string remoteFullPath = PathTool.GetSceneEffectPath(m_cRemoteData.remotePath);
+            string remoteFullPath = PathTool.GetSceneEffectPath(m_cResInfo.effect_name);
             m_cHangPoint.Init(remoteFullPath);
             //暂时不支持表现挂点(特效上挂特效)
             m_cHangPoint.InitHangView(null);
@@ -228,7 +233,6 @@ namespace Game
             m_cHangPoint.Clear();
             m_cTarget = null;
             RemoteTreePool.Instance.SaveRemoteTree(m_nConfigId, m_cRemoteTree);
-            m_cRemoteData = null;
             m_cRemoteTree = null;
             ClearAgent();
         }

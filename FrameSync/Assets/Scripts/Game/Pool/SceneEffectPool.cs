@@ -14,13 +14,13 @@ namespace Game
     {
         public void CacheObject(string name, int count, Action<string> callback)
         {
-            string path = PathTool.GetUIEffectPath(name);
+            string path = PathTool.GetSceneEffectPath(name);
             base._CacheObject(path, true, count, callback);
         }
 
         public void RemoveCacheObject(string name, Action<string> callback)
         {
-            string path = PathTool.GetUIEffectPath(name);
+            string path = PathTool.GetSceneEffectPath(name);
             base._RemoveCacheObject(path, callback);
         }
 

@@ -10,11 +10,6 @@ namespace Game
 {
     public class GamingData
     {
-        [NEPropertyKey]
-        [NEProperty("ID")]
-        public int id;
-        [NEProperty("描述")]
-        public string aiDesc;
     }
     [GamingNode(typeof(GamingData))]
     [NENodeDisplay(false, true, false)]

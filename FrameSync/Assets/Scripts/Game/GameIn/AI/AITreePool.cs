@@ -10,30 +10,30 @@ namespace Game
 {
     public class AITreePool : Singleton<AITreePool>
     {
-        private Dictionary<int, Queue<AITree>> m_dicPool = new Dictionary<int, Queue<AITree>>();
+        private Dictionary<string, Queue<AITree>> m_dicPool = new Dictionary<string, Queue<AITree>>();
 
-        public AITree GetAITree(int configId)
+        public AITree GetAITree(string aiPath)
         {
             Queue<AITree> queue = null;
-            if (m_dicPool.TryGetValue(configId, out queue))
+            if (m_dicPool.TryGetValue(aiPath, out queue))
             {
                 if (queue.Count > 0)
                 {
                     return queue.Dequeue();
                 }
             }
-            NEData neData = AICfgSys.Instance.GetAIData(configId);
+            NEData neData = AICfgSys.Instance.GetAIData(aiPath);
             AITree aiTree = CreateNode(neData) as AITree;
             return aiTree;
         }
 
-        public void SaveAITree(int configId, AITree aiTree)
+        public void SaveAITree(string aiPath, AITree aiTree)
         {
             Queue<AITree> queue = null;
-            if (!m_dicPool.TryGetValue(configId, out queue))
+            if (!m_dicPool.TryGetValue(aiPath, out queue))
             {
                 queue = new Queue<AITree>();
-                m_dicPool.Add(configId, queue);
+                m_dicPool.Add(aiPath, queue);
             }
             aiTree.Clear();
             queue.Enqueue(aiTree);

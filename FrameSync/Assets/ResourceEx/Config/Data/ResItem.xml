@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<resitem ai_path="" hp="0" id="1" move_speed="21474836480" name="血包" prefab="Prefab/Item/Item_1" radius="6442450944"/>
+</root>

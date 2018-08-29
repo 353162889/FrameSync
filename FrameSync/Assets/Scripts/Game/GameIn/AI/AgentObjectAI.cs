@@ -30,20 +30,21 @@ namespace Game
         public AgentObject host { get { return m_cHost; } }
         private AgentObject m_cHost;
         private AITree m_cAITree;
-        private AIData m_cAIData;
+        private string m_sAIPath;
         private AIBlackBoard m_cBlackBoard;
         private bool m_bStart;
         public bool start { get { return m_bStart; } }
         static AgentObjectAI() { Init(); }
 
-        public void Init(AgentObject host,int configId)
+        public void Init(AgentObject host,string aiPath)
         {
-            if (m_cAIData != null && m_cAITree != null)
+            if (!string.IsNullOrEmpty(m_sAIPath) && m_cAITree != null)
             {
-                AITreePool.Instance.SaveAITree(m_cAIData.id, m_cAITree);
+                AITreePool.Instance.SaveAITree(m_sAIPath, m_cAITree);
+                m_sAIPath = null;
             }
-            m_cAITree = AITreePool.Instance.GetAITree(configId);
-            m_cAIData = m_cAITree.data as AIData;
+            m_sAIPath = aiPath;
+            m_cAITree = AITreePool.Instance.GetAITree(m_sAIPath);
 
             m_cHost = host;
             m_cBlackBoard = new AIBlackBoard(this);
@@ -79,15 +80,15 @@ namespace Game
 
         public void Clear()
         {
-            if (m_cAIData != null && m_cAITree != null)
+            if (!string.IsNullOrEmpty(m_sAIPath) && m_cAITree != null)
             {
-                AITreePool.Instance.SaveAITree(m_cAIData.id, m_cAITree);
+                AITreePool.Instance.SaveAITree(m_sAIPath, m_cAITree);
             }
             if (m_cBlackBoard != null)
             {
                 m_cBlackBoard.Clear();
             }
-            m_cAIData = null;
+            m_sAIPath = null;
             m_cAITree = null;
             m_cHost = null;
         }

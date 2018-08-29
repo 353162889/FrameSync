@@ -29,9 +29,9 @@ namespace Game
             {
                 AddSkill(m_resInfo.skills[i]);
             }
-            if(m_resInfo.ai > 0)
+            if(!string.IsNullOrEmpty(m_resInfo.ai_path))
             {
-                this.SetAI(m_resInfo.ai);
+                this.SetAI(m_resInfo.ai_path);
             }
         }
 

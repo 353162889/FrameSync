@@ -1,5 +1,6 @@
 ﻿using BTCore;
 using Framework;
+using GameData;
 using NodeEditor;
 using System;
 using System.Collections.Generic;
@@ -27,15 +28,18 @@ namespace Game
             m_arrSkillNodeDataType = m_lstSkillNodeDataType.ToArray();
         }
 
-        public int skillId { get { return m_cSkillData.skillId; } }
-        public SkillTargetType targetType { get { return m_cSkillData.skillTarget; } }
-        public FP cd { get { return m_cSkillData.skillCD; } }
+        public int skillId { get { return m_cResInfo.id; } }
+        private SkillTargetType m_eTargetType;
+        public SkillTargetType targetType { get { return m_eTargetType; } }
+        public FP cd { get { return m_cResInfo.cd; } }
         public AgentObject host { get { return m_cHost; } }
         private AgentObject m_cHost;
         private SkillTree m_cSkillTree;
         private NEData m_cNEData;
         private SkillData m_cSkillData;
         public SkillData skillData { get { return m_cSkillData; } }
+        private ResSkill m_cResInfo;
+        public ResSkill resInfo { get { return m_cResInfo; } }
         private SkillBlackBoard m_cBlackBoard;
         private bool m_bIsDo;
         public bool isDo { get { return m_bIsDo; } }
@@ -52,13 +56,16 @@ namespace Game
         private FP m_sStartTime;
         private FP m_sEndTime;
 
-        public Skill(NEData neData)
+        public Skill(int configId,NEData neData)
         {
             Init();
+            m_cResInfo = ResCfgSys.Instance.GetCfg<ResSkill>(configId);
+            if (m_cResInfo == null) CLog.LogError("没有配置ID="+configId+"的技能配置");
             m_cNEData = neData;
             m_cSkillData = m_cNEData.data as SkillData;
             m_cSkillTree = CreateNode(m_cNEData) as SkillTree;
             m_cSkillTree.Clear();
+            m_eTargetType = (SkillTargetType)Enum.Parse(typeof(SkillTargetType), m_cResInfo.target_type);
             m_bIsDo = false;
             m_sStartTime = -1000;
             m_sEndTime = -1000;

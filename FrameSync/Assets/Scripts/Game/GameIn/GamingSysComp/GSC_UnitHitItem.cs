@@ -34,7 +34,7 @@ namespace Game
                     var unit = lstPlayer[j].unit;
                     if(unit != null && !unit.isDie)
                     {
-                        if(unit.gameCollider.CheckCircle(unitItem.curPosition,unitItem.radius))
+                        if(unit.gameCollider.CheckCircle(unitItem.curPosition,unitItem.resInfo.radius))
                         {
                             unitItem.HitUnit(unit);
                             m_lstRemoveUnit.Add(unitItem);

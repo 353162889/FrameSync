@@ -10,30 +10,30 @@ namespace Game
 {
     public class GamingTreePool : Singleton<GamingTreePool>
     {
-        private Dictionary<int, Queue<GamingTree>> m_dicPool = new Dictionary<int, Queue<GamingTree>>();
+        private Dictionary<string, Queue<GamingTree>> m_dicPool = new Dictionary<string, Queue<GamingTree>>();
 
-        public GamingTree GetGamingTree(int configId)
+        public GamingTree GetGamingTree(string logicPath)
         {
             Queue<GamingTree> queue = null;
-            if (m_dicPool.TryGetValue(configId, out queue))
+            if (m_dicPool.TryGetValue(logicPath, out queue))
             {
                 if (queue.Count > 0)
                 {
                     return queue.Dequeue();
                 }
             }
-            NEData neData = GamingCfgSys.Instance.GetGamingData(configId);
+            NEData neData = GamingCfgSys.Instance.GetGamingData(logicPath);
             GamingTree aiTree = CreateNode(neData) as GamingTree;
             return aiTree;
         }
 
-        public void SaveGamingTree(int configId, GamingTree gamingTree)
+        public void SaveGamingTree(string logicPath, GamingTree gamingTree)
         {
             Queue<GamingTree> queue = null;
-            if (!m_dicPool.TryGetValue(configId, out queue))
+            if (!m_dicPool.TryGetValue(logicPath, out queue))
             {
                 queue = new Queue<GamingTree>();
-                m_dicPool.Add(configId, queue);
+                m_dicPool.Add(logicPath, queue);
             }
             gamingTree.Clear();
             queue.Enqueue(gamingTree);

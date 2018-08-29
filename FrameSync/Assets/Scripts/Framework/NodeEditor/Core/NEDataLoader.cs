@@ -10,13 +10,13 @@ namespace NodeEditor
 {
     public class NEDataLoader
     {
-        private Dictionary<object, NEData> m_dicData = new Dictionary<object, NEData>();
+        private Dictionary<string, NEData> m_dicData = new Dictionary<string, NEData>();
 
         private MultiResourceObjectLoader m_resObjectLoader;
         private Action m_finishAction;
         private Type[] m_arrParseTypes;
 
-        public NEData Get(object key)
+        public NEData Get(string key)
         {
             NEData data = null;
             m_dicData.TryGetValue(key, out data);
@@ -47,7 +47,7 @@ namespace NodeEditor
                     var textAsset = UnityEditor.AssetDatabase.LoadAssetAtPath<TextAsset>(files[i]);
                     if (textAsset != null)
                     {
-                        ParseData(textAsset.bytes);
+                        ParseData(textAsset.bytes,files[i]);
                     }
                 }
                 if (null != m_finishAction)
@@ -90,29 +90,30 @@ namespace NodeEditor
         private void OnProgress(UnityEngine.Object obj,string path)
         {
             byte[] data = ((TextAsset)obj).bytes;
-            ParseData(data);
+            ParseData(data,path);
         }
 
-        private void ParseData(byte[] bytesData)
+        private void ParseData(byte[] bytesData,string path)
         {
             NEData neData = NEUtil.DeSerializerObjectFromBuff(bytesData, typeof(NEData), m_arrParseTypes) as NEData;
-            Type type = neData.data.GetType();
-            FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
-            bool hasPropertyKey = false;
-            foreach (var item in fields)
-            {
-                if (item.GetCustomAttributes(typeof(NEPropertyKeyAttribute), true).Length > 0)
-                {
-                    object key = item.GetValue(neData.data);
-                    m_dicData.Add(key, neData);
-                    hasPropertyKey = true;
-                    break;
-                }
-            }
-            if(!hasPropertyKey)
-            {
-                CLog.LogError(neData.data.GetType()+" can not find NEPropertyKeyAttribute!");
-            }
+            m_dicData.Add(path, neData);
+            //Type type = neData.data.GetType();
+            //FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+            //bool hasPropertyKey = false;
+            //foreach (var item in fields)
+            //{
+            //    if (item.GetCustomAttributes(typeof(NEPropertyKeyAttribute), true).Length > 0)
+            //    {
+            //        object key = item.GetValue(neData.data);
+            //        m_dicData.Add(key, neData);
+            //        hasPropertyKey = true;
+            //        break;
+            //    }
+            //}
+            //if(!hasPropertyKey)
+            //{
+            //    CLog.LogError(neData.data.GetType()+" can not find NEPropertyKeyAttribute!");
+            //}
         }
 
         

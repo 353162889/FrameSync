@@ -379,20 +379,20 @@ namespace NodeEditor
                 defaultName = m_sLoadPath.Substring(index + 1);
                 defaultName = defaultName.Substring(0,defaultName.LastIndexOf("."));
             }
-            else
-            {
-                Type type = data.data.GetType();
-                FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
-                foreach (var item in fields)
-                {
-                    if (item.GetCustomAttributes(typeof(NEPropertyKeyAttribute), true).Length > 0)
-                    {
-                        object key = item.GetValue(data.data);
-                        defaultName = key.ToString();
-                        break;
-                    }
-                }
-            }
+            //else
+            //{
+            //    Type type = data.data.GetType();
+            //    FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+            //    foreach (var item in fields)
+            //    {
+            //        if (item.GetCustomAttributes(typeof(NEPropertyKeyAttribute), true).Length > 0)
+            //        {
+            //            object key = item.GetValue(data.data);
+            //            defaultName = key.ToString();
+            //            break;
+            //        }
+            //    }
+            //}
             string path = EditorUtility.SaveFilePanel("保存数据", Application.dataPath + dir, defaultName, composeData.fileExt);
             if (path.Length != 0)
             {

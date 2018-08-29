@@ -23,7 +23,7 @@ namespace Game
             }
             NEData neData = SkillCfgSys.Instance.GetSkillData(configId);
             if (neData == null) return null;
-            Skill skill = new Skill(neData);
+            Skill skill = new Skill(configId,neData);
             return skill;
         }
 

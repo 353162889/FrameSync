@@ -17,15 +17,6 @@ namespace Game
     }
     public class SkillData
     {
-        [NEPropertyKey]
-        [NEProperty("技能ID")]
-        public int skillId;
-        [NEProperty("技能描述")]
-        public string skillDesc;
-        [NEProperty("技能目标类型")]
-        public SkillTargetType skillTarget;
-        [NEProperty("技能CD")]
-        public FP skillCD;
     }
 
     [BTNode(typeof(SkillData))]

@@ -15,16 +15,12 @@ namespace Game
         {
             m_cNEDataLoader = new NEDataLoader();
             List<string> files = new List<string>();
-            var lst = ResCfgSys.Instance.GetCfgLst<ResAirShip>();
+            var lst = ResCfgSys.Instance.GetCfgLst<ResSkill>();
             for (int i = 0; i < lst.Count; i++)
             {
-                for (int j = 0; j < lst[i].skills.Count; j++)
+                if (!files.Contains(lst[i].logic_path))
                 {
-                    string name = string.Format("Config/Skill/{0}.bytes", lst[i].skills[j]);
-                    if (!files.Contains(name))
-                    {
-                        files.Add(name);
-                    }
+                    files.Add(lst[i].logic_path);
                 }
             }
             Skill.Init();
@@ -33,7 +29,8 @@ namespace Game
 
         public NEData GetSkillData(int skillId)
         {
-            NEData neData = m_cNEDataLoader.Get(skillId);
+            var resInfo =  ResCfgSys.Instance.GetCfg<ResSkill>(skillId);
+            NEData neData = m_cNEDataLoader.Get(resInfo.logic_path);
             if(neData == null)
             {
                 CLog.LogError("can not find skillId = "+skillId +" cfgs!");

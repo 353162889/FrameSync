@@ -28,15 +28,15 @@ namespace Game
         }
 
         private GamingTree m_cGamingTree;
-        private GamingData m_cGamingData;
+        private string m_sLogicPath;
         private GamingBlackBoard m_cBlackBoard;
         private bool m_bIsDo;
         static GamingLogic() { Init(); }
 
-        public void Init(int configId)
+        public void Init(string logicPath)
         {
-            m_cGamingTree = GamingTreePool.Instance.GetGamingTree(configId);
-            m_cGamingData = m_cGamingTree.data as GamingData;
+            m_sLogicPath = logicPath;
+            m_cGamingTree = GamingTreePool.Instance.GetGamingTree(m_sLogicPath);
             m_cBlackBoard = new GamingBlackBoard();
             m_bIsDo = true;
         }
@@ -66,15 +66,14 @@ namespace Game
         public void Clear()
         {
             End();
-            if (m_cGamingData != null && m_cGamingTree != null)
+            if (!string.IsNullOrEmpty(m_sLogicPath) && m_cGamingTree != null)
             {
-                GamingTreePool.Instance.SaveGamingTree(m_cGamingData.id, m_cGamingTree);
+                GamingTreePool.Instance.SaveGamingTree(m_sLogicPath, m_cGamingTree);
             }
             if (m_cBlackBoard != null)
             {
                 m_cBlackBoard.Clear();
             }
-            m_cGamingData = null;
             m_cGamingTree = null;
         }
     }
