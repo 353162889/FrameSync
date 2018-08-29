@@ -3,7 +3,7 @@ import sys
 import xlrd
 import xml.dom.minidom
 import os
-
+#import codecs
 
 def show_select_view(excel_path_dir,generate_xml_dir,generate_csharp_dir):
     files = os.listdir(excel_path_dir)
@@ -119,8 +119,11 @@ def export_table_to_xml(table,generate_xml_dir,absolute_path = None,sheet_name =
 
     xml_name = name_cell.value + ".xml"
     generate_xml_path = os.path.join(generate_xml_dir,xml_name)
-    f = open(generate_xml_path,'w')
-    f.write(str(doc.toprettyxml(encoding='utf-8')))
+    #使用这种方式中文不会出问题
+    #f = codecs.open(generate_xml_path,'w','utf-8')
+    f = open(generate_xml_path,'w',encoding='utf-8')
+    #f.write(doc.toprettyxml(encoding='utf-8'))
+    f.write(str(doc.toprettyxml(encoding='utf-8'),encoding='utf-8'))
     #doc.writexml(f)
     f.close()
     print("导出配置{0}-{1}到{2}".format(absolute_path, sheet_name, generate_xml_path))
