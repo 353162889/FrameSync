@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-	<resairship ai="1" attack="42949672960" die_effect="eff_blast0" hp="429496729600" id="1" move_speed="128849018880" name="player1" prefab="Prefab/Unit/AirShip_1" skills="1"/>
+	<resairship ai="1" attack="42949672960" die_effect="eff_blast0" hp="429496729600" id="1" move_speed="128849018880" name="中文" prefab="Prefab/Unit/AirShip_1" skills="1"/>
 	<resairship ai="1" attack="42949672960" die_effect="eff_blast0" hp="429496729600" id="2" move_speed="128849018880" name="player2" prefab="Prefab/Unit/AirShip_2" skills="1"/>
 	<resairship ai="1" attack="42949672960" die_effect="eff_blast0" hp="429496729600" id="3" move_speed="128849018880" name="player3" prefab="Prefab/Unit/AirShip_3" skills="1"/>
 	<resairship ai="1" attack="42949672960" die_effect="eff_blast0" hp="429496729600" id="4" move_speed="128849018880" name="player4" prefab="Prefab/Unit/AirShip_4" skills="1"/>
