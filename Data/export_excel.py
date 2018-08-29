@@ -259,12 +259,16 @@ def csharp_parse_int_property(first_line,key):
         return "\t\t\t{0} = int.Parse(node.Attribute(\"{1}\"));".format(key,key)
     elif first_line == "repeated":
         temp_str = "\t\t\t{0} = new List<int>();\n".format(key)
-        temp_str += "\t\t\tstring[] {0}Arr = node.Attribute(\"{1}\").Split(\',\');\n".format(key,key)
-        temp_str += "\t\t\tif ({0}Arr != null || {1}Arr.Length > 0)\n".format(key,key)
-        temp_str += "\t\t\t{\n"
-        temp_str += "\t\t\t\tfor (int i = 0; i < {0}Arr.Length; i++)\n".format(key)
+        temp_str += "\t\t\tstring str_{0} = node.Attribute(\"{1}\");\n".format(key,key)
+        temp_str += "\t\t\tif(!string.IsNullOrEmpty(str_{0}))\n".format(key)
+        temp_str += "\t\t\t{\n";
+        temp_str += "\t\t\t\tstring[] {0}Arr = str_{1}.Split(\',\');\n".format(key,key)
+        temp_str += "\t\t\t\tif ({0}Arr != null || {1}Arr.Length > 0)\n".format(key,key)
         temp_str += "\t\t\t\t{\n"
-        temp_str += "\t\t\t\t\t{0}.Add(int.Parse({1}Arr[i]));\n".format(key,key)
+        temp_str += "\t\t\t\t\tfor (int i = 0; i < {0}Arr.Length; i++)\n".format(key)
+        temp_str += "\t\t\t\t\t{\n"
+        temp_str += "\t\t\t\t\t\t{0}.Add(int.Parse({1}Arr[i]));\n".format(key,key)
+        temp_str += "\t\t\t\t\t}\n"
         temp_str += "\t\t\t\t}\n"
         temp_str += "\t\t\t}"
         return temp_str
@@ -276,12 +280,16 @@ def csharp_parse_float_property(first_line,key):
         return "\t\t\t{0} = FP.FromSourceLong(long.Parse(node.Attribute(\"{1}\")));".format(key, key)
     elif first_line == "repeated":
         temp_str = "\t\t\t{0} = new List<FP>();\n".format(key)
-        temp_str += "\t\t\tstring[] {0}Arr = node.Attribute(\"{1}\").Split(\',\');\n".format(key,key)
-        temp_str += "\t\t\tif ({0}Arr != null || {1}Arr.Length > 0)\n".format(key,key)
-        temp_str += "\t\t\t{\n"
-        temp_str += "\t\t\t\tfor (int i = 0; i < {0}Arr.Length; i++)\n".format(key)
+        temp_str += "\t\t\tstring str_{0} = node.Attribute(\"{1}\");\n".format(key,key)
+        temp_str += "\t\t\tif(!string.IsNullOrEmpty(str_{0}))\n".format(key)
+        temp_str += "\t\t\t{\n";
+        temp_str += "\t\t\t\tstring[] {0}Arr = str_{1}.Split(\',\');\n".format(key,key)
+        temp_str += "\t\t\t\tif ({0}Arr != null || {1}Arr.Length > 0)\n".format(key,key)
         temp_str += "\t\t\t\t{\n"
-        temp_str += "\t\t\t\t\t{0}.Add(FP.FromSourceLong(long.Parse({1}Arr[i])));\n".format(key,key)
+        temp_str += "\t\t\t\t\tfor (int i = 0; i < {0}Arr.Length; i++)\n".format(key)
+        temp_str += "\t\t\t\t\t{\n"
+        temp_str += "\t\t\t\t\t\t{0}.Add(FP.FromSourceLong(long.Parse({1}Arr[i])));\n".format(key,key)
+        temp_str += "\t\t\t\t\t}\n"
         temp_str += "\t\t\t\t}\n"
         temp_str += "\t\t\t}"
         return temp_str
@@ -292,12 +300,16 @@ def csharp_parse_string_property(first_line,key):
         return "\t\t\t{0} = node.Attribute(\"{1}\");".format(key, key)
     elif first_line == "repeated":
         temp_str = "\t\t\t{0} = new List<string>();\n".format(key)
-        temp_str += "\t\t\tstring[] {0}Arr = node.Attribute(\"{1}\").Split(\',\');\n".format(key,key)
-        temp_str += "\t\t\tif ({0}Arr != null || {1}Arr.Length > 0)\n".format(key,key)
-        temp_str += "\t\t\t{\n"
-        temp_str += "\t\t\t\tfor (int i = 0; i < {0}Arr.Length; i++)\n".format(key)
+        temp_str += "\t\t\tstring str_{0} = node.Attribute(\"{1}\");\n".format(key,key)
+        temp_str += "\t\t\tif(!string.IsNullOrEmpty(str_{0}))\n".format(key)
+        temp_str += "\t\t\t{\n";
+        temp_str += "\t\t\t\tstring[] {0}Arr = str_{1}.Split(\',\');\n".format(key,key)
+        temp_str += "\t\t\t\tif ({0}Arr != null || {1}Arr.Length > 0)\n".format(key,key)
         temp_str += "\t\t\t\t{\n"
-        temp_str += "\t\t\t\t\t{0}.Add({1}Arr[i]);\n".format(key,key)
+        temp_str += "\t\t\t\t\tfor (int i = 0; i < {0}Arr.Length; i++)\n".format(key)
+        temp_str += "\t\t\t\t\t{\n"
+        temp_str += "\t\t\t\t\t\t{0}.Add({1}Arr[i]);\n".format(key,key)
+        temp_str += "\t\t\t\t\t}\n"
         temp_str += "\t\t\t\t}\n"
         temp_str += "\t\t\t}"
         return temp_str
@@ -308,12 +320,16 @@ def csharp_parse_bool_property(first_line,key):
         return "\t\t\t{0} = bool.Parse(node.Attribute(\"{1}\"));".format(key, key)
     elif first_line == "repeated":
         temp_str = "\t\t\t{0} = new List<bool>();\n".format(key)
-        temp_str += "\t\t\tstring[] {0}Arr = node.Attribute(\"{1}\").Split(\',\');\n".format(key,key)
-        temp_str += "\t\t\tif ({0}Arr != null || {1}Arr.Length > 0)\n".format(key,key)
-        temp_str += "\t\t\t{\n"
-        temp_str += "\t\t\t\tfor (int i = 0; i < {0}Arr.Length; i++)\n".format(key)
+        temp_str += "\t\t\tstring str_{0} = node.Attribute(\"{1}\");\n".format(key,key)
+        temp_str += "\t\t\tif(!string.IsNullOrEmpty(str_{0}))\n".format(key)
+        temp_str += "\t\t\t{\n";
+        temp_str += "\t\t\t\tstring[] {0}Arr = str_{1}.Split(\',\');\n".format(key,key)
+        temp_str += "\t\t\t\tif ({0}Arr != null || {1}Arr.Length > 0)\n".format(key,key)
         temp_str += "\t\t\t\t{\n"
-        temp_str += "\t\t\t\t\t{0}.Add(bool.Parse({1}Arr[i]));\n".format(key,key)
+        temp_str += "\t\t\t\t\tfor (int i = 0; i < {0}Arr.Length; i++)\n".format(key)
+        temp_str += "\t\t\t\t\t{\n"
+        temp_str += "\t\t\t\t\t\t{0}.Add(bool.Parse({1}Arr[i]));\n".format(key,key)
+        temp_str += "\t\t\t\t\t}\n"
         temp_str += "\t\t\t\t}\n"
         temp_str += "\t\t\t}"
         return temp_str
