@@ -15,7 +15,7 @@ namespace Game
             Unit unit = BattleScene.Instance.GetUnit(msg.unitId);
             if (unit != null)
             {
-                unit.StopMove();
+                unit.StopMove(MoveFromType.Player);
             }
         }
     }

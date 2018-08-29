@@ -30,9 +30,9 @@ namespace Game
             var lst = m_cUnit.lstSkill;
             for (int i = 0; i < lst.Count; i++)
             {
-                if(m_cUnit.CanDoSkill(lst[i].skillId))
+                if(m_cUnit.CanDoSkill(lst[i].skillId,SkillFromType.AI))
                 {
-                    m_cUnit.DoSkill(lst[i].skillId, 0, AgentObjectType.Unit, m_cUnit.curPosition, m_cUnit.curForward);
+                    m_cUnit.DoSkill(lst[i].skillId, 0, AgentObjectType.Unit, m_cUnit.curPosition, m_cUnit.curForward,SkillFromType.AI);
                     return BTActionResult.Running;
                 }
             }

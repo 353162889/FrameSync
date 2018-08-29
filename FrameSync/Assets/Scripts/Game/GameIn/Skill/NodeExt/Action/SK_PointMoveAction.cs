@@ -54,7 +54,7 @@ namespace Game
                     {
                         lst.Add(unit.curPosition + m_cPointMoveData.points[i] - firstPoint);
                     }
-                    unit.Move(lst);
+                    unit.Move(lst,MoveFromType.Skill);
                     unit.OnUnitMoveStop += OnOneMoveStop;
                     unit.OnUnitMoveStart += OnOneMoveStop;
                     ResetObjectPool<List<TSVector>>.Instance.SaveObject(lst);

@@ -15,7 +15,7 @@ namespace Game
             Unit unit = BattleScene.Instance.GetUnit(msg.unitId);
             if (unit != null)
             {
-                unit.DoSkill(msg.skillId, msg.targetAgentId, (AgentObjectType)msg.targetAgentType, GameInTool.ToTSVector(msg.position), GameInTool.ToTSVector(msg.forward));
+                unit.DoSkill(msg.skillId, msg.targetAgentId, (AgentObjectType)msg.targetAgentType, GameInTool.ToTSVector(msg.position), GameInTool.ToTSVector(msg.forward),SkillFromType.Player);
             }
         }
     }

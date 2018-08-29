@@ -17,6 +17,7 @@ namespace Game
         private PvpPlayerData m_cPlayerData;
 
         private TSVector m_sBornPos;
+        private bool m_bAIEnable;
         public bool initUnit { get { return m_bInitUnit; } }
         private bool m_bInitUnit;
 
@@ -25,6 +26,7 @@ namespace Game
             m_lId = id;
             m_cPlayerData = playerData;
             m_bInitUnit = false;
+            m_bAIEnable = false;
             GlobalEventDispatcher.Instance.AddEvent(GameEvent.UnitRemove, OnUnitRemove);
         }
 
@@ -35,6 +37,11 @@ namespace Game
             {
                 m_cUnit = null;
                 CreateUnit(m_sBornPos);
+                m_cUnit.Forbid(UnitForbidType.ForbidForward, UnitForbidFromType.Game);
+                if (m_bAIEnable)
+                {
+                    m_cUnit.StartAI();
+                }
             }
         }
 
@@ -43,12 +50,26 @@ namespace Game
             m_sBornPos = pos;
         }
 
+        public void SetAIEnable(bool enable)
+        {
+            m_bAIEnable = enable;
+            if(m_cUnit != null && !m_cUnit.isDie)
+            {
+                if (m_bAIEnable)
+                {
+                    m_cUnit.StartAI();
+                }
+                else
+                {
+                    m_cUnit.StopAI();
+                }
+            }
+        }
+
         public Unit CreateUnit(TSVector pos)
         {
             m_bInitUnit = true;
             m_cUnit = BattleScene.Instance.CreateUnit(m_cPlayerData.configId, m_cPlayerData.campId, UnitType.AirShip, pos, TSVector.forward);
-            m_cUnit.Forbid(UnitForbidType.ForbidForward, UnitForbidFromType.Game);
-            m_cUnit.StartAI();
             GlobalEventDispatcher.Instance.DispatchByParam(GameEvent.AddUnitDestory, UnitDestoryType.DieDestory, m_cUnit);
             return m_cUnit;
         }

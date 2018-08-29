@@ -156,7 +156,7 @@ namespace NodeEditor
             }
             if (m_cEnableStyle == null)
             {
-                m_cEnableStyle = new GUIStyle((GUIStyle)"CN EntryWarnIcon");
+                m_cEnableStyle = new GUIStyle((GUIStyle)"CN EntryWarn");
             }
             if (m_cCloseStyle == null)
             {

@@ -14,6 +14,8 @@ namespace Game
         ForbidSkill = 1 << 2,//禁止释放技能
         ForbidSelect = 1 << 3,//禁止被选中
         ForbidPlayerMove = 1 << 4,//禁止玩家请求移动
+        ForbidPlayerForward = 1 << 5,//禁止玩家请求转向
+        ForbidPlayerSkill = 1 << 6,//禁止玩家请求释放技能
     }
 
     public enum UnitForbidFromType

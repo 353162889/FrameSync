@@ -8,6 +8,12 @@ using UnityEngine;
 
 namespace Game
 {
+    public enum MoveFromType
+    {
+        Player,//玩家操作移动
+        Skill,//技能操作移动
+        Game,//游戏逻辑操作移动
+    }
     //unit的移动部分
     public partial class Unit
     {
@@ -24,7 +30,7 @@ namespace Game
         public void ReqMove(List<TSVector> movePath)
         {
             if (movePath.Count <= 0) return;
-            if(!IsForbid(UnitForbidType.ForbidPlayerMove) && CanMove())
+            if(CanMove(MoveFromType.Player))
             {
                 Frame_ReqMovePath_Data data = new Frame_ReqMovePath_Data();
                 data.unitId = id;
@@ -36,9 +42,9 @@ namespace Game
             }
         }
 
-        public void Move(List<TSVector> movePath)
+        public void Move(List<TSVector> movePath,MoveFromType fromType)
         {
-            if (CanMove())
+            if (CanMove(fromType))
             {
                 m_cMove.Move(m_sCurPosition, movePath, this.moveSpeed);
             }
@@ -46,7 +52,7 @@ namespace Game
 
         public void ReqMove(TSVector targetPosition)
         {
-            if(!IsForbid(UnitForbidType.ForbidPlayerMove) && CanMove() && (!m_cMove.isMoving || m_cMove.targetPosition != targetPosition))
+            if(CanMove(MoveFromType.Player) && (!m_cMove.isMoving || m_cMove.targetPosition != targetPosition))
             {
                 Frame_ReqMovePoint_Data data = new Frame_ReqMovePoint_Data();
                 data.unitId = id;
@@ -55,9 +61,9 @@ namespace Game
             }
         }
 
-        public void Move(TSVector targetPosition)
+        public void Move(TSVector targetPosition,MoveFromType fromType)
         {
-            if (CanMove())
+            if (CanMove(fromType))
             {
                 m_cMove.Move(m_sCurPosition, targetPosition, this.moveSpeed);
             }
@@ -65,7 +71,7 @@ namespace Game
 
         public void ReqMoveForward(TSVector direction,FP len)
         {
-            if(!IsForbid(UnitForbidType.ForbidPlayerMove) && CanMove() && (TSVector.Angle(curForward,direction) > FP.EN1 || !m_cMove.isMoving))
+            if(CanMove(MoveFromType.Player) && (TSVector.Angle(curForward,direction) > FP.EN1 || !m_cMove.isMoving))
             {
                 Frame_ReqMoveForward_Data data = new Frame_ReqMoveForward_Data();
                 data.unitId = id;
@@ -75,9 +81,9 @@ namespace Game
             }
         }
 
-        public void MoveForward(TSVector direction,FP len)
+        public void MoveForward(TSVector direction,FP len,MoveFromType fromType)
         {
-            if(CanMove())
+            if(CanMove(fromType))
             {
                 TSVector nextPoint = direction * len;
                 m_cMove.Move(m_sCurPosition, nextPoint, this.moveSpeed);
@@ -94,7 +100,7 @@ namespace Game
             }
         }
 
-        public void StopMove()
+        public void StopMove(MoveFromType fromType)
         {
             if (m_cMove != null)
             {
@@ -102,9 +108,11 @@ namespace Game
             }
         }
 
-        public bool CanMove()
+        public bool CanMove(MoveFromType fromType)
         {
-            return m_cMove != null && !IsForbid(UnitForbidType.ForbidMove);
+            if (m_cMove == null) return false;
+            if (fromType == MoveFromType.Player && IsForbid(UnitForbidType.ForbidPlayerMove)) return false;
+            return !IsForbid(UnitForbidType.ForbidMove);
         }
 
         public void StopRotate()

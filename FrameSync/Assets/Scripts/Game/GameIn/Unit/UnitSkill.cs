@@ -7,6 +7,13 @@ using System.Text;
 
 namespace Game
 {
+    public enum SkillFromType
+    {
+        Player,
+        AI,
+        Game,
+    }
+
     public partial class Unit
     {
         protected SkillExecutor m_cSkillExecutor;
@@ -15,7 +22,7 @@ namespace Game
 
         public void ReqDoSkill(int skillId,uint targetAgentId,AgentObjectType targetAgentType,TSVector position,TSVector forward)
         {
-            if(CanDoSkill(skillId))
+            if(CanDoSkill(skillId,SkillFromType.Player))
             {
                 Frame_ReqDoSkill_Data data = new Frame_ReqDoSkill_Data();
                 data.unitId = this.id;
@@ -28,9 +35,9 @@ namespace Game
             }
         }
 
-        public void DoSkill(int skillId, uint targetAgentId, AgentObjectType targetAgentType, TSVector position, TSVector forward)
+        public void DoSkill(int skillId, uint targetAgentId, AgentObjectType targetAgentType, TSVector position, TSVector forward,SkillFromType fromType)
         {
-            if(CanDoSkill(skillId))
+            if(CanDoSkill(skillId,fromType))
             {
                 m_cSkillExecutor.Do(skillId, targetAgentId, targetAgentType, position, forward);
             }
@@ -65,9 +72,12 @@ namespace Game
             m_cSkillExecutor.RemoveSkill(skillId);
         }
 
-        public bool CanDoSkill(int skillId)
+        public bool CanDoSkill(int skillId,SkillFromType fromType)
         {
-            return m_cSkillExecutor != null && m_cSkillExecutor.CanDo(skillId);
+            if (m_cSkillExecutor == null) return false;
+            if (fromType == SkillFromType.Player && IsForbid(UnitForbidType.ForbidPlayerSkill)) return false;
+            if (IsForbid(UnitForbidType.ForbidSkill)) return false;
+            return m_cSkillExecutor.CanDo(skillId);
         }
 
         public bool CanBreakSkill(int skillId)

@@ -14,6 +14,14 @@ namespace Game
         Player,
         UnitMove,
     }
+
+    public enum PositionFromType
+    {
+        Init,
+        Player,
+        Skill,
+    }
+
     public partial class Unit : MonoBehaviour,IDynamicObj,IPoolable
     {
         public delegate void UnitDamageHandler(Unit unit, DamageInfo damageInfo);
@@ -67,12 +75,12 @@ namespace Game
             m_cAgentObj = new AgentUnit(this);
             m_sCurPosition = m_sLastPosition = position;
             m_sCurForward = m_sLastForward = forward;
-            SetPosition(position,true);
+            SetPosition(position,PositionFromType.Init,true);
             SetForward(forward,ForwardFromType.Init);
             SubInit();
         }
 
-        public void ReqSetPosition(TSVector position,bool immediately)
+        public void ReqSetPosition(TSVector position, bool immediately)
         {
             if (position == m_sCurPosition) return;
             Frame_ReqSetPosition_Data data = new Frame_ReqSetPosition_Data();
@@ -82,7 +90,7 @@ namespace Game
             NetSys.Instance.SendMsg(NetChannelType.Game, (short)PacketOpcode.Frame_ReqSetPosition, data);
         }
 
-        public void SetPosition(TSVector position,bool immediately)
+        public void SetPosition(TSVector position,PositionFromType fromType, bool immediately)
         {
             curPosition = position;
             SetViewPosition(position,immediately);
@@ -122,7 +130,9 @@ namespace Game
         public bool CanSetForward(ForwardFromType fromType)
         {
             //初始化设置方向，不判断是否禁止
-            return fromType == ForwardFromType.Init || !IsForbid(UnitForbidType.ForbidForward);
+            if (fromType == ForwardFromType.Init) return true;
+            if (fromType == ForwardFromType.Player && IsForbid(UnitForbidType.ForbidPlayerForward)) return false;
+            return !IsForbid(UnitForbidType.ForbidForward);
         }
 
         public void OnHurt(DamageInfo damageInfo)

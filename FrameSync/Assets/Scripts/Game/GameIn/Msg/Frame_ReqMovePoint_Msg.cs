@@ -16,7 +16,7 @@ namespace Game
             if (null != unit)
             {
                 TSVector targetPosition = GameInTool.ToTSVector(msg.targetPosition);
-                unit.Move(targetPosition);
+                unit.Move(targetPosition,MoveFromType.Player);
             }
         }
     }

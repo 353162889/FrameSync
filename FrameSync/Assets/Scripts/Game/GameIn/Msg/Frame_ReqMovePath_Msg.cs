@@ -17,7 +17,7 @@ namespace Game
             {
                 //这个移动是一帧处理的
                 List<TSVector> lstPath = GameInTool.ToLstTSVector(msg.paths);
-                unit.Move(lstPath);
+                unit.Move(lstPath,MoveFromType.Player);
             }
         }
     }

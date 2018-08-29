@@ -82,7 +82,7 @@ namespace Game
                     {
                         lst.Add(unit.curPosition + m_cRefreshData.points[i] - firstPoint);
                     }
-                    unit.Move(lst);
+                    unit.Move(lst,MoveFromType.Game);
                     ResetObjectPool<List<TSVector>>.Instance.SaveObject(lst);
                 }
                 unit.StartAI();
