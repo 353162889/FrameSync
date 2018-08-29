@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import sys
 import xlrd
 import xml.dom.minidom
@@ -119,7 +120,7 @@ def export_table_to_xml(table,generate_xml_dir,absolute_path = None,sheet_name =
     xml_name = name_cell.value + ".xml"
     generate_xml_path = os.path.join(generate_xml_dir,xml_name)
     f = open(generate_xml_path,'w')
-    f.write(str(doc.toprettyxml(encoding='utf-8'),encoding='utf-8'))
+    f.write(str(doc.toprettyxml(encoding='utf-8')))
     #doc.writexml(f)
     f.close()
     print("导出配置{0}-{1}到{2}".format(absolute_path, sheet_name, generate_xml_path))
