@@ -45,8 +45,7 @@ namespace Game
             {
                 targetForward = bornForward;
             }
-            CLog.LogError("SK_TemplateCreateRemoteAction需要重写远程ID");
-            var remote = BattleScene.Instance.CreateRemote(0, skill.host.campId, bornPosition, targetForward, skill.targetAgentId, skill.targetAgentType, skill.targetPosition, targetForward);
+            var remote = BattleScene.Instance.CreateRemote(skill.resInfo.template_create_remote_id, skill.host.campId, bornPosition, targetForward, skill.targetAgentId, skill.targetAgentType, skill.targetPosition, targetForward);
             //初始化远程属性
             remote.SetAttrValue((int)AttrType.Attack, host.GetAttrValue((int)AttrType.Attack));
             return BTActionResult.Ready;

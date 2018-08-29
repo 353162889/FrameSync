@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <editorPos>
+    <x>5010</x>
+    <y>5000</y>
+  </editorPos>
+  <enable>true</enable>
+  <data xsi:type="SkillData" />
+  <lstChild>
+    <NEData>
+      <editorPos>
+        <x>5009</x>
+        <y>5146</y>
+      </editorPos>
+      <enable>true</enable>
+      <data xsi:type="SK_TemplateCreateRemoteActionData">
+        <time>
+          <_serializedValue>0</_serializedValue>
+        </time>
+        <hangPoint>FirePos</hangPoint>
+        <useHangPoint>true</useHangPoint>
+      </data>
+    </NEData>
+  </lstChild>
+</NEData>

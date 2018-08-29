@@ -1,28 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <editorPos>
-    <x>5112</x>
-    <y>4790</y>
+    <x>5010</x>
+    <y>5000</y>
   </editorPos>
-  <data xsi:type="RemoteData">
-    <remoteId>1</remoteId>
-    <remoteDesc>测试远程</remoteDesc>
-    <remotePath>eff_bullet3</remotePath>
-    <remoteTarget>TargetForward</remoteTarget>
-  </data>
+  <enable>true</enable>
+  <data xsi:type="RemoteData" />
   <lstChild>
     <NEData>
       <editorPos>
-        <x>5094</x>
-        <y>4927</y>
+        <x>5021.5</x>
+        <y>5127</y>
       </editorPos>
-      <data xsi:type="BTTimeLineData" />
+      <enable>true</enable>
+      <data xsi:type="BTTimeLineData">
+        <startRunTime>
+          <_serializedValue>0</_serializedValue>
+        </startRunTime>
+      </data>
       <lstChild>
         <NEData>
           <editorPos>
-            <x>5108</x>
-            <y>5050</y>
+            <x>5011</x>
+            <y>5239</y>
           </editorPos>
+          <enable>true</enable>
           <data xsi:type="BTTimeDecoratorData">
             <time>
               <_serializedValue>0</_serializedValue>
@@ -31,33 +33,30 @@
           <lstChild>
             <NEData>
               <editorPos>
-                <x>5107</x>
-                <y>5170</y>
+                <x>5012</x>
+                <y>5365</y>
               </editorPos>
+              <enable>true</enable>
               <data xsi:type="BTParallelORData" />
               <lstChild>
                 <NEData>
                   <editorPos>
-                    <x>4970</x>
-                    <y>5461</y>
+                    <x>4810</x>
+                    <y>5493</y>
                   </editorPos>
-                  <data xsi:type="RM_ConstantVelocityActionData">
+                  <enable>true</enable>
+                  <data xsi:type="RM_TemplateConstantVelocityActionData">
                     <time>
                       <_serializedValue>0</_serializedValue>
                     </time>
-                    <speed>
-                      <_serializedValue>214748364800</_serializedValue>
-                    </speed>
-                    <maxDistance>
-                      <_serializedValue>257698037760</_serializedValue>
-                    </maxDistance>
                   </data>
                 </NEData>
                 <NEData>
                   <editorPos>
-                    <x>5258</x>
-                    <y>5456</y>
+                    <x>5128</x>
+                    <y>5498</y>
                   </editorPos>
+                  <enable>true</enable>
                   <data xsi:type="BTG_LastPosToCurPosSelectCompositeData">
                     <time>
                       <_serializedValue>0</_serializedValue>
@@ -68,17 +67,17 @@
                     <oneDuration>
                       <_serializedValue>0</_serializedValue>
                     </oneDuration>
-                    <totalObjMaxCount>9999</totalObjMaxCount>
+                    <totalObjMaxCount>1</totalObjMaxCount>
                     <oneObjMaxCount>1</oneObjMaxCount>
                     <selectType>UnitEnemy</selectType>
-                    <hangPoint />
                   </data>
                   <lstChild>
                     <NEData>
                       <editorPos>
-                        <x>5240</x>
-                        <y>5635</y>
+                        <x>5144</x>
+                        <y>5662</y>
                       </editorPos>
+                      <enable>true</enable>
                       <data xsi:type="BTG_HurtActionData">
                         <time>
                           <_serializedValue>0</_serializedValue>

@@ -1,19 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <editorPos>
-    <x>4996</x>
+    <x>5001</x>
     <y>4814</y>
   </editorPos>
-  <data xsi:type="AIData">
-    <id>1</id>
-    <aiDesc>AI测试</aiDesc>
-  </data>
+  <enable>true</enable>
+  <data xsi:type="AIData" />
   <lstChild>
     <NEData>
       <editorPos>
-        <x>4999</x>
+        <x>5004</x>
         <y>4983</y>
       </editorPos>
+      <enable>true</enable>
       <data xsi:type="BTRepeatDecoratorData">
         <times>0</times>
         <spaceTime>
@@ -23,9 +22,10 @@
       <lstChild>
         <NEData>
           <editorPos>
-            <x>5007</x>
-            <y>5124</y>
+            <x>5005</x>
+            <y>5127</y>
           </editorPos>
+          <enable>true</enable>
           <data xsi:type="UnitDoSkillActionData" />
         </NEData>
       </lstChild>

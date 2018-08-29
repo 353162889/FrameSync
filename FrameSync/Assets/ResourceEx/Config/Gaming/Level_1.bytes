@@ -1,18 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <editorPos>
-    <x>5109</x>
+    <x>5124</x>
     <y>4850</y>
   </editorPos>
   <enable>true</enable>
-  <data xsi:type="GamingData">
-    <id>1</id>
-    <aiDesc>刷新小兵</aiDesc>
-  </data>
+  <data xsi:type="GamingData" />
   <lstChild>
     <NEData>
       <editorPos>
-        <x>5111</x>
+        <x>5126</x>
         <y>4978</y>
       </editorPos>
       <enable>true</enable>
@@ -20,8 +17,8 @@
       <lstChild>
         <NEData>
           <editorPos>
-            <x>4816</x>
-            <y>5153</y>
+            <x>4831</x>
+            <y>5186</y>
           </editorPos>
           <enable>true</enable>
           <data xsi:type="GL_StartGameRefreshPlayerData">
@@ -56,7 +53,7 @@
         </NEData>
         <NEData>
           <editorPos>
-            <x>5012</x>
+            <x>5027</x>
             <y>5160</y>
           </editorPos>
           <enable>true</enable>
@@ -68,8 +65,8 @@
         </NEData>
         <NEData>
           <editorPos>
-            <x>5171</x>
-            <y>5166</y>
+            <x>5186</x>
+            <y>5199</y>
           </editorPos>
           <enable>true</enable>
           <data xsi:type="GL_PlayerAIChangeData">
@@ -81,8 +78,8 @@
         </NEData>
         <NEData>
           <editorPos>
-            <x>5348</x>
-            <y>5161</y>
+            <x>5397.5</x>
+            <y>5194</y>
           </editorPos>
           <enable>true</enable>
           <data xsi:type="BTTimeLineData">
@@ -93,8 +90,8 @@
           <lstChild>
             <NEData>
               <editorPos>
-                <x>5351</x>
-                <y>5334</y>
+                <x>5366</x>
+                <y>5367</y>
               </editorPos>
               <enable>true</enable>
               <data xsi:type="GL_PathRandomRefreshData">

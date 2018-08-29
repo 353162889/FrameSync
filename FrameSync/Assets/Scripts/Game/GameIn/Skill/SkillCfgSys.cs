@@ -30,6 +30,10 @@ namespace Game
         public NEData GetSkillData(int skillId)
         {
             var resInfo =  ResCfgSys.Instance.GetCfg<ResSkill>(skillId);
+            if(resInfo == null)
+            {
+                CLog.LogError("找不到ID="+skillId+"的技能配置");
+            }
             NEData neData = m_cNEDataLoader.Get(resInfo.logic_path);
             if(neData == null)
             {

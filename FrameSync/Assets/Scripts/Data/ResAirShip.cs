@@ -26,12 +26,16 @@ namespace GameData
 			attack = FP.FromSourceLong(long.Parse(node.Attribute("attack")));
 			move_speed = FP.FromSourceLong(long.Parse(node.Attribute("move_speed")));
 			skills = new List<int>();
-			string[] skillsArr = node.Attribute("skills").Split(',');
-			if (skillsArr != null || skillsArr.Length > 0)
+			string str_skills = node.Attribute("skills");
+			if(!string.IsNullOrEmpty(str_skills))
 			{
-				for (int i = 0; i < skillsArr.Length; i++)
+				string[] skillsArr = str_skills.Split(',');
+				if (skillsArr != null || skillsArr.Length > 0)
 				{
-					skills.Add(int.Parse(skillsArr[i]));
+					for (int i = 0; i < skillsArr.Length; i++)
+					{
+						skills.Add(int.Parse(skillsArr[i]));
+					}
 				}
 			}
 			ai_path = node.Attribute("ai_path");
