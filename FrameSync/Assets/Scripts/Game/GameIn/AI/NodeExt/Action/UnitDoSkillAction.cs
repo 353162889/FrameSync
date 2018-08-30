@@ -27,7 +27,7 @@ namespace Game
         public override BTActionResult OnRun(AIBlackBoard blackBoard)
         {
             if (m_cUnit == null) return BTActionResult.Ready;
-            var lst = m_cUnit.lstSkill;
+            var lst = m_cUnit.lstActiveSkill;
             for (int i = 0; i < lst.Count; i++)
             {
                 if(m_cUnit.CanDoSkill(lst[i].skillId,SkillFromType.AI))

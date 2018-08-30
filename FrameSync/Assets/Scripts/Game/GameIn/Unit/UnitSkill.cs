@@ -18,6 +18,8 @@ namespace Game
     {
         protected SkillExecutor m_cSkillExecutor;
         public List<Skill> lstSkill { get { return m_cSkillExecutor.lstSkill; } }
+        public List<Skill> lstActiveSkill { get { return m_cSkillExecutor.lstActiveSkill; } }
+        public List<Skill> lstPassiveSkill { get { return m_cSkillExecutor.lstPassiveSkill; } }
         public List<Skill> lstCurSkill { get { return m_cSkillExecutor.lstCurSkill; } }
 
         public void ReqDoSkill(int skillId,uint targetAgentId,AgentObjectType targetAgentType,TSVector position,TSVector forward)

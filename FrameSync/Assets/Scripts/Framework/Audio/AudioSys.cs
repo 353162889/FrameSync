@@ -8,7 +8,7 @@ namespace Framework
 {
     public class AudioSys : SingletonMonoBehaviour<AudioSys>
     {
-        private static int MaxAudioCount = 3;
+        private static int MaxAudioCount = 30;
         private GameObject m_cAudioListenerObj;
         private float[] m_arrVolume;
         
@@ -46,7 +46,7 @@ namespace Framework
             m_lstQueue = new LinkedList<AudioChannelSource>();
             for (int i = 0; i < MaxAudioCount; i++)
             {
-                AudioChannelSource audioChannelSource = new AudioChannelSource();
+                AudioChannelSource audioChannelSource = new AudioChannelSource(i);
                 audioChannelSource.OnStartPlay += OnStartPlay;
                 audioChannelSource.OnStopPlay += OnStopPlay;
                 m_lstQueue.AddLast(audioChannelSource);
@@ -73,29 +73,33 @@ namespace Framework
 
        
 
-        public void Play(string path, AudioChannelType channelType, bool loop, int priority)
+        public int Play(string path, AudioChannelType channelType, bool loop, int priority)
         {
-            Play(path, channelType, loop, priority, Vector3.zero);
+            return Play(path, channelType, loop, priority, Vector3.zero);
         }
 
-        public void Play(string path, AudioChannelType channelType, bool loop, int priority,Vector3 pos)
+        public int Play(string path, AudioChannelType channelType, bool loop, int priority,Vector3 pos)
         {
             AudioChannelSource audioSource = GetChannelSource();
             if(audioSource != null)
             {
                 audioSource.SetVolume(m_arrVolume[(int)channelType]);
                 audioSource.Play(path, channelType, loop, priority, pos);
+                return audioSource.key;
             }
+            return -1;
         }
 
-        public void Play(string path, AudioChannelType channelType, bool loop, int priority, Transform trans)
+        public int Play(string path, AudioChannelType channelType, bool loop, int priority, Transform trans)
         {
             AudioChannelSource audioSource = GetChannelSource();
             if (audioSource != null)
             {
                 audioSource.SetVolume(m_arrVolume[(int)channelType]);
                 audioSource.Play(path, channelType, loop, priority, trans);
+                return audioSource.key;
             }
+            return -1;
         }
 
         public void SetVolume(float volume)
@@ -126,14 +130,24 @@ namespace Framework
             }
         }
 
-        public void Stop(string path)
+        public void Stop(string path,int key = -1)
         {
             var node = m_lstQueue.First;
             while (node != null)
             {
-                if (node.Value.path == path)
+                if (key > -1)
                 {
-                    node.Value.Stop();
+                    if(node.Value.key == key &&node.Value.path == path)
+                    {
+                        node.Value.Stop();
+                    }
+                }
+                else
+                {
+                    if (node.Value.path == path)
+                    {
+                        node.Value.Stop();
+                    }
                 }
                 node = node.Next;
             }

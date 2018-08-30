@@ -9,7 +9,7 @@ namespace EditorPackage
 {
     public class PackageWindow : EditorWindow
     {
-        [MenuItem("Tools/Package/PackageWindow _F2")]
+        [MenuItem("Tools/Package/PackageWindow _F3")]
         static void OpenPackageWindow()
         {
             EditorWindow.GetWindow<PackageWindow>().Show();

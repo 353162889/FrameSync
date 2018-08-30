@@ -9,10 +9,28 @@ namespace Game
     public partial class Unit
     {
         private AgentObjectAI m_cAgentObjectAI;
+        public List<int> lstSelectAISkill { get { return m_lstSelectAISkill; } }
+        private List<int> m_lstSelectAISkill;
         public bool isAIRunning { get { return m_cAgentObjectAI.start; } }
         public void InitAI()
         {
-            m_cAgentObjectAI = new AgentObjectAI();
+            if (m_cAgentObjectAI == null)
+            {
+                m_cAgentObjectAI = new AgentObjectAI();
+            }
+            if (m_lstSelectAISkill == null)
+            {
+                m_lstSelectAISkill = new List<int>();
+            }
+        }
+
+        public void SetAISkill(List<int> lstSkill)
+        {
+            m_lstSelectAISkill.Clear();
+            for (int i = 0; i < lstSkill.Count; i++)
+            {
+                m_lstSelectAISkill.Add(lstSkill[i]);
+            }
         }
 
         public void SetAI(string aiPath)
@@ -45,6 +63,10 @@ namespace Game
             if (m_cAgentObjectAI != null)
             {
                 m_cAgentObjectAI.Clear();
+            }
+            if(m_lstSelectAISkill != null)
+            {
+                m_lstSelectAISkill.Clear();
             }
         }
 

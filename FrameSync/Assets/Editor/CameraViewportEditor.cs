@@ -37,7 +37,9 @@ public class CameraViewportEditor : Editor
                 return;
             }
 
-            float radio = 750f / 1334f;
+            //float radio = 750f / 1334f;
+            //float radio = 1 / 2f;
+            float radio = 10 / 16f;//最大的手机宽度比
             float height;
             float width;
             if (camera.orthographic)

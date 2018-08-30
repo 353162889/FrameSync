@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <editorPos>
+    <x>5019</x>
+    <y>4822</y>
+  </editorPos>
+  <enable>true</enable>
+  <data xsi:type="SkillData" />
+  <lstChild>
+    <NEData>
+      <editorPos>
+        <x>5018</x>
+        <y>4954</y>
+      </editorPos>
+      <enable>true</enable>
+      <data xsi:type="BTRepeatDecoratorData">
+        <times>0</times>
+        <spaceTime>
+          <_serializedValue>0</_serializedValue>
+        </spaceTime>
+      </data>
+      <lstChild>
+        <NEData>
+          <editorPos>
+            <x>5023</x>
+            <y>5109</y>
+          </editorPos>
+          <enable>true</enable>
+          <data xsi:type="BTG_SelfColliderSelectCompositeData">
+            <time>
+              <_serializedValue>0</_serializedValue>
+            </time>
+            <totalDuration>
+              <_serializedValue>0</_serializedValue>
+            </totalDuration>
+            <oneDuration>
+              <_serializedValue>0</_serializedValue>
+            </oneDuration>
+            <totalObjMaxCount>1</totalObjMaxCount>
+            <oneObjMaxCount>1</oneObjMaxCount>
+            <selectType>UnitEnemy</selectType>
+          </data>
+          <lstChild>
+            <NEData>
+              <editorPos>
+                <x>5018</x>
+                <y>5262</y>
+              </editorPos>
+              <enable>true</enable>
+              <data xsi:type="BTG_BodyCollideHurtActionData">
+                <time>
+                  <_serializedValue>0</_serializedValue>
+                </time>
+                <actionTarget>All</actionTarget>
+              </data>
+            </NEData>
+          </lstChild>
+        </NEData>
+      </lstChild>
+    </NEData>
+  </lstChild>
+</NEData>

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-	<resskill cd="429496729" id="1" logic_path="Config/Skill/Template_Create_Remote.bytes" name="创建子弹1" target_type="TargetForward" template_create_remote_id="1"/>
+	<resskill cd="429496729" id="1" logic_path="Config/Skill/Template_Create_Remote.bytes" name="创建子弹1" target_type="TargetForward" template_create_remote_id="1" type="Active"/>
+	<resskill cd="0" id="2" logic_path="Config/Skill/Template_Body_Collide.bytes" name="碰撞伤害" target_type="None" template_create_remote_id="0" type="Passive"/>
 </root>

@@ -31,7 +31,7 @@ namespace Game
             AgentObject target = null;
             if (actionTarget == BTActionTarget.Host) target = blackBoard.host;
             else if (actionTarget == BTActionTarget.SelectTarget) target = blackBoard.selectAgentObjInfo.agentObj;
-            if (target != null && target.agentType == AgentObjectType.Unit)
+            if (target != null && target.agentType == AgentObjectType.Unit && target.agent != null)
             {
                 Unit unit = (Unit)target.agent;
                 unit.OnUnitHurt += OnUnitHurt;

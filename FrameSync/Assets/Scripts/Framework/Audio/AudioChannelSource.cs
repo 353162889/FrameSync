@@ -16,11 +16,20 @@ namespace Framework
 
     public class AudioChannelSource
     {
+        public static AudioChannelType GetChannelTypeByString(string str)
+        {
+            if (str == "BG") return AudioChannelType.BG;
+            else if (str == "UI") return AudioChannelType.UI;
+            else if (str == "Scene") return AudioChannelType.Scene;
+            return AudioChannelType.UI;
+        }
         public static int MaxPriority = 10000;
         public delegate void AudioChannelHandler(AudioChannelSource audioChannelSource);
         public event AudioChannelHandler OnStartPlay;
         public event AudioChannelHandler OnStopPlay;
 
+        public int key { get { return m_nKey; } }
+        private int m_nKey;
         public Transform transform { get { return m_cTransform; } }
         private Transform m_cTransform;
         private AudioSource m_cAudioSource;
@@ -40,8 +49,9 @@ namespace Framework
         private float m_fCurVolumeTime;
         private float m_fTargetVolumeTime;
         
-        public AudioChannelSource()
+        public AudioChannelSource(int key)
         {
+            m_nKey = key;
             GameObject go = new GameObject();
             go.name = "AudioChannelSource";
             m_cAudioSource = go.AddComponent<AudioSource>();

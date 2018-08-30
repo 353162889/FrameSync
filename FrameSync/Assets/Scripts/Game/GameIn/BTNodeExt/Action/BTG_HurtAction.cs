@@ -36,7 +36,7 @@ namespace Game
             else if (actionTarget == BTActionTarget.SelectTarget) target = blackBoard.selectAgentObjInfo.agentObj;
             if (target != null)
             {
-                if(target.agentType == AgentObjectType.Unit)
+                if(target.agentType == AgentObjectType.Unit && target.agent != null)
                 {
                     var unit = (Unit)target.agent;
                     var damageInfo = ObjectPool<DamageInfo>.Instance.GetObject();
@@ -46,10 +46,6 @@ namespace Game
                     damageInfo.damage = attack;
                     unit.OnHurt(damageInfo);
                     ObjectPool<DamageInfo>.Instance.SaveObject(damageInfo);
-                }
-                else
-                {
-                    CLog.LogError("非unit不能执行HurtAction");
                 }
             }
             return BTActionResult.Ready;

@@ -45,7 +45,7 @@ namespace Game
             if(!m_moveEnd)
             {
                 
-                if(blackBoard.host.agentType == AgentObjectType.Unit)
+                if(blackBoard.host.agentType == AgentObjectType.Unit && blackBoard.host.agent != null)
                 {
                     Unit unit = (Unit)blackBoard.host.agent;
                     var lst = ResetObjectPool<List<TSVector>>.Instance.GetObject();
@@ -75,7 +75,7 @@ namespace Game
 
         public override BTActionResult OnRun(SkillBlackBoard blackBoard)
         {
-            if(m_moveEnd)
+            if(m_moveEnd || blackBoard.host.agent == null)
             {
                 return BTActionResult.Ready;
             }
@@ -92,7 +92,7 @@ namespace Game
 
         public override void OnExit(SkillBlackBoard blackBoard)
         {
-            if (blackBoard.host.agentType == AgentObjectType.Unit)
+            if (blackBoard.host.agentType == AgentObjectType.Unit && blackBoard.host.agent != null)
             {
                 Unit unit = (Unit)blackBoard.host.agent;
                 unit.OnUnitMoveStop -= OnOneMoveStop;

@@ -14,9 +14,11 @@ namespace GameData
 		public FP hp { get; private set; }
 		public FP attack { get; private set; }
 		public FP move_speed { get; private set; }
-		public List<int> skills { get; private set; }
+		public List<int> active_skills { get; private set; }
+		public List<int> passive_skills { get; private set; }
 		public string ai_path { get; private set; }
 		public string die_effect { get; private set; }
+		public int die_audio { get; private set; }
 		public ResAirShip(SecurityElement node)
 		{
 			id = int.Parse(node.Attribute("id"));
@@ -25,21 +27,35 @@ namespace GameData
 			hp = FP.FromSourceLong(long.Parse(node.Attribute("hp")));
 			attack = FP.FromSourceLong(long.Parse(node.Attribute("attack")));
 			move_speed = FP.FromSourceLong(long.Parse(node.Attribute("move_speed")));
-			skills = new List<int>();
-			string str_skills = node.Attribute("skills");
-			if(!string.IsNullOrEmpty(str_skills))
+			active_skills = new List<int>();
+			string str_active_skills = node.Attribute("active_skills");
+			if(!string.IsNullOrEmpty(str_active_skills))
 			{
-				string[] skillsArr = str_skills.Split(',');
-				if (skillsArr != null || skillsArr.Length > 0)
+				string[] active_skillsArr = str_active_skills.Split(',');
+				if (active_skillsArr != null || active_skillsArr.Length > 0)
 				{
-					for (int i = 0; i < skillsArr.Length; i++)
+					for (int i = 0; i < active_skillsArr.Length; i++)
 					{
-						skills.Add(int.Parse(skillsArr[i]));
+						active_skills.Add(int.Parse(active_skillsArr[i]));
+					}
+				}
+			}
+			passive_skills = new List<int>();
+			string str_passive_skills = node.Attribute("passive_skills");
+			if(!string.IsNullOrEmpty(str_passive_skills))
+			{
+				string[] passive_skillsArr = str_passive_skills.Split(',');
+				if (passive_skillsArr != null || passive_skillsArr.Length > 0)
+				{
+					for (int i = 0; i < passive_skillsArr.Length; i++)
+					{
+						passive_skills.Add(int.Parse(passive_skillsArr[i]));
 					}
 				}
 			}
 			ai_path = node.Attribute("ai_path");
 			die_effect = node.Attribute("die_effect");
+			die_audio = int.Parse(node.Attribute("die_audio"));
 		}
 	}
 }

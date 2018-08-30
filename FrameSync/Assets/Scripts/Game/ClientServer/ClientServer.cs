@@ -40,7 +40,7 @@ namespace Game
             Frame_CreatePlayer_Data createPlayerData = new Frame_CreatePlayer_Data();
             createPlayerData.playerId = 1;
             createPlayerData.campId = (int)CampType.Camp1;
-            createPlayerData.configId = 3;
+            createPlayerData.configId = 9001;
             NetSys.Instance.SendMsg(NetChannelType.Game, (short)PacketOpcode.Frame_CreatePlayer, createPlayerData);
 
             //Frame_CreatePlayer_Data createOtherPlayerData = new Frame_CreatePlayer_Data();

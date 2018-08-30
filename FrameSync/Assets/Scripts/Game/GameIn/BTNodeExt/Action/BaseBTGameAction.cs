@@ -12,6 +12,7 @@ namespace Game
     {
         Host,   //当前宿主
         SelectTarget,//当前选择的目标
+        All,//双方
     }
 
     [NENodeCategory("BTGame/Action")]

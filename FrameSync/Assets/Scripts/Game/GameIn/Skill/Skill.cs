@@ -9,6 +9,21 @@ using System.Text;
 
 namespace Game
 {
+    public enum SkillTargetType
+    {
+        None,
+        Target,
+        TargetPosition,
+        TargetForward,
+    }
+
+    //技能类型
+    public enum SkillType
+    {
+        Active,     //主动
+        Passive,    //被动
+    }
+
     public class Skill
     {
         public static NETreeComposeType SkillComposeType = new NETreeComposeType(typeof(SkillTree), new List<Type> { typeof(SkillNodeAttribute), typeof(BTNodeAttribute), typeof(BTGameNodeAttribute) }, "Assets/ResourceEx/Config/Skill", "skill", "bytes", "技能");
@@ -29,7 +44,9 @@ namespace Game
         }
 
         public int skillId { get { return m_cResInfo.id; } }
-        private SkillTargetType m_eTargetType;
+        private SkillType m_eSkillType;
+        public SkillType skillType { get { return m_eSkillType; } }
+        public SkillTargetType m_eTargetType;
         public SkillTargetType targetType { get { return m_eTargetType; } }
         public FP cd { get { return m_cResInfo.cd; } }
         public AgentObject host { get { return m_cHost; } }
@@ -65,6 +82,7 @@ namespace Game
             m_cSkillData = m_cNEData.data as SkillData;
             m_cSkillTree = CreateNode(m_cNEData) as SkillTree;
             m_cSkillTree.Clear();
+            m_eSkillType = (SkillType)Enum.Parse(typeof(SkillType), m_cResInfo.type);
             m_eTargetType = (SkillTargetType)Enum.Parse(typeof(SkillTargetType), m_cResInfo.target_type);
             m_bIsDo = false;
             m_sStartTime = -1000;

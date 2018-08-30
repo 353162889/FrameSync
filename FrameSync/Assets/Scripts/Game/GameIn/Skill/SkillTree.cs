@@ -9,12 +9,6 @@ using System.Text;
 
 namespace Game
 {
-    public enum SkillTargetType
-    {
-        Target,
-        TargetPosition,
-        TargetForward,
-    }
     public class SkillData
     {
     }

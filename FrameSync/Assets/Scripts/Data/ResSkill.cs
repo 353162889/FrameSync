@@ -10,6 +10,7 @@ namespace GameData
 		[ResCfgKey]
 		public int id { get; private set; }
 		public string name { get; private set; }
+		public string type { get; private set; }
 		public string target_type { get; private set; }
 		public FP cd { get; private set; }
 		public string logic_path { get; private set; }
@@ -18,6 +19,7 @@ namespace GameData
 		{
 			id = int.Parse(node.Attribute("id"));
 			name = node.Attribute("name");
+			type = node.Attribute("type");
 			target_type = node.Attribute("target_type");
 			cd = FP.FromSourceLong(long.Parse(node.Attribute("cd")));
 			logic_path = node.Attribute("logic_path");

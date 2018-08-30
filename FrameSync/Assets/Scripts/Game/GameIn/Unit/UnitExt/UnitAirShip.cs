@@ -25,11 +25,24 @@ namespace Game
             this.hp = this.hpLmt;
             this.attack = m_resInfo.attack;
             this.moveSpeed = m_resInfo.move_speed;
-            for (int i = 0; i < m_resInfo.skills.Count; i++)
+            for (int i = 0; i < m_resInfo.active_skills.Count; i++)
             {
-                AddSkill(m_resInfo.skills[i]);
+                AddSkill(m_resInfo.active_skills[i]);
             }
-            if(!string.IsNullOrEmpty(m_resInfo.ai_path))
+            
+            if(m_resInfo.active_skills.Count > 0)
+            {
+                var lst = ResetObjectPool<List<int>>.Instance.GetObject();
+                lst.Add(m_resInfo.active_skills[0]);
+                SetAISkill(lst);
+                ResetObjectPool<List<int>>.Instance.SaveObject(lst);
+            }
+            
+            for (int i = 0; i < m_resInfo.passive_skills.Count; i++)
+            {
+                AddSkill(m_resInfo.passive_skills[i]);
+            }
+            if (!string.IsNullOrEmpty(m_resInfo.ai_path))
             {
                 this.SetAI(m_resInfo.ai_path);
             }

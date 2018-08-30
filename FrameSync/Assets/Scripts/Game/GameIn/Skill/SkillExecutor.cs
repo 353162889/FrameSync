@@ -12,12 +12,18 @@ namespace Game
         private AgentObject m_cAgentObject;
         public List<Skill> lstSkill { get { return m_lstSkill; } }
         private List<Skill> m_lstSkill;
+        public List<Skill> lstActiveSkill { get { return m_lstActiveskill; } }
+        private List<Skill> m_lstActiveskill;
+        public List<Skill> lstPassiveSkill { get { return m_lstPassiveSkill; } }
+        private List<Skill> m_lstPassiveSkill;
         public List<Skill> lstCurSkill { get { return m_lstCurSkill; } }
         private List<Skill> m_lstCurSkill;
         public SkillExecutor()
         {
             m_lstSkill = new List<Skill>();
             m_lstCurSkill = new List<Skill>();
+            m_lstActiveskill = new List<Skill>();
+            m_lstPassiveSkill = new List<Skill>();
         }
 
         public void Init(AgentObject agentObject)
@@ -37,12 +43,40 @@ namespace Game
             {
                 skill.Init(m_cAgentObject);
                 m_lstSkill.Add(skill);
+                if(skill.skillType == SkillType.Active)
+                {
+                    m_lstActiveskill.Add(skill);
+                }
+                else if(skill.skillType == SkillType.Passive)
+                {
+                    m_lstPassiveSkill.Add(skill);
+                    Do(skill, 0, AgentObjectType.Unit, TSVector.zero, TSVector.forward);
+                }
             }
         }
 
         public void RemoveSkill(int skillId)
         {
             Break(skillId);
+            for (int i = m_lstPassiveSkill.Count - 1 ; i > -1; i--)
+            {
+                var skill = m_lstPassiveSkill[i];
+                if (skill.skillId == skillId)
+                {
+                    m_lstPassiveSkill.RemoveAt(i);
+                    break;
+                }
+            }
+
+            for (int i = m_lstActiveskill.Count; i > -1; i--)
+            {
+                var skill = m_lstActiveskill[i];
+                if (skill.skillId == skillId)
+                {
+                    m_lstPassiveSkill.RemoveAt(i);
+                    break;
+                }
+            }
             for (int i = m_lstSkill.Count - 1; i > -1; i--)
             {
                 var skill = m_lstSkill[i];
@@ -147,6 +181,8 @@ namespace Game
         public void Clear()
         {
             BreakAll();
+            m_lstActiveskill.Clear();
+            m_lstPassiveSkill.Clear();
             for (int i = 0; i < m_lstSkill.Count; i++)
             {
                 SkillPool.Instance.SaveSkill(m_lstSkill[i].skillId, m_lstSkill[i]);

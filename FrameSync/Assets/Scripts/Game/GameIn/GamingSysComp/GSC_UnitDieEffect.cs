@@ -22,6 +22,10 @@ namespace Game
                 UnitAirShip airShip = (UnitAirShip)unit;
                 var effect = SceneEffectPool.Instance.CreateEffect(airShip.resInfo.die_effect, true, null);
                 effect.transform.position = unit.curPosition.ToUnityVector3();
+                if (airShip.resInfo.die_audio > 0)
+                {
+                    GameAudioSys.Instance.Play(airShip.resInfo.die_audio);
+                }
             }
         }
 
