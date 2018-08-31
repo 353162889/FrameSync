@@ -106,6 +106,11 @@ namespace Framework
             return !(position.x < xMin || position.x > xMax || position.y < yMin || position.y > yMax);
         }
 
+        public bool Contains(FP x,FP y)
+        {
+            return !(x < xMin || x > xMax || y < yMin || y > yMax);
+        }
+
         public static TSRect FromUnityRect(Rect rect)
         {
             return new TSRect(FP.FromFloat(rect.x),FP.FromFloat(rect.y),FP.FromFloat(rect.width),FP.FromFloat(rect.height));

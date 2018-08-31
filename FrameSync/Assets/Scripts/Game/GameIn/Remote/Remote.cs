@@ -201,7 +201,7 @@ namespace Game
             }
         }
 
-        protected void End()
+        public void End()
         {
             m_cRemoteTree.Clear();
             m_cBlackBoard.Clear();

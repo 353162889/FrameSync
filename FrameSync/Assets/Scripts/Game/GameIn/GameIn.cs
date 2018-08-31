@@ -54,7 +54,7 @@ namespace Game
         {
             //出事化战斗场景数据
             BattleScene.Instance.Init(BattleInfo.sceneId);
-            CameraSys.Instance.Init();
+            CameraSys.Instance.Init(BattleScene.Instance.viewRect.ToUnityRect());
         }
 
         private void OnJoinScene(CommandBase obj)

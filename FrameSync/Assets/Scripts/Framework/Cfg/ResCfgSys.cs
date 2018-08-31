@@ -56,6 +56,7 @@ namespace Framework
 
         public void LoadResCfgs(string resDir, Action OnFinish = null)
         {
+            Dispose();
             m_finishAction = OnFinish;
             m_dicCfgInfo = new Dictionary<string, ResCfgInfo>();
             resDir = resDir.Replace('\\', '/');

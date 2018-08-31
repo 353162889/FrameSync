@@ -20,15 +20,18 @@ namespace Game
         protected long m_lHeight;
 
         protected TSRect m_sRect = TSRect.zero;
-        public TSRect mRect {
-            get {
-                if(m_sRect == TSRect.zero)
+        public TSRect mRect
+        {
+            get
+            {
+                if (m_sRect == TSRect.zero)
                 {
-                    m_sRect = new TSRect(FP.FromSourceLong(m_lX),FP.FromSourceLong(m_lY),FP.FromSourceLong(m_lWidth),FP.FromSourceLong(m_lHeight));
+                    m_sRect = new TSRect(FP.FromSourceLong(m_lX), FP.FromSourceLong(m_lY), FP.FromSourceLong(m_lWidth), FP.FromSourceLong(m_lHeight));
                 }
                 return m_sRect;
             }
-            set {
+            set
+            {
                 m_sRect = value;
                 m_lX = m_sRect.x._serializedValue;
                 m_lY = m_sRect.y._serializedValue;

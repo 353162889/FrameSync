@@ -13,14 +13,10 @@ namespace Game
         public Camera mainCamera { get { return m_cMainCamera; } }
         private Transform m_cCameraParentTrans;
 
-        //当前相机的逻辑视口
-        public CameraViewport cameraViewPort { get { return m_cCameraViewPort; } }
-        private CameraViewport m_cCameraViewPort;
-
         private float m_fSceneScreenRate;
         private string m_sPath;
 
-        public void Init()
+        public void Init(Rect viewRect)
         {
             //进入场景时保证预加载相机资源
             //初始化相机
@@ -28,9 +24,11 @@ namespace Game
             var go = (GameObject)SceneGOPool.Instance.GetObject(m_sPath,false, null);
             go.Reset();
             m_cCameraParentTrans = go.transform;
+            m_cCameraParentTrans.position = Vector3.zero;
+            m_cCameraParentTrans.eulerAngles = Vector3.zero;
             m_cMainCamera = m_cCameraParentTrans.GetComponentInChildren<Camera>();
-            m_cCameraViewPort = m_cCameraParentTrans.GetComponent<CameraViewport>();
-            InitViewPort();
+            InitViewPort(viewRect);
+            UpdateViewPort();
             GlobalEventDispatcher.Instance.AddEvent(GameEvent.ResolutionUpdate, OnReolutionUpdate);
         }
 
@@ -42,10 +40,24 @@ namespace Game
 
         private void OnReolutionUpdate(object args)
         {
-            InitViewPort();
+            UpdateViewPort();
         }
 
-        private void InitViewPort()
+        private void InitViewPort(Rect rect)
+        {
+            if (m_cMainCamera.orthographic)
+            {
+                m_cMainCamera.orthographicSize = rect.height / 2;
+            }
+            else
+            {
+                float len = (m_cMainCamera.transform.position - Vector3.zero).magnitude;
+                float angle = Mathf.Rad2Deg * Mathf.Atan2(rect.height / 2, len);
+                m_cMainCamera.fieldOfView = angle * 2;
+            }
+        }
+
+        private void UpdateViewPort()
         {
             float radio = (float)Screen.width / Screen.height;
             float height;

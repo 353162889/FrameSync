@@ -98,7 +98,8 @@ namespace Game
                         TSVector2 dir = new TSVector2(FP.FromFloat(curOffset.x), FP.FromFloat(curOffset.y));
                         dir.Normalize();
                         //FP dis =TSMath.Min(CameraSys.Instance.cameraViewPort.mRect.halfWidth, CameraSys.Instance.cameraViewPort.mRect.halfHeight);
-                        FP dis = TSMath.Max(CameraSys.Instance.cameraViewPort.mRect.width, CameraSys.Instance.cameraViewPort.mRect.height) * 10;
+                        var viewRect = BattleScene.Instance.viewRect;
+                        FP dis = TSMath.Max(viewRect.width, viewRect.height) * 10;
 
                         TSVector2 end = start + dir * dis;
                         TSVector2 hitPoint;
@@ -158,7 +159,7 @@ namespace Game
         {
             hitPoint = start;
             resultPoint = end;
-            TSRect rect = CameraSys.Instance.cameraViewPort.mRect;
+            TSRect rect = BattleScene.Instance.viewRect;
             if (rect.Contains(end)) return false;
             TSVector2 result;
             var dir = (end - start);

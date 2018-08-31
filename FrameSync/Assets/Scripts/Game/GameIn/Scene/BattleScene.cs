@@ -43,6 +43,8 @@ namespace Game
 
         private ResScene m_cResScene;
         public ResScene resSceneInfo { get { return m_cResScene; } }
+        private TSRect m_sViewRect;
+        public TSRect viewRect { get { return m_sViewRect; } }
 
         private GameObject m_cUnitRoot;
         public GameObject unitRoot { get { return m_cUnitRoot; } }
@@ -75,6 +77,7 @@ namespace Game
                 CLog.LogError("找不到sceneId="+m_nSceneId+"的场景配置");
                 return;
             }
+            m_sViewRect = new TSRect(-m_cResScene.view_width / 2, -m_cResScene.view_height / 2, m_cResScene.view_width, m_cResScene.view_height);
             m_cUnitRoot = new GameObject("UnitRoot");
             m_cUnitRoot.name = "UnitRoot";
             GameObject.DontDestroyOnLoad(m_cUnitRoot);
@@ -242,6 +245,10 @@ namespace Game
         {
             Remote remote = (Remote)obj;
             remote.OnUpdate((FP)param);
+            if(!viewRect.Contains(remote.curPosition.x,remote.curPosition.z))
+            {
+                remote.End();
+            }
         }
 
         public Unit CreateUnit(int configId,int campId, UnitType type, TSVector bornPosition, TSVector bornForward)
