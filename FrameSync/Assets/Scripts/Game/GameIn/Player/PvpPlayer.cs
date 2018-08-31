@@ -36,6 +36,7 @@ namespace Game
             if(unit == m_cUnit)
             {
                 m_cUnit = null;
+                GlobalEventDispatcher.Instance.Dispatch(GameEvent.PvpPlayerUnitDie, this);
                 CreateUnit(m_sBornPos);
                 m_cUnit.Forbid(UnitForbidType.ForbidForward, UnitForbidFromType.Game);
                 if (m_bAIEnable)

@@ -10,6 +10,7 @@ namespace Framework
 {
     public class UIJoystick : MonoBehaviour
     {
+        private static float Epsilon6 = 1e-6f;
         public delegate void JoystickHandler(Vector2 screenPos, Vector2 offset,Vector2 delta);
         public event JoystickHandler OnBegin;
         public event JoystickHandler OnMove;//点击不动也算move
@@ -223,7 +224,7 @@ namespace Framework
                         direct.Normalize();
                         Vector2 preDirect = (m_preScreenPosition - m_startScreenPosition);
                         preDirect.Normalize();
-                        if (!Mathf.Approximately(preDirect.x - direct.x, 0) || !Mathf.Approximately(preDirect.y - direct.y, 0))
+                        if (Mathf.Abs(preDirect.x - direct.x) > Epsilon6 || Mathf.Abs(preDirect.y - direct.y) > Epsilon6)
                         {
                             Vector2 localPosition = m_defaultAnchorPosition + direct * m_fMoveRadius;
                             UpdateMovePosition(localPosition);

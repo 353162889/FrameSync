@@ -34,8 +34,8 @@ namespace Game
             m_nLastWidth = Screen.width;
             m_nLastHeight = Screen.height;
             Application.runInBackground = true;
-            GL.Clear(false, true, Color.black);
             Screen.orientation = ScreenOrientation.Portrait;
+            Application.targetFrameRate = 200;
         }
         void Start()
         {

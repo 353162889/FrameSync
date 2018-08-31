@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <editorPos>
-    <x>5144</x>
+    <x>5184</x>
     <y>4850</y>
   </editorPos>
   <enable>true</enable>
@@ -9,7 +9,7 @@
   <lstChild>
     <NEData>
       <editorPos>
-        <x>5146</x>
+        <x>5186</x>
         <y>4978</y>
       </editorPos>
       <enable>true</enable>
@@ -17,8 +17,8 @@
       <lstChild>
         <NEData>
           <editorPos>
-            <x>4851</x>
-            <y>5230</y>
+            <x>4891</x>
+            <y>5318</y>
           </editorPos>
           <enable>true</enable>
           <data xsi:type="GL_StartGameRefreshPlayerData">
@@ -53,20 +53,20 @@
         </NEData>
         <NEData>
           <editorPos>
-            <x>5051</x>
-            <y>5238</y>
+            <x>5077</x>
+            <y>5317</y>
           </editorPos>
           <enable>true</enable>
           <data xsi:type="BTWaitTimeData">
             <time>
-              <_serializedValue>8589934592</_serializedValue>
+              <_serializedValue>4294967296</_serializedValue>
             </time>
           </data>
         </NEData>
         <NEData>
           <editorPos>
-            <x>5206</x>
-            <y>5243</y>
+            <x>5229</x>
+            <y>5326</y>
           </editorPos>
           <enable>true</enable>
           <data xsi:type="GL_PlayerAIChangeData">
@@ -78,8 +78,8 @@
         </NEData>
         <NEData>
           <editorPos>
-            <x>5341</x>
-            <y>5245</y>
+            <x>5381</x>
+            <y>5333</y>
           </editorPos>
           <enable>true</enable>
           <data xsi:type="GL_PlayAudioData">
@@ -94,8 +94,8 @@
         </NEData>
         <NEData>
           <editorPos>
-            <x>5489</x>
-            <y>5244</y>
+            <x>5579</x>
+            <y>5338</y>
           </editorPos>
           <enable>true</enable>
           <data xsi:type="BTTimeLineData">
@@ -106,8 +106,8 @@
           <lstChild>
             <NEData>
               <editorPos>
-                <x>5478</x>
-                <y>5380</y>
+                <x>5583</x>
+                <y>5490</y>
               </editorPos>
               <enable>true</enable>
               <data xsi:type="GL_PathRandomRefreshData">

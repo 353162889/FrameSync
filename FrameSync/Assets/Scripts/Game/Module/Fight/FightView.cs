@@ -69,7 +69,7 @@ namespace Game
             }
         }
 
-        private Vector3 startPosition;
+        private Vector3 startPosition = Vector3.positiveInfinity;
         private void OnJoystickBegin(Vector2 screenPos, Vector2 offset,Vector2 delta)
         {
             //SetJoystickActive(true);
@@ -98,7 +98,7 @@ namespace Game
                         TSVector2 dir = new TSVector2(FP.FromFloat(curOffset.x), FP.FromFloat(curOffset.y));
                         dir.Normalize();
                         //FP dis =TSMath.Min(CameraSys.Instance.cameraViewPort.mRect.halfWidth, CameraSys.Instance.cameraViewPort.mRect.halfHeight);
-                        FP dis = TSMath.Max(CameraSys.Instance.cameraViewPort.mRect.width, CameraSys.Instance.cameraViewPort.mRect.height);
+                        FP dis = TSMath.Max(CameraSys.Instance.cameraViewPort.mRect.width, CameraSys.Instance.cameraViewPort.mRect.height) * 10;
 
                         TSVector2 end = start + dir * dis;
                         TSVector2 hitPoint;
@@ -114,9 +114,10 @@ namespace Game
                         }
                         else
                         {
-                            if (Time.time - m_fLastReqMoveTime > ViewConst.OnFrameTime)
-                            {
-                                m_fLastReqMoveTime = Time.time;
+                            //这里加了会导致一些需要改变的帧发布出去，例如，先按左键，然后立即按上键（0.001s）会导致最终左上方向被忽略掉
+                            //if (Time.time - m_fLastReqMoveTime > ViewConst.OnFrameTime)
+                            //{
+                            //m_fLastReqMoveTime = Time.time;
                                 if (hit)
                                 {
                                     m_lstMovePath.Clear();
@@ -128,14 +129,14 @@ namespace Game
                                 {
                                     unit.ReqMove(new TSVector(resultPoint.x, unit.curPosition.y, resultPoint.y));
                                 }
-                            }
+                            //}
                         }
                        
                     }
                 }
                 else
                 {
-                    if (Time.time - m_fLastReqSetPositionTime > ViewConst.OnFrameTime && !Mathf.Approximately(delta.x, 0) || !Mathf.Approximately(delta.y, 0))
+                    if (startPosition != Vector3.positiveInfinity && Time.time - m_fLastReqSetPositionTime > ViewConst.OnFrameTime && !Mathf.Approximately(delta.x, 0) || !Mathf.Approximately(delta.y, 0))
                     {
                         var curPos = unit.curPosition.ToUnityVector3();
                         var scenePosDelta = CameraSys.Instance.GetSceneDeltaByScreenDelta(offset);
@@ -239,6 +240,7 @@ namespace Game
             {
                 PvpPlayerMgr.Instance.mainPlayer.unit.ReqStopMove();
             }
+            startPosition = Vector3.positiveInfinity;
             //SetJoystickActive(false);
         }
 
@@ -252,6 +254,18 @@ namespace Game
         public override void OnEnter(ViewParam openParam)
         {
             base.OnEnter(openParam);
+            GlobalEventDispatcher.Instance.AddEvent(GameEvent.PvpPlayerUnitDie, OnPvpPlayerUnitDie);
+        }
+
+        public override void OnExit()
+        {
+            GlobalEventDispatcher.Instance.RemoveEvent(GameEvent.PvpPlayerUnitDie, OnPvpPlayerUnitDie);
+            base.OnExit();
+        }
+
+        private void OnPvpPlayerUnitDie(object args)
+        {
+            startPosition = Vector3.positiveInfinity;
         }
 
         public override void OnUpdate()

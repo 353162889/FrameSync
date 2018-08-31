@@ -19,5 +19,6 @@ namespace Game
         public static int UnitRecovery = "UnitRecovery".GetHashCode();
         public static int UnitDie = "UnitDie".GetHashCode();
         public static int AddUnitDestory = "AddUnitDestory".GetHashCode();
+        public static int PvpPlayerUnitDie = "PlayerUnitDie".GetHashCode();
     }
 }

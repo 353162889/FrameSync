@@ -54,7 +54,6 @@ namespace Game
         private float m_fStartTime;
         private float m_fAverageTime;
         private float m_fTargetAverageTime;
-        private float m_fTargetAverageTimeSpeed;
         //开始移动时，会有几个点忽略掉，这个是需要加的额外时间
         private int m_nMoveCount;
         private int m_nStartMoveCount;//移动前几个点不改变移速
@@ -64,7 +63,8 @@ namespace Game
         private List<float> m_lstCurStartAndNextRate = new List<float>();
         private int m_nMoveTimes;
         private float m_fOnFrameDistance;
-        private bool m_bRealMove;
+        private float m_fDelayMoveTime;
+        private bool m_bIsChangeSpeed;
 
         public void Init()
         {
@@ -96,7 +96,6 @@ namespace Game
             m_bCanMove = DequeuePoint();
             float onFrameTime = FrameSyncSys.OnFrameTime.AsFloat();
             m_fTargetAverageTime = m_fAverageTime = onFrameTime;
-            m_fTargetAverageTimeSpeed = 0;
             if(stopToMove)
             {
                 m_fStartTime = Time.time - m_fAverageTime * (m_nMoveCount);
@@ -109,8 +108,15 @@ namespace Game
             
             m_fLerpTime = 0;
             m_nMoveTimes = 0;
-            //延时过渡
-            m_bRealMove = !stopToMove;
+            if (stopToMove)
+            {
+                //表现位置延迟一帧再移动（影子跟随）
+                m_fDelayMoveTime = onFrameTime / 2f;
+            }
+            else
+            {
+                m_fDelayMoveTime = 0;
+            }
         }
 
         public void StopMove()
@@ -127,13 +133,12 @@ namespace Game
             m_nStartMoveCount = 0;
             m_fStartTime = Time.time;
             m_fTargetAverageTime = m_fAverageTime = 0;
-            m_fTargetAverageTimeSpeed = 0;
             m_fLerpTime = 0;
             m_sNextPosition = Vector3.zero;
             m_bCanMove = false;
             m_nMoveTimes = 0;
-            //表现位置延迟一帧再移动（影子跟随）
-            m_bRealMove = false;
+            m_fDelayMoveTime = float.MaxValue;
+            m_bIsChangeSpeed = false;
         }
 
         public void StopMove(Vector3 startPosition, Vector3 targetPosition,float speed)
@@ -151,11 +156,10 @@ namespace Game
             m_nStartMoveCount = m_nMoveCount;
             m_bCanMove = DequeuePoint();
             m_fTargetAverageTime = m_fAverageTime = dis / speed;
-            m_fTargetAverageTimeSpeed = 0;
             m_fStartTime = Time.time - m_fAverageTime * (m_nMoveCount);
             m_fLerpTime = 0;
             m_nMoveTimes = 0;
-            m_bRealMove = true;
+            m_fDelayMoveTime = 0;
         }
 
         public void WillMove(Vector3 position, LPM_CenterPoints willCenterPoint)
@@ -167,36 +171,47 @@ namespace Game
 
         public void Move(Vector3 curPosition, int moveTimes)
         {
-            m_bRealMove = true;
             m_nStartMoveCount--;
             float nextAverageTime = (Time.time - m_fStartTime) / m_nMoveCount;
-            m_fTargetAverageTime = nextAverageTime;
             //大于一定距离开始加速或减速(缓慢，不保证最终一定不相差很大的距离)
             //CLog.LogArgs("move", curPosition, transform.position,"sub", (curPosition - transform.position).magnitude, "nextAverageTime", nextAverageTime,"subTime",Time.time - m_fStartTime,"count",m_nMoveCount);
             //前几个点不计算位置误差
             if (m_nStartMoveCount <= 0)
             {
                 float dis = (transform.position - curPosition).magnitude;
-                //防止位置相差很大
-                if (dis > m_fOnFrameDistance * 2)
+
+                if (m_bIsChangeSpeed && dis <= m_fOnFrameDistance / 2)
                 {
+                    m_bIsChangeSpeed = false;
+                }
+
+                //防止位置相差很大
+                if (m_bIsChangeSpeed || dis > m_fOnFrameDistance)
+                {
+                    m_fTargetAverageTime = nextAverageTime;
                     //加速
                     if (m_nMoveTimes < moveTimes)
                     {
-                        m_fTargetAverageTime = nextAverageTime * 0.5f;
-                        CLog.LogArgs("加速:", dis, "m_nMoveTimes", m_nMoveTimes, "moveTimes", moveTimes);
+                        //m_fTargetAverageTime = nextAverageTime * 0.75f;
+                        nextAverageTime = nextAverageTime * 0.9f;
+                        //CLog.LogArgs("加速:", dis, "m_nMoveTimes", m_nMoveTimes, "moveTimes", moveTimes);
                     }
                     //减速
                     else
                     {
-                        m_fTargetAverageTime = nextAverageTime * 2f;
-                        CLog.LogArgs("减速:", dis, "m_nMoveTimes", m_nMoveTimes, "moveTimes", moveTimes);
+                        //m_fTargetAverageTime = nextAverageTime * 1.5f;
+                        nextAverageTime = nextAverageTime * 1.1f;
+                        //CLog.LogArgs("减速:", dis, "m_nMoveTimes", m_nMoveTimes, "moveTimes", moveTimes);
                     }
+                    m_bIsChangeSpeed = true;
                 }
             }
 
-            m_fTargetAverageTimeSpeed = Mathf.Abs(m_fTargetAverageTime - nextAverageTime) * 0.2f;
             UpdateAverageTime(nextAverageTime);
+            //if (!m_bIsChangeSpeed)
+            //{
+            //    UpdateAverageTime(nextAverageTime);
+            //}
         }
 
         private void UpdateAverageTime(float averageTime)
@@ -216,7 +231,11 @@ namespace Game
 
         void Update()
         {
-            if (m_bRealMove)
+            if (m_fDelayMoveTime > 0)
+            {
+                m_fDelayMoveTime -= Time.deltaTime;
+            }
+            if (m_fDelayMoveTime <= 0)
             {
                 if (!m_bCanMove)
                 {
@@ -319,9 +338,15 @@ namespace Game
                 }
 
                 SetPosition(pos);
-                //过渡差值
-                float nextAverageTime = Mathf.MoveTowards(m_fAverageTime, m_fTargetAverageTime, m_fTargetAverageTimeSpeed);
-                UpdateAverageTime(nextAverageTime);
+                //if (m_bIsChangeSpeed)
+                //{
+                //    //过渡差值
+                //    float nextAverageTime = Mathf.MoveTowards(m_fAverageTime, m_fTargetAverageTime, 1 * Time.deltaTime);
+                //    if (nextAverageTime != m_fAverageTime)
+                //    {
+                //        UpdateAverageTime(nextAverageTime);
+                //    }
+                //}
             }
             else
             {

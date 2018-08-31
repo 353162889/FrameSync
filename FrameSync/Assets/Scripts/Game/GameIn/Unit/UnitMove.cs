@@ -218,7 +218,7 @@ namespace Game
             }
         }
 
-        //private GameObject box;
+       
         protected void UpdateMove(FP deltaTime)
         {
             if (m_cMove != null)
@@ -229,11 +229,16 @@ namespace Game
             {
                 m_cRotate.OnUpdate(deltaTime);
             }
-            //if (null == box)
-            //{
-            //    box = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            //}
-            //box.transform.position = m_sCurPosition.ToUnityVector3();
+        }
+
+        private GameObject box;
+        void LateUpdate()
+        {
+            if (null == box)
+            {
+                box = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            }
+            box.transform.position = m_sCurPosition.ToUnityVector3();
         }
 
         protected void DieMove(DamageInfo damageInfo)
