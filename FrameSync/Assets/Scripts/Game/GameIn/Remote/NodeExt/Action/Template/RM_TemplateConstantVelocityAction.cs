@@ -18,7 +18,8 @@ namespace Game
     {
         private RM_TemplateConstantVelocityActionData m_cActionData;
         public override FP time { get { return m_cActionData.time; } }
-        private FP m_sDistance;
+        //private FP m_sDistance;
+        private FP m_sLeaveTime;
         private TSVector m_sTargetPosition;
         private PointMove m_cPointMove;
         private Remote m_cRemote;
@@ -33,8 +34,13 @@ namespace Game
 
         protected override void OnEnter(RemoteBlackBoard blackBoard)
         {
-            m_sDistance = 0;
+            //m_sDistance = 0;
             m_cRemote = blackBoard.remote;
+            m_sLeaveTime = 0;
+            if (m_cRemote.resInfo.move_speed > 0)
+            {
+                m_sLeaveTime = m_cRemote.resInfo.max_move_distance / m_cRemote.resInfo.move_speed;
+            }
             var remoteTargetType = blackBoard.remote.remoteTargetType;
             switch(remoteTargetType)
             {
@@ -64,12 +70,12 @@ namespace Game
 
         private void OnMove(TSVector position, TSVector forward)
         {
-            m_cRemote.Move(position,m_cPointMove.moveTimes);
-            m_sDistance += (m_cRemote.curPosition - m_cRemote.lastPosition).magnitude;
-            if (m_sDistance >= m_cRemote.resInfo.max_move_distance)
-            {
-                m_eCurActionResult = BTActionResult.Ready;
-            }
+            m_cRemote.Move(position,forward, m_cPointMove.moveTimes);
+            //m_sDistance += (m_cRemote.curPosition - m_cRemote.lastPosition).magnitude;
+            //if (m_sDistance >= m_cRemote.resInfo.max_move_distance)
+            //{
+            //    m_eCurActionResult = BTActionResult.Ready;
+            //}
         }
 
         private void OnStopMove(TSVector position, TSVector forward)
@@ -93,6 +99,9 @@ namespace Game
         public override BTActionResult OnRun(RemoteBlackBoard blackBoard)
         {
             m_cPointMove.OnUpdate(blackBoard.deltaTime);
+            m_sLeaveTime = m_sLeaveTime - blackBoard.deltaTime;
+            if (m_sLeaveTime <= 0) return BTActionResult.Ready;
+
             Remote remote = blackBoard.remote;
             if(remote.remoteTargetType == RemoteTargetType.Target)
             {

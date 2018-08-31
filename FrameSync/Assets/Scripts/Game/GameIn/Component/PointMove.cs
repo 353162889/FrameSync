@@ -447,12 +447,12 @@ namespace Game
             }
 
             TSVector deltaPosition = m_sNextPosition - position;
-            if(!deltaPosition.IsZero())
+            if(deltaPosition.x != 0 || deltaPosition.y != 0 || deltaPosition.z != 0)
             {
-                TSVector deltaForward = deltaPosition.normalized;
-                TSVector offset = deltaForward * m_sSpeed * deltaTime;
-                if (deltaPosition.sqrMagnitude > offset.sqrMagnitude)
+                FP moveLen = m_sSpeed * deltaTime;
+                if (deltaPosition.sqrMagnitude > moveLen * moveLen)
                 {
+                    TSVector offset = forward * moveLen;
                     position = position + offset;
                 }
                 else

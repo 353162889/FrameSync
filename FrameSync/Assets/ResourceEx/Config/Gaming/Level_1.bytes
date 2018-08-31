@@ -1,24 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <editorPos>
-    <x>5184</x>
-    <y>4850</y>
+    <x>4994</x>
+    <y>4793</y>
   </editorPos>
   <enable>true</enable>
   <data xsi:type="GamingData" />
   <lstChild>
     <NEData>
       <editorPos>
-        <x>5186</x>
-        <y>4978</y>
+        <x>4992</x>
+        <y>4929</y>
       </editorPos>
       <enable>true</enable>
       <data xsi:type="BTSequenceData" />
       <lstChild>
         <NEData>
           <editorPos>
-            <x>4891</x>
-            <y>5318</y>
+            <x>4768</x>
+            <y>5164</y>
           </editorPos>
           <enable>true</enable>
           <data xsi:type="GL_StartGameRefreshPlayerData">
@@ -53,8 +53,8 @@
         </NEData>
         <NEData>
           <editorPos>
-            <x>5077</x>
-            <y>5317</y>
+            <x>4977</x>
+            <y>5165</y>
           </editorPos>
           <enable>true</enable>
           <data xsi:type="BTWaitTimeData">
@@ -65,8 +65,8 @@
         </NEData>
         <NEData>
           <editorPos>
-            <x>5229</x>
-            <y>5326</y>
+            <x>5142</x>
+            <y>5158</y>
           </editorPos>
           <enable>true</enable>
           <data xsi:type="GL_PlayerAIChangeData">
@@ -78,8 +78,8 @@
         </NEData>
         <NEData>
           <editorPos>
-            <x>5381</x>
-            <y>5333</y>
+            <x>5280</x>
+            <y>5164</y>
           </editorPos>
           <enable>true</enable>
           <data xsi:type="GL_PlayAudioData">
@@ -94,8 +94,8 @@
         </NEData>
         <NEData>
           <editorPos>
-            <x>5579</x>
-            <y>5338</y>
+            <x>5440.5</x>
+            <y>5126</y>
           </editorPos>
           <enable>true</enable>
           <data xsi:type="BTTimeLineData">
@@ -106,8 +106,8 @@
           <lstChild>
             <NEData>
               <editorPos>
-                <x>5583</x>
-                <y>5490</y>
+                <x>5402</x>
+                <y>5291</y>
               </editorPos>
               <enable>true</enable>
               <data xsi:type="GL_PathRandomRefreshData">

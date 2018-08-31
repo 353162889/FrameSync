@@ -156,10 +156,10 @@ namespace Game
             m_cLerpView.StartMove(transform.position, lst,stopToMove);
         }
 
-        public void Move(TSVector position,int moveTimes)
+        public void Move(TSVector position,TSVector forward,int moveTimes)
         {
             SetPosition(position);
-            SetForward(m_sCurPosition - m_sLastPosition);
+            SetForward(forward);
             m_cLerpView.Move(position.ToUnityVector3(), moveTimes);
         }
 
@@ -182,10 +182,8 @@ namespace Game
         public void SetForward(TSVector forward)
         {
             if (forward == TSVector.zero) return;
-            forward.Normalize();
             m_sLastForward = m_sCurForward;
             m_sCurForward = forward;
-           
         }
 
         public void OnUpdate(FP deltaTime)
