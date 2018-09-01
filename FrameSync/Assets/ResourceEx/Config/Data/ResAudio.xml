@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-	<resaudio id="1" loop="TRUE" path="Audio/level_1_bg.ogg" priority="1" type="BG"/>
+	<resaudio id="1" loop="TRUE" path="Audio/level_1_bg.ogg" priority="9999" type="BG"/>
 	<resaudio id="2" loop="FALSE" path="Audio/explode.wav" priority="1" type="UI"/>
 </root>

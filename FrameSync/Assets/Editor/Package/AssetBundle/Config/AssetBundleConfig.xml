@@ -11,11 +11,13 @@ searchPattern:文件搜索通配符（不支持正则表达式，只支持*(在�
 -->
  
 <AssetBundle>
+  <Build searchDirectory="Assets/ResourceEx/Audio" packingType="SingleFile" searchPattern="*.*" />
   <Build searchDirectory="Assets/ResourceEx/Config" packingType="SubDir" searchPattern="*.*" />
   <Build searchDirectory="Assets/ResourceEx/Prefab/Effect" packingType="SingleFile" searchPattern="*.*" />
   <Build searchDirectory="Assets/ResourceEx/Prefab/Scene" packingType="SingleFile" searchPattern="*.*" />
   <Build searchDirectory="Assets/ResourceEx/Prefab/UI" packingType="SingleFile" searchPattern="*.*" />
   <Build searchDirectory="Assets/ResourceEx/Prefab/Unit" packingType="SingleFile" searchPattern="*.*" />
+  <Build searchDirectory="Assets/ResourceEx/Prefab/Item" packingType="SingleFile" searchPattern="*.*" />
   <Build searchDirectory="Assets/ResourceEx/Shader" packingType="Whole" searchPattern="*.*" />
   <Build searchDirectory="Assets/ResourceEx/UI" packingType="SubDir" searchPattern="*.*" />
 

@@ -210,6 +210,7 @@ namespace Game
             uiGO.AddComponentOnce<ViewSys>();
 
             gameObject.AddComponentOnce<AudioSys>();
+            GameAudioSys.Instance.SetVolume(0.2f);
 
             gameObject.AddComponentOnce<FPSMono>();
 

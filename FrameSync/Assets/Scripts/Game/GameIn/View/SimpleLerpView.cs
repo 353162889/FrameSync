@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -31,7 +32,7 @@ namespace Game
         {
             if (m_bStart)
             {
-                m_fCurTime += Time.time;
+                m_fCurTime += Time.deltaTime;
                 float t = Mathf.Clamp01(m_fCurTime /m_fTime);
                 transform.position = Vector3.Lerp(m_sStart, m_sEnd, t);
                 if (m_fCurTime >= m_fTime) m_bStart = false;

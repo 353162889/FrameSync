@@ -104,7 +104,7 @@ namespace Framework
                     percent = Mathf.Clamp01(percent);
                     m_cAudioSource.volume = Mathf.Lerp(m_fStartVolume, m_fTargetVolume, percent);
                 }
-                if(m_cAudioSource.clip != null && !m_cAudioSource.isPlaying)
+                if(!m_cAudioSource.loop && m_cAudioSource.clip != null && !m_cAudioSource.isPlaying)
                 {
                     Stop();
                 }

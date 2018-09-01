@@ -76,12 +76,14 @@ namespace Game
         public AgentObject agentObj { get { return m_cAgentObj; } }
 
         private ValueContainer m_cValueContainer;
+        private bool m_bDestory;
 
         public void Init(uint id, int configId,int campId, TSVector position, TSVector forward, uint targetAgentId, AgentObjectType targetAgentType, TSVector targetPosition, TSVector targetForward)
         {
             m_nId = id;
             m_nConfigId = configId;
             m_nCampId = campId;
+            m_bDestory = false;
             this.gameObject.name = "remote_" + m_nId + "_" + m_nConfigId;
             m_cResInfo = ResCfgSys.Instance.GetCfg<ResRemote>(configId);
             if (m_cResInfo == null) CLog.LogError("找不到ID="+configId+"的远程配置");
@@ -203,11 +205,15 @@ namespace Game
 
         public void End()
         {
-            m_cRemoteTree.Clear();
-            m_cBlackBoard.Clear();
-            StopMove();
-            //回收远程
-            BattleScene.Instance.DestroyRemote(this);
+            if (!m_bDestory)
+            {
+                m_bDestory = true;
+                m_cRemoteTree.Clear();
+                m_cBlackBoard.Clear();
+                StopMove();
+                //回收远程
+                BattleScene.Instance.DestroyRemote(this);
+            }
         }
 
         public void Reset()
