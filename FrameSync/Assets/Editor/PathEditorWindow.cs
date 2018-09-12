@@ -20,8 +20,9 @@ public class PathEditorWindow : EditorWindow
 
     private int m_nGONodeCount;
     private bool m_bAwaysGeneratePath;
+    private bool m_bDrawLine;
 
-    public void Init(Vector3[] points,Action<Vector3[]> callback)
+    public void Init(Vector3[] points,Action<Vector3[]> callback,bool bDrawLine = true)
     {
         m_arrInitPoints = points;
         m_cCallback = callback;
@@ -37,6 +38,7 @@ public class PathEditorWindow : EditorWindow
         }
         m_bShowGOs = false;
         m_bShowDrawPoints = false;
+        m_bDrawLine = bDrawLine;
 
         if (m_arrInitPoints != null && m_cRoot != null)
         {
@@ -122,7 +124,7 @@ public class PathEditorWindow : EditorWindow
         {
             GeneratePath();
         }
-        if (m_arrDrawPoints != null && m_arrDrawPoints.Length > 1)
+        if (m_arrDrawPoints != null && m_arrDrawPoints.Length > 1 && m_bDrawLine)
         {
             Handles.DrawPolyLine(m_arrDrawPoints);
         }

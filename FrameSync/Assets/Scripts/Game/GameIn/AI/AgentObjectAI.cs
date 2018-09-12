@@ -34,6 +34,8 @@ namespace Game
         private AIBlackBoard m_cBlackBoard;
         private bool m_bStart;
         public bool start { get { return m_bStart; } }
+        public bool m_bFinish;
+        public bool finish { get { return m_bFinish; } }
         static AgentObjectAI() { Init(); }
 
         public void Init(AgentObject host,string aiPath)
@@ -49,11 +51,13 @@ namespace Game
             m_cHost = host;
             m_cBlackBoard = new AIBlackBoard(this);
             m_bStart = false;
+            m_bFinish = false;
         }
 
         public void Start()
         {
             m_bStart = true;
+            m_bFinish = false;
         }
 
         public void Stop()
@@ -65,6 +69,11 @@ namespace Game
             }
         }
 
+        public void SetVariable(string name, BTSharedVariable variable)
+        {
+            m_cBlackBoard.SetVariable(name, variable);
+        }
+
         public void Update(FP deltaTime)
         {
             if(m_bStart && m_cAITree != null)
@@ -74,6 +83,7 @@ namespace Game
                 if(result != BTResult.Running)
                 {
                     Stop();
+                    m_bFinish = true;
                 }
             }
         }
@@ -88,6 +98,7 @@ namespace Game
             {
                 m_cBlackBoard.Clear();
             }
+            m_bFinish = true;
             m_sAIPath = null;
             m_cAITree = null;
             m_cHost = null;

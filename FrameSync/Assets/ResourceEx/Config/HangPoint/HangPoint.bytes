@@ -784,5 +784,21 @@
         </HangPointData>
       </mLstData>
     </HangPointItem>
+    <HangPointItem>
+      <path>Assets/ResourceEx/Prefab/Unit/AirShip_10151.prefab</path>
+      <mLstData />
+    </HangPointItem>
+    <HangPointItem>
+      <path>Assets/ResourceEx/Prefab/Unit/AirShip_10152.prefab</path>
+      <mLstData />
+    </HangPointItem>
+    <HangPointItem>
+      <path>Assets/ResourceEx/Prefab/Unit/AirShip_10161.prefab</path>
+      <mLstData />
+    </HangPointItem>
+    <HangPointItem>
+      <path>Assets/ResourceEx/Prefab/Unit/AirShip_10153.prefab</path>
+      <mLstData />
+    </HangPointItem>
   </mLstHangPointItem>
 </HangPointSet>

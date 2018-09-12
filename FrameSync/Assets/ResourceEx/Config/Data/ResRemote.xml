@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-	<resremote effect_name="eff_bullet1" id="1" logic_path="Config/Remote/Template_Move_Forward.bytes" max_move_distance="343597383680" move_speed="214748364800" name="子弹1" target_type="TargetForward"/>
-	<resremote effect_name="eff_bullet2" id="2" logic_path="Config/Remote/Template_Move_Forward.bytes" max_move_distance="343597383680" move_speed="214748364800" name="子弹2" target_type="TargetForward"/>
+	<resremote effect_name="eff_bullet1" id="1" logic_path="Config/Remote/Template_Move_Forward.bytes" max_move_distance="343597383680" move_speed="128849018880" name="子弹1" target_type="TargetForward"/>
+	<resremote effect_name="eff_bullet2" id="2" logic_path="Config/Remote/Template_Move_Forward.bytes" max_move_distance="343597383680" move_speed="128849018880" name="子弹2" target_type="TargetForward"/>
 	<resremote effect_name="eff_bullet3" id="3" logic_path="Config/Remote/Template_Move_Forward.bytes" max_move_distance="343597383680" move_speed="214748364800" name="子弹3" target_type="TargetForward"/>
-	<resremote effect_name="eff_bullet4" id="4" logic_path="Config/Remote/Template_Move_Forward.bytes" max_move_distance="343597383680" move_speed="214748364800" name="子弹4" target_type="TargetForward"/>
-	<resremote effect_name="eff_bullet5" id="5" logic_path="Config/Remote/Template_Move_Forward.bytes" max_move_distance="343597383680" move_speed="214748364800" name="子弹5" target_type="TargetForward"/>
-	<resremote effect_name="eff_bullet6" id="6" logic_path="Config/Remote/Template_Move_Forward.bytes" max_move_distance="343597383680" move_speed="214748364800" name="子弹6" target_type="TargetForward"/>
-	<resremote effect_name="eff_bullet7" id="7" logic_path="Config/Remote/Template_Move_Forward.bytes" max_move_distance="343597383680" move_speed="214748364800" name="子弹7" target_type="TargetForward"/>
+	<resremote effect_name="eff_bullet4" id="4" logic_path="Config/Remote/Template_Move_Forward.bytes" max_move_distance="343597383680" move_speed="128849018880" name="子弹4" target_type="TargetForward"/>
+	<resremote effect_name="eff_bullet5" id="5" logic_path="Config/Remote/Template_Move_Forward.bytes" max_move_distance="343597383680" move_speed="107374182400" name="子弹5" target_type="TargetForward"/>
+	<resremote effect_name="eff_bullet6" id="6" logic_path="Config/Remote/Template_Move_Forward.bytes" max_move_distance="343597383680" move_speed="107374182400" name="子弹6" target_type="TargetForward"/>
+	<resremote effect_name="eff_bullet7" id="7" logic_path="Config/Remote/Template_Move_Forward.bytes" max_move_distance="343597383680" move_speed="128849018880" name="子弹7" target_type="TargetForward"/>
 	<resremote effect_name="eff_bullet8" id="8" logic_path="Config/Remote/Template_Move_Forward.bytes" max_move_distance="343597383680" move_speed="214748364800" name="子弹8" target_type="TargetForward"/>
-	<resremote effect_name="eff_bullet9" id="9" logic_path="Config/Remote/Template_Move_Forward.bytes" max_move_distance="343597383680" move_speed="214748364800" name="子弹9" target_type="TargetForward"/>
+	<resremote effect_name="eff_bullet9" id="9" logic_path="Config/Remote/Template_Move_Forward.bytes" max_move_distance="343597383680" move_speed="128849018880" name="子弹9" target_type="TargetForward"/>
 	<resremote effect_name="eff_bullet11" id="11" logic_path="Config/Remote/Template_Move_Forward.bytes" max_move_distance="343597383680" move_speed="214748364800" name="子弹11" target_type="TargetForward"/>
 	<resremote effect_name="eff_bullet12" id="12" logic_path="Config/Remote/Template_Move_Forward.bytes" max_move_distance="343597383680" move_speed="214748364800" name="子弹12" target_type="TargetForward"/>
 	<resremote effect_name="eff_bullet13" id="13" logic_path="Config/Remote/Template_Move_Forward.bytes" max_move_distance="343597383680" move_speed="214748364800" name="子弹13" target_type="TargetForward"/>

@@ -9,6 +9,12 @@ namespace Game
 {
     public class GameConst : Singleton<GameConst>
     {
+        #region AI部分
+        public static string AIJoinScenePathName = "AIJoinScenePathName";//ai刷出时需要移动的路径
+        public static string AILeaveScenePathName = "AILeaveScenePathName";//ai离场是需要移动的路径
+        public static string AITargetName = "AITargetName";//ai目标
+        #endregion
+
         public int GetInt(string key)
         {
             var resConst = GetResConst(key);

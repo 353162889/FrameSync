@@ -17,6 +17,7 @@ namespace GameData
 		public List<int> active_skills { get; private set; }
 		public List<int> passive_skills { get; private set; }
 		public string ai_path { get; private set; }
+		public FP ai_attack_time { get; private set; }
 		public string die_effect { get; private set; }
 		public int die_audio { get; private set; }
 		public ResAirShip(SecurityElement node)
@@ -54,6 +55,7 @@ namespace GameData
 				}
 			}
 			ai_path = node.Attribute("ai_path");
+			ai_attack_time = FP.FromSourceLong(long.Parse(node.Attribute("ai_attack_time")));
 			die_effect = node.Attribute("die_effect");
 			die_audio = int.Parse(node.Attribute("die_audio"));
 		}

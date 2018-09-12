@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <editorPos>
+    <x>5010</x>
+    <y>5000</y>
+  </editorPos>
+  <enable>true</enable>
+  <data xsi:type="SkillData" />
+  <lstChild>
+    <NEData>
+      <editorPos>
+        <x>5000</x>
+        <y>5141</y>
+      </editorPos>
+      <enable>true</enable>
+      <data xsi:type="BTSequenceData" />
+      <lstChild>
+        <NEData>
+          <editorPos>
+            <x>4851</x>
+            <y>5314</y>
+          </editorPos>
+          <enable>true</enable>
+          <data xsi:type="SK_SetForwardActionData">
+            <time>
+              <_serializedValue>0</_serializedValue>
+            </time>
+            <bImmediately>false</bImmediately>
+          </data>
+        </NEData>
+        <NEData>
+          <editorPos>
+            <x>5136</x>
+            <y>5314</y>
+          </editorPos>
+          <enable>true</enable>
+          <data xsi:type="SK_TemplateCreateRemoteActionData">
+            <time>
+              <_serializedValue>0</_serializedValue>
+            </time>
+            <hangPoint>FirePos</hangPoint>
+            <useHangPoint>true</useHangPoint>
+          </data>
+        </NEData>
+      </lstChild>
+    </NEData>
+  </lstChild>
+</NEData>

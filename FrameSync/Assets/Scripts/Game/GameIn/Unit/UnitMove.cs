@@ -26,6 +26,7 @@ namespace Game
         protected LerpMoveView m_cLerpMoveView;
 
         public bool isMoving { get { return m_cMove.isMoving; } }
+        public bool isRotating { get { return m_cRotate != null && m_cRotate.rotating; } }
 
         public void ReqMove(List<TSVector> movePath)
         {

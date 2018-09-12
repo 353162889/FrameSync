@@ -34,6 +34,13 @@ namespace Game
             defence = null;
             damage = 0;
         }
+
+        public void CloneFrom(DamageInfo damageInfo)
+        {
+            attack = damageInfo.attack;
+            defence = damageInfo.defence;
+            damage = damageInfo.damage;
+        }
     }
 
     public class BattleScene : Singleton<BattleScene>

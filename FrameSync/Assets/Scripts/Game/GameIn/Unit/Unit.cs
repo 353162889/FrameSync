@@ -13,6 +13,7 @@ namespace Game
         Init,
         Player,
         UnitMove,
+        Skill,
     }
 
     public enum PositionFromType
@@ -61,6 +62,8 @@ namespace Game
 
         protected bool m_bIsDie;
         public bool isDie { get { return m_bIsDie; } }
+        protected bool m_bIsUpdate;
+        protected DamageInfo m_cDelayDamageInfo;
         protected FP m_sDieTime;
         public FP dieTime { get { return m_sDieTime; } }
         protected FP m_sStartDieTime;
@@ -170,6 +173,19 @@ namespace Game
                 OnUnitDie(this, damageInfo);
             }
             GlobalEventDispatcher.Instance.Dispatch(GameEvent.UnitDie, damageInfo);
+            if (m_bIsUpdate)
+            {
+                m_cDelayDamageInfo = ObjectPool<DamageInfo>.Instance.GetObject();
+                m_cDelayDamageInfo.CloneFrom(damageInfo);
+            }
+            else
+            {
+                ClearDamageInfo(damageInfo);
+            }
+        }
+
+        protected virtual void ClearDamageInfo(DamageInfo damageInfo)
+        {
             DieAI(damageInfo);
             DieAttr(damageInfo);
             DieMove(damageInfo);
@@ -180,6 +196,7 @@ namespace Game
 
         protected virtual void SubInit()
         {
+            m_cDelayDamageInfo = null;
             InitForbid();
             InitAttr();
             InitMove();
@@ -191,16 +208,30 @@ namespace Game
         public virtual void OnUpdate(FP deltaTime)
         {
             if (m_bIsDie) return;
+            m_bIsUpdate = true;
             UpdateAI(deltaTime);
             UpdateAttr(deltaTime);
             UpdateMove(deltaTime);
             UpdateView(deltaTime);
             UpdateSkill(deltaTime);
             UpdateForbid(deltaTime);
+            m_bIsUpdate = false;
+            if(m_cDelayDamageInfo != null)
+            {
+                ClearDamageInfo(m_cDelayDamageInfo);
+                ObjectPool<DamageInfo>.Instance.SaveObject(m_cDelayDamageInfo);
+                m_cDelayDamageInfo = null;
+            }
         }
 
         public void Reset()
         {
+            m_bIsUpdate = false;
+            if (m_cDelayDamageInfo != null)
+            {
+                ObjectPool<DamageInfo>.Instance.SaveObject(m_cDelayDamageInfo);
+                m_cDelayDamageInfo = null;
+            }
             ResetAI();
             ResetAttr();
             ResetMove();

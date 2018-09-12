@@ -12,16 +12,26 @@ namespace Game
     {
         [NEProperty("触发时间", true)]
         public FP time;
-        [NEPropertyBtn("打开选择单位编辑器", "NENodeFuncExt", "ShowSelectSingleAirShipWindow")]
-        [NEProperty("配置ID")]
-        public int configId;
+        [NEPropertyBtn("打开选择单位列表编辑器", "NENodeFuncExt", "ShowSelectMultiAirShipWindow")]
+        [NEProperty("配置ID列表")]
+        public int[] configIds;
+        [NEProperty("是否随机刷新配置ID")]
+        public bool isRandomCfgIds;
         [NEProperty("刷新对象类型")]
         public UnitType unitType;
         [NEProperty("刷新对象阵营")]
         public CampType campType;
-        [NEPropertyBtn("打开路径编辑器", "NENodeFuncExt", "ShowPathEditorWindow")]
-        [NEProperty("移动路径")]
+        [NEPropertyBtn("打开刷新点编辑器", "NENodeFuncExt", "ShowPointEditorWindow")]
+        [NEProperty("刷新点列表")]
         public TSVector[] points;
+        [NEProperty("是否随机刷新随机点")]
+        public bool isRandomPoints;
+        [NEPropertyBtn("打开路径编辑器", "NENodeFuncExt", "ShowPathEditorWindow")]
+        [NEProperty("出场移动路径")]
+        public TSVector[] joinScenePaths;
+        [NEPropertyBtn("打开路径编辑器", "NENodeFuncExt", "ShowPathEditorWindow")]
+        [NEProperty("离场移动路径")]
+        public TSVector[] leaveScenePaths;
         [NEProperty("刷新次数")]
         public int refreshTimes;
         [NEProperty("刷新间隔时间")]
@@ -44,6 +54,8 @@ namespace Game
 
         private int m_nRefreshTimes;
         private FP m_nRefreshSpaceTime;
+        private int m_nCurCfgIdx;
+        private int m_nCurPointIdx;
 
         protected override void OnInitData(object data)
         {
@@ -55,42 +67,53 @@ namespace Game
         {
             m_nRefreshTimes = m_cRefreshData.refreshTimes;
             m_nRefreshSpaceTime = m_cRefreshData.refreshSpaceTime;
+            m_nCurCfgIdx = m_cRefreshData.isRandomCfgIds ? GameInTool.Random(m_cRefreshData.configIds.Length) : 0;
+            m_nCurPointIdx = m_cRefreshData.isRandomPoints ? GameInTool.Random(m_cRefreshData.points.Length) : 0;
         }
 
         private void Refresh()
         {
-            if (m_cRefreshData.points.Length > 0)
+            int refreshCfgId = m_cRefreshData.configIds[m_nCurCfgIdx];
+            TSVector refreshPoint = m_cRefreshData.points[m_nCurPointIdx];
+            TSVector[] refreshPath = m_cRefreshData.joinScenePaths;
+            TSVector refreshForward = TSVector.forward;
+            if (m_cRefreshData.joinScenePaths != null && m_cRefreshData.joinScenePaths.Length > 0)
             {
-                TSVector bornPos = m_cRefreshData.points[0];
-                TSVector bornForward = TSVector.forward;
-                if (m_cRefreshData.points.Length > 1)
+                if (m_cRefreshData.joinScenePaths.Length > 1)
                 {
-                    var forward = m_cRefreshData.points[1] - m_cRefreshData.points[0];
+                    var forward = m_cRefreshData.joinScenePaths[1] - m_cRefreshData.joinScenePaths[0];
                     if (forward != TSVector.zero)
                     {
                         forward.Normalize();
-                        bornForward = forward;
+                        refreshForward = forward;
                     }
                 }
-                var unit = BattleScene.Instance.CreateUnit(m_cRefreshData.configId, (int)m_cRefreshData.campType, m_cRefreshData.unitType, bornPos, bornForward);
-                if (m_cRefreshData.points.Length > 1)
+                else
                 {
-                    var lst = ResetObjectPool<List<TSVector>>.Instance.GetObject();
-                    var firstPoint = m_cRefreshData.points[0];
-                    for (int i = 1; i < m_cRefreshData.points.Length; i++)
+                    var forward = m_cRefreshData.joinScenePaths[0] - refreshPoint;
+                    if (forward != TSVector.zero)
                     {
-                        lst.Add(unit.curPosition + m_cRefreshData.points[i] - firstPoint);
+                        forward.Normalize();
+                        refreshForward = forward;
                     }
-                    unit.Move(lst,MoveFromType.Game);
-                    ResetObjectPool<List<TSVector>>.Instance.SaveObject(lst);
                 }
-                unit.StartAI();
-                if (m_cRefreshData.destoryTypes != null)
+            }
+            var unit = BattleScene.Instance.CreateUnit(refreshCfgId, (int)m_cRefreshData.campType, m_cRefreshData.unitType, refreshPoint, refreshForward);
+           
+            if(m_cRefreshData.joinScenePaths != null && m_cRefreshData.joinScenePaths.Length > 1)
+            {
+                unit.SetAIVariable(GameConst.AIJoinScenePathName, (SharedTSVectorArray)m_cRefreshData.joinScenePaths);
+            }
+            if(m_cRefreshData.leaveScenePaths != null && m_cRefreshData.leaveScenePaths.Length > 1)
+            {
+                unit.SetAIVariable(GameConst.AILeaveScenePathName, (SharedTSVectorArray)m_cRefreshData.leaveScenePaths);
+            }
+            unit.StartAI();
+            if (m_cRefreshData.destoryTypes != null)
+            {
+                for (int i = 0; i < m_cRefreshData.destoryTypes.Length; i++)
                 {
-                    for (int i = 0; i < m_cRefreshData.destoryTypes.Length; i++)
-                    {
-                        GlobalEventDispatcher.Instance.DispatchByParam(GameEvent.AddUnitDestory, m_cRefreshData.destoryTypes[i], unit);
-                    }
+                    GlobalEventDispatcher.Instance.DispatchByParam(GameEvent.AddUnitDestory, m_cRefreshData.destoryTypes[i], unit);
                 }
             }
         }
@@ -104,6 +127,8 @@ namespace Game
                     m_nRefreshSpaceTime -= m_cRefreshData.refreshSpaceTime;
                     m_nRefreshTimes--;
                     Refresh();
+                    m_nCurCfgIdx = m_cRefreshData.isRandomCfgIds ? GameInTool.Random(m_cRefreshData.configIds.Length) : (m_nCurCfgIdx + 1) % m_cRefreshData.configIds.Length;
+                    m_nCurPointIdx = m_cRefreshData.isRandomPoints ? GameInTool.Random(m_cRefreshData.points.Length) : (m_nCurPointIdx + 1) % m_cRefreshData.points.Length;
                 }
                 m_nRefreshSpaceTime += blackBoard.deltaTime;
             }

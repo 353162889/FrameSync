@@ -35,6 +35,33 @@ public class NENodeFuncExt
         window.Init(initArr, action);
     }
 
+    public static void ShowPointEditorWindow(FieldInfo fieldInfo, System.Object obj)
+    {
+        TSVector[] ps = (TSVector[])fieldInfo.GetValue(obj);
+        Action<Vector3[]> action = (Vector3[] points) =>
+        {
+            if (points != null)
+            {
+                TSVector[] arr = new TSVector[points.Length];
+                for (int i = 0; i < arr.Length; i++)
+                {
+                    arr[i] = TSVector.FromUnitVector3(points[i]);
+                }
+                fieldInfo.SetValue(obj, arr);
+            }
+        };
+        var window = EditorWindow.GetWindow<PathEditorWindow>();
+        int count = 0;
+        if (ps != null) count = ps.Length;
+        Vector3[] initArr = new Vector3[count];
+        for (int i = 0; i < initArr.Length; i++)
+        {
+            initArr[i] = ps[i].ToUnityVector3();
+        }
+        window.Show();
+        window.Init(initArr, action,false);
+    }
+
     public static void ShowSelectSingleAirShipWindow(FieldInfo fieldInfo, System.Object obj)
     {
         var window = EditorWindow.GetWindow<SelectUnitWindow>();

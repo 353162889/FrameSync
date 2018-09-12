@@ -16,7 +16,8 @@ namespace Game
 
     public abstract class AgentObject
     {
-
+        public delegate void AgentObjectHandler(AgentObject agent);
+        public event AgentObjectHandler OnClear;
         static AgentObject()
         {
             ResetObjectPool<List<AgentObject>>.Instance.Init(5, (List<AgentObject> lst) => { lst.Clear(); });
@@ -49,7 +50,12 @@ namespace Game
         public object agent { get { return m_cAgent; } }
         public virtual void Clear()
         {
+            if (OnClear != null)
+            {
+                OnClear(this);
+            }
             m_cAgent = null;
+            OnClear = null;
         }
 
         abstract public uint id { get; }

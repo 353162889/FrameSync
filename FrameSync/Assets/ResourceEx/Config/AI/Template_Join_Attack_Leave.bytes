@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <editorPos>
+    <x>5030</x>
+    <y>5000</y>
+  </editorPos>
+  <enable>true</enable>
+  <data xsi:type="AIData" />
+  <lstChild>
+    <NEData>
+      <editorPos>
+        <x>5024</x>
+        <y>5132</y>
+      </editorPos>
+      <enable>true</enable>
+      <data xsi:type="BTSequenceData" />
+      <lstChild>
+        <NEData>
+          <editorPos>
+            <x>4792</x>
+            <y>5236</y>
+          </editorPos>
+          <enable>true</enable>
+          <data xsi:type="UnitJoinScenePathActionData" />
+        </NEData>
+        <NEData>
+          <editorPos>
+            <x>5027</x>
+            <y>5272</y>
+          </editorPos>
+          <enable>true</enable>
+          <data xsi:type="BTParallelORData" />
+          <lstChild>
+            <NEData>
+              <editorPos>
+                <x>4878</x>
+                <y>5412</y>
+              </editorPos>
+              <enable>true</enable>
+              <data xsi:type="AI_TemplateUnitAttackTimeActionData" />
+            </NEData>
+            <NEData>
+              <editorPos>
+                <x>5105</x>
+                <y>5408</y>
+              </editorPos>
+              <enable>true</enable>
+              <data xsi:type="BTRepeatDecoratorData">
+                <times>0</times>
+                <spaceTime>
+                  <_serializedValue>0</_serializedValue>
+                </spaceTime>
+              </data>
+              <lstChild>
+                <NEData>
+                  <editorPos>
+                    <x>5096</x>
+                    <y>5548</y>
+                  </editorPos>
+                  <enable>true</enable>
+                  <data xsi:type="BTSelectorData" />
+                  <lstChild>
+                    <NEData>
+                      <editorPos>
+                        <x>4875</x>
+                        <y>5680</y>
+                      </editorPos>
+                      <enable>true</enable>
+                      <data xsi:type="BTSequenceData" />
+                      <lstChild>
+                        <NEData>
+                          <editorPos>
+                            <x>4675</x>
+                            <y>5835</y>
+                          </editorPos>
+                          <enable>true</enable>
+                          <data xsi:type="BTNotConditionData" />
+                          <lstChild>
+                            <NEData>
+                              <editorPos>
+                                <x>4676</x>
+                                <y>5961</y>
+                              </editorPos>
+                              <enable>true</enable>
+                              <data xsi:type="UnitCheckExistTargetConditionData" />
+                            </NEData>
+                          </lstChild>
+                        </NEData>
+                        <NEData>
+                          <editorPos>
+                            <x>4907</x>
+                            <y>5841</y>
+                          </editorPos>
+                          <enable>true</enable>
+                          <data xsi:type="BTG_PlayerSelectCompositeData">
+                            <time>
+                              <_serializedValue>0</_serializedValue>
+                            </time>
+                            <totalDuration>
+                              <_serializedValue>0</_serializedValue>
+                            </totalDuration>
+                            <oneDuration>
+                              <_serializedValue>0</_serializedValue>
+                            </oneDuration>
+                            <totalObjMaxCount>1</totalObjMaxCount>
+                            <oneObjMaxCount>1</oneObjMaxCount>
+                            <selectType>UnitEnemy</selectType>
+                            <eSelectType>Random</eSelectType>
+                          </data>
+                          <lstChild>
+                            <NEData>
+                              <editorPos>
+                                <x>4902</x>
+                                <y>5976</y>
+                              </editorPos>
+                              <enable>true</enable>
+                              <data xsi:type="UnitSetTargetActionData" />
+                            </NEData>
+                          </lstChild>
+                        </NEData>
+                      </lstChild>
+                    </NEData>
+                    <NEData>
+                      <editorPos>
+                        <x>5226</x>
+                        <y>5661</y>
+                      </editorPos>
+                      <enable>true</enable>
+                      <data xsi:type="UnitDoSkillActionData">
+                        <bNeedTarget>false</bNeedTarget>
+                      </data>
+                    </NEData>
+                  </lstChild>
+                </NEData>
+              </lstChild>
+            </NEData>
+          </lstChild>
+        </NEData>
+        <NEData>
+          <editorPos>
+            <x>5268</x>
+            <y>5229</y>
+          </editorPos>
+          <enable>true</enable>
+          <data xsi:type="UnitLeaveScenePathActionData" />
+        </NEData>
+      </lstChild>
+    </NEData>
+  </lstChild>
+</NEData>

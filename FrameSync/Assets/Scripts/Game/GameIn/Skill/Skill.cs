@@ -46,7 +46,7 @@ namespace Game
         public int skillId { get { return m_cResInfo.id; } }
         private SkillType m_eSkillType;
         public SkillType skillType { get { return m_eSkillType; } }
-        public SkillTargetType m_eTargetType;
+        private SkillTargetType m_eTargetType;
         public SkillTargetType targetType { get { return m_eTargetType; } }
         public FP cd { get { return m_cResInfo.cd; } }
         public AgentObject host { get { return m_cHost; } }

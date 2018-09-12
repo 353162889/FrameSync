@@ -1,4 +1,5 @@
-﻿using Framework;
+﻿using BTCore;
+using Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,30 @@ namespace Game
         public List<int> lstSelectAISkill { get { return m_lstSelectAISkill; } }
         private List<int> m_lstSelectAISkill;
         public bool isAIRunning { get { return m_cAgentObjectAI.start; } }
+        public bool isAIFinish { get { return m_cAgentObjectAI.finish; } }
+
+        private AgentObject m_cAITargetAgentObj;
+        public AgentObject targetAIAgent { get { return m_cAITargetAgentObj; } set {
+                if(m_cAITargetAgentObj != null)
+                {
+                    m_cAITargetAgentObj.OnClear -= OnClearTarget;
+                }
+                m_cAITargetAgentObj = value;
+                if(m_cAITargetAgentObj != null)
+                {
+                    m_cAITargetAgentObj.OnClear += OnClearTarget;
+                }
+            } }
+
+        private void OnClearTarget(AgentObject agent)
+        {
+            if(m_cAITargetAgentObj != null)
+            {
+                m_cAITargetAgentObj.OnClear -= OnClearTarget;
+            }
+            m_cAITargetAgentObj = null;
+        }
+
         public void InitAI()
         {
             if (m_cAgentObjectAI == null)
@@ -22,6 +47,11 @@ namespace Game
             {
                 m_lstSelectAISkill = new List<int>();
             }
+        }
+
+        public void SetAIVariable(string name, BTSharedVariable variable)
+        {
+            m_cAgentObjectAI.SetVariable(name, variable);
         }
 
         public void SetAISkill(List<int> lstSkill)
@@ -68,6 +98,7 @@ namespace Game
             {
                 m_lstSelectAISkill.Clear();
             }
+            targetAIAgent = null;
         }
 
         public void UpdateAI(FP deltaTime)
@@ -81,6 +112,7 @@ namespace Game
         public void DieAI(DamageInfo damageInfo)
         {
             StopAI();
+            targetAIAgent = null;
         }
     }
 }

@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <editorPos>
+    <x>5005</x>
+    <y>5000</y>
+  </editorPos>
+  <enable>true</enable>
+  <data xsi:type="AIData" />
+  <lstChild>
+    <NEData>
+      <editorPos>
+        <x>5006</x>
+        <y>5143</y>
+      </editorPos>
+      <enable>true</enable>
+      <data xsi:type="UnitJoinScenePathActionData" />
+    </NEData>
+  </lstChild>
+</NEData>

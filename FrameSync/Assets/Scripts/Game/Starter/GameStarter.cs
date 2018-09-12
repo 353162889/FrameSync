@@ -96,6 +96,7 @@ namespace Game
 
         private void LoadConfigs()
         {
+            ResCfgSys.Instance.Dispose();
             ResCfgSys.Instance.LoadResCfgs("Config/Data", OnLoadResCfg);
         }
         private int m_nConfingIndex;

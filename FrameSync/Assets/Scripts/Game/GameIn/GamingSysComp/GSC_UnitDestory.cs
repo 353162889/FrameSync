@@ -9,7 +9,7 @@ namespace Game
     public enum UnitDestoryType
     {
         DieDestory,
-        StopMoveDestory,
+        AIFinishDestory,
     }
     public class GSC_UnitDestory : IGamingSysComponent
     {
@@ -35,7 +35,7 @@ namespace Game
         public void Enter()
         {
             Add(UnitDestoryType.DieDestory, typeof(UD_DieDestory));
-            Add(UnitDestoryType.StopMoveDestory, typeof(UD_StopMoveDestory));
+            Add(UnitDestoryType.AIFinishDestory, typeof(UD_AIFinishDestory));
             GlobalEventDispatcher.Instance.AddEvent(GameEvent.AddUnitDestory, OnUnitDestoryAdd);
         }
 

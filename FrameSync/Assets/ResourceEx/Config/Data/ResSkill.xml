@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-	<resskill cd="429496729" id="1" logic_path="Config/Skill/Template_Create_Remote.bytes" name="创建子弹1" target_type="TargetForward" template_create_remote_id="1" type="Active"/>
-	<resskill cd="0" id="2" logic_path="Config/Skill/Template_Body_Collide.bytes" name="碰撞伤害" target_type="None" template_create_remote_id="0" type="Passive"/>
+	<resskill cd="0" id="1" logic_path="Config/Skill/Template_Body_Collide.bytes" name="碰撞伤害" target_type="None" template_create_remote_id="0" type="Passive"/>
+	<resskill cd="429496729" id="101" logic_path="Config/Skill/Template_SetForward_Create_Remote.bytes" name="创建子弹1" target_type="TargetForward" template_create_remote_id="1" type="Active"/>
+	<resskill cd="429496729" id="102" logic_path="Config/Skill/Template_SetForward_Create_Remote.bytes" name="创建子弹1" target_type="TargetForward" template_create_remote_id="2" type="Active"/>
+	<resskill cd="429496729" id="103" logic_path="Config/Skill/Template_Create_Remote.bytes" name="创建子弹2" target_type="TargetForward" template_create_remote_id="3" type="Active"/>
+	<resskill cd="429496729" id="104" logic_path="Config/Skill/Template_Create_Remote.bytes" name="创建子弹3" target_type="TargetForward" template_create_remote_id="4" type="Active"/>
+	<resskill cd="429496729" id="105" logic_path="Config/Skill/Template_Create_Remote.bytes" name="创建子弹4" target_type="TargetForward" template_create_remote_id="5" type="Active"/>
+	<resskill cd="429496729" id="106" logic_path="Config/Skill/Template_Create_Remote.bytes" name="创建子弹5" target_type="TargetForward" template_create_remote_id="6" type="Active"/>
+	<resskill cd="429496729" id="107" logic_path="Config/Skill/Template_Create_Remote.bytes" name="创建子弹6" target_type="TargetForward" template_create_remote_id="7" type="Active"/>
+	<resskill cd="429496729" id="108" logic_path="Config/Skill/Template_Create_Remote.bytes" name="创建子弹7" target_type="TargetForward" template_create_remote_id="8" type="Active"/>
+	<resskill cd="429496729" id="109" logic_path="Config/Skill/Template_Create_Remote.bytes" name="创建子弹8" target_type="TargetForward" template_create_remote_id="9" type="Active"/>
 </root>
