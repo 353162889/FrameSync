@@ -43,8 +43,15 @@ public class UnitJoinScenePathAction : BaseAIAction
 
     public override BTActionResult OnRun(AIBlackBoard blackBoard)
     {
-        if(m_cUnit == null || !m_cUnit.isMoving)
+        if(m_cUnit == null || (!m_cUnit.isMoving && !m_cUnit.isRotating))
+        {
+            if (m_cUnit != null)
+            {
+                m_cUnit.SetForward(TSVector.back, ForwardFromType.AI, false);
+            }
             return BTActionResult.Ready;
+        }
+            
         return BTActionResult.Running;
     }
 

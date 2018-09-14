@@ -14,6 +14,7 @@ namespace Game
         Player,
         UnitMove,
         Skill,
+        AI,
     }
 
     public enum PositionFromType

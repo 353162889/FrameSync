@@ -118,7 +118,7 @@ namespace Game
             }
         }
 
-        public override BTActionResult OnRun(GamingBlackBoard blackBoard)
+        protected override BTActionResult OnRun(GamingBlackBoard blackBoard)
         {
             if (m_nRefreshTimes > 0)
             {
@@ -131,6 +131,10 @@ namespace Game
                     m_nCurPointIdx = m_cRefreshData.isRandomPoints ? GameInTool.Random(m_cRefreshData.points.Length) : (m_nCurPointIdx + 1) % m_cRefreshData.points.Length;
                 }
                 m_nRefreshSpaceTime += blackBoard.deltaTime;
+            }
+            else
+            {
+                return BTActionResult.Ready;
             }
             if (m_nRefreshSpaceTime > 0)
             {

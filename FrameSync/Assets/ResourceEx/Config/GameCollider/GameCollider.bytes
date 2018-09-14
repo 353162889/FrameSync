@@ -1290,6 +1290,40 @@
       </mLstData>
     </GameColliderItem>
     <GameColliderItem>
+      <path>Assets/ResourceEx/Prefab/Unit/AirShip_10153.prefab</path>
+      <mLstData>
+        <BaseGameColliderData xsi:type="CircleColliderData">
+          <name>Collider</name>
+          <gameColliderType>CircleCollider</gameColliderType>
+          <center>
+            <x>
+              <_serializedValue>0</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>0</_serializedValue>
+            </z>
+          </center>
+          <forward>
+            <x>
+              <_serializedValue>0</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>4294967296</_serializedValue>
+            </z>
+          </forward>
+          <radius>
+            <_serializedValue>21088288768</_serializedValue>
+          </radius>
+        </BaseGameColliderData>
+      </mLstData>
+    </GameColliderItem>
+    <GameColliderItem>
       <path>Assets/ResourceEx/Prefab/Unit/AirShip_10161.prefab</path>
       <mLstData>
         <BaseGameColliderData xsi:type="CircleColliderData">
@@ -1324,11 +1358,11 @@
       </mLstData>
     </GameColliderItem>
     <GameColliderItem>
-      <path>Assets/ResourceEx/Prefab/Unit/AirShip_10153.prefab</path>
+      <path>Assets/ResourceEx/Prefab/Unit/Boss_2001.prefab</path>
       <mLstData>
-        <BaseGameColliderData xsi:type="CircleColliderData">
+        <BaseGameColliderData xsi:type="RectColliderData">
           <name>Collider</name>
-          <gameColliderType>CircleCollider</gameColliderType>
+          <gameColliderType>RectCollider</gameColliderType>
           <center>
             <x>
               <_serializedValue>0</_serializedValue>
@@ -1351,9 +1385,12 @@
               <_serializedValue>4294967296</_serializedValue>
             </z>
           </forward>
-          <radius>
-            <_serializedValue>21088288768</_serializedValue>
-          </radius>
+          <halfWidth>
+            <_serializedValue>10307921920</_serializedValue>
+          </halfWidth>
+          <halfHeight>
+            <_serializedValue>34144989184</_serializedValue>
+          </halfHeight>
         </BaseGameColliderData>
       </mLstData>
     </GameColliderItem>

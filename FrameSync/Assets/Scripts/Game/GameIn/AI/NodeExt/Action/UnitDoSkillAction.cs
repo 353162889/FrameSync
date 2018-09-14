@@ -64,10 +64,10 @@ namespace Game
                         targetForward = m_cTarget.curPosition - m_cUnit.curPosition;
                     }
                     m_cUnit.DoSkill(lst[i].skillId, targetId, AgentObjectType.Unit, targetPos, targetForward, SkillFromType.AI);
-                    return BTActionResult.Running;
+                    return BTActionResult.Ready;
                 }
             }
-            return BTActionResult.Running;
+            return BTActionResult.Ready;
         }
 
         public override void OnExit(AIBlackBoard blackBoard)

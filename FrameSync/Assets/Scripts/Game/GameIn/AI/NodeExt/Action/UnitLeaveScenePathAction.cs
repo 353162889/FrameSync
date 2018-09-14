@@ -39,6 +39,30 @@ public class UnitLeaveScenePathAction : BaseAIAction
                 }
             }
         }
+        else
+        {
+            variable = blackBoard.GetVariable(GameConst.AIJoinScenePathName);
+            if (variable != null)
+            {
+                TSVector[] path = (TSVector[])variable.GetValue();
+                if (path != null)
+                {
+                    m_cUnit = (Unit)blackBoard.host.agent;
+                    if (m_cUnit == null) return;
+                    if (path.Length > 1)
+                    {
+                        var lst = ResetObjectPool<List<TSVector>>.Instance.GetObject();
+                        var firstPoint = path[path.Length - 1];
+                        for (int i = path.Length - 2; i > -1; i--)
+                        {
+                            lst.Add(m_cUnit.curPosition + path[i] - firstPoint);
+                        }
+                        m_cUnit.Move(lst, MoveFromType.Game);
+                        ResetObjectPool<List<TSVector>>.Instance.SaveObject(lst);
+                    }
+                }
+            }
+        }
     }
 
     public override BTActionResult OnRun(AIBlackBoard blackBoard)

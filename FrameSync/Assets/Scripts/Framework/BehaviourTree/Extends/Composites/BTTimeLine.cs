@@ -60,6 +60,7 @@ namespace BTCore
             FP deltaTime = blackBoard.deltaTime;
             if(m_bIsEnd)
             {
+               
                 m_bIsEnd = false;
 #if UNITY_EDITOR
                 m_sTime = m_cTimeLineData.startRunTime;
@@ -89,7 +90,12 @@ namespace BTCore
             m_sTime += deltaTime;
             if (m_nCount == count)
             {
+                for (int i = 0; i < m_lstResults.Count; i++)
+                {
+                    m_lstResults[i] = BTResult.Running;
+                }
                 m_bIsEnd = true;
+                m_nCount = 0;
                 return BTResult.Success;
             }
             return BTResult.Running;

@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <editorPos>
+    <x>5055</x>
+    <y>5000</y>
+  </editorPos>
+  <enable>true</enable>
+  <data xsi:type="AIData" />
+  <lstChild>
+    <NEData>
+      <editorPos>
+        <x>5049</x>
+        <y>5132</y>
+      </editorPos>
+      <enable>true</enable>
+      <data xsi:type="BTSequenceData" />
+      <lstChild>
+        <NEData>
+          <editorPos>
+            <x>4817</x>
+            <y>5236</y>
+          </editorPos>
+          <enable>true</enable>
+          <data xsi:type="UnitJoinScenePathActionData" />
+        </NEData>
+        <NEData>
+          <editorPos>
+            <x>5052</x>
+            <y>5272</y>
+          </editorPos>
+          <enable>true</enable>
+          <data xsi:type="BTParallelORData" />
+          <lstChild>
+            <NEData>
+              <editorPos>
+                <x>4903</x>
+                <y>5412</y>
+              </editorPos>
+              <enable>true</enable>
+              <data xsi:type="AI_TemplateUnitAttackTimeActionData" />
+            </NEData>
+            <NEData>
+              <editorPos>
+                <x>5161</x>
+                <y>5411</y>
+              </editorPos>
+              <enable>true</enable>
+              <data xsi:type="BTRepeatDecoratorData">
+                <times>0</times>
+                <delayTime>
+                  <_serializedValue>0</_serializedValue>
+                </delayTime>
+                <spaceTime>
+                  <_serializedValue>0</_serializedValue>
+                </spaceTime>
+              </data>
+              <lstChild>
+                <NEData>
+                  <editorPos>
+                    <x>5164</x>
+                    <y>5548</y>
+                  </editorPos>
+                  <enable>true</enable>
+                  <data xsi:type="UnitDoSkillActionData">
+                    <bNeedTarget>false</bNeedTarget>
+                  </data>
+                </NEData>
+              </lstChild>
+            </NEData>
+          </lstChild>
+        </NEData>
+        <NEData>
+          <editorPos>
+            <x>5293</x>
+            <y>5229</y>
+          </editorPos>
+          <enable>true</enable>
+          <data xsi:type="UnitLeaveScenePathActionData" />
+        </NEData>
+      </lstChild>
+    </NEData>
+  </lstChild>
+</NEData>

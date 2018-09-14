@@ -17,6 +17,9 @@ namespace Game
         public TSVector center { get { return m_sCenter; } }
         private TSVector m_sCenter;
 
+        public bool enable { get { return m_bEnable; } }
+        private bool m_bEnable;
+
         static GameCollider()
         {
             ObjectPool<C2D_Circle>.Instance.Init(100);
@@ -27,8 +30,9 @@ namespace Game
         {
             m_cColliderItem = GameColliderCfgSys.Instance.GetColliderItem(path);
             m_lstColliders.Clear();
+            m_bEnable = true;
 
-            
+
             if (m_cColliderItem != null && m_cColliderItem.mLstData.Count > 0)
             {
                 for (int i = 0; i < m_cColliderItem.mLstData.Count; i++)
@@ -38,6 +42,11 @@ namespace Game
                 }
             }
             Reculate();
+        }
+
+        public void SetEnable(bool enable)
+        {
+            m_bEnable = enable;
         }
 
         private void Reculate()
@@ -57,6 +66,7 @@ namespace Game
         public bool CheckCircle(TSVector sCenter, FP nRadius,out TSVector sCrossPoint)
         {
             sCrossPoint = sCenter;
+            if (!m_bEnable) return false;
             TSVector2 sCenter2 = new TSVector2(sCenter.x,sCenter.z);
             TSVector2 sCrossPoint2 = sCenter2;
             for (int i = m_lstColliders.Count - 1; i > -1; i--)
@@ -75,6 +85,7 @@ namespace Game
 
         public bool CheckCircle(TSVector sCenter, FP nRadius)
         {
+            if (!m_bEnable) return false;
             TSVector2 sCenter2 = new TSVector2(sCenter.x, sCenter.z);
             TSVector2 sCrossPoint2 = sCenter2;
             for (int i = m_lstColliders.Count - 1; i > -1; i--)
@@ -91,6 +102,7 @@ namespace Game
         public bool CheckCollider(GameCollider otherCollider,out TSVector sCrossPoint)
         {
             sCrossPoint = otherCollider.center;
+            if (!m_bEnable) return false;
             TSVector2 sCenter2 = new TSVector2(otherCollider.center.x, otherCollider.center.z);
             TSVector2 sCrossPoint2 = sCenter2;
             for (int i = m_lstColliders.Count - 1; i > -1; i--)
@@ -114,6 +126,7 @@ namespace Game
 
         public bool CheckCollider(GameCollider otherCollider)
         {
+            if (!m_bEnable || !otherCollider.enable) return false;
             TSVector2 sCenter2 = new TSVector2(otherCollider.center.x, otherCollider.center.z);
             TSVector2 sCrossPoint2 = sCenter2;
             for (int i = m_lstColliders.Count - 1; i > -1; i--)
@@ -135,6 +148,7 @@ namespace Game
         public bool CheckLine(TSVector sOrgPos, TSVector sOffset, out TSVector sCrossPoint)
         {
             sCrossPoint = sOrgPos;
+            if (!m_bEnable) return false;
             TSVector2 sOrgPos2 = new TSVector2(sOrgPos.x,sOrgPos.z);
             TSVector2 sOffset2 = new TSVector2(sOffset.x,sOffset.z);
             TSVector2 sCrossPoint2 = new TSVector2(sCrossPoint.x,sCrossPoint.z);
@@ -153,6 +167,7 @@ namespace Game
         public bool CheckPos(TSVector sPosition,out TSVector sCrossPoint)
         {
             sCrossPoint = sPosition;
+            if (!m_bEnable) return false;
             TSVector2 sPosition2 = new TSVector2(sPosition.x,sPosition.z);
             for (int i = m_lstColliders.Count - 1; i > -1; i--)
             {
@@ -168,6 +183,7 @@ namespace Game
         public bool CheckRect(TSVector sCenter, TSVector sDir, FP nHalfWidth, FP nHalfHeight,out TSVector sCrossPoint)
         {
             sCrossPoint = sCenter;
+            if (!m_bEnable) return false;
             TSVector2 sCenter2 = new TSVector2(sCenter.x, sCenter.z);
             TSVector2 sDir2 = new TSVector2(sDir.x, sDir.z);
             TSVector2 sCrossPoint2 = new TSVector2(sCrossPoint.x, sCrossPoint.z);
@@ -187,6 +203,7 @@ namespace Game
 
         public bool CheckRect(TSVector sCenter, TSVector sDir, FP nHalfWidth, FP nHalfHeight)
         {
+            if (!m_bEnable) return false;
             TSVector2 sCenter2 = new TSVector2(sCenter.x, sCenter.z);
             TSVector2 sDir2 = new TSVector2(sDir.x, sDir.z);
             for (int i = m_lstColliders.Count - 1; i > -1; i--)

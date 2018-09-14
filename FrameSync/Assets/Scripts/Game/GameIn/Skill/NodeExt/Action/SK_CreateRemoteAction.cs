@@ -18,6 +18,8 @@ namespace Game
         public string hangPoint;
         [NEProperty("使用挂点方向")]
         public bool useHangPoint;
+        [NEProperty("偏移角度")]
+        public FP offsetAngle;
     }
     [SkillNode(typeof(SK_CreateRemoteActionData))]
     [NENodeDesc("从宿主挂点位置创建远程")]
@@ -46,6 +48,11 @@ namespace Game
             if(m_cActionData.useHangPoint)
             {
                 targetForward = bornForward;
+            }
+            if (m_cActionData.offsetAngle != 0)
+            {
+                TSQuaternion quat = TSQuaternion.AngleAxis(m_cActionData.offsetAngle, TSVector.up);
+                targetForward = quat * targetForward;
             }
             var remote = BattleScene.Instance.CreateRemote(m_cActionData.remoteId,skill.host.campId, bornPosition, targetForward, skill.targetAgentId, skill.targetAgentType, skill.targetPosition, targetForward);
             //初始化远程属性

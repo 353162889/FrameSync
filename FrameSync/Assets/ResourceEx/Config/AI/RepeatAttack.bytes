@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <editorPos>
-    <x>5001</x>
+    <x>5011</x>
     <y>4814</y>
   </editorPos>
   <enable>true</enable>
@@ -9,7 +9,7 @@
   <lstChild>
     <NEData>
       <editorPos>
-        <x>5004</x>
+        <x>5014</x>
         <y>4983</y>
       </editorPos>
       <enable>true</enable>
@@ -22,11 +22,13 @@
       <lstChild>
         <NEData>
           <editorPos>
-            <x>5005</x>
+            <x>5015</x>
             <y>5127</y>
           </editorPos>
           <enable>true</enable>
-          <data xsi:type="UnitDoSkillActionData" />
+          <data xsi:type="UnitDoSkillActionData">
+            <bNeedTarget>false</bNeedTarget>
+          </data>
         </NEData>
       </lstChild>
     </NEData>

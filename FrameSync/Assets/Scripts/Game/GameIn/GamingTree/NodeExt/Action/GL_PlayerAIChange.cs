@@ -34,7 +34,7 @@ namespace Game
             m_cAIChangeData = data as GL_PlayerAIChangeData;
         }
 
-        public override BTActionResult OnRun(GamingBlackBoard blackBoard)
+        protected override BTActionResult OnRun(GamingBlackBoard blackBoard)
         {
             var lst = PvpPlayerMgr.Instance.lstPlayer;
             for (int i = 0; i < lst.Count; i++)

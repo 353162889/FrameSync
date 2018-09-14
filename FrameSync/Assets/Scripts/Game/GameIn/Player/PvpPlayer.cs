@@ -20,6 +20,7 @@ namespace Game
         private bool m_bAIEnable;
         public bool initUnit { get { return m_bInitUnit; } }
         private bool m_bInitUnit;
+        private FP m_sColliderTime;
 
         public void Init(long id,PvpPlayerData playerData = null)
         {
@@ -27,6 +28,7 @@ namespace Game
             m_cPlayerData = playerData;
             m_bInitUnit = false;
             m_bAIEnable = false;
+            m_sColliderTime = 3;
             GlobalEventDispatcher.Instance.AddEvent(GameEvent.UnitRemove, OnUnitRemove);
         }
 
@@ -38,6 +40,8 @@ namespace Game
                 m_cUnit = null;
                 GlobalEventDispatcher.Instance.Dispatch(GameEvent.PvpPlayerUnitDie, this);
                 CreateUnit(m_sBornPos);
+                m_cUnit.SetColliderEnable(false);
+                m_sColliderTime = 3;
                 m_cUnit.Forbid(UnitForbidType.ForbidForward, UnitForbidFromType.Game);
                 if (m_bAIEnable)
                 {
@@ -77,6 +81,14 @@ namespace Game
 
         public void FrameUpdate(FP deltaTime)
         {
+            if(m_sColliderTime > 0)
+            {
+                m_sColliderTime -= deltaTime;
+                if(m_sColliderTime <= 0 && m_cUnit != null)
+                {
+                    m_cUnit.SetColliderEnable(true);
+                }
+            }
             //if(FrameSyncSys.time > 5 && m_cUnit != null && !m_cUnit.isDie && !m_cUnit.isAIRunning)
             //{
             //    m_cUnit.StartAI();

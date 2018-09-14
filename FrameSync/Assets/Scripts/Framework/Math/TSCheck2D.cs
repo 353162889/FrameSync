@@ -249,6 +249,11 @@ namespace Framework
             return (nHalfWidth2 - nHalfWidth) * (nHalfWidth2 - nHalfWidth) + (nHalfHeight2 - nHalfHeight) * (nHalfHeight2 - nHalfHeight) <= nRadius * nRadius;
         }
 
+        public static bool CheckRectangleAndRectangle(TSVector2 sCenter, TSVector2 sDir,FP nHalfWidth,FP nHalfHeight, TSVector2 sOtherCenter,TSVector2 sOtherDir,FP nOtherHalfWidth,FP nOtherHalfHeight)
+        {
+            return false;
+        }
+
         //New 已测
         /// <summary>
         /// 检测圆与线段是否相交
@@ -372,6 +377,8 @@ namespace Framework
             FP nRadiusAdd = nRadius + nRadius2;
             return nDeltaX * nDeltaX + nDeltaY * nDeltaY <= nRadiusAdd * nRadiusAdd;
         }
+
+        
 
         ///// <summary>
         ///// 检测点是否在扇形区域内

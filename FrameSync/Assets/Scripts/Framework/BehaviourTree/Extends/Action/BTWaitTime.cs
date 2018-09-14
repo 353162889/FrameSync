@@ -9,16 +9,27 @@ namespace BTCore
 {
     public class BTWaitTimeData
     {
+        [NEProperty("触发时间")]
+        public FP exeTime;
         [NEProperty("等待时间")]
         public FP time;
     }
 
     [BTNode(typeof(BTWaitTimeData))]
     [NENodeDesc("等待一段时间")]
-    public class BTWaitTime : BTAction
+    public class BTWaitTime : BTAction, IBTTimeLineNode
     {
         private BTWaitTimeData m_cWaitTimeData;
         private FP m_sWaitTime;
+
+        public FP time
+        {
+            get
+            {
+                return m_cWaitTimeData.exeTime;
+            }
+        }
+
         protected override void OnInitData(object data)
         {
             base.OnInitData(data);

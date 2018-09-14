@@ -36,7 +36,11 @@ namespace Game
             AgentObject host = skill.host;
             TSVector bornPosition = host.curPosition;
             TSVector bornForward = host.curForward;
-            if (!string.IsNullOrEmpty(m_cActionData.hangPoint))
+            if(!string.IsNullOrEmpty(skill.resInfo.template_create_remote_hangpoint))
+            {
+                host.GetHangPoint(skill.resInfo.template_create_remote_hangpoint, out bornPosition, out bornForward);
+            }
+            else if (!string.IsNullOrEmpty(m_cActionData.hangPoint))
             {
                 host.GetHangPoint(m_cActionData.hangPoint, out bornPosition, out bornForward);
             }

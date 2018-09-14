@@ -33,7 +33,10 @@ namespace Game
             if(m_resInfo.active_skills.Count > 0)
             {
                 var lst = ResetObjectPool<List<int>>.Instance.GetObject();
-                lst.Add(m_resInfo.active_skills[0]);
+                for (int i = 0; i < m_resInfo.active_skills.Count; i++)
+                {
+                    lst.Add(m_resInfo.active_skills[i]);
+                }
                 SetAISkill(lst);
                 ResetObjectPool<List<int>>.Instance.SaveObject(lst);
             }

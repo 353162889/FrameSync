@@ -39,6 +39,14 @@ namespace Game
             return m_cHangPoint.GetHangPoint(name, cPosition, cForward, out position, out forward);
         }
 
+        public void SetColliderEnable(bool enable)
+        {
+            if(m_cCollider != null)
+            {
+                m_cCollider.SetEnable(enable);
+            }
+        }
+
         protected void InitView()
         {
             m_cHangPoint = gameObject.AddComponentOnce<HangPoint>();

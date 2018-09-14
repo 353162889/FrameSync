@@ -11,6 +11,8 @@ namespace BTCore
     {
         [NEProperty("重复执行次数（0为无限次）")]
         public int times;
+        [NEProperty("延时执行时间")]
+        public FP delayTime;
         [NEProperty("执行间隔(0为每帧)")]
         public FP spaceTime;
     }
@@ -26,15 +28,15 @@ namespace BTCore
             base.OnInitData(data);
             m_cRepeatData = data as BTRepeatDecoratorData;
             m_nTimes = 0;
-            m_sExecuteTime = 0;
+            m_sExecuteTime = m_cRepeatData.delayTime ;
         }
 
         public override BTResult OnEnter(BTBlackBoard blackBoard)
         {
-            m_sExecuteTime += blackBoard.deltaTime;
-            if (m_sExecuteTime >= m_cRepeatData.spaceTime)
+            m_sExecuteTime -= blackBoard.deltaTime;
+            if (m_sExecuteTime <= 0)
             {
-                m_sExecuteTime -= m_cRepeatData.spaceTime;
+                m_sExecuteTime += m_cRepeatData.spaceTime;
                 m_nTimes++;
                 BTResult result = base.OnEnter(blackBoard);
                 if(result != BTResult.Running)

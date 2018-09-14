@@ -22,12 +22,12 @@ namespace Game
         {
             this.OnExit((GamingBlackBoard)blackBoard);
         }
-        public virtual void OnExit(GamingBlackBoard blackBoard) { }
+        protected virtual void OnExit(GamingBlackBoard blackBoard) { }
 
         sealed public override BTActionResult OnRun(BTBlackBoard blackBoard)
         {
             return this.OnRun((GamingBlackBoard)blackBoard);
         }
-        public virtual BTActionResult OnRun(GamingBlackBoard blackBoard) { return BTActionResult.Running; }
+        protected virtual BTActionResult OnRun(GamingBlackBoard blackBoard) { return BTActionResult.Running; }
     }
 }

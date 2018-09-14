@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <editorPos>
+    <x>5005</x>
+    <y>5000</y>
+  </editorPos>
+  <enable>true</enable>
+  <data xsi:type="AIData" />
+  <lstChild>
+    <NEData>
+      <editorPos>
+        <x>4996</x>
+        <y>5133</y>
+      </editorPos>
+      <enable>true</enable>
+      <data xsi:type="BTParallelORData" />
+      <lstChild>
+        <NEData>
+          <editorPos>
+            <x>4832</x>
+            <y>5264</y>
+          </editorPos>
+          <enable>true</enable>
+          <data xsi:type="UnitJoinScenePathActionData" />
+        </NEData>
+        <NEData>
+          <editorPos>
+            <x>5118</x>
+            <y>5262</y>
+          </editorPos>
+          <enable>true</enable>
+          <data xsi:type="BTRepeatDecoratorData">
+            <times>0</times>
+            <delayTime>
+              <_serializedValue>0</_serializedValue>
+            </delayTime>
+            <spaceTime>
+              <_serializedValue>0</_serializedValue>
+            </spaceTime>
+          </data>
+          <lstChild>
+            <NEData>
+              <editorPos>
+                <x>5122</x>
+                <y>5399</y>
+              </editorPos>
+              <enable>true</enable>
+              <data xsi:type="UnitDoSkillActionData">
+                <bNeedTarget>false</bNeedTarget>
+              </data>
+            </NEData>
+          </lstChild>
+        </NEData>
+      </lstChild>
+    </NEData>
+  </lstChild>
+</NEData>

@@ -2,61 +2,6 @@
 <HangPointSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <mLstHangPointItem>
     <HangPointItem>
-      <path>Assets/ResourceEx/Prefab/Test/HangPointTest.prefab</path>
-      <mLstData>
-        <HangPointData>
-          <name>HangPoint2</name>
-          <position>
-            <x>
-              <_serializedValue>5841155584</_serializedValue>
-            </x>
-            <y>
-              <_serializedValue>0</_serializedValue>
-            </y>
-            <z>
-              <_serializedValue>214748160</_serializedValue>
-            </z>
-          </position>
-          <forward>
-            <x>
-              <_serializedValue>4294967808</_serializedValue>
-            </x>
-            <y>
-              <_serializedValue>0</_serializedValue>
-            </y>
-            <z>
-              <_serializedValue>-256</_serializedValue>
-            </z>
-          </forward>
-        </HangPointData>
-        <HangPointData>
-          <name>HangPoint3</name>
-          <position>
-            <x>
-              <_serializedValue>-6098853376</_serializedValue>
-            </x>
-            <y>
-              <_serializedValue>0</_serializedValue>
-            </y>
-            <z>
-              <_serializedValue>8332237312</_serializedValue>
-            </z>
-          </position>
-          <forward>
-            <x>
-              <_serializedValue>-3656960256</_serializedValue>
-            </x>
-            <y>
-              <_serializedValue>0</_serializedValue>
-            </y>
-            <z>
-              <_serializedValue>2252418048</_serializedValue>
-            </z>
-          </forward>
-        </HangPointData>
-      </mLstData>
-    </HangPointItem>
-    <HangPointItem>
       <path>Assets/ResourceEx/Prefab/Unit/AirShip_1.prefab</path>
       <mLstData>
         <HangPointData>
@@ -294,6 +239,56 @@
             </z>
           </forward>
         </HangPointData>
+        <HangPointData>
+          <name>FirePosLeft</name>
+          <position>
+            <x>
+              <_serializedValue>-2362232064</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>11081015296</_serializedValue>
+            </z>
+          </position>
+          <forward>
+            <x>
+              <_serializedValue>0</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>4294967296</_serializedValue>
+            </z>
+          </forward>
+        </HangPointData>
+        <HangPointData>
+          <name>FirePosRight</name>
+          <position>
+            <x>
+              <_serializedValue>2147483648</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>11081015296</_serializedValue>
+            </z>
+          </position>
+          <forward>
+            <x>
+              <_serializedValue>0</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>4294967296</_serializedValue>
+            </z>
+          </forward>
+        </HangPointData>
       </mLstData>
     </HangPointItem>
     <HangPointItem>
@@ -331,6 +326,56 @@
       <mLstData>
         <HangPointData>
           <name>FirePos</name>
+          <position>
+            <x>
+              <_serializedValue>0</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>16492674048</_serializedValue>
+            </z>
+          </position>
+          <forward>
+            <x>
+              <_serializedValue>0</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>4294967296</_serializedValue>
+            </z>
+          </forward>
+        </HangPointData>
+        <HangPointData>
+          <name>FirePosLeft</name>
+          <position>
+            <x>
+              <_serializedValue>0</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>16492674048</_serializedValue>
+            </z>
+          </position>
+          <forward>
+            <x>
+              <_serializedValue>0</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>4294967296</_serializedValue>
+            </z>
+          </forward>
+        </HangPointData>
+        <HangPointData>
+          <name>FirePosRight</name>
           <position>
             <x>
               <_serializedValue>0</_serializedValue>
@@ -429,7 +474,57 @@
               <_serializedValue>0</_serializedValue>
             </y>
             <z>
+              <_serializedValue>13615046656</_serializedValue>
+            </z>
+          </position>
+          <forward>
+            <x>
               <_serializedValue>0</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>4294967296</_serializedValue>
+            </z>
+          </forward>
+        </HangPointData>
+        <HangPointData>
+          <name>FirePosLeft</name>
+          <position>
+            <x>
+              <_serializedValue>-6786048000</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>11639361536</_serializedValue>
+            </z>
+          </position>
+          <forward>
+            <x>
+              <_serializedValue>0</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>4294967296</_serializedValue>
+            </z>
+          </forward>
+        </HangPointData>
+        <HangPointData>
+          <name>FirePosRight</name>
+          <position>
+            <x>
+              <_serializedValue>5884104704</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>11639361536</_serializedValue>
             </z>
           </position>
           <forward>
@@ -453,13 +548,113 @@
           <name>FirePos</name>
           <position>
             <x>
+              <_serializedValue>944891904</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>34918084608</_serializedValue>
+            </z>
+          </position>
+          <forward>
+            <x>
               <_serializedValue>0</_serializedValue>
             </x>
             <y>
               <_serializedValue>0</_serializedValue>
             </y>
             <z>
+              <_serializedValue>4294967296</_serializedValue>
+            </z>
+          </forward>
+        </HangPointData>
+        <HangPointData>
+          <name>FirePosLeft</name>
+          <position>
+            <x>
+              <_serializedValue>-8546983936</_serializedValue>
+            </x>
+            <y>
               <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>31653908480</_serializedValue>
+            </z>
+          </position>
+          <forward>
+            <x>
+              <_serializedValue>0</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>4294967296</_serializedValue>
+            </z>
+          </forward>
+        </HangPointData>
+        <HangPointData>
+          <name>FirePosRight</name>
+          <position>
+            <x>
+              <_serializedValue>7988637696</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>31653908480</_serializedValue>
+            </z>
+          </position>
+          <forward>
+            <x>
+              <_serializedValue>0</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>4294967296</_serializedValue>
+            </z>
+          </forward>
+        </HangPointData>
+        <HangPointData>
+          <name>FirePosLeft1</name>
+          <position>
+            <x>
+              <_serializedValue>-35605278720</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>19842748416</_serializedValue>
+            </z>
+          </position>
+          <forward>
+            <x>
+              <_serializedValue>0</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>4294967296</_serializedValue>
+            </z>
+          </forward>
+        </HangPointData>
+        <HangPointData>
+          <name>FirePosRight1</name>
+          <position>
+            <x>
+              <_serializedValue>37022617600</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>19842748416</_serializedValue>
             </z>
           </position>
           <forward>
@@ -632,6 +827,106 @@
             </z>
           </forward>
         </HangPointData>
+        <HangPointData>
+          <name>FirePosLeft</name>
+          <position>
+            <x>
+              <_serializedValue>-7816839168</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>0</_serializedValue>
+            </z>
+          </position>
+          <forward>
+            <x>
+              <_serializedValue>-4294967808</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>-512</_serializedValue>
+            </z>
+          </forward>
+        </HangPointData>
+        <HangPointData>
+          <name>FirePosRight</name>
+          <position>
+            <x>
+              <_serializedValue>7602094080</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>0</_serializedValue>
+            </z>
+          </position>
+          <forward>
+            <x>
+              <_serializedValue>4294967808</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>-512</_serializedValue>
+            </z>
+          </forward>
+        </HangPointData>
+        <HangPointData>
+          <name>FirePosUp</name>
+          <position>
+            <x>
+              <_serializedValue>0</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>7172595712</_serializedValue>
+            </z>
+          </position>
+          <forward>
+            <x>
+              <_serializedValue>0</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>4294967296</_serializedValue>
+            </z>
+          </forward>
+        </HangPointData>
+        <HangPointData>
+          <name>FirePosDown</name>
+          <position>
+            <x>
+              <_serializedValue>0</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>-6743097344</_serializedValue>
+            </z>
+          </position>
+          <forward>
+            <x>
+              <_serializedValue>0</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>-4294967296</_serializedValue>
+            </z>
+          </forward>
+        </HangPointData>
       </mLstData>
     </HangPointItem>
     <HangPointItem>
@@ -793,12 +1088,42 @@
       <mLstData />
     </HangPointItem>
     <HangPointItem>
+      <path>Assets/ResourceEx/Prefab/Unit/AirShip_10153.prefab</path>
+      <mLstData />
+    </HangPointItem>
+    <HangPointItem>
       <path>Assets/ResourceEx/Prefab/Unit/AirShip_10161.prefab</path>
       <mLstData />
     </HangPointItem>
     <HangPointItem>
-      <path>Assets/ResourceEx/Prefab/Unit/AirShip_10153.prefab</path>
-      <mLstData />
+      <path>Assets/ResourceEx/Prefab/Unit/Boss_2001.prefab</path>
+      <mLstData>
+        <HangPointData>
+          <name>FirePos</name>
+          <position>
+            <x>
+              <_serializedValue>0</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>34230886400</_serializedValue>
+            </z>
+          </position>
+          <forward>
+            <x>
+              <_serializedValue>0</_serializedValue>
+            </x>
+            <y>
+              <_serializedValue>0</_serializedValue>
+            </y>
+            <z>
+              <_serializedValue>4294967296</_serializedValue>
+            </z>
+          </forward>
+        </HangPointData>
+      </mLstData>
     </HangPointItem>
   </mLstHangPointItem>
 </HangPointSet>

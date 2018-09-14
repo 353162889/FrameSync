@@ -48,13 +48,13 @@ namespace Game
             m_nAudioKey = GameAudioSys.Instance.Play(m_cAudioData.audioId);
         }
 
-        public override BTActionResult OnRun(GamingBlackBoard blackBoard)
+        protected override BTActionResult OnRun(GamingBlackBoard blackBoard)
         {
             if (FrameSyncSys.time < m_sEndTime) return BTActionResult.Running;
             return BTActionResult.Ready;
         }
 
-        public override void OnExit(GamingBlackBoard blackBoard)
+        protected override void OnExit(GamingBlackBoard blackBoard)
         {
             if (!m_bAutoDestory)
             {

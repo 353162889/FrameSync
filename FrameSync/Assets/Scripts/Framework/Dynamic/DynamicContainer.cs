@@ -74,7 +74,7 @@ namespace Framework
 
         static DynamicContainer()
         {
-            ObjectPool<DCEntity>.Instance.Init(100);
+            ObjectPool<DCEntity>.Instance.Init(300);
         }
 
         public DynamicContainer()

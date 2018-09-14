@@ -57,8 +57,7 @@ namespace Framework
 
         public override bool CheckRect(TSVector2 sCenter, TSVector2 sDir, FP nHalfWidth, FP nHalfHeight)
         {
-            return false;
-            throw new Exception("需要实现矩形与矩形之间的碰撞");
+            return TSCheck2D.CheckRectangleAndRectangle(this.center, this.forward, halfWidth, halfHeight, sCenter, sDir, nHalfWidth, nHalfHeight);
         }
     }
 }

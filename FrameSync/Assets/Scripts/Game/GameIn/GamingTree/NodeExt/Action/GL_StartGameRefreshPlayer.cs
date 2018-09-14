@@ -74,7 +74,7 @@ namespace Game
             }
         }
 
-        public override BTActionResult OnRun(GamingBlackBoard blackBoard)
+        protected override BTActionResult OnRun(GamingBlackBoard blackBoard)
         {
             if (m_cRefershPlayer == null || m_cRefershPlayer.unit == null) return BTActionResult.Ready;
             if(!m_cRefershPlayer.unit.isMoving)
@@ -88,7 +88,7 @@ namespace Game
             return BTActionResult.Running;
         }
 
-        public override void OnExit(GamingBlackBoard blackBoard)
+        protected override void OnExit(GamingBlackBoard blackBoard)
         {
             m_cRefershPlayer = null;
             m_bForbidMoveId = 0;
