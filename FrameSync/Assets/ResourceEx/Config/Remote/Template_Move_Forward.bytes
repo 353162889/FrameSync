@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <editorPos>
-    <x>5010</x>
+    <x>5020</x>
     <y>5000</y>
   </editorPos>
   <enable>true</enable>
@@ -9,8 +9,8 @@
   <lstChild>
     <NEData>
       <editorPos>
-        <x>5021.5</x>
-        <y>5127</y>
+        <x>5031</x>
+        <y>5117</y>
       </editorPos>
       <enable>true</enable>
       <data xsi:type="BTTimeLineData">
@@ -21,7 +21,7 @@
       <lstChild>
         <NEData>
           <editorPos>
-            <x>5011</x>
+            <x>5021</x>
             <y>5239</y>
           </editorPos>
           <enable>true</enable>
@@ -33,7 +33,7 @@
           <lstChild>
             <NEData>
               <editorPos>
-                <x>5012</x>
+                <x>5022</x>
                 <y>5365</y>
               </editorPos>
               <enable>true</enable>
@@ -41,8 +41,8 @@
               <lstChild>
                 <NEData>
                   <editorPos>
-                    <x>4810</x>
-                    <y>5493</y>
+                    <x>4820</x>
+                    <y>5515</y>
                   </editorPos>
                   <enable>true</enable>
                   <data xsi:type="RM_TemplateConstantVelocityActionData">
@@ -53,8 +53,8 @@
                 </NEData>
                 <NEData>
                   <editorPos>
-                    <x>5128</x>
-                    <y>5498</y>
+                    <x>5138</x>
+                    <y>5520</y>
                   </editorPos>
                   <enable>true</enable>
                   <data xsi:type="BTG_LastPosToCurPosSelectCompositeData">
@@ -74,11 +74,11 @@
                   <lstChild>
                     <NEData>
                       <editorPos>
-                        <x>5144</x>
-                        <y>5662</y>
+                        <x>5147</x>
+                        <y>5673</y>
                       </editorPos>
                       <enable>true</enable>
-                      <data xsi:type="BTG_HurtActionData">
+                      <data xsi:type="RM_TemplateHurtActionData">
                         <time>
                           <_serializedValue>0</_serializedValue>
                         </time>

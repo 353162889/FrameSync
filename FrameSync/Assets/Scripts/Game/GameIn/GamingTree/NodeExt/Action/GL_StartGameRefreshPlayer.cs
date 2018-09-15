@@ -51,7 +51,7 @@ namespace Game
                     if (!player.initUnit)
                     {
                         m_cRefershPlayer = player;
-                        var unit = player.CreateUnit(m_cRefreshData.points[0]);
+                        var unit = player.CreatePlayerUnit(m_cRefreshData.points[0]);
                         player.SetBornPos(m_cRefreshData.points[m_cRefreshData.points.Length - 1]);
                         m_bForbidMoveId = unit.Forbid(UnitForbidType.ForbidPlayerMove, UnitForbidFromType.Game);
                         m_bForbidSkillId = unit.Forbid(UnitForbidType.ForbidPlayerSkill, UnitForbidFromType.Game);

@@ -126,7 +126,7 @@ namespace Game
             }
 
             BehaviourPool<UnitAirShip>.Instance.Init(30);
-            BehaviourPool<UnitItem>.Instance.Init(10);
+            BehaviourPool<UnitItem>.Instance.Init(50);
             BehaviourPool<Remote>.Instance.Init(300);
             ObjectPool<GameCollider>.Instance.Init(200);
             ObjectPool<DamageInfo>.Instance.Init(20);

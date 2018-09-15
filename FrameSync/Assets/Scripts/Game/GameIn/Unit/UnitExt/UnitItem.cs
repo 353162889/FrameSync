@@ -20,16 +20,23 @@ namespace Game
                 return;
             }
             m_sPrefab = m_resInfo.prefab;
+            InitForbid();
             InitAttr();
             InitMove();
             InitView();
             InitAI();
+
+            if (!string.IsNullOrEmpty(m_resInfo.ai_path))
+            {
+                this.SetAI(m_resInfo.ai_path);
+            }
+
             this.moveSpeed = m_resInfo.move_speed;
         }
 
-        public void HitUnit(Unit unit)
+        public void HitPlayer(PvpPlayer player,Unit unit)
         {
-            if(m_resInfo.hp != 0)
+            if (m_resInfo.hp != 0)
             {
                 var damageInfo = ObjectPool<DamageInfo>.Instance.GetObject();
                 damageInfo.attack = this.agentObj;
@@ -37,6 +44,20 @@ namespace Game
                 damageInfo.damage = -m_resInfo.hp;
                 unit.OnHurt(damageInfo);
                 ObjectPool<DamageInfo>.Instance.SaveObject(damageInfo);
+            }
+            if(m_resInfo.airship > 0)
+            {
+                player.HitUnit(m_resInfo.airship);
+            }
+
+            if(m_resInfo.skill1 > 0)
+            {
+                player.HitSkill(0, m_resInfo.skill1);
+            }
+
+            if (m_resInfo.skill2 > 0)
+            {
+                player.HitSkill(1, m_resInfo.skill2);
             }
         }
     }

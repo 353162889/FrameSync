@@ -36,7 +36,7 @@ namespace Game
                     {
                         if(unit.gameCollider.CheckCircle(unitItem.curPosition,unitItem.resInfo.radius))
                         {
-                            unitItem.HitUnit(unit);
+                            unitItem.HitPlayer(lstPlayer[j],unit);
                             m_lstRemoveUnit.Add(unitItem);
                             break;
                         }

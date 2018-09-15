@@ -14,6 +14,8 @@ namespace Game
         public FP time;
         [NEProperty("作用的对象")]
         public BTActionTarget actionTarget;
+        [NEProperty("附加伤害")]
+        public FP additionDamage;
     }
 
     [BTGameNode(typeof(BTG_HurtActionData))]
@@ -43,7 +45,7 @@ namespace Game
                     damageInfo.attack = blackBoard.host;
                     damageInfo.defence = target;
                     FP attack = blackBoard.host.GetAttrValue((int)AttrType.Attack);
-                    damageInfo.damage = attack;
+                    damageInfo.damage = attack + m_cHurtData.additionDamage;
                     unit.OnHurt(damageInfo);
                     ObjectPool<DamageInfo>.Instance.SaveObject(damageInfo);
                 }

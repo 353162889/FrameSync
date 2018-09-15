@@ -10,5 +10,6 @@ namespace Game
         UnitDestory,    //单位销毁
         UnitDieEffect,  //单位死亡时特效
         UnitHitItem,    //单位碰撞到物品
+        UnitDieDropItem,//单位死亡掉落
     }
 }

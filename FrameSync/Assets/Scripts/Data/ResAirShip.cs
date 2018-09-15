@@ -20,6 +20,9 @@ namespace GameData
 		public FP ai_attack_time { get; private set; }
 		public string die_effect { get; private set; }
 		public int die_audio { get; private set; }
+		public List<int> die_drop_ids { get; private set; }
+		public List<FP> die_drop_weights { get; private set; }
+		public FP die_drop_rate { get; private set; }
 		public ResAirShip(SecurityElement node)
 		{
 			id = int.Parse(node.Attribute("id"));
@@ -58,6 +61,33 @@ namespace GameData
 			ai_attack_time = FP.FromSourceLong(long.Parse(node.Attribute("ai_attack_time")));
 			die_effect = node.Attribute("die_effect");
 			die_audio = int.Parse(node.Attribute("die_audio"));
+			die_drop_ids = new List<int>();
+			string str_die_drop_ids = node.Attribute("die_drop_ids");
+			if(!string.IsNullOrEmpty(str_die_drop_ids))
+			{
+				string[] die_drop_idsArr = str_die_drop_ids.Split(',');
+				if (die_drop_idsArr != null || die_drop_idsArr.Length > 0)
+				{
+					for (int i = 0; i < die_drop_idsArr.Length; i++)
+					{
+						die_drop_ids.Add(int.Parse(die_drop_idsArr[i]));
+					}
+				}
+			}
+			die_drop_weights = new List<FP>();
+			string str_die_drop_weights = node.Attribute("die_drop_weights");
+			if(!string.IsNullOrEmpty(str_die_drop_weights))
+			{
+				string[] die_drop_weightsArr = str_die_drop_weights.Split(',');
+				if (die_drop_weightsArr != null || die_drop_weightsArr.Length > 0)
+				{
+					for (int i = 0; i < die_drop_weightsArr.Length; i++)
+					{
+						die_drop_weights.Add(FP.FromSourceLong(long.Parse(die_drop_weightsArr[i])));
+					}
+				}
+			}
+			die_drop_rate = FP.FromSourceLong(long.Parse(node.Attribute("die_drop_rate")));
 		}
 	}
 }

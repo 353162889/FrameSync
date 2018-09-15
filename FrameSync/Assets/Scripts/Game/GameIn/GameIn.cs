@@ -68,6 +68,7 @@ namespace Game
             m_cSysCompContainer.RegisterComp(GamingSysCompType.UnitDestory, new GSC_UnitDestory());
             m_cSysCompContainer.RegisterComp(GamingSysCompType.UnitDieEffect, new GSC_UnitDieEffect());
             m_cSysCompContainer.RegisterComp(GamingSysCompType.UnitHitItem, new GSC_UnitHitItem());
+            m_cSysCompContainer.RegisterComp(GamingSysCompType.UnitDieDropItem, new GSC_UnitDieDropItem());
 
             GlobalEventDispatcher.Instance.AddEvent(GameEvent.StartBattle, OnStartBattle);
             GlobalEventDispatcher.Instance.AddEvent(GameEvent.PvpPlayerCreate, OnPlayerCreate);

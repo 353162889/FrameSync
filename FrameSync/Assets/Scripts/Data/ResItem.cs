@@ -15,6 +15,9 @@ namespace GameData
 		public FP move_speed { get; private set; }
 		public string ai_path { get; private set; }
 		public FP hp { get; private set; }
+		public int airship { get; private set; }
+		public int skill1 { get; private set; }
+		public int skill2 { get; private set; }
 		public ResItem(SecurityElement node)
 		{
 			id = int.Parse(node.Attribute("id"));
@@ -24,6 +27,9 @@ namespace GameData
 			move_speed = FP.FromSourceLong(long.Parse(node.Attribute("move_speed")));
 			ai_path = node.Attribute("ai_path");
 			hp = FP.FromSourceLong(long.Parse(node.Attribute("hp")));
+			airship = int.Parse(node.Attribute("airship"));
+			skill1 = int.Parse(node.Attribute("skill1"));
+			skill2 = int.Parse(node.Attribute("skill2"));
 		}
 	}
 }

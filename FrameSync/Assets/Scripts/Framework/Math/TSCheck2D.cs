@@ -249,9 +249,69 @@ namespace Framework
             return (nHalfWidth2 - nHalfWidth) * (nHalfWidth2 - nHalfWidth) + (nHalfHeight2 - nHalfHeight) * (nHalfHeight2 - nHalfHeight) <= nRadius * nRadius;
         }
 
+
+        /// <summary>
+        /// 获取到矩形到一个分离轴的半径投影
+        /// </summary>
+        /// <returns></returns>
+        private static FP GetProjectionRadius(TSVector2 sRectHeightAxis, TSVector2 sRectWidthAxis, FP nHalfWidth, FP nHalfHeight, TSVector2 sAxis)
+        {
+            return nHalfHeight * TSMath.Abs(TSVector2.Dot(sRectHeightAxis, sAxis)) + nHalfWidth * TSMath.Abs(TSVector2.Dot(sRectWidthAxis, sAxis));
+        }
+        /// <summary>
+        /// 检测矩形与矩形是否相交，这里使用OBB中分离轴定律判断
+        /// </summary>
+        /// <param name="sCenter"></param>
+        /// <param name="sDir"></param>
+        /// <param name="nHalfWidth"></param>
+        /// <param name="nHalfHeight"></param>
+        /// <param name="sOtherCenter"></param>
+        /// <param name="sOtherDir"></param>
+        /// <param name="nOtherHalfWidth"></param>
+        /// <param name="nOtherHalfHeight"></param>
+        /// <returns></returns>
         public static bool CheckRectangleAndRectangle(TSVector2 sCenter, TSVector2 sDir,FP nHalfWidth,FP nHalfHeight, TSVector2 sOtherCenter,TSVector2 sOtherDir,FP nOtherHalfWidth,FP nOtherHalfHeight)
         {
-            return false;
+            //第一个矩形的方向轴向量
+            TSVector2 rect1HeightAxis = sDir;
+            rect1HeightAxis.Normalize();
+            TSVector2 rect1WidthAxis = new TSVector2(-rect1HeightAxis.y, rect1HeightAxis.x);
+
+            //第二个矩形的方向轴向量
+            TSVector2 rect2HeightAxis = sOtherDir;
+            rect2HeightAxis.Normalize();
+            TSVector2 rect2WidthAxis = new TSVector2(-rect2HeightAxis.y, rect2HeightAxis.x);
+
+            //两个矩形中心点向量
+            TSVector2 centerVector = sOtherCenter - sCenter;
+            //这里的半径投影就是矩形的半宽半高在分离轴上投影之和
+            //判断两矩形的半径投影之和 与 中心点向量的投影 (都是在分离轴上的投影) 的大小，如果半径投影之和小于等于中心点向量投影，那么两个矩形不碰撞（只要有一个）
+            //if (GetProjectionRadius(rect1HeightAxis, rect1WidthAxis, nHalfWidth, nHalfHeight, rect1HeightAxis)
+            //    + GetProjectionRadius(rect2HeightAxis, rect2WidthAxis, nOtherHalfWidth, nOtherHalfHeight, rect1HeightAxis)
+            //    <= TSMath.Abs(TSVector2.Dot(centerVector, rect1HeightAxis))) return false;
+            //if (GetProjectionRadius(rect1HeightAxis, rect1WidthAxis, nHalfWidth, nHalfHeight, rect1WidthAxis)
+            //    + GetProjectionRadius(rect2HeightAxis, rect2WidthAxis, nOtherHalfWidth, nOtherHalfHeight, rect1WidthAxis)
+            //    <= TSMath.Abs(TSVector2.Dot(centerVector, rect1WidthAxis))) return false;
+
+            //if (GetProjectionRadius(rect1HeightAxis, rect1WidthAxis, nHalfWidth, nHalfHeight, rect2HeightAxis)
+            //    + GetProjectionRadius(rect2HeightAxis, rect2WidthAxis, nOtherHalfWidth, nOtherHalfHeight, rect2HeightAxis)
+            //    <= TSMath.Abs(TSVector2.Dot(centerVector, rect2HeightAxis))) return false;
+            //if (GetProjectionRadius(rect1HeightAxis, rect1WidthAxis, nHalfWidth, nHalfHeight, rect2WidthAxis)
+            //    + GetProjectionRadius(rect2HeightAxis, rect2WidthAxis, nOtherHalfWidth, nOtherHalfHeight, rect2WidthAxis)
+            //    <= TSMath.Abs(TSVector2.Dot(centerVector, rect2WidthAxis))) return false;
+
+            //优化
+            if (nHalfHeight + GetProjectionRadius(rect2HeightAxis, rect2WidthAxis, nOtherHalfWidth, nOtherHalfHeight, rect1HeightAxis)
+               <= TSMath.Abs(TSVector2.Dot(centerVector, rect1HeightAxis))) return false;
+            if (nHalfWidth + GetProjectionRadius(rect2HeightAxis, rect2WidthAxis, nOtherHalfWidth, nOtherHalfHeight, rect1WidthAxis)
+                <= TSMath.Abs(TSVector2.Dot(centerVector, rect1WidthAxis))) return false;
+
+            if (GetProjectionRadius(rect1HeightAxis, rect1WidthAxis, nHalfWidth, nHalfHeight, rect2HeightAxis) + nOtherHalfHeight
+                <= TSMath.Abs(TSVector2.Dot(centerVector, rect2HeightAxis))) return false;
+            if (GetProjectionRadius(rect1HeightAxis, rect1WidthAxis, nHalfWidth, nHalfHeight, rect2WidthAxis) + nOtherHalfWidth
+                <= TSMath.Abs(TSVector2.Dot(centerVector, rect2WidthAxis))) return false;
+
+            return true;
         }
 
         //New 已测

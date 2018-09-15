@@ -24,6 +24,16 @@ namespace Game
                     files.Add(aiPath);
                 }
             }
+            var lstItem = ResCfgSys.Instance.GetCfgLst<ResItem>();
+            for (int i = 0; i < lstItem.Count; i++)
+            {
+                var aiPath = lstItem[i].ai_path;
+                if (!string.IsNullOrEmpty(aiPath) && !files.Contains(aiPath))
+                {
+                    files.Add(aiPath);
+                }
+            }
+
             AgentObjectAI.Init();
             m_cNEDataLoader.Load(files, AgentObjectAI.arrAINodeDataType, onFinish);
         }

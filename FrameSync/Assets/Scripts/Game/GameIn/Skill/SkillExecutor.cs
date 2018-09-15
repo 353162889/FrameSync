@@ -68,12 +68,12 @@ namespace Game
                 }
             }
 
-            for (int i = m_lstActiveskill.Count; i > -1; i--)
+            for (int i = m_lstActiveskill.Count - 1; i > -1; i--)
             {
                 var skill = m_lstActiveskill[i];
                 if (skill.skillId == skillId)
                 {
-                    m_lstPassiveSkill.RemoveAt(i);
+                    m_lstActiveskill.RemoveAt(i);
                     break;
                 }
             }

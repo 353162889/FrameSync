@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-	<resitem ai_path="" hp="0" id="1" move_speed="21474836480" name="血包" prefab="Prefab/Item/Item_1" radius="6442450944"/>
+	<resitem ai_path="Config/AI/RandomPointMove.bytes" airship="0" hp="21474836480" id="1" move_speed="21474836480" name="血包" prefab="Prefab/Item/Item_1" radius="2147483648" skill1="0" skill2="0"/>
+	<resitem ai_path="Config/AI/RandomPointMove.bytes" airship="0" hp="0" id="101" move_speed="21474836480" name="技能" prefab="Prefab/Item/Item_101" radius="2147483648" skill1="108" skill2="0"/>
+	<resitem ai_path="Config/AI/RandomPointMove.bytes" airship="1006" hp="0" id="1006" move_speed="21474836480" name="飞船" prefab="Prefab/Item/Item_1006" radius="2147483648" skill1="0" skill2="0"/>
+	<resitem ai_path="Config/AI/RandomPointMove.bytes" airship="1008" hp="0" id="1008" move_speed="21474836480" name="飞船" prefab="Prefab/Item/Item_1008" radius="2147483648" skill1="0" skill2="0"/>
+	<resitem ai_path="Config/AI/RandomPointMove.bytes" airship="1011" hp="0" id="1011" move_speed="21474836480" name="飞船" prefab="Prefab/Item/Item_1011" radius="2147483648" skill1="0" skill2="0"/>
+	<resitem ai_path="Config/AI/RandomPointMove.bytes" airship="1012" hp="0" id="1012" move_speed="21474836480" name="飞船" prefab="Prefab/Item/Item_1012" radius="2147483648" skill1="0" skill2="0"/>
+	<resitem ai_path="Config/AI/RandomPointMove.bytes" airship="1017" hp="0" id="1017" move_speed="21474836480" name="飞船" prefab="Prefab/Item/Item_1017" radius="2147483648" skill1="0" skill2="0"/>
+	<resitem ai_path="Config/AI/RandomPointMove.bytes" airship="1018" hp="0" id="1018" move_speed="21474836480" name="飞船" prefab="Prefab/Item/Item_1018" radius="2147483648" skill1="0" skill2="0"/>
 </root>

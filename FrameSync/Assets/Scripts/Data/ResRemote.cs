@@ -13,6 +13,7 @@ namespace GameData
 		public string target_type { get; private set; }
 		public FP move_speed { get; private set; }
 		public FP max_move_distance { get; private set; }
+		public FP add_damage { get; private set; }
 		public string effect_name { get; private set; }
 		public string logic_path { get; private set; }
 		public ResRemote(SecurityElement node)
@@ -22,6 +23,7 @@ namespace GameData
 			target_type = node.Attribute("target_type");
 			move_speed = FP.FromSourceLong(long.Parse(node.Attribute("move_speed")));
 			max_move_distance = FP.FromSourceLong(long.Parse(node.Attribute("max_move_distance")));
+			add_damage = FP.FromSourceLong(long.Parse(node.Attribute("add_damage")));
 			effect_name = node.Attribute("effect_name");
 			logic_path = node.Attribute("logic_path");
 		}
