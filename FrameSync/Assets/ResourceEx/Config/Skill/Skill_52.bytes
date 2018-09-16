@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <editorPos>
+    <x>5040</x>
+    <y>5000</y>
+  </editorPos>
+  <enable>true</enable>
+  <data xsi:type="SkillData" />
+  <lstChild>
+    <NEData>
+      <editorPos>
+        <x>5045</x>
+        <y>5137</y>
+      </editorPos>
+      <enable>true</enable>
+      <data xsi:type="BTParallelAndData" />
+      <lstChild>
+        <NEData>
+          <editorPos>
+            <x>4999</x>
+            <y>5324</y>
+          </editorPos>
+          <enable>true</enable>
+          <data xsi:type="BTG_CreateEffectData">
+            <time>
+              <_serializedValue>0</_serializedValue>
+            </time>
+            <actionTarget>Host</actionTarget>
+            <effectName>eff_jiguang_1</effectName>
+            <hangPoint>TransFirePos</hangPoint>
+            <playTime>
+              <_serializedValue>429492434632704</_serializedValue>
+            </playTime>
+          </data>
+        </NEData>
+        <NEData>
+          <editorPos>
+            <x>5226</x>
+            <y>5327</y>
+          </editorPos>
+          <enable>true</enable>
+          <data xsi:type="BGT_SelfRectSelectCompositeData">
+            <time>
+              <_serializedValue>0</_serializedValue>
+            </time>
+            <totalDuration>
+              <_serializedValue>429492434632704</_serializedValue>
+            </totalDuration>
+            <oneDuration>
+              <_serializedValue>0</_serializedValue>
+            </oneDuration>
+            <totalObjMaxCount>99999</totalObjMaxCount>
+            <oneObjMaxCount>99999</oneObjMaxCount>
+            <selectType>UnitAndRemoteEnemy</selectType>
+            <hangPoint>FirePos</hangPoint>
+            <width>
+              <_serializedValue>8589934592</_serializedValue>
+            </width>
+            <height>
+              <_serializedValue>343597383680</_serializedValue>
+            </height>
+            <useHangPointDirect>true</useHangPointDirect>
+          </data>
+          <lstChild>
+            <NEData>
+              <editorPos>
+                <x>5246</x>
+                <y>5467</y>
+              </editorPos>
+              <enable>true</enable>
+              <data xsi:type="BTG_HurtActionData">
+                <time>
+                  <_serializedValue>0</_serializedValue>
+                </time>
+                <actionTarget>SelectTarget</actionTarget>
+                <additionDamage>
+                  <_serializedValue>4294967296</_serializedValue>
+                </additionDamage>
+              </data>
+            </NEData>
+          </lstChild>
+        </NEData>
+      </lstChild>
+    </NEData>
+  </lstChild>
+</NEData>

@@ -49,6 +49,11 @@ namespace Game
                     unit.OnHurt(damageInfo);
                     ObjectPool<DamageInfo>.Instance.SaveObject(damageInfo);
                 }
+                else if(target.agentType == AgentObjectType.Remote && target.agent != null)
+                {
+                    var remote = (Remote)target.agent;
+                    BattleScene.Instance.DestroyRemote(remote);
+                }
             }
             return BTActionResult.Ready;
         }

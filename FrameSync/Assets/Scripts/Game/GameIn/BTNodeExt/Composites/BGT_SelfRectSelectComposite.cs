@@ -5,6 +5,7 @@ using System.Text;
 using BTCore;
 using Framework;
 using NodeEditor;
+using UnityEngine;
 
 namespace Game
 {
@@ -44,7 +45,7 @@ namespace Game
             {
                 curForward = host.curForward;
             }
-            TSVector center = (curPosition + curForward * m_cSelfRectSelectData.height) / 2;
+            TSVector center = curPosition + curForward * m_cSelfRectSelectData.height / 2;
             //检测lastPosition到curPosition这条之间碰撞到的代理
             for (int i = 0; i < lst.Count; i++)
             {
@@ -59,6 +60,14 @@ namespace Game
                         info.hitDirect = host.curForward;
                         result.Add(info);
                     }
+                    //Vector3 uCenter = center.ToUnityVector3();
+                    //Vector3 uForward = curForward.ToUnityVector3();
+                    //float nHalfWidth = (m_cSelfRectSelectData.width / 2).AsFloat();
+                    //float nHalfHeight = (m_cSelfRectSelectData.height / 2).AsFloat();
+                    //GizmosUtility.instance.BeginDrawGizmos(0f, () => {
+                    //    UnityEngine.Gizmos.color = Color.red;
+                    //    GizmosUtility.instance.DrawRect(uCenter, uForward, nHalfWidth, nHalfHeight);
+                    //},false);
                 }
             }
         }

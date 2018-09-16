@@ -117,7 +117,7 @@ namespace Game
             m_cHangPoint.InitHangView(null);
 
             m_cCollider = ObjectPool<GameCollider>.Instance.GetObject();
-            m_cCollider.Init(remoteFullPath);
+            m_cCollider.Init(curPosition,remoteFullPath);
             m_cCollider.Update(curPosition, curForward);
 
             if (m_cValueContainer == null)

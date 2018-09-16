@@ -91,6 +91,9 @@ namespace Game
 
         public void Init(AgentObject host)
         {
+            m_bIsDo = false;
+            m_sStartTime = -1000;
+            m_sEndTime = -1000;
             m_cHost = host;
             if (m_cBlackBoard == null)
             {

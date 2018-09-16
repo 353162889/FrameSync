@@ -16,6 +16,7 @@ namespace Game
 
         public TSVector center { get { return m_sCenter; } }
         private TSVector m_sCenter;
+        private TSVector2 m_sCenter2;
 
         public bool enable { get { return m_bEnable; } }
         private bool m_bEnable;
@@ -26,7 +27,7 @@ namespace Game
             ObjectPool<C2D_Rect>.Instance.Init(100);
         }
 
-        public void Init(string path)
+        public void Init(TSVector position, string path)
         {
             m_cColliderItem = GameColliderCfgSys.Instance.GetColliderItem(path);
             m_lstColliders.Clear();
@@ -41,7 +42,7 @@ namespace Game
                     m_lstColliders.Add(c);
                 }
             }
-            Reculate();
+            Reculate(position);
         }
 
         public void SetEnable(bool enable)
@@ -49,18 +50,27 @@ namespace Game
             m_bEnable = enable;
         }
 
-        private void Reculate()
+        private void Reculate(TSVector position)
         {
-            m_sCenter = TSVector.zero;
-            for (int i = 0; i < m_lstColliders.Count; i++)
+            if(m_lstColliders.Count > 0)
             {
-                TSVector2 center2 = m_lstColliders[i].center;
-                m_sCenter = m_sCenter + new TSVector(center2.x, 0, center2.y);
+                m_sCenter = TSVector.zero;
+                for (int i = 0; i < m_lstColliders.Count; i++)
+                {
+                    TSVector2 center2 = m_lstColliders[i].center;
+                    m_sCenter = m_sCenter + new TSVector(center2.x, 0, center2.y);
+                }
+                if (m_lstColliders.Count > 1)
+                {
+                    m_sCenter /= m_lstColliders.Count;
+                }
             }
-            if (m_lstColliders.Count > 1)
+            else
             {
-                m_sCenter /= m_lstColliders.Count;
+                m_sCenter = position;
             }
+            m_sCenter2.x = m_sCenter.x;
+            m_sCenter2.y = m_sCenter.z;
         }
 
         public bool CheckCircle(TSVector sCenter, FP nRadius,out TSVector sCrossPoint)
@@ -69,14 +79,25 @@ namespace Game
             if (!m_bEnable) return false;
             TSVector2 sCenter2 = new TSVector2(sCenter.x,sCenter.z);
             TSVector2 sCrossPoint2 = sCenter2;
-            for (int i = m_lstColliders.Count - 1; i > -1; i--)
+            if (m_lstColliders.Count > 0)
             {
-                var collider2 = m_lstColliders[i];
-                if (m_lstColliders[i].CheckCircle(sCenter2, nRadius))
+                for (int i = m_lstColliders.Count - 1; i > -1; i--)
                 {
-                    collider2.CheckLine(sCenter2, collider2.center - sCenter2, out sCrossPoint2);
-                    sCrossPoint.x = sCrossPoint2.x;
-                    sCrossPoint.z = sCrossPoint2.y;
+                    var collider2 = m_lstColliders[i];
+                    if (m_lstColliders[i].CheckCircle(sCenter2, nRadius))
+                    {
+                        collider2.CheckLine(sCenter2, collider2.center - sCenter2, out sCrossPoint2);
+                        sCrossPoint.x = sCrossPoint2.x;
+                        sCrossPoint.z = sCrossPoint2.y;
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                if(TSCheck2D.CheckCicleAndPos(sCenter2,nRadius, m_sCenter2))
+                {
+                    sCrossPoint = m_sCenter;
                     return true;
                 }
             }
@@ -88,10 +109,20 @@ namespace Game
             if (!m_bEnable) return false;
             TSVector2 sCenter2 = new TSVector2(sCenter.x, sCenter.z);
             TSVector2 sCrossPoint2 = sCenter2;
-            for (int i = m_lstColliders.Count - 1; i > -1; i--)
+            if (m_lstColliders.Count > 0)
             {
-                var collider2 = m_lstColliders[i];
-                if (m_lstColliders[i].CheckCircle(sCenter2, nRadius))
+                for (int i = m_lstColliders.Count - 1; i > -1; i--)
+                {
+                    var collider2 = m_lstColliders[i];
+                    if (m_lstColliders[i].CheckCircle(sCenter2, nRadius))
+                    {
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                if (TSCheck2D.CheckCicleAndPos(sCenter2, nRadius, m_sCenter2))
                 {
                     return true;
                 }
@@ -105,21 +136,30 @@ namespace Game
             if (!m_bEnable) return false;
             TSVector2 sCenter2 = new TSVector2(otherCollider.center.x, otherCollider.center.z);
             TSVector2 sCrossPoint2 = sCenter2;
-            for (int i = m_lstColliders.Count - 1; i > -1; i--)
+            if (m_lstColliders.Count > 0)
             {
-                var collider2 = m_lstColliders[i];
-                var lstOtherCollders = otherCollider.lstCollider;
-                for (int j = 0; j < lstOtherCollders.Count; j++)
+                for (int i = m_lstColliders.Count - 1; i > -1; i--)
                 {
-                    if (collider2.CheckCollider(lstOtherCollders[j]))
+                    var collider2 = m_lstColliders[i];
+                    var lstOtherCollders = otherCollider.lstCollider;
+                    for (int j = 0; j < lstOtherCollders.Count; j++)
                     {
-                        collider2.CheckLine(sCenter2, collider2.center - sCenter2, out sCrossPoint2);
-                        sCrossPoint.x = sCrossPoint2.x;
-                        sCrossPoint.z = sCrossPoint2.y;
-                        return true;
+                        if (collider2.CheckCollider(lstOtherCollders[j]))
+                        {
+                            collider2.CheckLine(sCenter2, collider2.center - sCenter2, out sCrossPoint2);
+                            sCrossPoint.x = sCrossPoint2.x;
+                            sCrossPoint.z = sCrossPoint2.y;
+                            return true;
+                        }
                     }
                 }
-                
+            }
+            else
+            {
+                if(otherCollider.CheckPos(m_sCenter, out sCrossPoint))
+                {
+                    return true;
+                }
             }
             return false;
         }
@@ -129,18 +169,27 @@ namespace Game
             if (!m_bEnable || !otherCollider.enable) return false;
             TSVector2 sCenter2 = new TSVector2(otherCollider.center.x, otherCollider.center.z);
             TSVector2 sCrossPoint2 = sCenter2;
-            for (int i = m_lstColliders.Count - 1; i > -1; i--)
+            if (m_lstColliders.Count > 0)
             {
-                var collider2 = m_lstColliders[i];
-                var lstOtherCollders = otherCollider.lstCollider;
-                for (int j = 0; j < lstOtherCollders.Count; j++)
+                for (int i = m_lstColliders.Count - 1; i > -1; i--)
                 {
-                    if (collider2.CheckCollider(lstOtherCollders[j]))
+                    var collider2 = m_lstColliders[i];
+                    var lstOtherCollders = otherCollider.lstCollider;
+                    for (int j = 0; j < lstOtherCollders.Count; j++)
                     {
-                        return true;
+                        if (collider2.CheckCollider(lstOtherCollders[j]))
+                        {
+                            return true;
+                        }
                     }
                 }
-
+            }
+            else
+            {
+                if(otherCollider.CheckPos(m_sCenter))
+                {
+                    return true;
+                }
             }
             return false;
         }
@@ -180,6 +229,21 @@ namespace Game
             return false;
         }
 
+        public bool CheckPos(TSVector sPosition)
+        {
+            if (!m_bEnable) return false;
+            TSVector2 sPosition2 = new TSVector2(sPosition.x, sPosition.z);
+            for (int i = m_lstColliders.Count - 1; i > -1; i--)
+            {
+                var collider2 = m_lstColliders[i];
+                if (collider2.CheckPos(sPosition2))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public bool CheckRect(TSVector sCenter, TSVector sDir, FP nHalfWidth, FP nHalfHeight,out TSVector sCrossPoint)
         {
             sCrossPoint = sCenter;
@@ -187,14 +251,24 @@ namespace Game
             TSVector2 sCenter2 = new TSVector2(sCenter.x, sCenter.z);
             TSVector2 sDir2 = new TSVector2(sDir.x, sDir.z);
             TSVector2 sCrossPoint2 = new TSVector2(sCrossPoint.x, sCrossPoint.z);
-            for (int i = m_lstColliders.Count - 1; i > -1; i--)
+            if (m_lstColliders.Count > 0)
             {
-                var collider2 = m_lstColliders[i];
-                if (collider2.CheckRect(sCenter2, sDir2, nHalfWidth, nHalfHeight))
+                for (int i = m_lstColliders.Count - 1; i > -1; i--)
                 {
-                    collider2.CheckLine(sCenter2, collider2.center - sCenter2, out sCrossPoint2);
-                    sCrossPoint.x = sCrossPoint2.x;
-                    sCrossPoint.z = sCrossPoint2.y;
+                    var collider2 = m_lstColliders[i];
+                    if (collider2.CheckRect(sCenter2, sDir2, nHalfWidth, nHalfHeight))
+                    {
+                        collider2.CheckLine(sCenter2, collider2.center - sCenter2, out sCrossPoint2);
+                        sCrossPoint.x = sCrossPoint2.x;
+                        sCrossPoint.z = sCrossPoint2.y;
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                if(TSCheck2D.CheckRectangleAndPos(sCenter2,sDir2,nHalfWidth,nHalfHeight,m_sCenter2))
+                {
                     return true;
                 }
             }
@@ -206,10 +280,20 @@ namespace Game
             if (!m_bEnable) return false;
             TSVector2 sCenter2 = new TSVector2(sCenter.x, sCenter.z);
             TSVector2 sDir2 = new TSVector2(sDir.x, sDir.z);
-            for (int i = m_lstColliders.Count - 1; i > -1; i--)
+            if (m_lstColliders.Count > 0)
             {
-                var collider2 = m_lstColliders[i];
-                if (collider2.CheckRect(sCenter2, sDir2, nHalfWidth, nHalfHeight))
+                for (int i = m_lstColliders.Count - 1; i > -1; i--)
+                {
+                    var collider2 = m_lstColliders[i];
+                    if (collider2.CheckRect(sCenter2, sDir2, nHalfWidth, nHalfHeight))
+                    {
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                if (TSCheck2D.CheckRectangleAndPos(sCenter2, sDir2, nHalfWidth, nHalfHeight, m_sCenter2))
                 {
                     return true;
                 }
@@ -272,7 +356,7 @@ namespace Game
                 //m_lstObject[i].transform.position = new Vector3(collider.center.x.AsFloat(), 0, collider.center.y.AsFloat());
                 //m_lstObject[i].transform.forward = new Vector3(collider.forward.x.AsFloat(), 0, collider.forward.y.AsFloat());
             }
-            Reculate();
+            Reculate(curPosition);
         }
 
         private void UpdateCollider2(Check2DCollider collider, TSVector curPosition,TSVector curForward,BaseGameColliderData colliderData)

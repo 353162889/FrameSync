@@ -16,7 +16,7 @@ namespace Game
         public BTActionTarget actionTarget;
     }
 
-    [BTGameNode(typeof(RM_TemplateHurtActionData))]
+    [RemoteNode(typeof(RM_TemplateHurtActionData))]
     [NENodeDesc("对选择器选择的单位进行伤害处理")]
     public class RM_TemplateHurtAction : BaseTimeLineRemoteAction
     {

@@ -15,6 +15,10 @@ namespace Game
         public static string AITargetName = "AITargetName";//ai目标
         #endregion
 
+        #region 技能部分
+        public static string SkillLaserEffectName = "SkillLaserEffectName";//激光特效的名称
+        #endregion
+
         public int GetInt(string key)
         {
             var resConst = GetResConst(key);

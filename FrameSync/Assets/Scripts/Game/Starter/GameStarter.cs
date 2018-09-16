@@ -215,6 +215,8 @@ namespace Game
 
             gameObject.AddComponentOnce<FPSMono>();
 
+            gameObject.AddComponentOnce<GizmosUtility>();
+
             ResetObjectPool<List<int>>.Instance.Init(10,(List<int> lst)=>{ lst.Clear(); });
             ResetObjectPool<List<TSVector>>.Instance.Init(100,(List<TSVector> lst)=> { lst.Clear(); });
             ResetObjectPool<List<Vector3>>.Instance.Init(100, (List<Vector3> lst) => { lst.Clear(); });

@@ -50,6 +50,7 @@ namespace Game
             if (m_cUnit == null) return BTActionResult.Ready;
             if (m_cDoSkillData.bNeedTarget && (m_cTarget == null || m_cTarget.isDie)) return BTActionResult.Ready;
             var lst = m_cUnit.lstActiveSkill;
+            //当前所有技能，可释放就释放
             for (int i = 0; i < lst.Count; i++)
             {
                 if(m_cUnit.CanDoSkill(lst[i].skillId,SkillFromType.AI))
@@ -64,7 +65,7 @@ namespace Game
                         targetForward = m_cTarget.curPosition - m_cUnit.curPosition;
                     }
                     m_cUnit.DoSkill(lst[i].skillId, targetId, AgentObjectType.Unit, targetPos, targetForward, SkillFromType.AI);
-                    return BTActionResult.Ready;
+                    //return BTActionResult.Ready;
                 }
             }
             return BTActionResult.Ready;

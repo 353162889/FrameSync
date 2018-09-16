@@ -2,6 +2,8 @@
 <root>
 	<resskill cd="0" id="1" logic_path="Config/Skill/Template_Body_Collide.bytes" name="碰撞伤害" target_type="None" template_create_remote_hangpoint="" template_create_remote_id="0" type="Passive"/>
 	<resskill cd="429496729" id="51" logic_path="Config/Skill/Template_Create_Remote.bytes" name="玩家技能" target_type="TargetForward" template_create_remote_hangpoint="FirePos" template_create_remote_id="3" type="Active"/>
+	<resskill cd="429492434632704" id="52" logic_path="Config/Skill/Skill_52.bytes" name="喷火" target_type="TargetForward" template_create_remote_hangpoint="" template_create_remote_id="0" type="Active"/>
+	<resskill cd="429492434632704" id="53" logic_path="Config/Skill/Skill_53.bytes" name="激光" target_type="TargetForward" template_create_remote_hangpoint="" template_create_remote_id="0" type="Active"/>
 	<resskill cd="4294967296" id="101" logic_path="Config/Skill/Template_SetForward_Create_Remote.bytes" name="创建子弹1" target_type="TargetForward" template_create_remote_hangpoint="FirePos" template_create_remote_id="1" type="Active"/>
 	<resskill cd="4294967296" id="102" logic_path="Config/Skill/Template_SetForward_Create_Remote.bytes" name="创建子弹1" target_type="TargetForward" template_create_remote_hangpoint="FirePos" template_create_remote_id="2" type="Active"/>
 	<resskill cd="429496729" id="103" logic_path="Config/Skill/Template_Create_Remote.bytes" name="创建子弹2" target_type="TargetForward" template_create_remote_hangpoint="FirePos" template_create_remote_id="3" type="Active"/>

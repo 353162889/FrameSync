@@ -233,6 +233,7 @@ namespace Game
                 lst = new List<Remote>();
                 m_dicCampRemotes.Add(remote.campId, lst);
             }
+            lst.Add(remote);
             m_dicRemote.Add(remote.id, remote);
         }
 

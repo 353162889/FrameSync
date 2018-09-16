@@ -42,6 +42,8 @@ namespace Game
 
     public struct SelectAgentObjInfo
     {
+        public static SelectAgentObjInfo Empty = new SelectAgentObjInfo();
+
         public AgentObject agentObj;    //当前选择代理对象
         public TSVector hitPoint;       //当前选择点
         public TSVector hitDirect;      //当前选择方向
@@ -287,8 +289,12 @@ namespace Game
                         selectInfo.count++;
                         //通过选择器
                         lstSelectInfoResult.Add(selectObjInfo);
-
+                        m_nMaxSelectCount++;
                     }
+                }
+                else
+                {
+                    break;
                 }
             }
             for (int i = 0; i < lstSelectInfoResult.Count; i++)
@@ -297,13 +303,13 @@ namespace Game
                 selectObjInfo.agentObjCount = lstSelectInfoResult.Count;
                 ExecuteChilds(blackBoard, selectObjInfo);
             }
-            m_nMaxSelectCount += lstSelectInfoResult.Count;
-            if (m_nMaxSelectCount >= m_cCompositeData.oneObjMaxCount)
+            if(lstSelectInfoResult.Count > 0)
             {
-                return false;
+                GlobalEventDispatcher.Instance.Dispatch(GameEvent.BTNodeSelectCompositeSelectTarget);
             }
             ResetObjectPool<List<SelectAgentObjInfo>>.Instance.SaveObject(lstSelectInfo);
             ResetObjectPool<List<SelectAgentObjInfo>>.Instance.SaveObject(lstSelectInfoResult);
+            if (m_nMaxSelectCount >= m_cCompositeData.totalObjMaxCount) return false;
             return true;
         }
 
@@ -315,7 +321,7 @@ namespace Game
             {
                 m_lstChild[i].OnTick(blackBoard);
             }
-            blackBoard.selectAgentObjInfo.Reset();
+            blackBoard.selectAgentObjInfo = SelectAgentObjInfo.Empty;
         }
 
         public override void Clear()

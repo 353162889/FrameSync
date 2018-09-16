@@ -20,5 +20,7 @@ namespace Game
         public static int UnitDie = "UnitDie".GetHashCode();
         public static int AddUnitDestory = "AddUnitDestory".GetHashCode();
         public static int PvpPlayerUnitDie = "PlayerUnitDie".GetHashCode();
+        //这个只用作与选择器是否选择到目标装饰使用(BTG_IsSelectDecorator使用)，合理的设计方式是这个不应该放在全局消息（因为这个是某个技能或远程抛出的）
+        public static int BTNodeSelectCompositeSelectTarget = "BTNodeSelectCompositeSelectTarget".GetHashCode();//选择器选择到目标时会抛出此消息
     }
 }

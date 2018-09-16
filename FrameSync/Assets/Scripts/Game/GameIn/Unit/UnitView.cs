@@ -52,7 +52,7 @@ namespace Game
             m_cHangPoint = gameObject.AddComponentOnce<HangPoint>();
             m_cHangPoint.Init(PathTool.GetBasePrefabPath(m_sPrefab));
             m_cCollider = ObjectPool<GameCollider>.Instance.GetObject();
-            m_cCollider.Init(PathTool.GetBasePrefabPath(m_sPrefab));
+            m_cCollider.Init(curPosition,PathTool.GetBasePrefabPath(m_sPrefab));
             m_cCollider.Update(curPosition, curForward);
 
             if(m_cAnimation == null)
