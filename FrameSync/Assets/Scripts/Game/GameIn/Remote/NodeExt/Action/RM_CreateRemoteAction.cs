@@ -12,8 +12,11 @@ namespace Game
     {
         [NEProperty("触发时间", true)]
         public FP time;
+        [NEProperty("远程ID")]
         public int remoteId;
+        [NEProperty("挂点")]
         public string hangPoint;
+        [NEProperty("使用挂点方向")]
         public bool useHangPoint;
     }
     [RemoteNode(typeof(RM_CreateRemoteActionData))]

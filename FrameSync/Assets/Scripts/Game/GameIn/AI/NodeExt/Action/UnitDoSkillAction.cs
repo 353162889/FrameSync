@@ -10,18 +10,28 @@ namespace Game
 {
     public class UnitDoSkillActionData
     {
+        [NEProperty("触发时间")]
+        public FP time;
         [NEProperty("是否需要目标")]
         public bool bNeedTarget;
     }
 
     [AINode(typeof(UnitDoSkillActionData))]
-    [NENodeDesc("从当前技能库中寻找技能并向目标释放")]
-    public class UnitDoSkillAction : BaseAIAction
+    [NENodeDesc("从当前技能库中将能释放的技能一起释放")]
+    public class UnitDoSkillAction : BaseTimeLineAIAction
     {
         private UnitDoSkillActionData m_cDoSkillData;
 
         private Unit m_cUnit;
         private Unit m_cTarget;
+
+        public override FP time
+        {
+            get
+            {
+                return m_cDoSkillData.time;
+            }
+        }
 
         protected override void OnInitData(object data)
         {

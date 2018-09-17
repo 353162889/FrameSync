@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <editorPos>
+    <x>5045</x>
+    <y>4815</y>
+  </editorPos>
+  <enable>true</enable>
+  <data xsi:type="RemoteData" />
+  <lstChild>
+    <NEData>
+      <editorPos>
+        <x>5036</x>
+        <y>4960</y>
+      </editorPos>
+      <enable>true</enable>
+      <data xsi:type="BTTimeLineData">
+        <startRunTime>
+          <_serializedValue>0</_serializedValue>
+        </startRunTime>
+      </data>
+      <lstChild>
+        <NEData>
+          <editorPos>
+            <x>5039</x>
+            <y>5101</y>
+          </editorPos>
+          <enable>true</enable>
+          <data xsi:type="BTTimeDecoratorData">
+            <time>
+              <_serializedValue>0</_serializedValue>
+            </time>
+          </data>
+          <lstChild>
+            <NEData>
+              <editorPos>
+                <x>5045</x>
+                <y>5226</y>
+              </editorPos>
+              <enable>true</enable>
+              <data xsi:type="BTParallelORData" />
+              <lstChild>
+                <NEData>
+                  <editorPos>
+                    <x>4812</x>
+                    <y>5375</y>
+                  </editorPos>
+                  <enable>true</enable>
+                  <data xsi:type="RM_TemplateConstantVelocityActionData">
+                    <time>
+                      <_serializedValue>0</_serializedValue>
+                    </time>
+                  </data>
+                </NEData>
+                <NEData>
+                  <editorPos>
+                    <x>5114</x>
+                    <y>5369</y>
+                  </editorPos>
+                  <enable>true</enable>
+                  <data xsi:type="BTG_SelfCircleSelectCompositeData">
+                    <time>
+                      <_serializedValue>0</_serializedValue>
+                    </time>
+                    <totalDuration>
+                      <_serializedValue>42945377992704</_serializedValue>
+                    </totalDuration>
+                    <delayTime>
+                      <_serializedValue>0</_serializedValue>
+                    </delayTime>
+                    <oneDuration>
+                      <_serializedValue>0</_serializedValue>
+                    </oneDuration>
+                    <totalObjMaxCount>1</totalObjMaxCount>
+                    <oneObjMaxCount>1</oneObjMaxCount>
+                    <selectType>UnitEnemy</selectType>
+                    <radius>
+                      <_serializedValue>8589934592</_serializedValue>
+                    </radius>
+                  </data>
+                  <lstChild>
+                    <NEData>
+                      <editorPos>
+                        <x>5128</x>
+                        <y>5519</y>
+                      </editorPos>
+                      <enable>true</enable>
+                      <data xsi:type="RM_CreateRemoteActionData">
+                        <time>
+                          <_serializedValue>0</_serializedValue>
+                        </time>
+                        <remoteId>57</remoteId>
+                        <useHangPoint>false</useHangPoint>
+                      </data>
+                    </NEData>
+                  </lstChild>
+                </NEData>
+              </lstChild>
+            </NEData>
+          </lstChild>
+        </NEData>
+      </lstChild>
+    </NEData>
+  </lstChild>
+</NEData>

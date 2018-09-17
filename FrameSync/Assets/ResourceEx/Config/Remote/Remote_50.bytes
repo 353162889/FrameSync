@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <editorPos>
+    <x>5020</x>
+    <y>4789</y>
+  </editorPos>
+  <enable>true</enable>
+  <data xsi:type="RemoteData" />
+  <lstChild>
+    <NEData>
+      <editorPos>
+        <x>5025</x>
+        <y>4941</y>
+      </editorPos>
+      <enable>true</enable>
+      <data xsi:type="BTTimeLineData">
+        <startRunTime>
+          <_serializedValue>0</_serializedValue>
+        </startRunTime>
+      </data>
+      <lstChild>
+        <NEData>
+          <editorPos>
+            <x>5025</x>
+            <y>5058</y>
+          </editorPos>
+          <enable>true</enable>
+          <data xsi:type="BTTimeDecoratorData">
+            <time>
+              <_serializedValue>0</_serializedValue>
+            </time>
+          </data>
+          <lstChild>
+            <NEData>
+              <editorPos>
+                <x>5026</x>
+                <y>5196</y>
+              </editorPos>
+              <enable>true</enable>
+              <data xsi:type="BTParallelORData" />
+              <lstChild>
+                <NEData>
+                  <editorPos>
+                    <x>4854</x>
+                    <y>5321</y>
+                  </editorPos>
+                  <enable>true</enable>
+                  <data xsi:type="RM_TemplateConstantVelocityActionData">
+                    <time>
+                      <_serializedValue>0</_serializedValue>
+                    </time>
+                  </data>
+                </NEData>
+                <NEData>
+                  <editorPos>
+                    <x>5153</x>
+                    <y>5316</y>
+                  </editorPos>
+                  <enable>true</enable>
+                  <data xsi:type="BTG_LastRectToCurRectSelectCompositeData">
+                    <time>
+                      <_serializedValue>0</_serializedValue>
+                    </time>
+                    <totalDuration>
+                      <_serializedValue>42945377992704</_serializedValue>
+                    </totalDuration>
+                    <delayTime>
+                      <_serializedValue>0</_serializedValue>
+                    </delayTime>
+                    <oneDuration>
+                      <_serializedValue>0</_serializedValue>
+                    </oneDuration>
+                    <totalObjMaxCount>1</totalObjMaxCount>
+                    <oneObjMaxCount>1</oneObjMaxCount>
+                    <selectType>UnitEnemy</selectType>
+                    <hangPoint>Head</hangPoint>
+                    <width>
+                      <_serializedValue>7730940928</_serializedValue>
+                    </width>
+                  </data>
+                  <lstChild>
+                    <NEData>
+                      <editorPos>
+                        <x>5146</x>
+                        <y>5456</y>
+                      </editorPos>
+                      <enable>true</enable>
+                      <data xsi:type="BTG_HurtActionData">
+                        <time>
+                          <_serializedValue>0</_serializedValue>
+                        </time>
+                        <actionTarget>SelectTarget</actionTarget>
+                        <additionDamage>
+                          <_serializedValue>0</_serializedValue>
+                        </additionDamage>
+                      </data>
+                    </NEData>
+                  </lstChild>
+                </NEData>
+              </lstChild>
+            </NEData>
+          </lstChild>
+        </NEData>
+      </lstChild>
+    </NEData>
+  </lstChild>
+</NEData>

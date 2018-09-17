@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <editorPos>
+    <x>5009</x>
+    <y>4811</y>
+  </editorPos>
+  <enable>true</enable>
+  <data xsi:type="RemoteData" />
+  <lstChild>
+    <NEData>
+      <editorPos>
+        <x>5016</x>
+        <y>4971</y>
+      </editorPos>
+      <enable>true</enable>
+      <data xsi:type="BTG_SelfCircleSelectCompositeData">
+        <time>
+          <_serializedValue>0</_serializedValue>
+        </time>
+        <totalDuration>
+          <_serializedValue>1288490240</_serializedValue>
+        </totalDuration>
+        <delayTime>
+          <_serializedValue>0</_serializedValue>
+        </delayTime>
+        <oneDuration>
+          <_serializedValue>429496736</_serializedValue>
+        </oneDuration>
+        <totalObjMaxCount>999</totalObjMaxCount>
+        <oneObjMaxCount>1</oneObjMaxCount>
+        <selectType>UnitEnemy</selectType>
+        <radius>
+          <_serializedValue>42949672960</_serializedValue>
+        </radius>
+      </data>
+      <lstChild>
+        <NEData>
+          <editorPos>
+            <x>5005</x>
+            <y>5129</y>
+          </editorPos>
+          <enable>true</enable>
+          <data xsi:type="BTG_HurtActionData">
+            <time>
+              <_serializedValue>0</_serializedValue>
+            </time>
+            <actionTarget>SelectTarget</actionTarget>
+            <additionDamage>
+              <_serializedValue>0</_serializedValue>
+            </additionDamage>
+          </data>
+        </NEData>
+      </lstChild>
+    </NEData>
+  </lstChild>
+</NEData>

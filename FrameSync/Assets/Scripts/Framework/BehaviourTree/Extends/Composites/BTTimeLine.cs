@@ -90,12 +90,7 @@ namespace BTCore
             m_sTime += deltaTime;
             if (m_nCount == count)
             {
-                for (int i = 0; i < m_lstResults.Count; i++)
-                {
-                    m_lstResults[i] = BTResult.Running;
-                }
-                m_bIsEnd = true;
-                m_nCount = 0;
+                Clear();
                 return BTResult.Success;
             }
             return BTResult.Running;

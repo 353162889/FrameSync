@@ -81,6 +81,32 @@ namespace Game
             m_nForbid &= ~forbidType;
         }
 
+        public void ResumeType(uint forbidType,byte forbidFromType)
+        {
+            for (int i = m_lstForbid.Count - 1; i > -1; i--)
+            {
+                var forbidInfo = m_lstForbid[i];
+                if (forbidInfo.forbidType == forbidType && forbidInfo.forbidFromType == forbidFromType)
+                {
+                    m_lstForbid.RemoveAt(i);
+                    break;
+                }
+            }
+            bool hasOther = false;
+            for (int i = 0; i < m_lstForbid.Count; i++)
+            {
+                if (forbidType == m_lstForbid[i].forbidType)
+                {
+                    hasOther = true;
+                    break;
+                }
+            }
+            if (!hasOther)
+            {
+                m_nForbid &= ~forbidType;
+            }
+        }
+
         public bool IsForbid(uint forbidType)
         {
             return (m_nForbid & forbidType) != 0;

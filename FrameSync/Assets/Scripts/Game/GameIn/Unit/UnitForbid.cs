@@ -22,6 +22,7 @@ namespace Game
     {
         Game,       //来自于玩法限制
         Skill,      //技能限制
+        AI,         //AI限制
     }
 
     public partial class Unit
@@ -75,7 +76,15 @@ namespace Game
         {
             if (m_cForbid != null)
             {
-                m_cForbid.Resume((uint)forbidType);
+                m_cForbid.ResumeType((uint)forbidType);
+            }
+        }
+
+        public void Resume(UnitForbidType forbidType,UnitForbidFromType forbidFromType)
+        {
+            if (m_cForbid != null)
+            {
+                m_cForbid.ResumeType((uint)forbidType,(byte)forbidFromType);
             }
         }
 

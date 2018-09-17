@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <editorPos>
-    <x>5020</x>
-    <y>5000</y>
+    <x>5027</x>
+    <y>4846</y>
   </editorPos>
   <enable>true</enable>
   <data xsi:type="RemoteData" />
   <lstChild>
     <NEData>
       <editorPos>
-        <x>5031</x>
-        <y>5117</y>
+        <x>5019</x>
+        <y>4976</y>
       </editorPos>
       <enable>true</enable>
       <data xsi:type="BTTimeLineData">
@@ -21,8 +21,8 @@
       <lstChild>
         <NEData>
           <editorPos>
-            <x>5021</x>
-            <y>5239</y>
+            <x>5006</x>
+            <y>5126</y>
           </editorPos>
           <enable>true</enable>
           <data xsi:type="BTTimeDecoratorData">
@@ -33,16 +33,16 @@
           <lstChild>
             <NEData>
               <editorPos>
-                <x>5022</x>
-                <y>5365</y>
+                <x>5011</x>
+                <y>5261</y>
               </editorPos>
               <enable>true</enable>
               <data xsi:type="BTParallelORData" />
               <lstChild>
                 <NEData>
                   <editorPos>
-                    <x>4820</x>
-                    <y>5515</y>
+                    <x>4824</x>
+                    <y>5388</y>
                   </editorPos>
                   <enable>true</enable>
                   <data xsi:type="RM_TemplateConstantVelocityActionData">
@@ -53,8 +53,8 @@
                 </NEData>
                 <NEData>
                   <editorPos>
-                    <x>5138</x>
-                    <y>5520</y>
+                    <x>5155</x>
+                    <y>5393</y>
                   </editorPos>
                   <enable>true</enable>
                   <data xsi:type="BTG_LastPosToCurPosSelectCompositeData">
@@ -64,6 +64,9 @@
                     <totalDuration>
                       <_serializedValue>42945377992704</_serializedValue>
                     </totalDuration>
+                    <delayTime>
+                      <_serializedValue>0</_serializedValue>
+                    </delayTime>
                     <oneDuration>
                       <_serializedValue>0</_serializedValue>
                     </oneDuration>
@@ -74,15 +77,18 @@
                   <lstChild>
                     <NEData>
                       <editorPos>
-                        <x>5147</x>
-                        <y>5673</y>
+                        <x>5157</x>
+                        <y>5546</y>
                       </editorPos>
                       <enable>true</enable>
-                      <data xsi:type="RM_TemplateHurtActionData">
+                      <data xsi:type="BTG_HurtActionData">
                         <time>
                           <_serializedValue>0</_serializedValue>
                         </time>
                         <actionTarget>SelectTarget</actionTarget>
+                        <additionDamage>
+                          <_serializedValue>0</_serializedValue>
+                        </additionDamage>
                       </data>
                     </NEData>
                   </lstChild>

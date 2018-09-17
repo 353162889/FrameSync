@@ -73,10 +73,10 @@ namespace Game
             m_sCenter2.y = m_sCenter.z;
         }
 
-        public bool CheckCircle(TSVector sCenter, FP nRadius,out TSVector sCrossPoint)
+        public bool CheckCircle(TSVector sCenter, FP nRadius,out TSVector sCrossPoint,bool ignoreEnable = false)
         {
             sCrossPoint = sCenter;
-            if (!m_bEnable) return false;
+            if (!ignoreEnable && !m_bEnable) return false;
             TSVector2 sCenter2 = new TSVector2(sCenter.x,sCenter.z);
             TSVector2 sCrossPoint2 = sCenter2;
             if (m_lstColliders.Count > 0)
@@ -104,9 +104,9 @@ namespace Game
             return false;
         }
 
-        public bool CheckCircle(TSVector sCenter, FP nRadius)
+        public bool CheckCircle(TSVector sCenter, FP nRadius, bool ignoreEnable = false)
         {
-            if (!m_bEnable) return false;
+            if (!ignoreEnable && !m_bEnable) return false;
             TSVector2 sCenter2 = new TSVector2(sCenter.x, sCenter.z);
             TSVector2 sCrossPoint2 = sCenter2;
             if (m_lstColliders.Count > 0)
@@ -130,10 +130,10 @@ namespace Game
             return false;
         }
 
-        public bool CheckCollider(GameCollider otherCollider,out TSVector sCrossPoint)
+        public bool CheckCollider(GameCollider otherCollider,out TSVector sCrossPoint, bool ignoreEnable = false)
         {
             sCrossPoint = otherCollider.center;
-            if (!m_bEnable) return false;
+            if (!ignoreEnable && !m_bEnable) return false;
             TSVector2 sCenter2 = new TSVector2(otherCollider.center.x, otherCollider.center.z);
             TSVector2 sCrossPoint2 = sCenter2;
             if (m_lstColliders.Count > 0)
@@ -164,9 +164,9 @@ namespace Game
             return false;
         }
 
-        public bool CheckCollider(GameCollider otherCollider)
+        public bool CheckCollider(GameCollider otherCollider, bool ignoreEnable = false)
         {
-            if (!m_bEnable || !otherCollider.enable) return false;
+            if ((!ignoreEnable && !m_bEnable) || !otherCollider.enable) return false;
             TSVector2 sCenter2 = new TSVector2(otherCollider.center.x, otherCollider.center.z);
             TSVector2 sCrossPoint2 = sCenter2;
             if (m_lstColliders.Count > 0)
@@ -194,10 +194,10 @@ namespace Game
             return false;
         }
 
-        public bool CheckLine(TSVector sOrgPos, TSVector sOffset, out TSVector sCrossPoint)
+        public bool CheckLine(TSVector sOrgPos, TSVector sOffset, out TSVector sCrossPoint, bool ignoreEnable = false)
         {
             sCrossPoint = sOrgPos;
-            if (!m_bEnable) return false;
+            if (!ignoreEnable && !m_bEnable) return false;
             TSVector2 sOrgPos2 = new TSVector2(sOrgPos.x,sOrgPos.z);
             TSVector2 sOffset2 = new TSVector2(sOffset.x,sOffset.z);
             TSVector2 sCrossPoint2 = new TSVector2(sCrossPoint.x,sCrossPoint.z);
@@ -213,10 +213,10 @@ namespace Game
             return false;
         }
 
-        public bool CheckPos(TSVector sPosition,out TSVector sCrossPoint)
+        public bool CheckPos(TSVector sPosition,out TSVector sCrossPoint, bool ignoreEnable = false)
         {
             sCrossPoint = sPosition;
-            if (!m_bEnable) return false;
+            if (!ignoreEnable && !m_bEnable) return false;
             TSVector2 sPosition2 = new TSVector2(sPosition.x,sPosition.z);
             for (int i = m_lstColliders.Count - 1; i > -1; i--)
             {
@@ -229,9 +229,9 @@ namespace Game
             return false;
         }
 
-        public bool CheckPos(TSVector sPosition)
+        public bool CheckPos(TSVector sPosition, bool ignoreEnable = false)
         {
-            if (!m_bEnable) return false;
+            if (!ignoreEnable && !m_bEnable) return false;
             TSVector2 sPosition2 = new TSVector2(sPosition.x, sPosition.z);
             for (int i = m_lstColliders.Count - 1; i > -1; i--)
             {
@@ -244,10 +244,10 @@ namespace Game
             return false;
         }
 
-        public bool CheckRect(TSVector sCenter, TSVector sDir, FP nHalfWidth, FP nHalfHeight,out TSVector sCrossPoint)
+        public bool CheckRect(TSVector sCenter, TSVector sDir, FP nHalfWidth, FP nHalfHeight,out TSVector sCrossPoint, bool ignoreEnable = false)
         {
             sCrossPoint = sCenter;
-            if (!m_bEnable) return false;
+            if (!ignoreEnable && !m_bEnable) return false;
             TSVector2 sCenter2 = new TSVector2(sCenter.x, sCenter.z);
             TSVector2 sDir2 = new TSVector2(sDir.x, sDir.z);
             TSVector2 sCrossPoint2 = new TSVector2(sCrossPoint.x, sCrossPoint.z);
@@ -275,9 +275,9 @@ namespace Game
             return false;
         }
 
-        public bool CheckRect(TSVector sCenter, TSVector sDir, FP nHalfWidth, FP nHalfHeight)
+        public bool CheckRect(TSVector sCenter, TSVector sDir, FP nHalfWidth, FP nHalfHeight, bool ignoreEnable = false)
         {
-            if (!m_bEnable) return false;
+            if (!ignoreEnable && !m_bEnable) return false;
             TSVector2 sCenter2 = new TSVector2(sCenter.x, sCenter.z);
             TSVector2 sDir2 = new TSVector2(sDir.x, sDir.z);
             if (m_lstColliders.Count > 0)

@@ -1,32 +1,61 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <editorPos>
-    <x>5055</x>
-    <y>5000</y>
+    <x>5061</x>
+    <y>4821</y>
   </editorPos>
   <enable>true</enable>
   <data xsi:type="AIData" />
   <lstChild>
     <NEData>
       <editorPos>
-        <x>5049</x>
-        <y>5132</y>
+        <x>5077</x>
+        <y>4959</y>
       </editorPos>
       <enable>true</enable>
       <data xsi:type="BTSequenceData" />
       <lstChild>
         <NEData>
           <editorPos>
-            <x>4817</x>
-            <y>5236</y>
+            <x>4757</x>
+            <y>5102</y>
           </editorPos>
           <enable>true</enable>
           <data xsi:type="UnitJoinScenePathActionData" />
         </NEData>
         <NEData>
           <editorPos>
-            <x>5052</x>
-            <y>5272</y>
+            <x>4938</x>
+            <y>5101</y>
+          </editorPos>
+          <enable>true</enable>
+          <data xsi:type="UnitForbidActionData">
+            <time>
+              <_serializedValue>0</_serializedValue>
+            </time>
+            <eForbidType>ForbidForward</eForbidType>
+          </data>
+        </NEData>
+        <NEData>
+          <editorPos>
+            <x>5096</x>
+            <y>5109</y>
+          </editorPos>
+          <enable>true</enable>
+          <data xsi:type="UnitPlayAnimActionData">
+            <time>
+              <_serializedValue>0</_serializedValue>
+            </time>
+            <animName>show</animName>
+            <animTime>
+              <_serializedValue>4294967296</_serializedValue>
+            </animTime>
+          </data>
+        </NEData>
+        <NEData>
+          <editorPos>
+            <x>5274</x>
+            <y>5098</y>
           </editorPos>
           <enable>true</enable>
           <data xsi:type="BTParallelORData" />
@@ -34,7 +63,7 @@
             <NEData>
               <editorPos>
                 <x>5050</x>
-                <y>5409</y>
+                <y>5235</y>
               </editorPos>
               <enable>true</enable>
               <data xsi:type="BTRepeatDecoratorData">
@@ -49,24 +78,24 @@
               <lstChild>
                 <NEData>
                   <editorPos>
-                    <x>5052</x>
-                    <y>5558</y>
+                    <x>5054</x>
+                    <y>5336</y>
                   </editorPos>
                   <enable>true</enable>
                   <data xsi:type="BTSequenceData" />
                   <lstChild>
                     <NEData>
                       <editorPos>
-                        <x>4926</x>
-                        <y>5687</y>
+                        <x>4916</x>
+                        <y>5470</y>
                       </editorPos>
                       <enable>true</enable>
                       <data xsi:type="BTNotConditionData" />
                       <lstChild>
                         <NEData>
                           <editorPos>
-                            <x>4925</x>
-                            <y>5839</y>
+                            <x>4913</x>
+                            <y>5626</y>
                           </editorPos>
                           <enable>true</enable>
                           <data xsi:type="UnitCheckExistTargetConditionData" />
@@ -75,8 +104,8 @@
                     </NEData>
                     <NEData>
                       <editorPos>
-                        <x>5170</x>
-                        <y>5696</y>
+                        <x>5167</x>
+                        <y>5469</y>
                       </editorPos>
                       <enable>true</enable>
                       <data xsi:type="BTG_PlayerSelectCompositeData">
@@ -86,6 +115,9 @@
                         <totalDuration>
                           <_serializedValue>0</_serializedValue>
                         </totalDuration>
+                        <delayTime>
+                          <_serializedValue>0</_serializedValue>
+                        </delayTime>
                         <oneDuration>
                           <_serializedValue>0</_serializedValue>
                         </oneDuration>
@@ -97,8 +129,8 @@
                       <lstChild>
                         <NEData>
                           <editorPos>
-                            <x>5168</x>
-                            <y>5843</y>
+                            <x>5167</x>
+                            <y>5630</y>
                           </editorPos>
                           <enable>true</enable>
                           <data xsi:type="UnitSetTargetActionData" />
@@ -111,8 +143,55 @@
             </NEData>
             <NEData>
               <editorPos>
-                <x>5294</x>
-                <y>5410</y>
+                <x>5296</x>
+                <y>5242</y>
+              </editorPos>
+              <enable>true</enable>
+              <data xsi:type="UnitRandomPointMoveActionData">
+                <time>
+                  <_serializedValue>0</_serializedValue>
+                </time>
+                <points>
+                  <TSVector>
+                    <x>
+                      <_serializedValue>-66571993088</_serializedValue>
+                    </x>
+                    <y>
+                      <_serializedValue>0</_serializedValue>
+                    </y>
+                    <z>
+                      <_serializedValue>129278517248</_serializedValue>
+                    </z>
+                  </TSVector>
+                  <TSVector>
+                    <x>
+                      <_serializedValue>65713000448</_serializedValue>
+                    </x>
+                    <y>
+                      <_serializedValue>0</_serializedValue>
+                    </y>
+                    <z>
+                      <_serializedValue>129708015616</_serializedValue>
+                    </z>
+                  </TSVector>
+                  <TSVector>
+                    <x>
+                      <_serializedValue>12288</_serializedValue>
+                    </x>
+                    <y>
+                      <_serializedValue>0</_serializedValue>
+                    </y>
+                    <z>
+                      <_serializedValue>70007980032</_serializedValue>
+                    </z>
+                  </TSVector>
+                </points>
+              </data>
+            </NEData>
+            <NEData>
+              <editorPos>
+                <x>5490</x>
+                <y>5218</y>
               </editorPos>
               <enable>true</enable>
               <data xsi:type="BTRepeatDecoratorData">
@@ -121,17 +200,20 @@
                   <_serializedValue>0</_serializedValue>
                 </delayTime>
                 <spaceTime>
-                  <_serializedValue>0</_serializedValue>
+                  <_serializedValue>2147483648</_serializedValue>
                 </spaceTime>
               </data>
               <lstChild>
                 <NEData>
                   <editorPos>
-                    <x>5294</x>
-                    <y>5562</y>
+                    <x>5495</x>
+                    <y>5331</y>
                   </editorPos>
                   <enable>true</enable>
-                  <data xsi:type="UnitDoSkillActionData">
+                  <data xsi:type="UnitDoOneSkillActionData">
+                    <time>
+                      <_serializedValue>0</_serializedValue>
+                    </time>
                     <bNeedTarget>false</bNeedTarget>
                   </data>
                 </NEData>

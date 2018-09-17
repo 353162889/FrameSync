@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <editorPos>
+    <x>5011</x>
+    <y>4835</y>
+  </editorPos>
+  <enable>true</enable>
+  <data xsi:type="SkillData" />
+  <lstChild>
+    <NEData>
+      <editorPos>
+        <x>5008</x>
+        <y>4965</y>
+      </editorPos>
+      <enable>true</enable>
+      <data xsi:type="BTTimeLineData">
+        <startRunTime>
+          <_serializedValue>0</_serializedValue>
+        </startRunTime>
+      </data>
+      <lstChild>
+        <NEData>
+          <editorPos>
+            <x>4832</x>
+            <y>5125</y>
+          </editorPos>
+          <enable>true</enable>
+          <data xsi:type="SK_CreateRemoteActionData">
+            <time>
+              <_serializedValue>0</_serializedValue>
+            </time>
+            <remoteId>16</remoteId>
+            <hangPoint>FirePosLeft</hangPoint>
+            <useHangPoint>true</useHangPoint>
+            <offsetAngle>
+              <_serializedValue>0</_serializedValue>
+            </offsetAngle>
+          </data>
+        </NEData>
+        <NEData>
+          <editorPos>
+            <x>5130</x>
+            <y>5124</y>
+          </editorPos>
+          <enable>true</enable>
+          <data xsi:type="SK_CreateRemoteActionData">
+            <time>
+              <_serializedValue>0</_serializedValue>
+            </time>
+            <remoteId>16</remoteId>
+            <hangPoint>FirePosRight</hangPoint>
+            <useHangPoint>true</useHangPoint>
+            <offsetAngle>
+              <_serializedValue>0</_serializedValue>
+            </offsetAngle>
+          </data>
+        </NEData>
+      </lstChild>
+    </NEData>
+  </lstChild>
+</NEData>

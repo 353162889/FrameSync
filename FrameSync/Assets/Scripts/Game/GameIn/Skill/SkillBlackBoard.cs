@@ -1,4 +1,5 @@
 ﻿using BTCore;
+using Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,18 @@ namespace Game
             get
             {
                 return m_cSkill.host;
+            }
+        }
+
+        public override FP GetHostAttr(AttrType attrType)
+        {
+            if (attrType == AttrType.Attack)
+            {
+                return base.GetHostAttr(attrType) + m_cSkill.resInfo.add_damage;
+            }
+            else
+            {
+                return base.GetHostAttr(attrType);
             }
         }
 

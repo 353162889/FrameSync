@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
 	<resitem ai_path="Config/AI/RandomPointMove.bytes" airship="0" hp="21474836480" id="1" move_speed="21474836480" name="血包" prefab="Prefab/Item/Item_1" radius="2147483648" skill1="0" skill2="0"/>
-	<resitem ai_path="Config/AI/RandomPointMove.bytes" airship="0" hp="0" id="101" move_speed="21474836480" name="技能" prefab="Prefab/Item/Item_101" radius="2147483648" skill1="108" skill2="0"/>
+	<resitem ai_path="Config/AI/RandomPointMove.bytes" airship="0" hp="0" id="101" move_speed="21474836480" name="创建并行子弹" prefab="Prefab/Item/Item_101" radius="2147483648" skill1="54" skill2="0"/>
 	<resitem ai_path="Config/AI/RandomPointMove.bytes" airship="0" hp="0" id="102" move_speed="21474836480" name="喷火" prefab="Prefab/Item/Item_102" radius="2147483648" skill1="52" skill2="0"/>
 	<resitem ai_path="Config/AI/RandomPointMove.bytes" airship="0" hp="0" id="103" move_speed="21474836480" name="激光" prefab="Prefab/Item/Item_103" radius="2147483648" skill1="53" skill2="0"/>
+	<resitem ai_path="Config/AI/RandomPointMove.bytes" airship="0" hp="0" id="104" move_speed="21474836480" name="创建可爆炸光球" prefab="Prefab/Item/Item_104" radius="2147483648" skill1="65" skill2="0"/>
+	<resitem ai_path="Config/AI/RandomPointMove.bytes" airship="0" hp="0" id="105" move_speed="21474836480" name="创建一次性激光" prefab="Prefab/Item/Item_105" radius="2147483648" skill1="55" skill2="0"/>
+	<resitem ai_path="Config/AI/RandomPointMove.bytes" airship="0" hp="0" id="106" move_speed="21474836480" name="子弹19" prefab="Prefab/Item/Item_106" radius="2147483648" skill1="56" skill2="0"/>
+	<resitem ai_path="Config/AI/RandomPointMove.bytes" airship="0" hp="0" id="107" move_speed="21474836480" name="子弹23" prefab="Prefab/Item/Item_107" radius="2147483648" skill1="57" skill2="0"/>
+	<resitem ai_path="Config/AI/RandomPointMove.bytes" airship="0" hp="0" id="108" move_speed="21474836480" name="子弹40" prefab="Prefab/Item/Item_108" radius="2147483648" skill1="58" skill2="0"/>
+	<resitem ai_path="Config/AI/RandomPointMove.bytes" airship="0" hp="0" id="109" move_speed="21474836480" name="子弹25" prefab="Prefab/Item/Item_109" radius="2147483648" skill1="59" skill2="0"/>
+	<resitem ai_path="Config/AI/RandomPointMove.bytes" airship="0" hp="0" id="110" move_speed="21474836480" name="子弹46" prefab="Prefab/Item/Item_110" radius="2147483648" skill1="60" skill2="0"/>
+	<resitem ai_path="Config/AI/RandomPointMove.bytes" airship="0" hp="0" id="111" move_speed="21474836480" name="子弹49" prefab="Prefab/Item/Item_111" radius="2147483648" skill1="61" skill2="0"/>
+	<resitem ai_path="Config/AI/RandomPointMove.bytes" airship="0" hp="0" id="112" move_speed="21474836480" name="子弹50" prefab="Prefab/Item/Item_112" radius="2147483648" skill1="62" skill2="0"/>
+	<resitem ai_path="Config/AI/RandomPointMove.bytes" airship="0" hp="0" id="113" move_speed="21474836480" name="子弹51" prefab="Prefab/Item/Item_113" radius="2147483648" skill1="63" skill2="0"/>
+	<resitem ai_path="Config/AI/RandomPointMove.bytes" airship="0" hp="0" id="114" move_speed="21474836480" name="侧翼导弹" prefab="Prefab/Item/Item_114" radius="2147483648" skill1="0" skill2="64"/>
 	<resitem ai_path="Config/AI/RandomPointMove.bytes" airship="1006" hp="0" id="1006" move_speed="21474836480" name="飞船" prefab="Prefab/Item/Item_1006" radius="2147483648" skill1="0" skill2="0"/>
 	<resitem ai_path="Config/AI/RandomPointMove.bytes" airship="1008" hp="0" id="1008" move_speed="21474836480" name="飞船" prefab="Prefab/Item/Item_1008" radius="2147483648" skill1="0" skill2="0"/>
 	<resitem ai_path="Config/AI/RandomPointMove.bytes" airship="1011" hp="0" id="1011" move_speed="21474836480" name="飞船" prefab="Prefab/Item/Item_1011" radius="2147483648" skill1="0" skill2="0"/>

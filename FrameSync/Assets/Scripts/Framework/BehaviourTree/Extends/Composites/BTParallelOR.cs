@@ -24,6 +24,7 @@ namespace BTCore
                 BTResult childResult = m_lstChild[i].OnTick(blackBoard);
                 if(childResult != BTResult.Running)
                 {
+                    Clear();
                     return childResult;
                 }
             }

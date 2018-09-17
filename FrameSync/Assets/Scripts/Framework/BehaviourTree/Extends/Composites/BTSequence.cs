@@ -28,6 +28,7 @@ namespace BTCore
                 BTResult childResult = child.OnTick(blackBoard);
                 if(childResult == BTResult.Failure)
                 {
+                    Clear();
                     return BTResult.Failure;
                 }
                 else if(childResult == BTResult.Running)
@@ -39,6 +40,7 @@ namespace BTCore
                     m_iSelectedIndex++;
                 }
             }
+            Clear();
             return BTResult.Success;
         }
 

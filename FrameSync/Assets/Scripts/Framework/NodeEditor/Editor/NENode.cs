@@ -128,7 +128,7 @@ namespace NodeEditor
             if (extendSize.y > 0) extendSize.y += 10;
             float rectWidth = Mathf.Max(normalSize.x, extendSize.x) + 10;
             float rectHeight = normalSize.y + extendSize.y;
-            rect = new Rect(position.x - width / 2, position.y - height / 2, rectWidth, rectHeight);
+            rect = new Rect(position.x - rectWidth / 2, position.y - rectHeight / 2, rectWidth, rectHeight);
 
             if (m_bShowInPoint)
             {

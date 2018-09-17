@@ -56,7 +56,7 @@ namespace Game
             }
             var remote = BattleScene.Instance.CreateRemote(m_cActionData.remoteId,skill.host.campId, bornPosition, targetForward, skill.targetAgentId, skill.targetAgentType, skill.targetPosition, targetForward);
             //初始化远程属性
-            remote.SetAttrValue((int)AttrType.Attack, host.GetAttrValue((int)AttrType.Attack));
+            remote.SetAttrValue((int)AttrType.Attack, host.GetAttrValue((int)AttrType.Attack) + skill.resInfo.add_damage);
             return BTActionResult.Ready;
         }
     }

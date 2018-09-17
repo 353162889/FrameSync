@@ -44,7 +44,7 @@ namespace Game
                     var damageInfo = ObjectPool<DamageInfo>.Instance.GetObject();
                     damageInfo.attack = blackBoard.host;
                     damageInfo.defence = target;
-                    FP attack = blackBoard.host.GetAttrValue((int)AttrType.Attack);
+                    FP attack = blackBoard.GetHostAttr(AttrType.Attack);
                     damageInfo.damage = attack + m_cHurtData.additionDamage;
                     unit.OnHurt(damageInfo);
                     ObjectPool<DamageInfo>.Instance.SaveObject(damageInfo);

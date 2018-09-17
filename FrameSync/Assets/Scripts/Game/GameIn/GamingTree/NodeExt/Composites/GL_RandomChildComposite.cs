@@ -8,6 +8,10 @@ public class GL_RandomChildCompositeData
 {
     [NEProperty("触发时间", true)]
     public FP time;
+
+    [NEProperty("重复执行次数（0为无限次）")]
+    public int times;
+
     [NEProperty("每个子节点执行一次后至少等待多久才能执行下一个", true)]
     public FP onChildExeTime;
 }
@@ -29,6 +33,8 @@ public class GL_RandomChildComposite : BaseTimeLineGamingComposite
     private bool m_bIsEnd = true;
     private int m_nIdx = 0;
     private FP[] m_arrChildExeLeaveTime;
+
+    private int m_nTimes;
 
     protected override void OnInitData(object data)
     {
@@ -54,14 +60,15 @@ public class GL_RandomChildComposite : BaseTimeLineGamingComposite
                 m_arrChildExeLeaveTime[i] -= blackBoard.deltaTime;
             }
         }
+
         if (m_bIsEnd)
         {
-            
             int totalCount = m_lstChild.Count;
             m_nIdx = GameInTool.Random(m_lstChild.Count);
             if (m_arrChildExeLeaveTime[m_nIdx] <= 0)
             {
                 m_bIsEnd = false;
+                m_nTimes++;
                 m_arrChildExeLeaveTime[m_nIdx] = m_cRandomData.onChildExeTime;
             }
             else
@@ -73,13 +80,19 @@ public class GL_RandomChildComposite : BaseTimeLineGamingComposite
         if(result != BTResult.Running)
         {
             m_bIsEnd = true;
+            if(m_cRandomData.times > 0 && m_nTimes >= m_cRandomData.times)
+            {
+                Clear();
+                return BTResult.Success;
+            }
         }
-        return result;
+        return BTResult.Running;
     }
 
     public override void Clear()
     {
-        if(m_arrChildExeLeaveTime !=null)
+        m_nTimes = 0;
+        if (m_arrChildExeLeaveTime !=null)
         {
             for (int i = 0; i < m_arrChildExeLeaveTime.Length; i++)
             {

@@ -30,6 +30,8 @@ namespace Game
         public FP time;
         [NEProperty("持续时间")]
         public FP totalDuration;
+        [NEProperty("第一次检测延时时间")]
+        public FP delayTime;
         [NEProperty("每次间隔时间(<0:每帧)")]
         public FP oneDuration;
         [NEProperty("最大选择次数")]
@@ -208,18 +210,18 @@ namespace Game
         {
             if(m_bIsEnd)
             {
-                m_sTime = 0;
-                m_sLastSelectTime = 0;
+                m_sTime = m_cCompositeData.totalDuration;
+                m_sLastSelectTime = m_cCompositeData.delayTime;
                 m_nMaxSelectCount = 0;
                 m_bIsEnd = false;
                 m_lstSelectInfo.Clear();
                 OnEnter(blackBoard);
             }
-            if(m_sLastSelectTime >= m_cCompositeData.oneDuration)
+            if(m_sLastSelectTime <= 0)
             {
                 if (m_cCompositeData.oneDuration > 0)
                 {
-                    m_sLastSelectTime -= m_cCompositeData.oneDuration;
+                    m_sLastSelectTime += m_cCompositeData.oneDuration;
                 }
                 else
                 {
@@ -229,19 +231,21 @@ namespace Game
                 if(!succ)
                 {
                     m_bIsEnd = true;
+                    Clear();
                     return BTResult.Success;
                 }
             }
             
-            if(m_sTime >= m_cCompositeData.totalDuration)
+            if(m_sTime <= 0)
             {
                 m_bIsEnd = true;
                 m_lstSelectInfo.Clear();
                 OnExit(blackBoard);
+                Clear();
                 return BTResult.Success;
             }
-            m_sTime += blackBoard.deltaTime;
-            m_sLastSelectTime += blackBoard.deltaTime;
+            m_sTime -= blackBoard.deltaTime;
+            m_sLastSelectTime -= blackBoard.deltaTime;
            
             return BTResult.Running;
         }
@@ -273,20 +277,31 @@ namespace Game
                 var selectObjInfo = lstSelectInfo[i];
                 if (m_nMaxSelectCount < m_cCompositeData.totalObjMaxCount)
                 {
-                    SelectAgentObjCountInfo selectInfo = new SelectAgentObjCountInfo(selectObjInfo.agentObj.id, selectObjInfo.agentObj.agentType, 0);
+                    int selectInfoIdx = -1;
                     for (int j = 0; j < m_lstSelectInfo.Count; j++)
                     {
                         var info = m_lstSelectInfo[j];
                         if (info.id == selectObjInfo.agentObj.id && info.agentType == selectObjInfo.agentObj.agentType)
                         {
-                            selectInfo = info;
+                            selectInfoIdx = j;
                             break;
                         }
                     }
-                    if (selectInfo.count < m_cCompositeData.oneObjMaxCount)
+                    int selectInfoCount = 0;
+                    if(selectInfoIdx > -1)
                     {
-                        if (selectInfo.count == 0) m_lstSelectInfo.Add(selectInfo);
+                        selectInfoCount = m_lstSelectInfo[selectInfoIdx].count;
+                    }
+                    if (selectInfoCount < m_cCompositeData.oneObjMaxCount)
+                    {
+                        if (selectInfoCount == 0)
+                        {
+                            m_lstSelectInfo.Add(new SelectAgentObjCountInfo(selectObjInfo.agentObj.id, selectObjInfo.agentObj.agentType, 0));
+                            selectInfoIdx = m_lstSelectInfo.Count - 1;
+                        }
+                        var selectInfo = m_lstSelectInfo[selectInfoIdx];
                         selectInfo.count++;
+                        m_lstSelectInfo[selectInfoIdx] = selectInfo;
                         //通过选择器
                         lstSelectInfoResult.Add(selectObjInfo);
                         m_nMaxSelectCount++;

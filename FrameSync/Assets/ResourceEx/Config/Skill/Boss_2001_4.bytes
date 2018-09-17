@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <editorPos>
+    <x>5005</x>
+    <y>4808</y>
+  </editorPos>
+  <enable>true</enable>
+  <data xsi:type="SkillData" />
+  <lstChild>
+    <NEData>
+      <editorPos>
+        <x>5004</x>
+        <y>4917</y>
+      </editorPos>
+      <enable>true</enable>
+      <data xsi:type="BTRepeatDecoratorData">
+        <times>3</times>
+        <delayTime>
+          <_serializedValue>0</_serializedValue>
+        </delayTime>
+        <spaceTime>
+          <_serializedValue>4294967296</_serializedValue>
+        </spaceTime>
+      </data>
+      <lstChild>
+        <NEData>
+          <editorPos>
+            <x>4996</x>
+            <y>5057</y>
+          </editorPos>
+          <enable>true</enable>
+          <data xsi:type="BTTimeLineData">
+            <startRunTime>
+              <_serializedValue>0</_serializedValue>
+            </startRunTime>
+          </data>
+          <lstChild>
+            <NEData>
+              <editorPos>
+                <x>4864</x>
+                <y>5171</y>
+              </editorPos>
+              <enable>true</enable>
+              <data xsi:type="SK_CreateRemoteActionData">
+                <time>
+                  <_serializedValue>0</_serializedValue>
+                </time>
+                <remoteId>56</remoteId>
+                <hangPoint>FirePosLeft</hangPoint>
+                <useHangPoint>true</useHangPoint>
+                <offsetAngle>
+                  <_serializedValue>0</_serializedValue>
+                </offsetAngle>
+              </data>
+            </NEData>
+            <NEData>
+              <editorPos>
+                <x>5108</x>
+                <y>5178</y>
+              </editorPos>
+              <enable>true</enable>
+              <data xsi:type="SK_CreateRemoteActionData">
+                <time>
+                  <_serializedValue>0</_serializedValue>
+                </time>
+                <remoteId>56</remoteId>
+                <hangPoint>FirePosRight</hangPoint>
+                <useHangPoint>true</useHangPoint>
+                <offsetAngle>
+                  <_serializedValue>0</_serializedValue>
+                </offsetAngle>
+              </data>
+            </NEData>
+          </lstChild>
+        </NEData>
+      </lstChild>
+    </NEData>
+  </lstChild>
+</NEData>

@@ -51,9 +51,11 @@ namespace BTCore
                     //只要有一个成功了，那么返回成功
                     if(m_lstResults[i] == BTResult.Success)
                     {
+                        Clear();
                         return BTResult.Success;
                     }
                 }
+                Clear();
                 return BTResult.Failure;
             }
             return BTResult.Running;
