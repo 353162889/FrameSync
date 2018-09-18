@@ -23,6 +23,7 @@ namespace Game
         {
             if(m_cAsyncOperation.isDone)
             {
+                ResourceSys.Instance.ReleaseUnUseRes();
                 this.OnExecuteDone(CmdExecuteState.Success);
             }
         }

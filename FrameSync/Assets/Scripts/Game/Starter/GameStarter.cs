@@ -168,16 +168,7 @@ namespace Game
         {
             gameObject.AddComponentOnce<ConsoleLogger>();
             gameObject.AddComponentOnce<NetSys>();
-            if (netMode == GameNetMode.Network)
-            {
-                NetSys.Instance.CreateChannel(NetChannelType.Game,NetChannelModeType.Tcp);
-            }
-            else if(netMode == GameNetMode.StandAlone)
-            {
-                NetSys.Instance.CreateChannel(NetChannelType.Game, NetChannelModeType.StandAlone);
-                gameObject.AddComponentOnce<ClientServer>();
-                ClientServer.Instance.StartServer();
-            }
+            gameObject.AddComponentOnce<ClientServer>();
             gameObject.AddComponentOnce<FrameSyncSys>();
             gameObject.AddComponentOnce<ResourceSys>();
             bool directLoadMode = true;

@@ -11,6 +11,15 @@ namespace Game
         public override void Execute(ICommandContext context)
         {
             base.Execute(context);
+            if (!BattleInfo.standAlone)
+            {
+                NetSys.Instance.CreateChannel(NetChannelType.Game, NetChannelModeType.Tcp);
+            }
+            else
+            {
+                NetSys.Instance.CreateChannel(NetChannelType.Game, NetChannelModeType.StandAlone);
+            }
+            ClientServer.Instance.StartServer();
             NetSys.Instance.BeginConnect(NetChannelType.Game, "127.0.0.1", 8080, OnConnect);
         }
 

@@ -93,7 +93,8 @@ namespace Game
 
         public void ReqStopMove()
         {
-            if(m_cMove != null && m_cMove.isMoving)
+            if (IsForbid(UnitForbidType.ForbidPlayerMove)) return;
+            if (m_cMove != null && m_cMove.isMoving)
             {
                 Frame_ReqStopMove_Data data = new Frame_ReqStopMove_Data();
                 data.unitId = id;

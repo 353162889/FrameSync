@@ -30,6 +30,7 @@ namespace Game
         private GamingTree m_cGamingTree;
         private string m_sLogicPath;
         private GamingBlackBoard m_cBlackBoard;
+        public bool isDo { get { return m_bIsDo; } }
         private bool m_bIsDo;
         static GamingLogic() { Init(); }
 

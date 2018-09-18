@@ -11,6 +11,7 @@ namespace Game
         Root,
         GameOut,
         GameIn,
+        GameDebugStandAloneInit,//测试单机下参数初始化
     }
 
     public class GameStateData
@@ -40,7 +41,7 @@ namespace Game
                 }
                 else if(netMode == GameNetMode.StandAlone)
                 {
-                    return ReleaseStandAlone;
+                    return ReleaseNetwork;
                 }
             }
             else if(versionMode == GameVersionMode.Debug)
@@ -51,7 +52,7 @@ namespace Game
                 }
                 else if (netMode == GameNetMode.StandAlone)
                 {
-                    return ReleaseStandAlone;
+                    return DebugStandAlone;
                 }
             }
             return null;
@@ -71,7 +72,19 @@ namespace Game
     {
         public static GameStateData ReleaseStandAlone = new GameStateData(GameStateType.Root, typeof(StateContainerBase), false,
             new GameStateData[] {
-                new GameStateData(GameStateType.GameIn,typeof(GameIn),true),
+                new GameStateData(GameStateType.GameOut,typeof(GameOut),false),
+                new GameStateData(GameStateType.GameIn,typeof(GameIn),false),
+                new GameStateData(GameStateType.GameDebugStandAloneInit,typeof(GameDebugStandAloneInit),true),
+            });
+    }
+
+    public partial class GameStateCfg
+    {
+        public static GameStateData DebugStandAlone = new GameStateData(GameStateType.Root, typeof(StateContainerBase), false,
+            new GameStateData[] {
+                new GameStateData(GameStateType.GameOut,typeof(GameOut),false),
+                new GameStateData(GameStateType.GameIn,typeof(GameIn),false),
+                new GameStateData(GameStateType.GameDebugStandAloneInit,typeof(GameDebugStandAloneInit),true),
             });
     }
 }

@@ -16,12 +16,8 @@ namespace Game
         private ResLevel m_cLevelInfo;
         protected override void OnEnter()
         {
-            FrameSyncSys.Instance.StopRun();
-            BattleInfo.Clear();
-            BattleInfo.userId = 1;
-            BattleInfo.levelId = GameConst.Instance.GetInt("default_level_id");
             m_cLevelInfo = ResCfgSys.Instance.GetCfg<ResLevel>(BattleInfo.levelId);
-            BattleInfo.sceneId = m_cLevelInfo.scene_id;
+            FrameSyncSys.Instance.StopRun();
             SceneEffectPool.Instance.Clear();
             SceneGOPool.Instance.Clear();
             ViewSys.Instance.Open("LoadingView");
@@ -93,9 +89,13 @@ namespace Game
             }
             if(null != m_cGamingLogic)
             {
+                bool preIsDo = m_cGamingLogic.isDo;
                 if (!m_cGamingLogic.Update(deltaTime))
                 {
-                    //this.ParentSwitchState((int)GameStateType.GameOut);
+                    if (preIsDo != m_cGamingLogic.isDo)
+                    {
+                        this.ParentSwitchState((int)GameStateType.GameOut);
+                    }
                 }
             }
         }
@@ -140,6 +140,7 @@ namespace Game
             }
             //停止帧同步运行
             FrameSyncSys.Instance.OnFrameSyncUpdate -= OnFrameSyncUpdate;
+            AudioSys.Instance.StopAll();
             ViewSys.Instance.Close("FightView");
             CameraSys.Instance.Clear();
             PvpPlayerMgr.Instance.Clear();

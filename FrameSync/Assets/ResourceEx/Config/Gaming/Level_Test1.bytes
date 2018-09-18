@@ -158,6 +158,68 @@
             </destoryTypes>
           </data>
         </NEData>
+        <NEData>
+          <editorPos>
+            <x>5495</x>
+            <y>5108</y>
+          </editorPos>
+          <enable>true</enable>
+          <data xsi:type="GL_WaitStageClearData">
+            <time>
+              <_serializedValue>0</_serializedValue>
+            </time>
+            <camp>Camp2</camp>
+          </data>
+        </NEData>
+        <NEData>
+          <editorPos>
+            <x>5676</x>
+            <y>5116</y>
+          </editorPos>
+          <enable>true</enable>
+          <data xsi:type="GL_PlayerAIChangeData">
+            <time>
+              <_serializedValue>0</_serializedValue>
+            </time>
+            <enableAI>false</enableAI>
+          </data>
+        </NEData>
+        <NEData>
+          <editorPos>
+            <x>5833</x>
+            <y>5122</y>
+          </editorPos>
+          <enable>true</enable>
+          <data xsi:type="GL_PlayerLeaveData">
+            <time>
+              <_serializedValue>0</_serializedValue>
+            </time>
+            <points>
+              <TSVector>
+                <x>
+                  <_serializedValue>0</_serializedValue>
+                </x>
+                <y>
+                  <_serializedValue>0</_serializedValue>
+                </y>
+                <z>
+                  <_serializedValue>-97925251072</_serializedValue>
+                </z>
+              </TSVector>
+              <TSVector>
+                <x>
+                  <_serializedValue>0</_serializedValue>
+                </x>
+                <y>
+                  <_serializedValue>0</_serializedValue>
+                </y>
+                <z>
+                  <_serializedValue>247819616256</_serializedValue>
+                </z>
+              </TSVector>
+            </points>
+          </data>
+        </NEData>
       </lstChild>
     </NEData>
   </lstChild>

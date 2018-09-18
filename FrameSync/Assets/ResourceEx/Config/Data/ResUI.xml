@@ -2,4 +2,6 @@
 <root>
 	<resui name="LoadingView" prefab="Prefab/UI/Loading/LoadingView"/>
 	<resui name="FightView" prefab="Prefab/UI/Fight/FightView"/>
+	<resui name="PopupTipsView" prefab="Prefab/UI/Tips/PopupTipsView"/>
+	<resui name="LobbyView" prefab="Prefab/UI/Lobby/LobbyView"/>
 </root>

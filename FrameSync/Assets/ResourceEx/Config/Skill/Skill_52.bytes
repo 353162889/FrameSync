@@ -2,23 +2,23 @@
 <NEData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <editorPos>
     <x>5040</x>
-    <y>5000</y>
+    <y>4793</y>
   </editorPos>
   <enable>true</enable>
   <data xsi:type="SkillData" />
   <lstChild>
     <NEData>
       <editorPos>
-        <x>5045</x>
-        <y>5137</y>
+        <x>5042</x>
+        <y>4923</y>
       </editorPos>
       <enable>true</enable>
       <data xsi:type="BTParallelAndData" />
       <lstChild>
         <NEData>
           <editorPos>
-            <x>4999</x>
-            <y>5324</y>
+            <x>4897</x>
+            <y>5062</y>
           </editorPos>
           <enable>true</enable>
           <data xsi:type="BTG_CreateEffectData">
@@ -35,8 +35,8 @@
         </NEData>
         <NEData>
           <editorPos>
-            <x>5226</x>
-            <y>5327</y>
+            <x>5160</x>
+            <y>5059</y>
           </editorPos>
           <enable>true</enable>
           <data xsi:type="BGT_SelfRectSelectCompositeData">
@@ -46,8 +46,11 @@
             <totalDuration>
               <_serializedValue>429492434632704</_serializedValue>
             </totalDuration>
-            <oneDuration>
+            <delayTime>
               <_serializedValue>0</_serializedValue>
+            </delayTime>
+            <oneDuration>
+              <_serializedValue>429496736</_serializedValue>
             </oneDuration>
             <totalObjMaxCount>99999</totalObjMaxCount>
             <oneObjMaxCount>99999</oneObjMaxCount>
@@ -64,8 +67,8 @@
           <lstChild>
             <NEData>
               <editorPos>
-                <x>5246</x>
-                <y>5467</y>
+                <x>5150</x>
+                <y>5233</y>
               </editorPos>
               <enable>true</enable>
               <data xsi:type="BTG_HurtActionData">
@@ -74,7 +77,7 @@
                 </time>
                 <actionTarget>SelectTarget</actionTarget>
                 <additionDamage>
-                  <_serializedValue>4294967296</_serializedValue>
+                  <_serializedValue>0</_serializedValue>
                 </additionDamage>
               </data>
             </NEData>

@@ -29,7 +29,6 @@ namespace Game
             }
         }
 
-        private PvpPlayer m_cRefershPlayer;
         private uint m_bForbidMoveId;
         private uint m_bForbidSkillId;
         private uint m_bForbidForwardId;
@@ -50,7 +49,6 @@ namespace Game
                     var player = lstPlayer[i];
                     if (!player.initUnit)
                     {
-                        m_cRefershPlayer = player;
                         var unit = player.CreatePlayerUnit(m_cRefreshData.points[0]);
                         player.SetBornPos(m_cRefreshData.points[m_cRefreshData.points.Length - 1]);
                         m_bForbidMoveId = unit.Forbid(UnitForbidType.ForbidPlayerMove, UnitForbidFromType.Game);
@@ -68,7 +66,6 @@ namespace Game
                             unit.Move(lst,MoveFromType.Game);
                             ResetObjectPool<List<TSVector>>.Instance.SaveObject(lst);
                         }
-                        break;
                     }
                 }
             }
@@ -76,21 +73,25 @@ namespace Game
 
         protected override BTActionResult OnRun(GamingBlackBoard blackBoard)
         {
-            if (m_cRefershPlayer == null || m_cRefershPlayer.unit == null) return BTActionResult.Ready;
-            if(!m_cRefershPlayer.unit.isMoving)
+            var lstPlayer = PvpPlayerMgr.Instance.lstPlayer;
+            for (int i = 0; i < lstPlayer.Count; i++)
             {
-                m_cRefershPlayer.unit.Forbid(UnitForbidType.ForbidForward, UnitForbidFromType.Game);
-                m_cRefershPlayer.unit.Resume(m_bForbidMoveId);
-                m_cRefershPlayer.unit.Resume(m_bForbidSkillId);
-                m_cRefershPlayer.unit.Resume(m_bForbidForwardId);
-                return BTActionResult.Ready;
+                var player = lstPlayer[i];
+                if (player.unit != null && player.unit.isMoving) return BTActionResult.Running;
             }
-            return BTActionResult.Running;
+            for (int i = 0; i < lstPlayer.Count; i++)
+            {
+                var player = lstPlayer[i];
+                player.unit.Forbid(UnitForbidType.ForbidForward, UnitForbidFromType.Game);
+                player.unit.Resume(m_bForbidMoveId);
+                player.unit.Resume(m_bForbidSkillId);
+                player.unit.Resume(m_bForbidForwardId);
+            }
+            return BTActionResult.Ready;
         }
 
         protected override void OnExit(GamingBlackBoard blackBoard)
         {
-            m_cRefershPlayer = null;
             m_bForbidMoveId = 0;
             m_bForbidSkillId = 0;
             m_bForbidForwardId = 0;
