@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='PacketOpcode.proto',
   package='Proto',
   syntax='proto2',
-  serialized_pb=_b('\n\x12PacketOpcode.proto\x12\x05Proto*h\n\x0cPacketOpcode\x12\r\n\x08Msg_Test\x10\x81\x02\x12\x19\n\x14\x43\x32S_JoinOrCreateRoom\x10\xe8\x07\x12\x19\n\x14S2C_JoinOrCreateRoom\x10\xe9\x07\x12\x13\n\x0e\x46rame_Msg_Test\x10\x90N')
+  serialized_pb=_b('\n\x12PacketOpcode.proto\x12\x05Proto*\x91\x04\n\x0cPacketOpcode\x12\r\n\x08Msg_Test\x10\x81\x02\x12\x12\n\rC2S_HeartBeat\x10\xe6\x07\x12\x12\n\rS2C_HeartBeat\x10\xe7\x07\x12\x19\n\x14\x43\x32S_JoinOrCreateRoom\x10\xe8\x07\x12\x19\n\x14S2C_JoinOrCreateRoom\x10\xe9\x07\x12\x12\n\rC2S_GameReady\x10\xea\x07\x12\x14\n\x0fS2C_StartBattle\x10\xeb\x07\x12\x12\n\rC2S_JoinMatch\x10\xec\x07\x12\x18\n\x13S2C_JoinMatchResult\x10\xed\x07\x12\x13\n\x0e\x43\x32S_LeaveMatch\x10\xee\x07\x12\x19\n\x14S2C_LeaveMatchResult\x10\xef\x07\x12\x14\n\x0fS2C_MatchResult\x10\xf0\x07\x12\x13\n\x0e\x46rame_Msg_Test\x10\x90N\x12\x17\n\x12\x46rame_CreatePlayer\x10\x91N\x12\x16\n\x11\x46rame_ReqMovePath\x10\x92N\x12\x17\n\x12\x46rame_ReqMovePoint\x10\x93N\x12\x19\n\x14\x46rame_ReqSetPosition\x10\x94N\x12\x18\n\x13\x46rame_ReqSetForward\x10\x95N\x12\x19\n\x14\x46rame_ReqMoveForward\x10\x96N\x12\x16\n\x11\x46rame_ReqStopMove\x10\x97N\x12\x15\n\x10\x46rame_ReqDoSkill\x10\x98N\x12\x18\n\x13\x46rame_ReqBreakSkill\x10\x99N')
 )
 
 _PACKETOPCODE = _descriptor.EnumDescriptor(
@@ -34,30 +34,120 @@ _PACKETOPCODE = _descriptor.EnumDescriptor(
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='C2S_JoinOrCreateRoom', index=1, number=1000,
+      name='C2S_HeartBeat', index=1, number=998,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='S2C_JoinOrCreateRoom', index=2, number=1001,
+      name='S2C_HeartBeat', index=2, number=999,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='Frame_Msg_Test', index=3, number=10000,
+      name='C2S_JoinOrCreateRoom', index=3, number=1000,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='S2C_JoinOrCreateRoom', index=4, number=1001,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='C2S_GameReady', index=5, number=1002,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='S2C_StartBattle', index=6, number=1003,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='C2S_JoinMatch', index=7, number=1004,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='S2C_JoinMatchResult', index=8, number=1005,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='C2S_LeaveMatch', index=9, number=1006,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='S2C_LeaveMatchResult', index=10, number=1007,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='S2C_MatchResult', index=11, number=1008,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='Frame_Msg_Test', index=12, number=10000,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='Frame_CreatePlayer', index=13, number=10001,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='Frame_ReqMovePath', index=14, number=10002,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='Frame_ReqMovePoint', index=15, number=10003,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='Frame_ReqSetPosition', index=16, number=10004,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='Frame_ReqSetForward', index=17, number=10005,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='Frame_ReqMoveForward', index=18, number=10006,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='Frame_ReqStopMove', index=19, number=10007,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='Frame_ReqDoSkill', index=20, number=10008,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='Frame_ReqBreakSkill', index=21, number=10009,
       options=None,
       type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=29,
-  serialized_end=133,
+  serialized_start=30,
+  serialized_end=559,
 )
 _sym_db.RegisterEnumDescriptor(_PACKETOPCODE)
 
 PacketOpcode = enum_type_wrapper.EnumTypeWrapper(_PACKETOPCODE)
 Msg_Test = 257
+C2S_HeartBeat = 998
+S2C_HeartBeat = 999
 C2S_JoinOrCreateRoom = 1000
 S2C_JoinOrCreateRoom = 1001
+C2S_GameReady = 1002
+S2C_StartBattle = 1003
+C2S_JoinMatch = 1004
+S2C_JoinMatchResult = 1005
+C2S_LeaveMatch = 1006
+S2C_LeaveMatchResult = 1007
+S2C_MatchResult = 1008
 Frame_Msg_Test = 10000
+Frame_CreatePlayer = 10001
+Frame_ReqMovePath = 10002
+Frame_ReqMovePoint = 10003
+Frame_ReqSetPosition = 10004
+Frame_ReqSetForward = 10005
+Frame_ReqMoveForward = 10006
+Frame_ReqStopMove = 10007
+Frame_ReqDoSkill = 10008
+Frame_ReqBreakSkill = 10009
 
 
 DESCRIPTOR.enum_types_by_name['PacketOpcode'] = _PACKETOPCODE

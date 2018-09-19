@@ -126,7 +126,7 @@ class PacketReceiver:
 
     def __handle_packet(self):
         if self.dataLength >= self.packet.packetSize + MsgPacket.HeadSize:
-            print("receive from {0} packetID = {1}".format(self.connection.id,self.packet.packetID))
+            #print("receive from {0} packetID = {1}".format(self.connection.id,self.packet.packetID))
             #小于10000是一般包，反序列化，否则是帧包，不反序列化
             if(not MsgPacket.isFramePacket(self.packet.packetID)) :
                 self.bytesIO.seek(MsgPacket.HeadSize)
@@ -174,6 +174,10 @@ class PacketSender:
             serializeBuff = None
             if MsgPacket.isFramePacket(pack.packetID) or MsgPacket.isFrameHeadPacket(pack.packetID):
                 serializeBuff = pack.buff
+                #服务器主动发送的帧包需要序列化
+                if not serializeBuff and MsgPacket.isFramePacket(pack.packetID):
+                    pack.serialize();
+                    serializeBuff = pack.getSerializeBuff();
             else:
                 pack.serialize()
                 print("send to {0} packetID = {1}".format(self.connection.id,pack.packetID))
@@ -269,26 +273,45 @@ class Room:
         self.__lstCurPacket = None
         self.__tempLstPacket = []
         self.__preTime = time.time()
+        self.__mapReady = {}
+        self.__isStart = False
 
     def add(self,conn):
         if self.getConn(conn.id) is None:
-            self.__mapConn[conn.id] = conn;
+            self.__mapConn[conn.id] = conn
+            self.__mapReady[conn.id] = False
             conn.joinRoom(self.id)
             return True
         return False
 
     def remove(self,conn):
         if self.getConn(conn.id):
-            del self.__mapConn[conn.id];
+            del self.__mapConn[conn.id]
+            del self.__mapReady[conn.id]
             conn.leaveRoom()
             return True
         return False
+
+    def getAllConn(self):
+        return  self.__mapConn.values()
 
     def getCount(self):
         return  len(self.__mapConn)
 
     def getConn(self,connId):
         return self.__mapConn.get(connId,None)
+
+    def isStart(self):
+        return self.__isStart;
+
+    def readyConn(self,conn,isReady):
+        if conn and self.getConn(conn.id):
+            self.__mapReady[conn.id] = isReady
+        for ready in self.__mapReady.values():
+            if not ready:
+                return
+        self.__isStart = True
+        self.__preTime = time.time()
 
     def update(self):
         self.__delConn.clear()
@@ -297,19 +320,20 @@ class Room:
                 self.__delConn.append(conn.id)
         for connId in self.__delConn:
             del self.__mapConn[connId]
-        succ = False
+            del self.__mapReady[connId]
+        succ = True
         if len(self.__mapConn) <= 0:
             succ = False
-        succ = True
         if not succ:
             return succ;
-        #做房间帧消息处理
-        curTime = time.time()
-        if(curTime - self.__preTime > 0.05):
-            self.__preTime += 0.05
-            #发送数据包
-            self.sendMsgPacket()
-            self.__lstCurPacket = None
+        if self.__isStart:
+            #做房间帧消息处理
+            curTime = time.time()
+            if(curTime - self.__preTime > 0.05):
+                self.__preTime += 0.05
+                #发送数据包
+                self.sendMsgPacket()
+                self.__lstCurPacket = None
         return succ
 
     def sendMsgPacket(self):
@@ -354,6 +378,55 @@ class Room:
     def clear(self):
         self.__mapConn.clear()
         self.__delConn.clear()
+        self.__mapReady.clear()
+        self.__isStart = False
+
+class Match:
+    def __init__(self):
+        self.__lstConn = []
+        self.__delLstConn = []
+
+    def joinMatch(self,conn):
+        if self.__lstConn.count(conn) > 0:
+            return False
+        self.__lstConn.append(conn)
+        return True
+
+    def leaveMatch(self,conn):
+        if self.__lstConn.count(conn) <= 0:
+            return False
+        self.__lstConn.remove(conn)
+        return  True
+
+    #匹配队列中获取到固定数量的链接数
+    def getMatchConns(self,count):
+        curCount = 0
+        for conn in self.__lstConn:
+            if conn.connected:
+                curCount = curCount + 1
+        if curCount < count:
+            return None
+        else:
+            result = []
+            for conn in self.__lstConn:
+                if conn.connected:
+                    result.append(conn)
+            return result
+
+    def getLstMatch(self):
+        return  self.__lstConn;
+
+    def update(self):
+        self.__delLstConn.clear()
+        for conn in self.__lstConn:
+            if not conn.connected:
+                self.__delLstConn.append(conn)
+        for conn in self.__delLstConn:
+            self.__lstConn.remove(conn)
+        self.__delLstConn.clear()
+
+    def clear(self):
+        self.__lstConn.clear()
 
 class CustomRequestHandler(socketserver.BaseRequestHandler):
     def handle(self):
@@ -367,6 +440,7 @@ class CustomServer(socketserver.TCPServer):
         self._connectionId = 0
         self._rooms = {}
         self._delRoom = []
+        self._match = Match()
         self._roomId = 0
         self._mapMsgHandle = {}
         self.loadMsgHandle()
@@ -449,6 +523,18 @@ class CustomServer(socketserver.TCPServer):
             self._rooms[roomId].clear()
             del self._rooms[roomId]
 
+    #进入匹配队列
+    def joinMatch(self,conn):
+        return self._match.joinMatch(conn)
+
+    #离开匹配队列
+    def leaveMatch(self,conn):
+        return self._match.leaveMatch(conn)
+
+    #匹配列表中获取到固定数量的连接，如果数量不够，返回None
+    def getMatchConns(self, count):
+        return self._match.getMatchConns(count)
+
     def service_actions(self):
         self._delConnection.clear()
         for conn in self._connections.values():
@@ -508,13 +594,16 @@ class CustomServer(socketserver.TCPServer):
                     self._delRoom.append(room.id)
             for roomId in self._delRoom:
                 self.removeRoom(roomId)
+
+            if self._match:
+                self._match.update()
             lock.release()
 
     def handMsg(self,conn,pack):
         if MsgPacket.isFramePacket(pack.packetID):
             if conn.isInRoom():
                 room = self.getRoomById(conn.roomId)
-                if room:
+                if room and room.isStart():
                     room.addFramePacket(pack)
         else:
             handle = self._mapMsgHandle.get(pack.packetID, None)
