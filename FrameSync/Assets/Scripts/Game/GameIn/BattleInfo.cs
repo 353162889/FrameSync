@@ -11,6 +11,8 @@ namespace Game
         public static int levelId;//关卡id
         public static int sceneId;//场景id
         public static bool standAlone;
+        public static string ip;
+        public static int port;
 
         public static void Clear()
         {
@@ -18,6 +20,8 @@ namespace Game
             levelId = 0;
             sceneId = 0;
             standAlone = true;
+            ip = "";
+            port = 0;
         }
     }
 }

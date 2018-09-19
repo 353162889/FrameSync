@@ -16,6 +16,7 @@ namespace Game
         private ResLevel m_cLevelInfo;
         protected override void OnEnter()
         {
+            NetSys.Instance.OnNetChannelDisConnect += OnNetChannelDisConnect;
             m_cLevelInfo = ResCfgSys.Instance.GetCfg<ResLevel>(BattleInfo.levelId);
             FrameSyncSys.Instance.StopRun();
             SceneEffectPool.Instance.Clear();
@@ -32,6 +33,17 @@ namespace Game
             m_cJoinSequence.AddSubCommand(cmdPreload);
             m_cJoinSequence.On_Done += OnJoinScene;
             m_cJoinSequence.Execute();
+        }
+
+        private void OnNetChannelDisConnect(NetChannelType obj)
+        {
+            CommonUtil.ShowPopup("服务器断开连接，返回到主界面", "提示", () =>
+            {
+                this.ParentSwitchState((int)GameStateType.GameOut);
+            }, () =>
+            {
+                this.ParentSwitchState((int)GameStateType.GameOut);
+            });
         }
 
         protected override void OnUpdate()
@@ -55,22 +67,35 @@ namespace Game
 
         private void OnJoinScene(CommandBase obj)
         {
-            m_cJoinSequence = null;
-            CLog.Log("进入场景成功");
-            //初始化一些数据
-            PvpPlayerMgr.Instance.Init();
-            m_cSysCompContainer = new GamingSysCompContainer();
-            //注册逻辑
-            m_cSysCompContainer.RegisterComp(GamingSysCompType.UnitDestory, new GSC_UnitDestory());
-            m_cSysCompContainer.RegisterComp(GamingSysCompType.UnitDieEffect, new GSC_UnitDieEffect());
-            m_cSysCompContainer.RegisterComp(GamingSysCompType.UnitHitItem, new GSC_UnitHitItem());
-            m_cSysCompContainer.RegisterComp(GamingSysCompType.UnitDieDropItem, new GSC_UnitDieDropItem());
+            if (obj.State == CmdExecuteState.Success)
+            {
+                m_cJoinSequence = null;
+                CLog.Log("进入场景成功");
+                //初始化一些数据
+                PvpPlayerMgr.Instance.Init();
+                m_cSysCompContainer = new GamingSysCompContainer();
+                //注册逻辑
+                m_cSysCompContainer.RegisterComp(GamingSysCompType.UnitDestory, new GSC_UnitDestory());
+                m_cSysCompContainer.RegisterComp(GamingSysCompType.UnitDieEffect, new GSC_UnitDieEffect());
+                m_cSysCompContainer.RegisterComp(GamingSysCompType.UnitHitItem, new GSC_UnitHitItem());
+                m_cSysCompContainer.RegisterComp(GamingSysCompType.UnitDieDropItem, new GSC_UnitDieDropItem());
 
-            GlobalEventDispatcher.Instance.AddEvent(GameEvent.StartBattle, OnStartBattle);
-            GlobalEventDispatcher.Instance.AddEvent(GameEvent.PvpPlayerCreate, OnPlayerCreate);
-            //向服务器发送准备完成消息
-            C2S_GameReady_Data data = new C2S_GameReady_Data();
-            NetSys.Instance.SendMsg(NetChannelType.Game, (short)PacketOpcode.C2S_GameReady, data);
+                GlobalEventDispatcher.Instance.AddEvent(GameEvent.StartBattle, OnStartBattle);
+                GlobalEventDispatcher.Instance.AddEvent(GameEvent.PvpPlayerCreate, OnPlayerCreate);
+                //向服务器发送准备完成消息
+                C2S_GameReady_Data data = new C2S_GameReady_Data();
+                NetSys.Instance.SendMsg(NetChannelType.Game, (short)PacketOpcode.C2S_GameReady, data);
+            }
+            else
+            {
+                CommonUtil.ShowPopup("进入游戏失败，返回到主界面", "提示", () =>
+                {
+                    this.ParentSwitchState((int)GameStateType.GameOut);
+                }, () =>
+                {
+                    this.ParentSwitchState((int)GameStateType.GameOut);
+                });
+            }
         }
 
         private void OnStartBattle(object args)
@@ -152,7 +177,7 @@ namespace Game
                 m_cJoinSequence.OnDestroy();
                 m_cJoinSequence = null;
             }
-
+            NetSys.Instance.OnNetChannelDisConnect -= OnNetChannelDisConnect;
             //断开连接操作
             NetSys.Instance.DisConnect(NetChannelType.Game);
         }

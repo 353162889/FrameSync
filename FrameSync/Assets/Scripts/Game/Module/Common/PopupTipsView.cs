@@ -41,20 +41,22 @@ namespace Game
 
         private void OnConfirm(BaseEventData arg0)
         {
+            var openObj = m_cOpenObject;
             this.CloseThis();
-            if(m_cOpenObject != null && m_cOpenObject.confirmCallback != null)
+            if(openObj != null && openObj.confirmCallback != null)
             {
-                Action callback = m_cOpenObject.confirmCallback;
+                Action callback = openObj.confirmCallback;
                 callback.Invoke();
             }
         }
 
         private void OnCancel(BaseEventData arg0)
         {
+            var openObj = m_cOpenObject;
             this.CloseThis();
-            if (m_cOpenObject != null && m_cOpenObject.cancelCallback != null)
+            if (openObj != null && openObj.cancelCallback != null)
             {
-                Action callback = m_cOpenObject.cancelCallback;
+                Action callback = openObj.cancelCallback;
                 callback.Invoke();
             }
         }

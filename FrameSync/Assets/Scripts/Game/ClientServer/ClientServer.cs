@@ -18,13 +18,26 @@ namespace Game
             m_bIsRun = true;
             //监听进入战斗消息，给客户端发送初始化玩家的消息
             NetSys.Instance.AddMsgCallback(NetChannelType.Game, (short)PacketOpcode.C2S_GameReady, OnClientGameReady);
+            NetSys.Instance.AddMsgCallback(NetChannelType.Game, (short)PacketOpcode.C2S_JoinMatch, OnJoinMatch);
         }
-
+      
         public void StopServer()
         {
             m_bIsRun = false;
+            NetSys.Instance.RemoveMsgCallback(NetChannelType.Game, (short)PacketOpcode.C2S_JoinMatch, OnJoinMatch);
             NetSys.Instance.RemoveMsgCallback(NetChannelType.Game, (short)PacketOpcode.C2S_GameReady, OnClientGameReady);
         }
+
+        private void OnJoinMatch(object netObj)
+        {
+            S2C_JoinMatchResult_Data joinMatchResult = new S2C_JoinMatchResult_Data();
+            joinMatchResult.status = true;
+            NetSys.Instance.SendMsg(NetChannelType.Game, (short)PacketOpcode.S2C_JoinMatchResult, joinMatchResult);
+            S2C_MatchResult_Data matchResult = new S2C_MatchResult_Data();
+            matchResult.status = true;
+            NetSys.Instance.SendMsg(NetChannelType.Game, (short)PacketOpcode.S2C_MatchResult, matchResult);
+        }
+
 
         private void OnClientGameReady(object netObj)
         {

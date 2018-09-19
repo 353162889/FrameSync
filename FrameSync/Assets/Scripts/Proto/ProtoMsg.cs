@@ -51,6 +51,26 @@ namespace Proto
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"C2S_HeartBeat_Data")]
+  public partial class C2S_HeartBeat_Data : global::ProtoBuf.IExtensible
+  {
+    public C2S_HeartBeat_Data() {}
+    
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"S2C_HeartBeat_Data")]
+  public partial class S2C_HeartBeat_Data : global::ProtoBuf.IExtensible
+  {
+    public S2C_HeartBeat_Data() {}
+    
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
   [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"C2S_JoinOrCreateRoom_Data")]
   public partial class C2S_JoinOrCreateRoom_Data : global::ProtoBuf.IExtensible
   {
@@ -114,6 +134,84 @@ namespace Proto
     {
       get { return _seed; }
       set { _seed = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"C2S_JoinMatch_Data")]
+  public partial class C2S_JoinMatch_Data : global::ProtoBuf.IExtensible
+  {
+    public C2S_JoinMatch_Data() {}
+    
+    private int _matchCount;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"matchCount", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int matchCount
+    {
+      get { return _matchCount; }
+      set { _matchCount = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"S2C_JoinMatchResult_Data")]
+  public partial class S2C_JoinMatchResult_Data : global::ProtoBuf.IExtensible
+  {
+    public S2C_JoinMatchResult_Data() {}
+    
+    private bool _status;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"status", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public bool status
+    {
+      get { return _status; }
+      set { _status = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"C2S_LeaveMatch_Data")]
+  public partial class C2S_LeaveMatch_Data : global::ProtoBuf.IExtensible
+  {
+    public C2S_LeaveMatch_Data() {}
+    
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"S2C_LeaveMatchResult_Data")]
+  public partial class S2C_LeaveMatchResult_Data : global::ProtoBuf.IExtensible
+  {
+    public S2C_LeaveMatchResult_Data() {}
+    
+    private bool _status;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"status", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public bool status
+    {
+      get { return _status; }
+      set { _status = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"S2C_MatchResult_Data")]
+  public partial class S2C_MatchResult_Data : global::ProtoBuf.IExtensible
+  {
+    public S2C_MatchResult_Data() {}
+    
+    private bool _status;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"status", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public bool status
+    {
+      get { return _status; }
+      set { _status = value; }
     }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)

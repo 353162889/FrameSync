@@ -68,8 +68,9 @@ namespace Framework
                 return !(lhs == rhs);
             }
         }
-
+        public event Action<NetChannel> OnSysDisConnect;
         private NetChannelType m_eChannelType;
+        public NetChannelType channelType { get { return m_eChannelType; } }
         private Queue<NetRecvData> m_queueRecvData;
         public SocketClient socketClient { get { return m_cSocketClient; } }
         private SocketClient m_cSocketClient;
@@ -127,6 +128,14 @@ namespace Framework
         {
             //网络自动断开，可以处理断线重连
             CLog.Log("系统断开连接", CLogColor.Red);
+            if(null != OnSysDisConnect)
+            {
+                if (OnSysDisConnect != null)
+                {
+                    var action = OnSysDisConnect;
+                    action(this);
+                }
+            }
         }
 
         public void SendMsg(NetSendData data)
@@ -178,6 +187,7 @@ namespace Framework
 
         public void Dispose()
         {
+            DisConnect();
             m_cSocketClient.Dispose();
             m_cSocketClient = null;
             if(m_cMsgDispatcher != null)
@@ -190,6 +200,7 @@ namespace Framework
                 m_cFrameData.Clear();
                 m_cFrameData = null;
             }
+            OnSysDisConnect = null;
         }
 
         public void OnUpdate()

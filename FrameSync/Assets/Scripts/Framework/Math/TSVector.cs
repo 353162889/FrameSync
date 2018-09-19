@@ -626,10 +626,17 @@ namespace Framework
         public void Normalize()
         {
             FP num2 = ((this.x * this.x) + (this.y * this.y)) + (this.z * this.z);
-            FP num = FP.One / FP.Sqrt(num2);
-            this.x *= num;
-            this.y *= num;
-            this.z *= num;
+            try
+            {
+                FP num = FP.One / FP.Sqrt(num2);
+                this.x *= num;
+                this.y *= num;
+                this.z *= num;
+            }
+            catch (Exception e)
+            {
+                CLog.LogError(this.ToString() + "," + e.Message + "\n" + e.StackTrace);
+            }
         }
 
         /// <summary>

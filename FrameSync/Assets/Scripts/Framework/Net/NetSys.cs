@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Proto;
 
 namespace Framework
 {
     public delegate void MsgCallback(object netObj);
     public class NetSys : SingletonMonoBehaviour<NetSys>
     {
+        public event Action<NetChannelType> OnNetChannelDisConnect;
+
         private NetChannel[] m_arrChannel;
         protected override void Init()
         {
@@ -24,7 +27,7 @@ namespace Framework
             var curChannel = GetChannel(channel);
             if(curChannel != null)
             {
-                curChannel.DisConnect();
+                curChannel.Dispose();
             }
             curChannel = null;
             switch(channelMode)
@@ -37,6 +40,15 @@ namespace Framework
                     break;
             }
             m_arrChannel[(int)channel] = curChannel;
+            curChannel.OnSysDisConnect += OnSysDisConnect;
+        }
+
+        private void OnSysDisConnect(NetChannel channel)
+        {
+            if(null != OnNetChannelDisConnect)
+            {
+                OnNetChannelDisConnect(channel.channelType);
+            }
         }
 
         public NetChannel GetChannel(NetChannelType type)
@@ -127,8 +139,8 @@ namespace Framework
                 }
             }
         }
-        
-        void OnApplicationQuit()
+
+        public void Dispose()
         {
             for (int i = 0; i < m_arrChannel.Length; i++)
             {
@@ -138,6 +150,12 @@ namespace Framework
                 }
                 m_arrChannel[i] = null;
             }
+            OnNetChannelDisConnect = null;
+        }
+        
+        void OnApplicationQuit()
+        {
+            Dispose();
         }
     }
 }

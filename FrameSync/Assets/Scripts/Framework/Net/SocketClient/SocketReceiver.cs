@@ -68,7 +68,7 @@ namespace Framework
                         int frameIndexCount = m_cSocket.Receive(m_cBuffer, 0, 4, SocketFlags.None);
                         if (CheckReceiveZero(frameIndexCount)) break;
                         netData.data = BitConverter.ToInt32(m_cBuffer, 0);
-                       // CLog.Log(string.Format("收到帧包frameCount={0},frameIndex={1},buff={2}",netData.len,netData.data,BitConverter.ToString(m_cBuffer,0,4)));
+                        //CLog.Log(string.Format("收到帧包frameCount={0},frameIndex={1},buff={2}",netData.len,netData.data,BitConverter.ToString(m_cBuffer,0,4)));
                     }
                     else
                     {
@@ -78,6 +78,7 @@ namespace Framework
                         if (CheckReceiveZero(lenCount)) break;
                         netData.len = BitConverter.ToInt16(m_cBuffer, 0);
                         int dataLen = m_cSocket.Receive(m_cBuffer, 0, (int)netData.len, SocketFlags.None);
+                        //CLog.Log("收到包Opcode="+opcode+",len="+netData.len);
                         if (CheckReceiveZero(dataLen)) break;
                         //反序列化
                         try {
@@ -85,6 +86,7 @@ namespace Framework
                             if (ProtoBuf.Serializer.NonGeneric.CanSerialize(type))
                             {
                                 m_cStream.Position = 0;
+                                m_cStream.SetLength(0);
                                 m_cStream.Write(m_cBuffer, 0, netData.len);
                                 m_cStream.Position = 0;
                                 netData.data = ProtoBuf.Serializer.NonGeneric.Deserialize(type, m_cStream);

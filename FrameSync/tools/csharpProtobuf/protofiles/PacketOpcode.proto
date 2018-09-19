@@ -6,6 +6,10 @@ enum PacketOpcode
 	//测试消息包（需要超过256）
 	Msg_Test = 257;
 
+	//心跳
+	C2S_HeartBeat = 998;
+	S2C_HeartBeat = 999;
+
 	//一般消息包
 	C2S_JoinOrCreateRoom = 1000;
 	S2C_JoinOrCreateRoom = 1001;
@@ -14,7 +18,16 @@ enum PacketOpcode
 	C2S_GameReady = 1002;
 	//服务器发送开始战斗
 	S2C_StartBattle = 1003;
-	
+
+	//进入匹配队列
+	C2S_JoinMatch = 1004;
+	//进入匹配队列结果
+	S2C_JoinMatchResult = 1005;
+	//离开匹配队列
+	C2S_LeaveMatch = 1006;
+	S2C_LeaveMatchResult = 1007;
+	//匹配结果
+	S2C_MatchResult = 1008;
 
 	//帧同步包 >= 10000
 	Frame_Msg_Test = 10000;

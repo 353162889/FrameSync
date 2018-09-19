@@ -13,6 +13,15 @@ message Msg_Test_Data
 	required string msg = 1;
 }
 
+//心跳
+message C2S_HeartBeat_Data
+{
+}
+
+message S2C_HeartBeat_Data
+{
+}
+
 //一般消息
 //进入或创建房间
 message C2S_JoinOrCreateRoom_Data
@@ -35,6 +44,30 @@ message C2S_GameReady_Data
 message S2C_StartBattle_Data
 {
 	required int32 seed = 1;
+}
+
+message C2S_JoinMatch_Data
+{
+	required int32 matchCount = 1;
+}
+
+message S2C_JoinMatchResult_Data
+{
+	required bool status = 1;
+}
+
+message C2S_LeaveMatch_Data
+{
+}
+
+message S2C_LeaveMatchResult_Data
+{
+	required bool status = 1;
+}
+
+message S2C_MatchResult_Data
+{
+	required bool status = 1;
 }
 
 //帧消息

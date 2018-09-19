@@ -12,6 +12,7 @@ namespace Game
         GameOut,
         GameIn,
         GameDebugStandAloneInit,//测试单机下参数初始化
+        GameDebugNetworkInit,//测试网络下参数初始化
     }
 
     public class GameStateData
@@ -48,7 +49,7 @@ namespace Game
             {
                 if (netMode == GameNetMode.Network)
                 {
-                    return ReleaseNetwork;
+                    return DebugNetwork;
                 }
                 else if (netMode == GameNetMode.StandAlone)
                 {
@@ -70,11 +71,11 @@ namespace Game
 
     public partial class GameStateCfg
     {
-        public static GameStateData ReleaseStandAlone = new GameStateData(GameStateType.Root, typeof(StateContainerBase), false,
+        public static GameStateData DebugNetwork = new GameStateData(GameStateType.Root, typeof(StateContainerBase), false,
             new GameStateData[] {
                 new GameStateData(GameStateType.GameOut,typeof(GameOut),false),
                 new GameStateData(GameStateType.GameIn,typeof(GameIn),false),
-                new GameStateData(GameStateType.GameDebugStandAloneInit,typeof(GameDebugStandAloneInit),true),
+                new GameStateData(GameStateType.GameDebugNetworkInit,typeof(GameDebugNetworkInit),true),
             });
     }
 

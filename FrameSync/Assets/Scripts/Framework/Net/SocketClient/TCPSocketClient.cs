@@ -135,7 +135,6 @@ namespace Framework
 
         public override void OnUpdate()
         {
-            base.OnUpdate();
             if(m_cSender != null)
             {
                 if(!m_cSender.Update())
@@ -150,6 +149,7 @@ namespace Framework
                     this.LostConnect();
                 }
             }
+            base.OnUpdate();
         }
 
         private bool CheckEndToPoint(string ip,int port,out IPEndPoint point)

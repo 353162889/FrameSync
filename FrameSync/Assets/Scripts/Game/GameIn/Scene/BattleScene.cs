@@ -73,7 +73,7 @@ namespace Game
 
         private Dictionary<int, AgentObjField> m_dicCampUnitField;
         private Dictionary<int, AgentObjField> m_dicCampRemoteField;
-
+        private bool m_bInit;
 
         public void Init(int sceneId)
         {
@@ -132,7 +132,7 @@ namespace Game
             ObjectPool<DamageInfo>.Instance.Init(20);
 
             FrameSyncSys.Instance.OnFrameSyncUpdate += OnFrameSyncUpdate;
-
+            m_bInit = true;
 
         }
 
@@ -303,6 +303,8 @@ namespace Game
 
         public void Clear()
         {
+            if (!m_bInit) return;
+            m_bInit = false;
             m_nSceneId = -1;
             m_cResScene = null;
             BehaviourPool<UnitAirShip>.Instance.Dispose();

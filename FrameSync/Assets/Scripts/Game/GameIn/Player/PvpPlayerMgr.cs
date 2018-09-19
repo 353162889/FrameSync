@@ -13,9 +13,11 @@ namespace Game
         private Dictionary<long, PvpPlayer> m_dic;
         public List<PvpPlayer> lstPlayer { get { return m_lstPlayer; } }
         private List<PvpPlayer> m_lstPlayer;
+        private bool m_bInit;
 
         public void Init()
         {
+            m_bInit = true;
             m_dic = new Dictionary<long, PvpPlayer>();
             m_lstPlayer = new List<PvpPlayer>();
             m_cMainPlayer = null;
@@ -72,6 +74,7 @@ namespace Game
 
         public void Clear()
         {
+            if (!m_bInit) return;
             FrameSyncSys.Instance.OnFrameSyncUpdate -= FrameUpdate;
             foreach (var item in m_dic)
             {

@@ -17,6 +17,12 @@ namespace Proto
       [global::ProtoBuf.ProtoEnum(Name=@"Msg_Test", Value=257)]
       Msg_Test = 257,
             
+      [global::ProtoBuf.ProtoEnum(Name=@"C2S_HeartBeat", Value=998)]
+      C2S_HeartBeat = 998,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"S2C_HeartBeat", Value=999)]
+      S2C_HeartBeat = 999,
+            
       [global::ProtoBuf.ProtoEnum(Name=@"C2S_JoinOrCreateRoom", Value=1000)]
       C2S_JoinOrCreateRoom = 1000,
             
@@ -28,6 +34,21 @@ namespace Proto
             
       [global::ProtoBuf.ProtoEnum(Name=@"S2C_StartBattle", Value=1003)]
       S2C_StartBattle = 1003,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"C2S_JoinMatch", Value=1004)]
+      C2S_JoinMatch = 1004,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"S2C_JoinMatchResult", Value=1005)]
+      S2C_JoinMatchResult = 1005,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"C2S_LeaveMatch", Value=1006)]
+      C2S_LeaveMatch = 1006,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"S2C_LeaveMatchResult", Value=1007)]
+      S2C_LeaveMatchResult = 1007,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"S2C_MatchResult", Value=1008)]
+      S2C_MatchResult = 1008,
             
       [global::ProtoBuf.ProtoEnum(Name=@"Frame_Msg_Test", Value=10000)]
       Frame_Msg_Test = 10000,

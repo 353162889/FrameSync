@@ -7,7 +7,7 @@ using GameData;
 
 namespace Game
 {
-    public class GameDebugStandAloneInit : StateBase
+    public class GameDebugNetworkInit : StateBase
     {
         protected override void OnEnter()
         {
@@ -17,7 +17,7 @@ namespace Game
             BattleInfo.levelId = GameConst.Instance.GetInt("default_level_id");
             var levelResInfo = ResCfgSys.Instance.GetCfg<ResLevel>(BattleInfo.levelId);
             BattleInfo.sceneId = levelResInfo.scene_id;
-            BattleInfo.standAlone = true;
+            BattleInfo.standAlone = false;
             BattleInfo.ip = "127.0.0.1";
             BattleInfo.port = 8080;
             this.ParentSwitchState((int)GameStateType.GameIn);

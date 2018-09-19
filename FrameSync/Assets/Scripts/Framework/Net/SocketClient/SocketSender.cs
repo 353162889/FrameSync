@@ -48,12 +48,14 @@ namespace Framework
                 try
                 {
                     m_cStream.Position = 0;
+                    m_cStream.SetLength(0);
                     ProtoBuf.Serializer.NonGeneric.Serialize(m_cStream, sendData.data);
                     short len = (short)m_cStream.Position;
                     m_cBuffer.SetIndex(0, 0);
                     m_cBuffer.WriteShortLE(sendData.sendOpcode);
                     m_cBuffer.WriteShortLE(len);
                     m_cBuffer.WriteBytes(m_cStream.GetBuffer(), 0, len);
+                    //CLog.Log("发送包Opcode=" + sendData.sendOpcode + ",len=" + len);
                     int count = m_cSocket.Send(m_cBuffer.GetRaw(), 0, m_cBuffer.WriterIndex(),SocketFlags.None);
                     if(count == 0)
                     {
