@@ -43,7 +43,7 @@ namespace Game
                 {
                     CLog.Log("连接战斗服务器成功");
                     C2S_JoinMatch_Data joinMatch = new C2S_JoinMatch_Data();
-                    joinMatch.matchCount = 1;
+                    joinMatch.matchCount = BattleInfo.matchCount;
                     NetSys.Instance.SendMsg(NetChannelType.Game, (short)PacketOpcode.C2S_JoinMatch, (short)PacketOpcode.S2C_JoinMatchResult,joinMatch,OnJoinMatchResult);
                 }
                 else
@@ -74,6 +74,7 @@ namespace Game
             S2C_JoinMatchResult_Data joinMatchResult = (S2C_JoinMatchResult_Data)netObj;
             if (joinMatchResult.status)
             {
+                GlobalEventDispatcher.Instance.Dispatch(GameEvent.StartMatchOther);
                 CLog.Log("进入匹配成功");
             }
             else

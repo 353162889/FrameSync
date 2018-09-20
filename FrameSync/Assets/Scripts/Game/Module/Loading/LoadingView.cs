@@ -22,10 +22,17 @@ namespace Game
         {
             base.OnEnter(openParam);
             CLog.Log("LoadingView[OnEnter]");
+            GlobalEventDispatcher.Instance.AddEvent(GameEvent.StartMatchOther, OnStartMatchOther);
+        }
+
+        private void OnStartMatchOther(object args)
+        {
+
         }
 
         public override void OnExit()
         {
+            GlobalEventDispatcher.Instance.RemoveEvent(GameEvent.StartMatchOther, OnStartMatchOther);
             base.OnExit();
             CLog.Log("LoadingView[OnExit]");
         }

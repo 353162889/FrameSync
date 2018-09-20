@@ -62,12 +62,15 @@ namespace Framework
                     m_cBuffer.WriteShortLE(len);
                     m_cBuffer.WriteBytes(m_cStream.GetBuffer(), 0, len);
                     //CLog.Log("发送包Opcode=" + sendData.sendOpcode + ",len=" + len);
-                    int count = m_cSocket.Send(m_cBuffer.GetRaw(), 0, m_cBuffer.WriterIndex(),SocketFlags.None);
-                    if(count == 0)
+                    if (m_cSocket != null)
                     {
-                        CLog.LogError("SocketSender send data count = 0");
-                        m_bLostConnect = true;
-                        break;
+                        int count = m_cSocket.Send(m_cBuffer.GetRaw(), 0, m_cBuffer.WriterIndex(), SocketFlags.None);
+                        if (count == 0)
+                        {
+                            CLog.LogError("SocketSender send data count = 0");
+                            m_bLostConnect = true;
+                            break;
+                        }
                     }
                 }
                 catch (System.Threading.ThreadAbortException)
@@ -81,7 +84,6 @@ namespace Framework
                     break;
                 }
             }
-            m_cSocket = null;
             m_cStream = null;
             m_cBuffer = null;
         }
@@ -109,6 +111,7 @@ namespace Framework
                 m_cThread = null;
             }
             m_bLostConnect = false;
+            m_cSocket = null;
         }
 
     }

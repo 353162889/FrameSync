@@ -58,6 +58,7 @@ namespace Framework
             {
                 try
                 {
+                    if (m_cSocket == null) break;
                     int opcodeCount = m_cSocket.Receive(m_cBuffer, 0, 2, SocketFlags.None);
                     if (CheckReceiveZero(opcodeCount)) break;
                     short opcode = BitConverter.ToInt16(m_cBuffer, 0);
@@ -67,6 +68,7 @@ namespace Framework
                     {
                         netData.recvOpcode = 0;
                         netData.len = opcode;
+                        if (m_cSocket == null) break;
                         int frameIndexCount = m_cSocket.Receive(m_cBuffer, 0, 4, SocketFlags.None);
                         if (CheckReceiveZero(frameIndexCount)) break;
                         netData.data = BitConverter.ToInt32(m_cBuffer, 0);
@@ -76,9 +78,11 @@ namespace Framework
                     {
                         netData.recvOpcode = opcode;
                         //读取长度
+                        if (m_cSocket == null) break;
                         int lenCount = m_cSocket.Receive(m_cBuffer, 0, 2, SocketFlags.None);
                         if (CheckReceiveZero(lenCount)) break;
                         netData.len = BitConverter.ToInt16(m_cBuffer, 0);
+                        if (m_cSocket == null) break;
                         int dataLen = m_cSocket.Receive(m_cBuffer, 0, (int)netData.len, SocketFlags.None);
                         //CLog.Log("收到包Opcode="+opcode+",len="+netData.len);
                         if (netData.len != 0 && CheckReceiveZero(dataLen)) break;
@@ -128,7 +132,6 @@ namespace Framework
                     break;
                 }
             }
-            m_cSocket = null;
             m_cStream = null;
             m_cBuffer = null;
         }
@@ -173,6 +176,7 @@ namespace Framework
                 m_cThread.Abort();
                 m_cThread = null;
             }
+            m_cSocket = null;
         }
     }
 }

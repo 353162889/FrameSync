@@ -101,7 +101,7 @@ namespace Game
                         dir.Normalize();
                         //FP dis =TSMath.Min(CameraSys.Instance.cameraViewPort.mRect.halfWidth, CameraSys.Instance.cameraViewPort.mRect.halfHeight);
                         var viewRect = BattleScene.Instance.viewRect;
-                        FP dis = TSMath.Max(viewRect.width, viewRect.height) * 10;
+                        FP dis = viewRect.width + viewRect.height;
 
                         TSVector2 end = start + dir * dis;
                         TSVector2 hitPoint;
@@ -139,7 +139,7 @@ namespace Game
                 }
                 else
                 {
-                    if (startPosition != Vector3.positiveInfinity && Time.time - m_fLastReqSetPositionTime > ViewConst.OnFrameTime && !Mathf.Approximately(delta.x, 0) || !Mathf.Approximately(delta.y, 0))
+                    if (!(Mathf.Abs(startPosition.x) > 100000 || Mathf.Abs(startPosition.y) > 100000 || Mathf.Abs(startPosition.z) > 100000) && Time.time - m_fLastReqSetPositionTime > ViewConst.OnFrameTime && !Mathf.Approximately(delta.x, 0) || !Mathf.Approximately(delta.y, 0))
                     {
                         var curPos = unit.curPosition.ToUnityVector3();
                         var scenePosDelta = CameraSys.Instance.GetSceneDeltaByScreenDelta(offset);
@@ -175,7 +175,7 @@ namespace Game
             {
                 dir.Normalize();
                 FP nDis = TSCheck2D.CheckAabbAndLine(new TSVector2(rect.xCenter, rect.yCenter), rect.width / 2, rect.height / 2, start, dir, startLen);
-                if (nDis < 0)
+                if (nDis <= 0)
                 {
                     result = start;
                 }
@@ -259,7 +259,7 @@ namespace Game
             base.OnEnter(openParam);
             GlobalEventDispatcher.Instance.AddEvent(GameEvent.PvpPlayerUnitDie, OnPvpPlayerUnitDie);
         }
-
+        
         public override void OnExit()
         {
             GlobalEventDispatcher.Instance.RemoveEvent(GameEvent.PvpPlayerUnitDie, OnPvpPlayerUnitDie);
