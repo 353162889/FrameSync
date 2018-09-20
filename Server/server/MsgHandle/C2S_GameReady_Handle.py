@@ -11,17 +11,18 @@ def HandleMsg(server,conn,proto):
         if room.isStart():
             #发送所有玩家开始战斗消息
             lstConns = room.getAllConn()
-            for onConn in lstConns:
+            for oneConn in lstConns:
                 sendData = protobuf.Msg_pb2.S2C_StartBattle_Data()
                 sendData.seed = random.randint(0, 999999)
-                onConn.sendMsg(protobuf.PacketOpcode_pb2.S2C_StartBattle, sendData)
+                sendData.userId = oneConn.id;
+                oneConn.sendMsg(protobuf.PacketOpcode_pb2.S2C_StartBattle, sendData)
             # 创建所有玩家
-            for onConn in lstConns:
+            for oneConn in lstConns:
                 sendData = protobuf.Msg_pb2.Frame_CreatePlayer_Data()
-                sendData.playerId = 1
+                sendData.playerId = oneConn.id
                 sendData.campId = 0
                 sendData.configId = 9001
-                onConn.sendMsg(protobuf.PacketOpcode_pb2.Frame_CreatePlayer, sendData)
+                oneConn.sendMsg(protobuf.PacketOpcode_pb2.Frame_CreatePlayer, sendData)
 
 
 

@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='Msg.proto',
   package='Proto',
   syntax='proto2',
-  serialized_pb=_b('\n\tMsg.proto\x12\x05Proto\"$\n\x0cProtoVector2\x12\t\n\x01x\x18\x01 \x02(\x03\x12\t\n\x01y\x18\x02 \x02(\x03\"\x1c\n\rMsg_Test_Data\x12\x0b\n\x03msg\x18\x01 \x02(\t\"\x14\n\x12\x43\x32S_HeartBeat_Data\"\x14\n\x12S2C_HeartBeat_Data\"+\n\x19\x43\x32S_JoinOrCreateRoom_Data\x12\x0e\n\x06roomId\x18\x01 \x02(\x05\";\n\x19S2C_JoinOrCreateRoom_Data\x12\x0e\n\x06status\x18\x01 \x02(\x08\x12\x0e\n\x06roomId\x18\x02 \x01(\x05\"\x14\n\x12\x43\x32S_GameReady_Data\"$\n\x14S2C_StartBattle_Data\x12\x0c\n\x04seed\x18\x01 \x02(\x05\"(\n\x12\x43\x32S_JoinMatch_Data\x12\x12\n\nmatchCount\x18\x01 \x02(\x05\"*\n\x18S2C_JoinMatchResult_Data\x12\x0e\n\x06status\x18\x01 \x02(\x08\"\x15\n\x13\x43\x32S_LeaveMatch_Data\"+\n\x19S2C_LeaveMatchResult_Data\x12\x0e\n\x06status\x18\x01 \x02(\x08\"&\n\x14S2C_MatchResult_Data\x12\x0e\n\x06status\x18\x01 \x02(\x08\"\"\n\x13\x46rame_Msg_Test_Data\x12\x0b\n\x03msg\x18\x01 \x02(\t\"M\n\x17\x46rame_CreatePlayer_Data\x12\x10\n\x08playerId\x18\x01 \x02(\x03\x12\x10\n\x08\x63onfigId\x18\x02 \x02(\x05\x12\x0e\n\x06\x63\x61mpId\x18\x03 \x02(\x05\"L\n\x16\x46rame_ReqMovePath_Data\x12\x0e\n\x06unitId\x18\x01 \x02(\r\x12\"\n\x05paths\x18\x02 \x03(\x0b\x32\x13.Proto.ProtoVector2\"V\n\x17\x46rame_ReqMovePoint_Data\x12\x0e\n\x06unitId\x18\x01 \x02(\r\x12+\n\x0etargetPosition\x18\x02 \x02(\x0b\x32\x13.Proto.ProtoVector2\"g\n\x19\x46rame_ReqSetPosition_Data\x12\x0e\n\x06unitId\x18\x01 \x02(\r\x12%\n\x08position\x18\x02 \x02(\x0b\x32\x13.Proto.ProtoVector2\x12\x13\n\x0bimmediately\x18\x03 \x02(\x08\"e\n\x18\x46rame_ReqSetForward_Data\x12\x0e\n\x06unitId\x18\x01 \x02(\r\x12$\n\x07\x66orward\x18\x02 \x02(\x0b\x32\x13.Proto.ProtoVector2\x12\x13\n\x0bimmediately\x18\x03 \x02(\x08\"^\n\x19\x46rame_ReqMoveForward_Data\x12\x0e\n\x06unitId\x18\x01 \x02(\r\x12$\n\x07\x66orward\x18\x02 \x02(\x0b\x32\x13.Proto.ProtoVector2\x12\x0b\n\x03len\x18\x03 \x02(\x03\"(\n\x16\x46rame_ReqStopMove_Data\x12\x0e\n\x06unitId\x18\x01 \x02(\r\"\xb5\x01\n\x15\x46rame_ReqDoSkill_Data\x12\x0e\n\x06unitId\x18\x01 \x02(\r\x12\x0f\n\x07skillId\x18\x02 \x02(\x05\x12\x15\n\rtargetAgentId\x18\x03 \x02(\r\x12\x17\n\x0ftargetAgentType\x18\x04 \x02(\x05\x12%\n\x08position\x18\x05 \x02(\x0b\x32\x13.Proto.ProtoVector2\x12$\n\x07\x66orward\x18\x06 \x02(\x0b\x32\x13.Proto.ProtoVector2\";\n\x18\x46rame_ReqBreakSkill_Data\x12\x0e\n\x06unitId\x18\x01 \x02(\r\x12\x0f\n\x07skillId\x18\x02 \x02(\x05')
+  serialized_pb=_b('\n\tMsg.proto\x12\x05Proto\"$\n\x0cProtoVector2\x12\t\n\x01x\x18\x01 \x02(\x03\x12\t\n\x01y\x18\x02 \x02(\x03\"\x1c\n\rMsg_Test_Data\x12\x0b\n\x03msg\x18\x01 \x02(\t\"\x14\n\x12\x43\x32S_HeartBeat_Data\"\x14\n\x12S2C_HeartBeat_Data\"+\n\x19\x43\x32S_JoinOrCreateRoom_Data\x12\x0e\n\x06roomId\x18\x01 \x02(\x05\";\n\x19S2C_JoinOrCreateRoom_Data\x12\x0e\n\x06status\x18\x01 \x02(\x08\x12\x0e\n\x06roomId\x18\x02 \x01(\x05\"\x14\n\x12\x43\x32S_GameReady_Data\"4\n\x14S2C_StartBattle_Data\x12\x0c\n\x04seed\x18\x01 \x02(\x05\x12\x0e\n\x06userId\x18\x02 \x02(\x03\"(\n\x12\x43\x32S_JoinMatch_Data\x12\x12\n\nmatchCount\x18\x01 \x02(\x05\"*\n\x18S2C_JoinMatchResult_Data\x12\x0e\n\x06status\x18\x01 \x02(\x08\"\x15\n\x13\x43\x32S_LeaveMatch_Data\"+\n\x19S2C_LeaveMatchResult_Data\x12\x0e\n\x06status\x18\x01 \x02(\x08\"&\n\x14S2C_MatchResult_Data\x12\x0e\n\x06status\x18\x01 \x02(\x08\"\"\n\x13\x46rame_Msg_Test_Data\x12\x0b\n\x03msg\x18\x01 \x02(\t\"M\n\x17\x46rame_CreatePlayer_Data\x12\x10\n\x08playerId\x18\x01 \x02(\x03\x12\x10\n\x08\x63onfigId\x18\x02 \x02(\x05\x12\x0e\n\x06\x63\x61mpId\x18\x03 \x02(\x05\"L\n\x16\x46rame_ReqMovePath_Data\x12\x0e\n\x06unitId\x18\x01 \x02(\r\x12\"\n\x05paths\x18\x02 \x03(\x0b\x32\x13.Proto.ProtoVector2\"V\n\x17\x46rame_ReqMovePoint_Data\x12\x0e\n\x06unitId\x18\x01 \x02(\r\x12+\n\x0etargetPosition\x18\x02 \x02(\x0b\x32\x13.Proto.ProtoVector2\"g\n\x19\x46rame_ReqSetPosition_Data\x12\x0e\n\x06unitId\x18\x01 \x02(\r\x12%\n\x08position\x18\x02 \x02(\x0b\x32\x13.Proto.ProtoVector2\x12\x13\n\x0bimmediately\x18\x03 \x02(\x08\"e\n\x18\x46rame_ReqSetForward_Data\x12\x0e\n\x06unitId\x18\x01 \x02(\r\x12$\n\x07\x66orward\x18\x02 \x02(\x0b\x32\x13.Proto.ProtoVector2\x12\x13\n\x0bimmediately\x18\x03 \x02(\x08\"^\n\x19\x46rame_ReqMoveForward_Data\x12\x0e\n\x06unitId\x18\x01 \x02(\r\x12$\n\x07\x66orward\x18\x02 \x02(\x0b\x32\x13.Proto.ProtoVector2\x12\x0b\n\x03len\x18\x03 \x02(\x03\"(\n\x16\x46rame_ReqStopMove_Data\x12\x0e\n\x06unitId\x18\x01 \x02(\r\"\xb5\x01\n\x15\x46rame_ReqDoSkill_Data\x12\x0e\n\x06unitId\x18\x01 \x02(\r\x12\x0f\n\x07skillId\x18\x02 \x02(\x05\x12\x15\n\rtargetAgentId\x18\x03 \x02(\r\x12\x17\n\x0ftargetAgentType\x18\x04 \x02(\x05\x12%\n\x08position\x18\x05 \x02(\x0b\x32\x13.Proto.ProtoVector2\x12$\n\x07\x66orward\x18\x06 \x02(\x0b\x32\x13.Proto.ProtoVector2\";\n\x18\x46rame_ReqBreakSkill_Data\x12\x0e\n\x06unitId\x18\x01 \x02(\r\x12\x0f\n\x07skillId\x18\x02 \x02(\x05')
 )
 
 
@@ -249,6 +249,13 @@ _S2C_STARTBATTLE_DATA = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='userId', full_name='Proto.S2C_StartBattle_Data.userId', index=1,
+      number=2, type=3, cpp_type=2, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -262,7 +269,7 @@ _S2C_STARTBATTLE_DATA = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=260,
-  serialized_end=296,
+  serialized_end=312,
 )
 
 
@@ -292,8 +299,8 @@ _C2S_JOINMATCH_DATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=298,
-  serialized_end=338,
+  serialized_start=314,
+  serialized_end=354,
 )
 
 
@@ -323,8 +330,8 @@ _S2C_JOINMATCHRESULT_DATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=340,
-  serialized_end=382,
+  serialized_start=356,
+  serialized_end=398,
 )
 
 
@@ -347,8 +354,8 @@ _C2S_LEAVEMATCH_DATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=384,
-  serialized_end=405,
+  serialized_start=400,
+  serialized_end=421,
 )
 
 
@@ -378,8 +385,8 @@ _S2C_LEAVEMATCHRESULT_DATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=407,
-  serialized_end=450,
+  serialized_start=423,
+  serialized_end=466,
 )
 
 
@@ -409,8 +416,8 @@ _S2C_MATCHRESULT_DATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=452,
-  serialized_end=490,
+  serialized_start=468,
+  serialized_end=506,
 )
 
 
@@ -440,8 +447,8 @@ _FRAME_MSG_TEST_DATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=492,
-  serialized_end=526,
+  serialized_start=508,
+  serialized_end=542,
 )
 
 
@@ -485,8 +492,8 @@ _FRAME_CREATEPLAYER_DATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=528,
-  serialized_end=605,
+  serialized_start=544,
+  serialized_end=621,
 )
 
 
@@ -523,8 +530,8 @@ _FRAME_REQMOVEPATH_DATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=607,
-  serialized_end=683,
+  serialized_start=623,
+  serialized_end=699,
 )
 
 
@@ -561,8 +568,8 @@ _FRAME_REQMOVEPOINT_DATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=685,
-  serialized_end=771,
+  serialized_start=701,
+  serialized_end=787,
 )
 
 
@@ -606,8 +613,8 @@ _FRAME_REQSETPOSITION_DATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=773,
-  serialized_end=876,
+  serialized_start=789,
+  serialized_end=892,
 )
 
 
@@ -651,8 +658,8 @@ _FRAME_REQSETFORWARD_DATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=878,
-  serialized_end=979,
+  serialized_start=894,
+  serialized_end=995,
 )
 
 
@@ -696,8 +703,8 @@ _FRAME_REQMOVEFORWARD_DATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=981,
-  serialized_end=1075,
+  serialized_start=997,
+  serialized_end=1091,
 )
 
 
@@ -727,8 +734,8 @@ _FRAME_REQSTOPMOVE_DATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1077,
-  serialized_end=1117,
+  serialized_start=1093,
+  serialized_end=1133,
 )
 
 
@@ -793,8 +800,8 @@ _FRAME_REQDOSKILL_DATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1120,
-  serialized_end=1301,
+  serialized_start=1136,
+  serialized_end=1317,
 )
 
 
@@ -831,8 +838,8 @@ _FRAME_REQBREAKSKILL_DATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1303,
-  serialized_end=1362,
+  serialized_start=1319,
+  serialized_end=1378,
 )
 
 _FRAME_REQMOVEPATH_DATA.fields_by_name['paths'].message_type = _PROTOVECTOR2

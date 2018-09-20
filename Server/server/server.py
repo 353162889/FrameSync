@@ -108,6 +108,8 @@ class PacketReceiver:
             while True:
                 newPacket = self.__try_handle_packet()
                 if newPacket is not None:
+                    if(newPacket.packetID == 998):
+                        print("C2S_HeartBeat", time.time())
                     self.packetQueue.put(newPacket)
                 else:
                     break
