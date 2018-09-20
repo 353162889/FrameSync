@@ -113,6 +113,10 @@ namespace Framework
                         m_queueData.Enqueue(netData);
                     }
                 }
+                catch(System.Threading.ThreadAbortException)
+                {
+
+                }
                 catch(Exception e)
                 {
                     //忽略WSACancelBlockingCall异常

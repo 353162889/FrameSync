@@ -70,7 +70,11 @@ namespace Framework
                         break;
                     }
                 }
-                catch(Exception e)
+                catch (System.Threading.ThreadAbortException)
+                {
+
+                }
+                catch (Exception e)
                 {
                     CLog.LogError("SocketSender exception:" + e.Message + "\n" + e.StackTrace);
                     m_bLostConnect = true;

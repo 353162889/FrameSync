@@ -19,6 +19,7 @@ namespace Game
             BattleInfo.standAlone = false;
             BattleInfo.ip = "127.0.0.1";
             BattleInfo.port = 8080;
+            BattleInfo.matchCount = 1;
             this.ParentSwitchState((int)GameStateType.GameIn);
         }
     }

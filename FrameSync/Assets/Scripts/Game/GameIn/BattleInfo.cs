@@ -13,6 +13,7 @@ namespace Game
         public static bool standAlone;
         public static string ip;
         public static int port;
+        public static int matchCount;//匹配人数
 
         public static void Clear()
         {
@@ -22,6 +23,7 @@ namespace Game
             standAlone = true;
             ip = "";
             port = 0;
+            matchCount = 1;
         }
     }
 }

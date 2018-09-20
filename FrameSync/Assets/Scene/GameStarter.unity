@@ -296,7 +296,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   versionMode: 1
-  netMode: 1
+  netMode: 0
 --- !u!4 &727793063
 Transform:
   m_ObjectHideFlags: 0

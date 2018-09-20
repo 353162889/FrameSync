@@ -25,6 +25,7 @@ namespace Game
             netChannel.SetHeartBeatSpaceTime(1000d);
             netChannel.SetHeartBeatEnable(true);
             ClientServer.Instance.StartServer();
+            NetSys.Instance.AddMsgCallback(NetChannelType.Game, (short)PacketOpcode.S2C_MatchResult, OnMatchResult);
             NetSys.Instance.BeginConnect(NetChannelType.Game, BattleInfo.ip, BattleInfo.port, OnConnect);
         }
 
@@ -42,7 +43,7 @@ namespace Game
                 {
                     CLog.Log("连接战斗服务器成功");
                     C2S_JoinMatch_Data joinMatch = new C2S_JoinMatch_Data();
-                    NetSys.Instance.AddMsgCallback(NetChannelType.Game, (short)PacketOpcode.S2C_MatchResult, OnMatchResult, true);
+                    joinMatch.matchCount = 1;
                     NetSys.Instance.SendMsg(NetChannelType.Game, (short)PacketOpcode.C2S_JoinMatch, (short)PacketOpcode.S2C_JoinMatchResult,joinMatch,OnJoinMatchResult);
                 }
                 else

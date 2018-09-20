@@ -16,6 +16,7 @@ namespace Game
             BattleInfo.standAlone = true;
             BattleInfo.ip = "127.0.0.1";
             BattleInfo.port = 8080;
+            BattleInfo.matchCount = 1;
             GameStarter.GameGlobalState.SwitchState((int)GameStateType.GameIn);
         }
 
@@ -28,6 +29,7 @@ namespace Game
             BattleInfo.standAlone = false;
             BattleInfo.ip = "127.0.0.1";
             BattleInfo.port = 8080;
+            BattleInfo.matchCount = 2;
             GameStarter.GameGlobalState.SwitchState((int)GameStateType.GameIn);
         }
     }
