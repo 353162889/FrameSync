@@ -12,14 +12,18 @@ namespace Game
         public override void Execute(ICommandContext context)
         {
             base.Execute(context);
+            NetChannel netChannel = null;
             if (!BattleInfo.standAlone)
             {
-                NetSys.Instance.CreateChannel(NetChannelType.Game, NetChannelModeType.Tcp);
+                netChannel = NetSys.Instance.CreateChannel(NetChannelType.Game, NetChannelModeType.Tcp);
             }
             else
             {
-                NetSys.Instance.CreateChannel(NetChannelType.Game, NetChannelModeType.StandAlone);
+                netChannel = NetSys.Instance.CreateChannel(NetChannelType.Game, NetChannelModeType.StandAlone);
             }
+            netChannel.InitHeartBeat((short)PacketOpcode.C2S_HeartBeat, (short)PacketOpcode.S2C_HeartBeat);
+            netChannel.SetHeartBeatSpaceTime(1000d);
+            netChannel.SetHeartBeatEnable(true);
             ClientServer.Instance.StartServer();
             NetSys.Instance.BeginConnect(NetChannelType.Game, BattleInfo.ip, BattleInfo.port, OnConnect);
         }

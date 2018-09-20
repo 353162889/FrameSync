@@ -22,10 +22,12 @@ namespace Framework
         private byte[] m_cBuffer;
         private Dictionary<short, Type> m_dicOpcodeToType;
         private bool m_bStop = true;
+        private HeartBeatInfo m_cHeartBeatInfo;
 
-        public SocketReceiver(Socket socket)
+        public SocketReceiver(Socket socket,HeartBeatInfo heartBeatInfo = null)
         {
             m_cSocket = socket;
+            m_cHeartBeatInfo = heartBeatInfo;
             m_queueData = new Queue<NetRecvData>();
             m_bLostConnect = false;
             m_dicOpcodeToType = new Dictionary<short, Type>();
@@ -79,7 +81,15 @@ namespace Framework
                         netData.len = BitConverter.ToInt16(m_cBuffer, 0);
                         int dataLen = m_cSocket.Receive(m_cBuffer, 0, (int)netData.len, SocketFlags.None);
                         //CLog.Log("收到包Opcode="+opcode+",len="+netData.len);
-                        if (CheckReceiveZero(dataLen)) break;
+                        if (netData.len != 0 && CheckReceiveZero(dataLen)) break;
+                        if(m_cHeartBeatInfo != null && m_cHeartBeatInfo.sReceiveHeartBeatOpcode == opcode && m_cHeartBeatInfo.receiveHandler != null)
+                        {
+                            //心跳包如果不需要解析的话，直接continue
+                            if(!m_cHeartBeatInfo.receiveHandler.Invoke())
+                            {
+                                continue;
+                            }
+                        }
                         //反序列化
                         try {
                             Type type = m_dicOpcodeToType[netData.recvOpcode];
@@ -114,6 +124,9 @@ namespace Framework
                     break;
                 }
             }
+            m_cSocket = null;
+            m_cStream = null;
+            m_cBuffer = null;
         }
 
         public int RecvNetData(Queue<NetRecvData> queue)
@@ -148,10 +161,8 @@ namespace Framework
 
         public void Dispose()
         {
+            m_cHeartBeatInfo = null;
             m_bLostConnect = false;
-            m_cSocket = null;
-            m_cStream = null;
-            m_cBuffer = null;
             m_bStop = true;
             if (m_cThread != null)
             {

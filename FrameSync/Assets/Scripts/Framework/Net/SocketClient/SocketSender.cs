@@ -18,9 +18,11 @@ namespace Framework
         private MemoryStream m_cStream;
         private ByteBuf m_cBuffer;
         private bool m_bStop = true;
-        public SocketSender(Socket socket)
+        private HeartBeatInfo m_cHeartBeatInfo;
+        public SocketSender(Socket socket, HeartBeatInfo heartBeatInfo = null)
         {
             m_cSocket = socket;
+            m_cHeartBeatInfo = heartBeatInfo;
             m_queueData = new Queue<NetSendData>();
             m_bLostConnect = false;
             m_cStream = new MemoryStream(MaxSendDataSize);
@@ -35,15 +37,19 @@ namespace Framework
         {
             while(!m_bStop)
             {
-                if(m_queueData.Count == 0)
-                {
-                    Thread.Sleep(1);
-                    continue;
-                }
                 NetSendData sendData;
-                lock(m_queueData)
+
+                if (m_cHeartBeatInfo == null || m_cHeartBeatInfo.sendHandler == null || !m_cHeartBeatInfo.sendHandler.Invoke(out sendData))
                 {
-                    sendData = m_queueData.Dequeue();
+                    if (m_queueData.Count == 0)
+                    {
+                        Thread.Sleep(1);
+                        continue;
+                    }
+                    lock (m_queueData)
+                    {
+                        sendData = m_queueData.Dequeue();
+                    }
                 }
                 try
                 {
@@ -71,6 +77,9 @@ namespace Framework
                     break;
                 }
             }
+            m_cSocket = null;
+            m_cStream = null;
+            m_cBuffer = null;
         }
 
         public void SendData(NetSendData data)
@@ -88,6 +97,7 @@ namespace Framework
 
         public void Dispose()
         {
+            m_cHeartBeatInfo = null;
             m_bStop = true;
             if (m_cThread != null)
             {
@@ -95,9 +105,6 @@ namespace Framework
                 m_cThread = null;
             }
             m_bLostConnect = false;
-            m_cSocket = null;
-            m_cStream = null;
-            m_cBuffer = null;
         }
 
     }

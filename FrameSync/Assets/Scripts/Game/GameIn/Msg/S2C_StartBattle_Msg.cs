@@ -13,6 +13,7 @@ namespace Game
         protected override void HandleMsg(S2C_StartBattle_Data msg)
         {
             GameInTool.InitRandomSeed(msg.seed);
+            BattleInfo.userId = msg.userId;
             GlobalEventDispatcher.Instance.Dispatch(GameEvent.StartBattle);
         }
     }

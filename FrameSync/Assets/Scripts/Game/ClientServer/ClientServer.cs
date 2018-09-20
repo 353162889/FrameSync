@@ -18,9 +18,18 @@ namespace Game
             m_bIsRun = true;
             //监听进入战斗消息，给客户端发送初始化玩家的消息
             NetSys.Instance.AddMsgCallback(NetChannelType.Game, (short)PacketOpcode.C2S_GameReady, OnClientGameReady);
+            //进入匹配协议
             NetSys.Instance.AddMsgCallback(NetChannelType.Game, (short)PacketOpcode.C2S_JoinMatch, OnJoinMatch);
+            //心跳协议
+            NetSys.Instance.AddMsgCallback(NetChannelType.Game, (short)PacketOpcode.C2S_HeartBeat, OnHeartBeat);
         }
-      
+
+        private void OnHeartBeat(object netObj)
+        {
+            S2C_HeartBeat_Data data = new S2C_HeartBeat_Data();
+            NetSys.Instance.SendMsg(NetChannelType.Game, (short)PacketOpcode.S2C_HeartBeat, data);
+        }
+
         public void StopServer()
         {
             m_bIsRun = false;
@@ -48,6 +57,7 @@ namespace Game
             //先发送开始战斗协议
             S2C_StartBattle_Data startBattleData = new S2C_StartBattle_Data();
             startBattleData.seed = UnityEngine.Random.Range(0, int.MaxValue);
+            startBattleData.userId = 1;
             NetSys.Instance.SendMsg(NetChannelType.Game, (short)PacketOpcode.S2C_StartBattle, startBattleData);
             //创建玩家
             Frame_CreatePlayer_Data createPlayerData = new Frame_CreatePlayer_Data();

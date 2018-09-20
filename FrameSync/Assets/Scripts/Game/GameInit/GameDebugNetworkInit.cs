@@ -13,7 +13,6 @@ namespace Game
         {
             base.OnEnter();
             BattleInfo.Clear();
-            BattleInfo.userId = 1;
             BattleInfo.levelId = GameConst.Instance.GetInt("default_level_id");
             var levelResInfo = ResCfgSys.Instance.GetCfg<ResLevel>(BattleInfo.levelId);
             BattleInfo.sceneId = levelResInfo.scene_id;

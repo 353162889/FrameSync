@@ -319,9 +319,16 @@ namespace Framework
 
         public FP magnitude {
             get {
-                FP result;
-                DistanceSquared(ref this, ref zeroVector, out result);
-                return FP.Sqrt(result);
+                try
+                {
+                    FP result;
+                    DistanceSquared(ref this, ref zeroVector, out result);
+                    return FP.Sqrt(result);
+                }catch(Exception e)
+                {
+                    Debug.LogError(this + "," + e.Message + ","+e.StackTrace);
+                    return 0;
+                }
             }
         }
 

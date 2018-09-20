@@ -77,11 +77,32 @@ namespace Framework
         public override void OnUpdate()
         {
             base.OnUpdate();
+            if(m_cHeartBeatInfo != null)
+            {
+                if(m_cHeartBeatInfo.sendHandler != null)
+                {
+                    NetSendData sendData;
+                    if(m_cHeartBeatInfo.sendHandler.Invoke(out sendData))
+                    {
+                        SendNetData(sendData);
+                    }
+                }
+            }
             //一般消息处理
             while(m_queueSend.Count > 0)
             {
-                NetRecvData recvData = new NetRecvData();
                 var sendData = m_queueSend.Dequeue();
+                if(m_cHeartBeatInfo != null && sendData.sendOpcode == m_cHeartBeatInfo.sReceiveHeartBeatOpcode)
+                {
+                    if(m_cHeartBeatInfo.receiveHandler != null)
+                    {
+                        if(!m_cHeartBeatInfo.receiveHandler.Invoke())
+                        {
+                            continue;
+                        }
+                    }
+                }
+                NetRecvData recvData = new NetRecvData();
                 recvData.recvOpcode = sendData.sendOpcode;
                 recvData.data = sendData.data;
                 recvData.len = 0;//这里的长度直接填0（不需要反序列化）

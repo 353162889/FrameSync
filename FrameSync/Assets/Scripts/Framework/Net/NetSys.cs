@@ -22,7 +22,7 @@ namespace Framework
             //}
         }
 
-        public void CreateChannel(NetChannelType channel,NetChannelModeType channelMode)
+        public NetChannel CreateChannel(NetChannelType channel,NetChannelModeType channelMode)
         {
             var curChannel = GetChannel(channel);
             if(curChannel != null)
@@ -41,6 +41,7 @@ namespace Framework
             }
             m_arrChannel[(int)channel] = curChannel;
             curChannel.OnSysDisConnect += OnSysDisConnect;
+            return curChannel;
         }
 
         private void OnSysDisConnect(NetChannel channel)

@@ -44,6 +44,7 @@ message C2S_GameReady_Data
 message S2C_StartBattle_Data
 {
 	required int32 seed = 1;
+	required int64 userId = 2;
 }
 
 message C2S_JoinMatch_Data

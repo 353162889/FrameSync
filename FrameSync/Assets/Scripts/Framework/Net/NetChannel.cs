@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 
 namespace Framework
 {
@@ -16,6 +17,7 @@ namespace Framework
         Tcp,
         StandAlone,
     }
+
 
 
     /// <summary>
@@ -68,6 +70,7 @@ namespace Framework
                 return !(lhs == rhs);
             }
         }
+        //系统断开事件（主动断开不会调用）
         public event Action<NetChannel> OnSysDisConnect;
         private NetChannelType m_eChannelType;
         public NetChannelType channelType { get { return m_eChannelType; } }
@@ -78,10 +81,20 @@ namespace Framework
         private Dictionary<short, List<IServerMsg>> m_dicServerMsg;
         public EDynamicDispatcher m_cMsgDispatcher;
         private NetFrameData m_cFrameData;
+        public int ping { get { return m_nPing; } }
+        private volatile int m_nPing;
+        private double m_dSendHeartBeatTime;
+        private volatile bool m_bReceiveHeartBeat;
+        private double m_dSendHeartBeatSpaceTime;
+        private NetSendData m_sHeartBeatSendData;
+        private HeartBeatInfo m_cHeartBeatInfo;
+        private volatile bool m_bStartHeart;
+        private static DateTime MinTime = new DateTime(1970, 1, 1);
 
         public SocketClientStatus Status {
             get { return m_cSocketClient.Status; }
         }
+
         public NetChannel(NetChannelType type,SocketClient socketClient)
         {
             m_eChannelType = type;
@@ -92,6 +105,65 @@ namespace Framework
             m_cMsgDispatcher = new EDynamicDispatcher();
             m_cFrameData = new NetFrameData();
             LoadNetMessageEvent();
+            m_nPing = 0;
+        }
+
+        public void InitHeartBeat(short sSendHeartBeatOpcode,short sReceiveHeartBeatOpcode)
+        {
+            string opcodeName = ((Proto.PacketOpcode)sSendHeartBeatOpcode).ToString();
+            string dataName = "Proto." + opcodeName + "_Data";
+            Assembly assembly = Assembly.GetAssembly(typeof(NetSys));
+            var type = assembly.GetType(dataName);
+            m_sHeartBeatSendData = new NetSendData();
+            m_sHeartBeatSendData.sendOpcode = sSendHeartBeatOpcode;
+            m_sHeartBeatSendData.data = Activator.CreateInstance(type);
+            m_bReceiveHeartBeat = true;
+            m_dSendHeartBeatTime = (DateTime.Now.ToUniversalTime() - MinTime).TotalMilliseconds;
+            m_cHeartBeatInfo = new HeartBeatInfo(sSendHeartBeatOpcode, sReceiveHeartBeatOpcode, TryGetHeartBeatSendData, ReceiveHeartBeatData);
+            m_cSocketClient.SetHeartBeatInfo(m_cHeartBeatInfo);
+            m_bStartHeart = false;
+            m_dSendHeartBeatSpaceTime = 1000d;
+        }
+        /// <summary>
+        /// 毫秒为单位
+        /// </summary>
+        /// <param name="spaceTime"></param>
+        public void SetHeartBeatSpaceTime(double spaceTime)
+        {
+            m_dSendHeartBeatSpaceTime = spaceTime;
+        }
+
+        public void SetHeartBeatEnable(bool enable)
+        {
+            m_bStartHeart = enable;
+        }
+
+        private bool TryGetHeartBeatSendData(out NetSendData sendData)
+        {
+            sendData = m_sHeartBeatSendData;
+            if (!m_bStartHeart) return false;
+            double curTimeStamp = (DateTime.Now - MinTime).TotalMilliseconds;
+            if(curTimeStamp - m_dSendHeartBeatTime >= m_dSendHeartBeatSpaceTime && m_bReceiveHeartBeat) 
+            {
+                m_bReceiveHeartBeat = false;
+                m_dSendHeartBeatTime = curTimeStamp;
+                //Thread.VolatileWrite(ref m_dSendHeartBeatTime, curTimeStamp);
+                //CLog.LogArgs("sendHeartBeatData", curTimeStamp);
+                return true;
+            }
+            return false;
+        }
+
+        private bool ReceiveHeartBeatData()
+        {
+            if (!m_bStartHeart) return false;
+            double curTimeStamp = (DateTime.Now - MinTime).TotalMilliseconds;
+            //double sendHeartBeatTime = Thread.VolatileRead(ref m_dSendHeartBeatTime);
+            double sendHeartBeatTime = m_dSendHeartBeatTime;
+            m_nPing = (int)(curTimeStamp - sendHeartBeatTime);
+            m_bReceiveHeartBeat = true;
+            //CLog.LogArgs("receiveHeartBeatData", sendHeartBeatTime, curTimeStamp,m_nPing);
+            return false;
         }
 
         private void LoadNetMessageEvent()
@@ -190,7 +262,13 @@ namespace Framework
             DisConnect();
             m_cSocketClient.Dispose();
             m_cSocketClient = null;
-            if(m_cMsgDispatcher != null)
+            if (m_cHeartBeatInfo != null)
+            {
+                m_cHeartBeatInfo.Clear();
+                m_cHeartBeatInfo = null;
+            }
+            m_bStartHeart = false;
+            if (m_cMsgDispatcher != null)
             {
                 m_cMsgDispatcher.Clear();
                 m_cMsgDispatcher = null;
@@ -223,6 +301,10 @@ namespace Framework
                         }
                     }
                 }
+            }
+            else
+            {
+                m_nPing = 500;
             }
         }
 

@@ -16,6 +16,7 @@ namespace Game
         private RectTransform m_cMoveTrans;
         private GameObject m_cBtnSkillTest;
         private Text m_txtFps;
+        private Text m_txtPing;
         private Button m_btnTest;
         private float minDirLen;
         public FightView(GameObject go) : base(go)
@@ -25,6 +26,7 @@ namespace Game
         protected override void BuidUI()
         {
             m_txtFps = this.MainGO.FindChildComponentRecursive<Text>("txtFps");
+            m_txtPing = this.MainGO.FindChildComponentRecursive<Text>("txtPing");
             m_btnTest = this.MainGO.FindChildComponentRecursive<Button>("btnTest");
             RectTransform rectTrans = this.MainGO.FindChildComponentRecursive<RectTransform>("JoystickRect");
             m_cBaseTrans = this.MainGO.FindChildComponentRecursive<RectTransform>("JoystickBase");
@@ -272,6 +274,13 @@ namespace Game
         public override void OnUpdate()
         {
             m_txtFps.text = FPSMono.Instance.realFPS.ToString();
+            var channel = NetSys.Instance.GetChannel(NetChannelType.Game);
+            string ping = "0";
+            if (channel != null)
+            {
+                ping = channel.ping.ToString();                
+            }
+            m_txtPing.text = ping;
         }
     }
 }

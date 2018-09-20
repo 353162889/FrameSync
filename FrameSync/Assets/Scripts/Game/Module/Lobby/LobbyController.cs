@@ -10,7 +10,6 @@ namespace Game
         public void JoinSingle()
         {
             BattleInfo.Clear();
-            BattleInfo.userId = 1;
             BattleInfo.levelId = GameConst.Instance.GetInt("default_level_id");
             var levelResInfo = ResCfgSys.Instance.GetCfg<ResLevel>(BattleInfo.levelId);
             BattleInfo.sceneId = levelResInfo.scene_id;
@@ -23,7 +22,6 @@ namespace Game
         public void JoinMulti()
         {
             BattleInfo.Clear();
-            BattleInfo.userId = 1;
             BattleInfo.levelId = GameConst.Instance.GetInt("default_level_id");
             var levelResInfo = ResCfgSys.Instance.GetCfg<ResLevel>(BattleInfo.levelId);
             BattleInfo.sceneId = levelResInfo.scene_id;

@@ -82,8 +82,8 @@ namespace Framework
         private void OnConnectedSucc()
         {
             //初始化发送接收
-            m_cSender = new SocketSender(m_cSocket);
-            m_cReceiver = new SocketReceiver(m_cSocket);
+            m_cSender = new SocketSender(m_cSocket,m_cHeartBeatInfo);
+            m_cReceiver = new SocketReceiver(m_cSocket,m_cHeartBeatInfo);
         }
 
         public override void DisConnect()

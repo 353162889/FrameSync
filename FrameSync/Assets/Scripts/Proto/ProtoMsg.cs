@@ -135,6 +135,13 @@ namespace Proto
       get { return _seed; }
       set { _seed = value; }
     }
+    private long _userId;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"userId", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public long userId
+    {
+      get { return _userId; }
+      set { _userId = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }

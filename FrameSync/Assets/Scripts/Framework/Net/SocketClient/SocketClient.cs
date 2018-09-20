@@ -5,6 +5,41 @@ using System.Text;
 
 namespace Framework
 {
+
+    public class HeartBeatInfo
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sendData">心跳包数据</param>
+        /// <returns>是否需要发送当前数据</returns>
+        public delegate bool HeartBeatSendHandler(out NetSendData sendData);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>当前收到的包是否需要解析</returns>
+        public delegate bool HeartBeatReceiveHandler();
+        public readonly short sSendHeartBeatOpcode;
+        public readonly short sReceiveHeartBeatOpcode;
+        public HeartBeatSendHandler sendHandler { get { return m_cSendHandler; } }
+        private HeartBeatSendHandler m_cSendHandler;
+        public HeartBeatReceiveHandler receiveHandler { get { return m_cReceiveHandler; } }
+        private HeartBeatReceiveHandler m_cReceiveHandler;
+        public HeartBeatInfo(short sSendHeartBeatOpcode, short sReceiveHeartBeatOpcode, HeartBeatSendHandler sendHandler, HeartBeatReceiveHandler receiveHandler)
+        {
+            this.sSendHeartBeatOpcode = sSendHeartBeatOpcode;
+            this.sReceiveHeartBeatOpcode = sReceiveHeartBeatOpcode;
+            this.m_cSendHandler = sendHandler;
+            this.m_cReceiveHandler = receiveHandler;
+        }
+
+        public void Clear()
+        {
+            m_cSendHandler = null;
+            m_cReceiveHandler = null;
+        }
+    }
+
     public enum SocketClientStatus
     {
         DisConnect = 1,
@@ -21,6 +56,7 @@ namespace Framework
 
         private volatile bool m_bIsDisConnect = false;
         private volatile SocketClientStatus m_eStatus;
+        protected HeartBeatInfo m_cHeartBeatInfo;
        
         public SocketClientStatus Status { get { return m_eStatus; }
             private set {
@@ -67,6 +103,11 @@ namespace Framework
                 }
             }
             return succ;
+        }
+
+        public void SetHeartBeatInfo(HeartBeatInfo heartBeatInfo)
+        {
+            m_cHeartBeatInfo = heartBeatInfo;
         }
 
         //开始连接
@@ -143,6 +184,7 @@ namespace Framework
         //释放数据
         public virtual void Dispose()
         {
+            m_cHeartBeatInfo = null;
             DisConnect();
             OnDisConnect = null;
         }
