@@ -25,12 +25,12 @@ namespace Framework
             m_cHeartBeatInfo = heartBeatInfo;
             m_queueData = new Queue<NetSendData>();
             m_bLostConnect = false;
+            m_bStop = false;
             m_cStream = new MemoryStream(MaxSendDataSize);
             m_cBuffer = new ByteBuf(MaxSendDataSize);
             m_cThread = new Thread(new ThreadStart(Run));
             m_cThread.IsBackground = true;
             m_cThread.Start();
-            m_bStop = false;
         }
 
         private void Run()
@@ -75,7 +75,7 @@ namespace Framework
                 }
                 catch (System.Threading.ThreadAbortException)
                 {
-
+                    CLog.LogError("ThreadAbortException");
                 }
                 catch (Exception e)
                 {
@@ -90,7 +90,7 @@ namespace Framework
 
         public void SendData(NetSendData data)
         {
-            lock(m_queueData)
+            lock (m_queueData)
             {
                 m_queueData.Enqueue(data);
             }
@@ -105,13 +105,13 @@ namespace Framework
         {
             m_cHeartBeatInfo = null;
             m_bStop = true;
+            m_cSocket = null;
             if (m_cThread != null)
             {
                 m_cThread.Abort();
                 m_cThread = null;
             }
             m_bLostConnect = false;
-            m_cSocket = null;
         }
 
     }

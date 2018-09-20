@@ -30,6 +30,7 @@ namespace Framework
             m_cHeartBeatInfo = heartBeatInfo;
             m_queueData = new Queue<NetRecvData>();
             m_bLostConnect = false;
+            m_bStop = false;
             m_dicOpcodeToType = new Dictionary<short, Type>();
             LoadProtoTypes();
             m_cStream = new MemoryStream(MaxRecvDataSize);
@@ -37,7 +38,7 @@ namespace Framework
             m_cThread = new Thread(new ThreadStart(Run));
             m_cThread.IsBackground = true;
             m_cThread.Start();
-            m_bStop = false;
+           
         }
 
         private void LoadProtoTypes()
@@ -171,12 +172,12 @@ namespace Framework
             m_cHeartBeatInfo = null;
             m_bLostConnect = false;
             m_bStop = true;
+            m_cSocket = null;
             if (m_cThread != null)
             {
                 m_cThread.Abort();
                 m_cThread = null;
             }
-            m_cSocket = null;
         }
     }
 }
