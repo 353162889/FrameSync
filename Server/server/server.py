@@ -5,6 +5,8 @@ import queue
 import struct
 import io
 import time
+import protobuf.PacketOpcode_pb2
+import protobuf.Msg_pb2
 
 from errno import EALREADY, EINPROGRESS, EWOULDBLOCK, ECONNRESET, EINVAL, \
     ENOTCONN, ESHUTDOWN, EISCONN, EBADF, ECONNABORTED, EPIPE, EAGAIN, \
@@ -125,9 +127,10 @@ class PacketReceiver:
 
     def __handle_packet(self):
         if self.dataLength >= self.packet.packetSize + MsgPacket.HeadSize:
-            #print("receive from {0} packetID = {1}".format(self.connection.id,self.packet.packetID))
             #小于10000是一般包，反序列化，否则是帧包，不反序列化
             if(not MsgPacket.isFramePacket(self.packet.packetID)) :
+                if self.packet.packetID != protobuf.PacketOpcode_pb2.C2S_HeartBeat:
+                    print("receive from {0} packetID = {1}".format(self.connection.id, self.packet.packetID))
                 self.bytesIO.seek(MsgPacket.HeadSize)
                 buff = self.bytesIO.read(self.packet.packetSize)
                 protoClass = self.mapOpcodeClass.get(self.packet.packetID,None)
@@ -179,7 +182,9 @@ class PacketSender:
                     serializeBuff = pack.getSerializeBuff();
             else:
                 pack.serialize()
-                print("send to {0} packetID = {1}".format(self.connection.id,pack.packetID))
+                #一般消息打印日志
+                if pack.packetID != protobuf.PacketOpcode_pb2.S2C_HeartBeat:
+                    print("send to {0} packetID = {1}".format(self.connection.id,pack.packetID))
                 serializeBuff = pack.getSerializeBuff()
             if not serializeBuff:
                 print("can not send none pack,packId = {0}".format(pack.packetID))
