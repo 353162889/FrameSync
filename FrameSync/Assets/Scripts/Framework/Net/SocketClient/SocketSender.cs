@@ -106,12 +106,12 @@ namespace Framework
             m_cHeartBeatInfo = null;
             m_bStop = true;
             m_cSocket = null;
+            m_bLostConnect = false;
             if (m_cThread != null)
             {
                 m_cThread.Abort();
                 m_cThread = null;
             }
-            m_bLostConnect = false;
         }
 
     }

@@ -88,6 +88,7 @@ namespace Framework
 
         public override void DisConnect()
         {
+            
             try {
                 if (m_cSocket != null)
                 {
@@ -106,6 +107,16 @@ namespace Framework
             }
             finally
             {
+                if (m_cSender != null)
+                {
+                    m_cSender.Dispose();
+                    m_cSender = null;
+                }
+                if (m_cReceiver != null)
+                {
+                    m_cReceiver.Dispose();
+                    m_cReceiver = null;
+                }
                 try
                 {
                     if (m_cSocket != null)
@@ -116,16 +127,6 @@ namespace Framework
                 catch (Exception e)
                 {
                     CLog.LogError(e.Message + "\n" + e.StackTrace);
-                }
-                if(m_cSender != null)
-                {
-                    m_cSender.Dispose();
-                    m_cSender = null;
-                }
-                if(m_cReceiver != null)
-                {
-                    m_cReceiver.Dispose();
-                    m_cReceiver = null;
                 }
                 m_cSocket = null;
                 m_cAsyncResult = null;

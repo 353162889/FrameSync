@@ -17,7 +17,7 @@ namespace Game
             var levelResInfo = ResCfgSys.Instance.GetCfg<ResLevel>(BattleInfo.levelId);
             BattleInfo.sceneId = levelResInfo.scene_id;
             BattleInfo.standAlone = false;
-            BattleInfo.ip = "127.0.0.1";
+            BattleInfo.ip = "192.168.0.103";
             BattleInfo.port = 8080;
             BattleInfo.matchCount = 1;
             this.ParentSwitchState((int)GameStateType.GameIn);
