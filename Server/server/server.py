@@ -559,8 +559,8 @@ class CustomServer(socketserver.TCPServer):
         self.recvThread.daemon = False
         self.sendThread.daemon = False
         self.recvThread.start()
-        self.sendThread.start()
-        self.logicThread.start()
+        # self.sendThread.start()
+        # self.logicThread.start()
         super(CustomServer, self).serve_forever(poll_interval)
 
     def recvData_thread(self,lock):
@@ -571,6 +571,29 @@ class CustomServer(socketserver.TCPServer):
                     conn.recvData()
                 except ConnectionResetError:
                     conn.lostConnection()
+
+            for conn in self._connections.values():
+                try:
+                    conn.sendData()
+                except:
+                    conn.lostConnection()
+
+            for conn in self._connections.values():
+                pack = conn.dequeueMsg()
+                while pack:
+                    self.handMsg(conn, pack)
+                    pack = conn.dequeueMsg()
+
+            self._delRoom.clear()
+            for room in self._rooms.values():
+                if not room.update():
+                    self._delRoom.append(room.id)
+            for roomId in self._delRoom:
+                self.removeRoom(roomId)
+
+            if self._match:
+                self._match.update()
+
             lock.release()
 
     def sendData_thread(self,lock):
@@ -624,7 +647,7 @@ if __name__ == '__main__':
     # info1.ParseFromString(s)
     # print(info1.msg)
     print("开始启动服务器...")
-    addr = ("127.0.0.1", 8080)
+    addr = ("192.168.0.103", 8080)
     server = CustomServer(addr, CustomRequestHandler)
     print("服务器启动...")
     server.serve_forever()
