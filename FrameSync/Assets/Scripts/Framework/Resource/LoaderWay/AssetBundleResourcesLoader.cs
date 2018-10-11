@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections;
+﻿using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Framework
 {
-    public class InResourcesLoader : BaseResLoader
+    public class AssetBundleResourcesLoader : BaseResLoader
     {
+        private Dictionary<AssetBundleCreateRequest, Resource> m_dicLoadingQueue = new Dictionary<AssetBundleCreateRequest, Resource>();
+        private Dictionary<AssetBundleCreateRequest, Resource> m_dicLoadedQueue = new Dictionary<AssetBundleCreateRequest, Resource>();
 
-        private Dictionary<ResourceRequest, Resource> m_dicLoadingQueue = new Dictionary<ResourceRequest, Resource>();
-        private Dictionary<ResourceRequest, Resource> m_dicLoadedQueue = new Dictionary<ResourceRequest, Resource>();
         public override void Load(Resource res)
         {
-            string loadPath = GetInResPath(res);
-            ResourceRequest request = Resources.LoadAsync(loadPath);
+            string url = GetInResPath(res);
+            AssetBundleCreateRequest request = AssetBundle.LoadFromFileAsync(url);
             m_dicLoadingQueue.Add(request, res);
         }
 
@@ -22,7 +20,7 @@ namespace Framework
             if (m_dicLoadingQueue.Count == 0) return;
             foreach (var item in m_dicLoadingQueue)
             {
-                if(item.Key.isDone)
+                if (item.Key.isDone)
                 {
                     m_dicLoadedQueue.Add(item.Key, item.Value);
                 }
@@ -30,14 +28,15 @@ namespace Framework
             foreach (var item in m_dicLoadedQueue)
             {
                 item.Value.isDone = true;
-                if(item.Key.asset == null)
+                if (item.Key.assetBundle != null)
                 {
-                    item.Value.errorTxt = "Load resource [" + item.Value.realPath + "] fail!";
-                    CLog.LogError(item.Value.errorTxt);
+                    item.Value.SetBundle(item.Key.assetBundle);
                 }
                 else
                 {
-                    item.Value.SetDirectObject(item.Key.asset);
+                    string errorTxt = "Load resource [" + GetInResPath(item.Value) + "] fail!";
+                    item.Value.errorTxt = errorTxt;
+                    CLog.LogError(errorTxt);
                 }
                 m_dicLoadingQueue.Remove(item.Key);
                 OnDone(item.Value);
@@ -49,13 +48,5 @@ namespace Framework
         {
             return _resUtil.FullPathForFile(res.realPath, res.resType,false);
         }
-
-        protected override void OnDestroy()
-        {
-            m_dicLoadingQueue.Clear();
-            m_dicLoadedQueue.Clear();
-            base.OnDestroy();
-        }
     }
-
 }

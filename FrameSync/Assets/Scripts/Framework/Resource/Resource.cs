@@ -101,6 +101,11 @@ namespace Framework
             }
         }
 
+        public void SetBundle(AssetBundle assetBundle)
+        {
+            _assetBundle = assetBundle;
+        }
+
         public string GetText()
         {
             if (resType == ResourceType.Text && !string.IsNullOrEmpty(_txt))

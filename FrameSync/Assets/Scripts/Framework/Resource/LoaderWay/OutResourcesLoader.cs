@@ -31,7 +31,7 @@ namespace Framework
 
         protected override string GetInResPath(Resource res)
         {
-            return _resUtil.FullPathForFile(res.realPath, res.resType);
+            return _resUtil.FullPathForFile(res.realPath, res.resType,false);
         }
     }
 }

@@ -108,17 +108,29 @@ namespace Framework
             }
             return extenstion;
         }
-
+        
         /// <summary>
         /// 获取文件的完整路径
         /// </summary>
-        public string FullPathForFile(string file, ResourceType resType)
+        /// <param name="file">内部使用的相对路径</param>
+        /// <param name="resType">资源类型</param>
+        /// <param name="checkFileSymbol">是否使用前缀(unity中WWW加载资源需要前缀)</param>
+        /// <returns></returns>
+        public string FullPathForFile(string file, ResourceType resType,bool checkFileSymbol)
         {
             string fullPath;
             if (!_resourceContainer.DirectLoadMode)
             {
                 file = file.ToLower();
-                fullPath = OUTER_FILE_SYMBOL + PersistentLoadPath + file;
+                //前缀是www才需要的
+                if (checkFileSymbol)
+                {
+                    fullPath = OUTER_FILE_SYMBOL + PersistentLoadPath + file;
+                }
+                else
+                {
+                    fullPath = PersistentLoadPath + file;
+                }
             }
             else
             {

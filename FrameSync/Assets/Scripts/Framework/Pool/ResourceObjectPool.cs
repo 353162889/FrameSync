@@ -20,11 +20,13 @@ namespace Framework
             public UnityEngine.Object prefab;
             public Resource res;
             public Queue<UnityEngine.Object> queue;
+            public bool isDone;
 
             public void Reset()
             {
                 prefab = null;
                 res = null;
+                isDone = false;
                 if (queue != null)
                 {
                     queue.Clear();
@@ -65,48 +67,59 @@ namespace Framework
             ResourceObjectQueue resQueue;
             if (m_dicGO.TryGetValue(path, out resQueue))
             {
-                if(!isPrefab)
+                if (resQueue.isDone)
                 {
-                    for (int i = 0; i < count; i++)
+                    if (!isPrefab)
                     {
-                        var go = GetGameObject(resQueue.prefab, path);
-                        SaveObject(path, go);
-                    }
-                }
-                if (callback != null)
-                {
-                    callback.Invoke(path);
-                }
-            }
-            else
-            {
-                if(callback != null)
-                {
-                    List<CacheCallbackStruct> lstCallbackStruct;
-                    if (!m_dicCacheCallback.TryGetValue(path, out lstCallbackStruct))
-                    {
-                        lstCallbackStruct = new List<CacheCallbackStruct>();
-                        m_dicCacheCallback.Add(path,lstCallbackStruct);
-                    }
-                    bool contain = false;
-                    for (int i = 0; i < lstCallbackStruct.Count; i++)
-                    {
-                        if(lstCallbackStruct[i].callback == callback)
+                        for (int i = 0; i < count; i++)
                         {
-                            contain = true;
-                            break;
+                            var go = GetGameObject(resQueue.prefab, path);
+                            SaveObject(path, go);
                         }
                     }
-                    if (!contain)
+                    if (callback != null)
                     {
-                        CacheCallbackStruct callbackStruct = new CacheCallbackStruct();
-                        callbackStruct.callback = callback;
-                        callbackStruct.count = count;
-                        callbackStruct.isPrefab = isPrefab;
-                        lstCallbackStruct.Add(callbackStruct);
+                        callback.Invoke(path);
+                    }
+                    return;
+                }
+            }
+            if (callback != null)
+            {
+                List<CacheCallbackStruct> lstCallbackStruct;
+                if (!m_dicCacheCallback.TryGetValue(path, out lstCallbackStruct))
+                {
+                    lstCallbackStruct = new List<CacheCallbackStruct>();
+                    m_dicCacheCallback.Add(path, lstCallbackStruct);
+                }
+                bool contain = false;
+                for (int i = 0; i < lstCallbackStruct.Count; i++)
+                {
+                    if (lstCallbackStruct[i].callback == callback)
+                    {
+                        contain = true;
+                        break;
                     }
                 }
-                ResourceSys.Instance.GetResource(path, OnResLoadCache);
+                if (!contain)
+                {
+                    CacheCallbackStruct callbackStruct = new CacheCallbackStruct();
+                    callbackStruct.callback = callback;
+                    callbackStruct.count = count;
+                    callbackStruct.isPrefab = isPrefab;
+                    lstCallbackStruct.Add(callbackStruct);
+                }
+            }
+            if (resQueue == null)
+            {
+                resQueue = ObjectPool<ResourceObjectQueue>.Instance.GetObject();
+                resQueue.isDone = false;
+                resQueue.queue = new Queue<UnityEngine.Object>();
+                resQueue.prefab = null;
+                m_dicGO.Add(path, resQueue);
+                Resource res = ResourceSys.Instance.GetResource(path, OnResLoadCache);
+                resQueue.res = res;
+                res.Retain();
             }
         }
 
@@ -131,31 +144,34 @@ namespace Framework
             ResourceObjectQueue resQueue;
             if(m_dicGO.TryGetValue(path,out resQueue))
             {
-                UnityEngine.Object go = null;
-                if (isPrefab)
+                if (resQueue.isDone)
                 {
-                    go = resQueue.prefab;
-                }
-                else
-                {
-                    if (resQueue.queue.Count > 0)
+                    UnityEngine.Object go = null;
+                    if (isPrefab)
                     {
-                        go = resQueue.queue.Dequeue();
+                        go = resQueue.prefab;
                     }
                     else
                     {
-                        go = GetGameObject(resQueue.prefab, path);
+                        if (resQueue.queue.Count > 0)
+                        {
+                            go = resQueue.queue.Dequeue();
+                        }
+                        else
+                        {
+                            go = GetGameObject(resQueue.prefab, path);
+                        }
+                        ((GameObject)go).SetActive(true);
                     }
-                    ((GameObject)go).SetActive(true);
+
+                    if (null != callback)
+                    {
+                        var tempCallback = callback;
+                        callback = null;
+                        tempCallback.Invoke(path, go);
+                    }
+                    return go;
                 }
-               
-                if (null != callback)
-                {
-                    var tempCallback = callback;
-                    callback = null;
-                    tempCallback.Invoke(path,go);
-                }
-                return go;
             }
             if (callback != null)
             {
@@ -182,7 +198,17 @@ namespace Framework
                     lst.Add(callbackStruct);
                 }
             }
-            ResourceSys.Instance.GetResource(path, OnResLoad);
+            if (resQueue == null)
+            {
+                resQueue = ObjectPool<ResourceObjectQueue>.Instance.GetObject();
+                resQueue.isDone = false;
+                resQueue.queue = new Queue<UnityEngine.Object>();
+                resQueue.prefab = null;
+                m_dicGO.Add(path, resQueue);
+                Resource res = ResourceSys.Instance.GetResource(path, OnResLoad);
+                resQueue.res = res;
+                res.Retain();
+            }
             return null;
         }
 
@@ -264,8 +290,16 @@ namespace Framework
 
         private GameObject GetGameObject(UnityEngine.Object prefab,string path)
         {
-            GameObject go = (GameObject)GameObject.Instantiate(prefab);
-            return go;
+            try
+            {
+                GameObject go = (GameObject)GameObject.Instantiate(prefab);
+                return go;
+            }
+            catch(Exception e)
+            {
+                CLog.LogError("路径为"+ path +"传入预设为空");
+            }
+            return null;
         }
 
         private void OnResLoad(Resource res,string path)
@@ -300,16 +334,7 @@ namespace Framework
 
         private IEnumerator LoadAssetAndCallback(Resource res, string path)
         {
-            ResourceObjectQueue resQueue;
-            if (!m_dicGO.TryGetValue(path, out resQueue))
-            {
-                resQueue = ObjectPool<ResourceObjectQueue>.Instance.GetObject();
-                resQueue.res = res;
-                res.Retain();
-                resQueue.queue = new Queue<UnityEngine.Object>();
-                resQueue.prefab = null;
-                m_dicGO.Add(path, resQueue);
-            }
+            ResourceObjectQueue resQueue = m_dicGO[path];
             if (resQueue.prefab == null)
             {
                 IEnumerator enumerator = resQueue.res.GetAssetAsync(path, OnLoadAsset);
@@ -319,6 +344,7 @@ namespace Framework
                 }
                 //yield return resQueue.res.GetAssetAsync(path, OnLoadAsset);
             }
+            resQueue.isDone = true;
             List<GameObjectPoolCallbackStruct> lstCallback = null;
             if (m_dicCallback.TryGetValue(path, out lstCallback))
             {
@@ -350,6 +376,10 @@ namespace Framework
 
         private void OnLoadAsset(string path,UnityEngine.Object prefab)
         {
+            if(prefab == null)
+            {
+                CLog.LogError("加载资源path="+path+"的预制为空");
+            }
             ResourceObjectQueue resQueue;
             if (m_dicGO.TryGetValue(path, out resQueue))
             {
@@ -361,17 +391,9 @@ namespace Framework
         {
             if (res.isSucc)
             {
-                ResourceObjectQueue resQueue;
-                if (!m_dicGO.TryGetValue(path, out resQueue))
-                {
-                    resQueue = ObjectPool<ResourceObjectQueue>.Instance.GetObject();
-                    resQueue.res = res;
-                    res.Retain();
-                    resQueue.queue = new Queue<UnityEngine.Object>();
-                    resQueue.prefab = res.GetAsset(path);
-                    m_dicGO.Add(path, resQueue);
-                }
-
+                ResourceObjectQueue resQueue = m_dicGO[path];
+                resQueue.prefab = res.GetAsset(path);
+                resQueue.isDone = true;
                 List<CacheCallbackStruct> lstCallbackStruct = null;
                 if (m_dicCacheCallback.TryGetValue(path, out lstCallbackStruct))
                 {

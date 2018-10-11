@@ -13,6 +13,7 @@ namespace Framework
         private InResourcesLoader _inResourcesLoader;
         private WWWResLoader _wwwLoader;
         private OutResourcesLoader _outResourcesLoader;
+        private AssetBundleResourcesLoader _assetBundleResourcesLoader;
         private LinkedList<Resource> _waitingList;
         private LinkedList<Resource> _loadingList;
         private ResourceContainer _resContainer;
@@ -30,9 +31,11 @@ namespace Framework
             _inResourcesLoader = this.gameObject.AddComponentOnce<InResourcesLoader>();
             _wwwLoader = this.gameObject.AddComponentOnce<WWWResLoader>();
             _outResourcesLoader = this.gameObject.AddComponentOnce<OutResourcesLoader>();
+            _assetBundleResourcesLoader = this.gameObject.AddComponentOnce<AssetBundleResourcesLoader>();
             _inResourcesLoader.OnResourceDone += OnResourceDone;
             _wwwLoader.OnResourceDone += OnResourceDone;
             _outResourcesLoader.OnResourceDone += OnResourceDone;
+            _assetBundleResourcesLoader.OnResourceDone += OnResourceDone;
 
             _waitingList = new LinkedList<Resource>();
             _loadingList = new LinkedList<Resource>();
@@ -91,7 +94,14 @@ namespace Framework
                 _loadingList.AddLast(loadingRes);
                 if (!_resContainer.DirectLoadMode)
                 {
-                    _wwwLoader.Load(loadingRes);
+                    if (loadingRes.resType == ResourceType.AssetBundle)
+                    {
+                        _assetBundleResourcesLoader.Load(loadingRes);
+                    }
+                    else
+                    {
+                        _wwwLoader.Load(loadingRes);
+                    }
                 }
                 else
                 {
