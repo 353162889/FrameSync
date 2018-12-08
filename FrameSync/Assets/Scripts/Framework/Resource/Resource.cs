@@ -38,6 +38,7 @@ namespace Framework
         private AssetBundle _assetBundle;
 
         private List<Resource> _dependRes;
+        public List<Resource> dependRes { get { return _dependRes; } }
 
         protected bool _bytesUnloaded = false;
         public bool bytesUnloaded
@@ -52,7 +53,8 @@ namespace Framework
                 return _bytesUnloaded;
             }
         }
-
+        //引用计数，标识游戏内部是否有系统引用该资源（不包括依赖，因为用的是垃圾回收的标记清除方法），
+        //引用计数大于0的作为资源节点的入口，通过为每个资源（或其依赖）添加标识来删除没有标识的资源
         public int refCount { get; private set; }
         public bool IsDestroy { get; private set; }
 
@@ -253,17 +255,18 @@ namespace Framework
         public void SetDependsRes(List<Resource> list)
         {
             this._dependRes = list;
-            if (_dependRes != null)
-            {
-                int count = _dependRes.Count;
-                for (int i = 0; i < count; i++)
-                {
-                    if(_dependRes[i] != null)
-                    { 
-                        _dependRes[i].Retain();
-                    }
-                }
-            }
+            //这里不需要依赖文件引用
+            //if (_dependRes != null)
+            //{
+            //    int count = _dependRes.Count;
+            //    for (int i = 0; i < count; i++)
+            //    {
+            //        if (_dependRes[i] != null)
+            //        {
+            //            _dependRes[i].Retain();
+            //        }
+            //    }
+            //}
         }
 
         public void Retain()

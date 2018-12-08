@@ -46,23 +46,48 @@ namespace Framework
             _assetBundleFile = gameObject.AddComponentOnce<AssetBundleFile>();
         }
 
+        private HashSet<string> m_setSign = new HashSet<string>();
+        private List<string> m_lstRemoveKeyList = new List<string>();
         public void ReleaseUnUseRes()
         {
-            List<string> keyList = new List<string>();
+            //释放资源使用垃圾回收的机制（标记清除法）
             foreach (var item in _mapRes)
             {
-                if (item.Value.refCount <= 0)
+                if(!m_setSign.Contains(item.Key) && item.Value.refCount > 0)
                 {
-                    keyList.Add(item.Key);
+                    m_setSign.Add(item.Key);
+                    //收集依赖资源的标记
+                    var lstDepend = item.Value.dependRes;
+                    if(lstDepend != null)
+                    {
+                        for (int i = 0; i < lstDepend.Count; i++)
+                        {
+                            if(!m_setSign.Contains(lstDepend[i].realPath))
+                            {
+                                m_setSign.Add(lstDepend[i].realPath);
+                            }
+                        }
+                    }
+                }
+                
+            }
+            foreach (var item in _mapRes)
+            {
+                if (!m_setSign.Contains(item.Key))
+                {
+                    m_lstRemoveKeyList.Add(item.Key);
                 }
             }
-            for (int i = 0; i < keyList.Count; i++)
+
+            for (int i = 0; i < m_lstRemoveKeyList.Count; i++)
             {
-                Resource res = _mapRes[keyList[i]];
+                Resource res = _mapRes[m_lstRemoveKeyList[i]];
                 RemoveAllListener(res);
-                _mapRes.Remove(keyList[i]);
+                _mapRes.Remove(m_lstRemoveKeyList[i]);
                 res.DestroyResource();
             }
+            m_setSign.Clear();
+            m_lstRemoveKeyList.Clear();
             Resources.UnloadUnusedAssets();
             GC.Collect();
         }
@@ -107,6 +132,10 @@ namespace Framework
             res.realPath = GetRealResourcePath(path);
             res.resType = (!DirectLoadMode && resType == ResourceType.UnKnow) ? ResourceType.AssetBundle : resType;
 
+            //这个需要在加载依赖之前放入字典中（如果出现循环引用时需要直接获取）
+            _mapRes.Add(res.realPath, res);
+            res.Retain();
+
             //获取到当前资源的依赖资源(可能没法保证顺序，所以拿的时候需要保证所有依赖资源都已经加载好)
             if (!DirectLoadMode && res.resType == ResourceType.AssetBundle)
             {
@@ -124,8 +153,8 @@ namespace Framework
                 }
             }
             //真正加载当前资源
-            _mapRes.Add(res.realPath, res);
-            res.Retain();
+            //_mapRes.Add(res.realPath, res);
+            //res.Retain();
             AddListener(res,path, onSucc, onFail);
             _resLoader.Load(res);
             return res;
